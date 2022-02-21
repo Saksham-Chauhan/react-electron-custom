@@ -6,7 +6,7 @@ const { autoUpdater } = require("electron-updater");
 const _ = require("lodash");
 
 let win = null;
-const redirect_uri = "http://localhost/callback/*";
+// const redirect_uri = "http://localhost/callback/*";
 let mainWindow = null;
 
 // AUTH WINDOW CREATION
@@ -57,11 +57,11 @@ let mainWindow = null;
 //     win = null;
 //   });
 // }
-function destroyAuthWin() {
-  if (!win) return;
-  win.close();
-  win = null;
-}
+// function destroyAuthWin() {
+//   if (!win) return;
+//   win.close();
+//   win = null;
+// }
 
 // MAIN WINDOW CREATOR
 function createWindow() {
@@ -110,6 +110,7 @@ function createWindow() {
 }
 
 // IPC NECESSARY EVENTS
+
 // ipcMain.on("logout", () => {
 //   auth.logout();
 // });

@@ -1,0 +1,24 @@
+.group-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px;
+}
+.group-title > span {
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--primary);
+}
+.group-title.btn {
+  height: 30px;
+  width: 30px;
+  background: #131a3c;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.group-title.btn > img {
+  height: 16px;
+}

@@ -1,12 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
 * {
   margin: 0;
   box-sizing: border-box;
 }
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
@@ -30,6 +29,12 @@ code {
   --sidebar-bg: #311172;
   --tabkle-row: #303439;
   --sidebar-width: 5.5%;
+  --active-card: linear-gradient(
+    99.49deg,
+    #f40489 -10.73%,
+    rgba(191, 38, 243, 0.8) 36.84%,
+    rgba(250, 124, 87, 0.96) 84.15%
+  );
 }
 
 /* HIDE DEFAULT ARROW WHEN INPUT TYPE IS NUMBER */

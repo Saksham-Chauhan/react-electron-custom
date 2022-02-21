@@ -1,0 +1,22 @@
+.group-card {
+  display: flex;
+  align-items: center;
+  padding: 0.8em;
+  background: var(--active-card);
+  border-radius: 4px;
+}
+.group-card-content {
+  display: block;
+  margin-left: 10px;
+}
+.group-card-content > h5 {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--primary);
+}
+.group-card-content > p {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--primary);
+}

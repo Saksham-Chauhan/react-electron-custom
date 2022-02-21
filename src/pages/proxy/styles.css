@@ -1,0 +1,13 @@
+.page-section {
+  height: 100%;
+  width: 100%;
+}
+.page-section.left-container {
+  height: 100%;
+  width: 18%;
+  border-right: 0.5px solid #131b3c;
+}
+.group-card-scroll {
+  height: 50vh;
+  padding: 0px 20px;
+}
