@@ -4,9 +4,8 @@ const isDev = require("electron-is-dev");
 const currentProcesses = require("current-processes");
 const { autoUpdater } = require("electron-updater");
 const _ = require("lodash");
-
+const auth = require("./auth");
 let win = null;
-// const redirect_uri = "http://localhost/callback/*";
 let mainWindow = null;
 
 // AUTH WINDOW CREATION
@@ -27,26 +26,26 @@ let mainWindow = null;
 //   const {
 //     session: { webRequest },
 //   } = win.webContents;
-//   const filter = {
-//     urls: [redirect_uri],
-//   };
-//   webRequest.onBeforeRequest(filter, async ({ url }) => {
-//     try {
-//       await auth.loadTokens(url);
-//       await auth.login();
-//       if (!mainWindow) return;
-//       mainWindow.reload();
-//       return destroyAuthWin();
-//     } catch (error) {
-//       destroyAuthWin();
+// const filter = {
+//   urls: [auth.redirect_uri],
+// };
+// webRequest.onBeforeRequest(filter, async ({ url }) => {
+//   try {
+//     await auth.loadTokens(url);
+//     await auth.login();
+//     if (!mainWindow) return;
+//     mainWindow.reload();
+//     return destroyAuthWin();
+//   } catch (error) {
+//     destroyAuthWin();
 
-//       const options = {
-//         type: "question",
-//         defaultId: 2,
-//         title: "Login Error",
-//         message: "Login Failed",
-//         detail: "You are not allowed to login",
-//       };
+//     const options = {
+//       type: "question",
+//       defaultId: 2,
+//       title: "Login Error",
+//       message: "Login Failed",
+//       detail: "You are not allowed to login",
+//     };
 //       dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
 //     }
 //   });
@@ -141,12 +140,14 @@ ipcMain.on("minimize", () => {
 });
 
 ipcMain.on("maximize", () => {
-  if (!mainWindow.isMaximized()) {
-    mainWindow.maximize();
+  let tempMainWindow = mainWindow || global.mainWin;
+  if (!tempMainWindow.isMaximized()) {
+    tempMainWindow.maximize();
   } else {
-    mainWindow.unmaximize();
+    tempMainWindow.unmaximize();
   }
 });
+
 ipcMain.on("close", () => {
   mainWindow = null;
 });

@@ -18,9 +18,9 @@
   transform: translate(-50%, -50%);
   border-radius: 10px;
   background-image: url(../../assests/images/small-bot.svg);
-    background-repeat: no-repeat;
-    background-position: 95% 30px;
-    background-blend-mode: overlay;
+  background-repeat: no-repeat;
+  background-position: 95% 30px;
+  background-blend-mode: overlay;
 }
 
 /* modal title css */

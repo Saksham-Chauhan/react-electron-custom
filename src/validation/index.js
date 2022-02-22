@@ -1,0 +1,53 @@
+import joi from "joi";
+
+export const oneClickAddGmailSchema = joi.object({
+  email: joi
+    .string()
+    .required()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .label("Enter email address"),
+  password: joi
+    .string()
+    .required()
+    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+    .label("Enter password"),
+  recoveryEmail: joi
+    .string()
+    .required()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .label("Enter Recovery email address"),
+  securityAnswer: joi.string().required().label("Enter security answer"),
+  proxy: joi.optional(),
+  status: joi.optional(),
+  score: joi.optional(),
+});
+
+export const genNewAcccountSchema = joi.object({
+  site: joi.string().required().label("Select site"),
+  proxy: joi.string().required().label("Select proxy"),
+  amount: joi
+    .string()
+    .required()
+    .pattern(new RegExp("^[0-9]{1,30}$"))
+    .label("Enter account number"),
+  mobile: joi.optional(),
+  profile: joi.string().required().label("Select profile"),
+});
+
+export const addProxyGroupSchema = joi.object({
+  id: joi.optional(),
+  proxyList: joi.array(),
+  groupName: joi.string().required().label("Enter group name"),
+  proxies: joi.optional(),
+});
+
+export const spooferSchema = joi.object({
+  url: joi.optional(),
+  proxyName: joi.string().required().label("Select Proxy"),
+  quantity: joi.number().required().min(1).label("Enter quantity value"),
+  delay: joi.optional(),
+  disableImages: joi.optional(),
+  id: joi.optional(),
+  status: joi.optional(),
+  proxyValue: joi.optional(),
+});

@@ -14,5 +14,8 @@
 }
 .right-container{
   width: calc(100% - 18%);
+
+}
+.page-padding-section{
   padding: 0px 1em;
 }

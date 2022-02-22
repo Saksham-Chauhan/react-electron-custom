@@ -6,12 +6,13 @@ import { AppController, DragBar } from "./component";
 import { fetchProxyGroupModalState } from "./features/counterSlice";
 import { ProxyGroupModal } from "./modals";
 import { ProxyPage } from "./pages";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const proxyModalState = useSelector(fetchProxyGroupModalState);
 
-  
+
   return (
     <div className="app">
       {proxyModalState && <ProxyGroupModal />}
@@ -25,6 +26,7 @@ function App() {
             <ProxyPage />
           </div>
         </div>
+        <ToastContainer />
       </div>
     </div>
   );

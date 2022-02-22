@@ -16,7 +16,7 @@ function GroupCard({
       </div>
       <div className="group-card-content">
         <h5>{cardTitle}</h5>
-        <p>{cardSubtitle}</p>
+        <p>{cardSubtitle} proxies</p>
       </div>
     </div>
   );
