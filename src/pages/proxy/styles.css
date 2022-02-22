@@ -1,8 +1,9 @@
 .page-section {
   height: 100%;
   width: 100%;
+  display: flex;
 }
-.page-section.left-container {
+.left-container {
   height: 100%;
   width: 18%;
   border-right: 0.5px solid #131b3c;
@@ -10,4 +11,8 @@
 .group-card-scroll {
   height: 50vh;
   padding: 0px 20px;
+}
+.right-container{
+  width: calc(100% - 18%);
+  padding: 0px 1em;
 }

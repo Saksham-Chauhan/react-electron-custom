@@ -4,6 +4,9 @@ import { ProxyState } from "./initial-state/proxy";
 
 const initialState = {
   ...ProxyState,
+  modals: {
+    proxyGroup: false,
+  },
 };
 
 export const counterSlice = createSlice({
@@ -14,12 +17,18 @@ export const counterSlice = createSlice({
     setProxyState: (state, action) => {
       state.proxyGroup = action.payload;
     },
+    setModalState: (state, action) => {
+      const key = action.payload;
+      state.modals[key] = !state.modals[key];
+    },
   },
 });
 
-export const { setProxyState } = counterSlice.actions;
+export const { setProxyState, setModalState } = counterSlice.actions;
 
 export default counterSlice.reducer;
 
 // PROXY SELECTOR
 export const fetchProxyGroupList = (state) => state[STATE_KEY].proxyGroup;
+export const fetchProxyGroupModalState = (state) =>
+  state[STATE_KEY].modals.proxyGroup;

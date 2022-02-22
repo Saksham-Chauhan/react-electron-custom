@@ -1,14 +1,16 @@
 import React from "react";
-import wifi from "../../assests/images/wifi.svg";
 import "./styles.css";
+import wifi from "../../assests/images/wifi.svg";
+
 function GroupCard({
   cardIcon = wifi,
   cardTitle = "Proxy Group 1",
   cardSubtitle = "3 proxies",
+  activeClass = "",
   ...props
 }) {
   return (
-    <div {...props} className="group-card">
+    <div {...props} className={`group-card ${activeClass}`}>
       <div className="group-card-icon">
         <img src={cardIcon} alt="" />
       </div>

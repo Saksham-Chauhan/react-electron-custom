@@ -10,7 +10,7 @@ function GroupStatus({
       <h1>{title}</h1>
       <div className="group-status-stats">
         <span />
-        <spa>{subText}</spa>
+        <span>{subText}</span>
       </div>
     </div>
   );

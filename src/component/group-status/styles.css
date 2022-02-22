@@ -1,7 +1,7 @@
 .group-status > h1 {
   font-weight: 500;
-  font-size: 28px;
-  line-height: 42px;
+  font-size: 22px;
+  line-height: 32px;
   color: var(--primary);
 }
 .group-status-stats {
@@ -16,7 +16,7 @@
 }
 .group-status-stats > span:last-of-type {
   font-weight: 300;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 21px;
   color: var(--primary);
   margin-left: 10px;

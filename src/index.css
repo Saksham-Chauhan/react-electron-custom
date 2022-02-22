@@ -23,11 +23,14 @@ code {
   --app-bg: #0d0027;
   --active-link-bg: #4301c7;
   --delete: #b60e0e;
+  --red: #a31013;
   --stop: #1e53e6;
   --start: #2aa73b;
-  --primary: #fff;
+  --primary-offset: 1;
+  --primary: rgba(255, 255, 255, var(--primary-offset));
   --sidebar-bg: #311172;
-  --tabkle-row: #303439;
+  --card-bg: #19122d;
+  --table-row: rgba(48, 52, 57, 0.35);
   --sidebar-width: 5.5%;
   --active-card: linear-gradient(
     99.49deg,
@@ -35,6 +38,8 @@ code {
     rgba(191, 38, 243, 0.8) 36.84%,
     rgba(250, 124, 87, 0.96) 84.15%
   );
+  --btn-bg: #131a3c;
+  --placeholder: #706a6a;
 }
 
 /* HIDE DEFAULT ARROW WHEN INPUT TYPE IS NUMBER */
