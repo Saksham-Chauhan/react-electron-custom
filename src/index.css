@@ -26,6 +26,7 @@ code {
   --red: #a31013;
   --stop: #1e53e6;
   --start: #2aa73b;
+  --status:#4CFF00;
   --primary-offset: 1;
   --primary: rgba(255, 255, 255, var(--primary-offset));
   --sidebar-bg: #311172;

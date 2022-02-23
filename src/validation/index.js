@@ -20,6 +20,7 @@ export const oneClickAddGmailSchema = joi.object({
   proxy: joi.optional(),
   status: joi.optional(),
   score: joi.optional(),
+  id: joi.optional(),
 });
 
 export const genNewAcccountSchema = joi.object({
@@ -32,6 +33,7 @@ export const genNewAcccountSchema = joi.object({
     .label("Enter account number"),
   mobile: joi.optional(),
   profile: joi.string().required().label("Select profile"),
+  id: joi.optional(),
 });
 
 export const addProxyGroupSchema = joi.object({
@@ -50,4 +52,10 @@ export const spooferSchema = joi.object({
   id: joi.optional(),
   status: joi.optional(),
   proxyValue: joi.optional(),
+});
+
+export const discordAccountSchema = joi.object({
+  accountName: joi.string().required().label("Enter Account name"),
+  discordToken: joi.string().required().label("Enter token"),
+  id: joi.optional(),
 });

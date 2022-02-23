@@ -5,4 +5,5 @@ export const RoutePath = {
   proxy: "/proxy",
   account: "/account",
   settings: "/settings",
+  linkOpener:"/linkOpener"
 };

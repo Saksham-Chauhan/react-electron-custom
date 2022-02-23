@@ -14,6 +14,7 @@ function ProxyTableRow({ data, index, onEdit, onDelete, onTest }) {
       <div className="tbl-header-title body">{proxyArr[3]}</div>
       <div className="tbl-header-title body">{data["status"]}</div>
       <div className="tbl-header-title body action-col">
+        <img onClick={() => onTest(data)} src={test} className="btn" alt="" />
         <img onClick={() => onEdit(data)} src={edit} className="btn" alt="" />
         <img
           onClick={() => onDelete(data)}
@@ -21,7 +22,6 @@ function ProxyTableRow({ data, index, onEdit, onDelete, onTest }) {
           className="btn"
           alt=""
         />
-        <img onClick={() => onTest(data)} src={test} className="btn" alt="" />
       </div>
     </div>
   );
