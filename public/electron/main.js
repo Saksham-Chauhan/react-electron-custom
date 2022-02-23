@@ -80,7 +80,7 @@ function createWindow() {
   //     console.log("Error in Disocrd RPC Wrapper", err.message);
   //   }
   mainWindow = new BrowserWindow({
-    width: 1340,
+    width: 1402,
     height: 800,
     resizable: true,
     frame: false,
