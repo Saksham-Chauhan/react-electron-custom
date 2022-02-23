@@ -1,0 +1,24 @@
+.OneClick_title {
+  padding: 0px 20px;
+}
+
+.OneClick_title p {
+  font-weight: 500;
+  font-size: 20.4458px;
+  line-height: 31px;
+  color: var(--primary);
+}
+
+.OneClick_title ul {
+  padding: 3px 15px 15px;
+}
+.OneClick_title ul li {
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #ffffff;
+}

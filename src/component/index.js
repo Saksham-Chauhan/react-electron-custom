@@ -7,4 +7,7 @@ export { default as AppDivider } from "./divider/Divider";
 export { default as GroupStatusCard } from "./group-status/GroupStatus";
 export { default as TopWrapper } from "./wrapper-top/WrapperTop";
 export { default as ModalWrapper } from "./modal-wrapper/Modal";
-export {default as AppInputField} from "./input-field/InputField"
+export { default as AppInputField } from "./input-field/InputField";
+
+// sidebar
+export { default as Sidebar } from "./Sidebar/Sidebar";

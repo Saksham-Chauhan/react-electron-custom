@@ -1,0 +1,147 @@
+.sidebarOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* height: 35px; */
+  width: 100%;
+  margin: 0px auto;
+  cursor: pointer;
+  padding: 13px;
+  margin-top: 1px;
+  position: relative;
+  transition: background 0.1s ease-in-out;
+}
+
+.sidebarOption > img:first-of-type {
+  height: 23px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  opacity: 0.5;
+}
+.sidebarOption > img:last-of-type {
+  height: 23px;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+.sidebarOption.activeLink,
+.sidebarOption:hover {
+  background: #0d0027;
+}
+.sidebarOption.activeLink > img:last-of-type,
+.sidebarOption:hover > img:last-of-type {
+  opacity: 1;
+}
+
+.sideBarOptionNotLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  margin: 0px auto;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 400;
+}
+.sideBarOptionNotLink > img {
+  height: 30px;
+  background: var(--w);
+  border-radius: 100%;
+}
+.sideBarOptionNotLink:hover > .app-user-profile-handlers,
+.app-user-profile-handlers.activeClick {
+  display: block;
+}
+.app-user-profile-handlers {
+  position: absolute;
+  display: none;
+  /* right: -105px; */
+  left: 35px;
+  padding: 20px 10px;
+  border-radius: 8px;
+  bottom: -30px;
+  background: #0d0027;
+  transition: all 0.5s ease-in-out;
+}
+
+#app-logout-btn-handler {
+  display: block;
+  width: 100%;
+  padding: 7px;
+  border: none;
+  outline: none;
+  margin-bottom: 5px;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 18px;
+  background: #311172;
+  cursor: pointer;
+  transition: transform 0.5s ease-in-out;
+  border-radius: 3px;
+}
+#app-user-profile-btn {
+  display: block;
+  width: 100%;
+  padding: 7px;
+  border: none;
+  outline: none;
+  margin-bottom: 5px;
+  background: #311172;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 18px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: transform 0.5s ease-in-out;
+}
+#app-user-profile-btn:hover,
+#app-logout-btn-handler:hover {
+  transform: scale(1.06);
+}
+.logged-user-summary-details {
+  display: flex;
+  margin-top: 5px;
+  align-items: center;
+  pointer-events: none;
+  color: white;
+}
+.logged-user-summary-details > img {
+  height: 40px;
+  background: var(--w);
+  border-radius: 100%;
+}
+.logged-user-summary-details > span {
+  color: var(--w);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+  margin-left: 10px;
+}
+
+.ProfileImag {
+  border-radius: 50%;
+  border: 1px solid white;
+  height: 30px;
+  width: 30px;
+  margin: 0px auto;
+  cursor: pointer;
+}
+.ProfileImagTwo {
+  border-radius: 50%;
+  border: 1px solid white;
+  height: 40px;
+  width: 40px;
+  margin: 0px auto;
+  cursor: pointer;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+}

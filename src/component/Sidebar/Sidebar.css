@@ -1,0 +1,37 @@
+.sidebarMain {
+  height: 100%;
+  width: 100%;
+  padding-top: 10px;
+  background-color: --sidebar-bg;
+}
+.sidebarMain--logo-wrapper > img {
+  height: 40px;
+}
+.sidebarMain--logo-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.updateIcon {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.updateIcon a {
+  margin: 0px;
+}
+.updateIcon p {
+  font-size: 15px;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 22px;
+  color: #a1a1a1;
+  margin-top: 5px;
+}

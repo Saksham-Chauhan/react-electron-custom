@@ -1,0 +1,41 @@
+.search_feild {
+  padding: 0px 20px;
+  display: flex;
+  position: relative;
+}
+
+.search_feild > .btn {
+  margin: 0px 0px 0px 10px;
+  height: 32px;
+}
+
+.search_feild > input {
+  outline: none;
+  border: none;
+  width: 193px;
+  height: 32px;
+  padding-left: 40px;
+  border-radius: 5px;
+  background: #131b3c;
+  color: white;
+}
+
+.search_feild ::placeholder {
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 23px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.searchIcon {
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 4px;
+  left: 25px;
+}

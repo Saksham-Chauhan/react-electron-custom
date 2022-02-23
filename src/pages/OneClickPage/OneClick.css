@@ -1,0 +1,22 @@
+.oneClick {
+  height: calc(100% - 30px);
+}
+.sub_heading {
+  padding: 20px;
+  list-style-type: disc;
+  color: white;
+}
+
+.wifi {
+  position: absolute;
+  right: 3.62%;
+  bottom: 1.6%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: green;
+}
+
+.wifi p {
+  margin-left: 10px;
+}

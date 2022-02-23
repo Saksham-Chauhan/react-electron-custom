@@ -1,0 +1,40 @@
+.SectionTwo {
+  padding: 10px 20px;
+  color: white;
+  width: 100%;
+  height: 100%;
+}
+
+.SectionTwo ul {
+  padding: 0 10px;
+  width: 100%;
+  height: 42px;
+  border-radius: 5px;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #311172;
+}
+.SectionTwo ul li:first-child {
+  width: 5%;
+}
+.SectionTwo ul li:nth-child(3) {
+  width: 10%;
+}
+
+.SectionTwo ul li:nth-child(6) {
+  width: 10%;
+}
+.SectionTwo ul li {
+  width: 18%;
+}
+
+.SectionTwo .Proxy_list {
+  margin-top: 7px;
+  background: rgba(48, 52, 57, 0.35);
+}
+/* Icons List  */
+.SectionTwo ul li img {
+  margin-right: 15px;
+}
