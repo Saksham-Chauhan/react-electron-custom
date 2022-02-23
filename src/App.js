@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import "./App.css";
 import bot from "./assests/images/bot.svg";
+import chip from "./assests/images/chip.svg";
 import { AppController, DragBar, AppFooter } from "./component";
 import {
   fetchDiscordModalState,
@@ -24,6 +25,7 @@ function App() {
       <div className="app sidebar"></div>
       <div className="app page-section">
         <div className="app overlay-wrapper">
+          <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
           <img id="kyro-bot" src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
             <DragBar />

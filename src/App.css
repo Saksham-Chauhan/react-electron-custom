@@ -31,6 +31,14 @@
   animation: botMove 1s ease-in-out infinite;
 }
 
+#kyro-chip{
+  position: absolute;
+  right: 0;
+  top: 65%;
+  opacity: 0.8;
+  height: 200px;
+}
+
 @keyframes botMove {
   0%,
   100% {
