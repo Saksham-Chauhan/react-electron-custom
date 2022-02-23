@@ -4,6 +4,7 @@ body {
   display: block;
   top: 50%;
 }
+
 .lds-ellipsis {
   display: inline-block;
   position: relative;
