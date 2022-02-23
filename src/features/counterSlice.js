@@ -10,6 +10,7 @@ const initialState = {
   modals: {
     proxyGroup: false,
     discordAccount: false,
+    addGmail: false,
   },
 };
 
@@ -88,3 +89,7 @@ export const fetchIJChannelList = (state) =>
   state[STATE_KEY].inviteJoiner.channelList;
 export const fetchLOChannelList = (state) =>
   state[STATE_KEY].linkOpener.channelList;
+// ADD GMAIL
+
+export const fetchAddGmailModalState = (state) =>
+  state[STATE_KEY].modals.addGmail;

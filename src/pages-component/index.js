@@ -8,3 +8,8 @@ export { default as LinkOpenerSetting } from "./linkopner-component/settings/Set
 export { default as LinkOpenerTopSection } from "./linkopner-component/top-section/TopSection";
 export { default as LinkOpenerLogSection } from "./linkopner-component/log-section/LogSection";
 export { default as LinkOpenerLeftSection } from "./linkopner-component/left-section/LeftSection";
+
+//OneClick ,InputGroup,OneClickBody
+export { default as OneClick } from "./oneClickComp/OneClick/OneClick";
+export { default as InputGroup } from "./oneClickComp/InputGroup/InputGroup";
+export { default as OneClickBody } from "./oneClickComp/Body/OneClickBody";
