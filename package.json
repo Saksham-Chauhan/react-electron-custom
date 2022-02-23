@@ -2,6 +2,7 @@
   "name": "kyro-v1",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@reduxjs/toolkit": "^1.7.2",
@@ -37,7 +38,7 @@
     "eject": "react-scripts eject",
     "dev": "concurrently -k \"npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron .",
-    "electron-pack-win": "react-scripts build && electron-builder "
+    "electron-pack-win": "react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -w"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -63,5 +64,27 @@
   "resolutions": {
     "//": "See https://github.com/facebook/create-react-app/issues/11773",
     "react-error-overlay": "6.0.9"
-  }
+  },
+  "build": {
+    "productName": "Kyro",
+    "appId": "com.kyro.koders",
+    "files": [
+        "build/**/*"
+    ],
+    "win": {
+        "artifactName": "${productName}-${version}.${ext}",
+        "target": "nsis"
+    },
+    "mac": {
+        "artifactName": "${productName}-${version}.${ext}",
+        "target": "dmg"
+    },
+    "nsis": {
+        "installerIcon": "public/electron/img/win.ico",
+        "installerHeaderIcon": "public/electron/img/win.ico",
+        "allowToChangeInstallationDirectory": true,
+        "deleteAppDataOnUninstall": true,
+        "oneClick": "false"
+    }
+}
 }
