@@ -4,6 +4,16 @@
   line-height: 20px;
   color: var(--primary);
 }
+.input-field-container > .custom-label {
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 17.525px;
+  line-height: 26px;
+}
+.custom-label-input{
+  background: #121538 !important;
+
+}
 .input-field-box {
   margin-top: 0.4em;
 }
@@ -19,7 +29,7 @@
   font-size: 15.5px;
   line-height: 23px;
   color: var(--primary);
-  font-family: 'Poppins';
+  font-family: "Poppins";
 }
 .input-field-box > textarea {
   overflow-y: scroll;
@@ -37,5 +47,4 @@
   font-size: 13px;
   line-height: 18px;
   color: var(--placeholder);
- 
 }

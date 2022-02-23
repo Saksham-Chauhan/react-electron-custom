@@ -4,6 +4,7 @@ import "./styles.css";
 function GroupStatus({
   title = "Proxy Group 1",
   subText = "2 Proxies running",
+
 }) {
   return (
     <div className="group-status">

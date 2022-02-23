@@ -1,8 +1,8 @@
 import React from "react";
 import Select from "react-select";
-import { selectStyles } from "./styles";
+import { selectCustomStyles, selectStyles } from "./styles";
 import NumberFormat from "react-number-format";
-import "./styles.css"
+import "./styles.css";
 
 const DefaultOptions = [];
 
@@ -17,16 +17,19 @@ function InputField({
   isMulti = false,
   multiHeight = "150px",
   selectOptions = DefaultOptions,
+  isCustomLabel = false,
   ...props
 }) {
   return (
     <div className="input-field-container">
+      {isCustomLabel && <label className="custom-label">{fieldTitle}</label>}
       {!hideLabel && <label>{fieldTitle}</label>}
       {!isSelect ? (
         <div className="input-field-box">
           {!isMulti ? (
             !isCustomInputField ? (
               <input
+                className={`${isCustomLabel && "custom-label-input"}`}
                 {...props}
                 autoSave="off"
                 autoCapitalize="off"
@@ -62,7 +65,7 @@ function InputField({
             placeholder={placeholderText}
             isOptionSelected={true}
             options={selectOptions}
-            styles={selectStyles}
+            styles={isCustomLabel ? selectCustomStyles : selectStyles}
             isSearchable={false}
           />
         </div>
@@ -72,4 +75,3 @@ function InputField({
 }
 
 export default InputField;
-
