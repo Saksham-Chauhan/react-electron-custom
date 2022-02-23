@@ -7,6 +7,7 @@ const _ = require("lodash");
 const auth = require("./auth");
 let win = null;
 let mainWindow = null;
+let splash = null;
 
 // AUTH WINDOW CREATION
 // function createAuthWindow() {
@@ -84,6 +85,7 @@ function createWindow() {
     height: 800,
     resizable: true,
     frame: false,
+    show: false,
     backgroundColor: "var(--main-bg)",
     icon: path.resolve(__dirname, "img", "logo.png"),
     webPreferences: {
@@ -101,11 +103,21 @@ function createWindow() {
     console.log(`This is Build Product ${app.getVersion()} Version`);
   }
 
+  splash = new BrowserWindow({width: 750, height: 250, transparent: true, frame: false, alwaysOnTop: true});
+  splash.loadURL(
+    isDev 
+    ? `file://${path.join(__dirname, "../splash.html")}`
+    : `file://${path.join(__dirname, "../../build/splash.html")}`
+  );
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000/"
       : `file://${path.join(__dirname, "../../build/index.html")}`
   );
+  mainWindow.once('ready-to-show', () => {
+    splash.destroy();
+    mainWindow.show();
+  });
 }
 
 // IPC NECESSARY EVENTS
