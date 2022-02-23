@@ -80,8 +80,6 @@
         "target": "dmg"
     },
     "nsis": {
-        "installerIcon": "public/electron/img/win.ico",
-        "installerHeaderIcon": "public/electron/img/win.ico",
         "allowToChangeInstallationDirectory": true,
         "deleteAppDataOnUninstall": true,
         "oneClick": "false"
