@@ -3,6 +3,8 @@ import "./InputGroup.css";
 import plus from "../../../assests/images/plus.svg";
 import searchIcon from "../../../assests/sidebarImage/searchIcon.svg";
 import deleteIcon from "../../../assests/sidebarImage/deleteIcon.svg";
+import { useDispatch } from "react-redux";
+import { setModalState } from "../../../features/counterSlice";
 
 const Button = ({ icon }) => (
   <div className="group-title btn">
@@ -18,7 +20,9 @@ const InputGroup = () => {
       </div>
 
       <input type="text" name="Search" placeholder="Search" />
+
       <Button icon={plus} />
+
       <Button icon={deleteIcon} />
     </div>
   );

@@ -2,9 +2,9 @@ import React from "react";
 import "./OneClick.css";
 import { AppSpacer } from "../../component";
 import { AppDivider } from "../../component";
-import OneClick from "../../pages-component/oneClickComp/OneClick/OneClick";
-import InputGroup from "../../pages-component/oneClickComp/InputGroup/InputGroup";
-import OneClickBody from "../../pages-component/oneClickComp/Body/OneClickBody";
+import { OneClick } from "../../pages-component";
+import { InputGroup } from "../../pages-component";
+import { OneClickBody } from "../../pages-component";
 import wifi from "../../assests/sidebarImage/wifi.svg";
 
 const Connected = false;

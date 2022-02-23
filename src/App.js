@@ -17,11 +17,12 @@ import { OneClickPage } from "./pages";
 function App() {
   const proxyModalState = useSelector(fetchProxyGroupModalState);
 
-  const gmail = false;
+  const gmail = true;
   return (
     <div className="app">
+      {/* AddGmail Modal  */}
       {gmail && <AddGmail />}
-      {/* {proxyModalState && <ProxyGroupModal />} */}
+      {proxyModalState && <ProxyGroupModal />}
       <div className="app sidebar">
         <Sidebar />
       </div>

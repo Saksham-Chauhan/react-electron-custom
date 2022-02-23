@@ -4,12 +4,11 @@ import { ModalWrapper, AppInputField, AppSpacer } from "../../component";
 
 import { setModalState } from "../../features/counterSlice";
 import { useDispatch } from "react-redux";
+import { OneClick } from "../../pages-component";
 
 const AddGmail = () => {
   const dispatch = useDispatch();
-  const handleCloseModal = () => {
-    dispatch(setModalState("proxyGroup"));
-  };
+  const handleCloseModal = () => {};
 
   const handleSubmit = () => {};
 
@@ -18,7 +17,7 @@ const AddGmail = () => {
       <div className="Addgmail">
         <div className="inputs">
           <div className="title">
-            {/* <OneClick title="Add-Gmail" subTitle=" " /> */}
+            <OneClick title="Add-Gmail" subTitle=" " />
           </div>
 
           <div className="gmail_password">
