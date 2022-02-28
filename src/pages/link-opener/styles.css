@@ -9,6 +9,10 @@
 .linkopner-right-section {
   width: 35%;
 }
+.linkopner-left-section.invite-joiner{
+  width: 75%;
+  margin-right: 0px;
+}
 .switch-with-text {
   max-width: 220px;
   background: var(--sidebar-bg);
@@ -56,6 +60,9 @@
   display: flex;
   height: 350px;
   justify-content: space-between;
+}
+.flex-keyword-channel.invite-joiner{
+height: 470px;
 }
 .flex-keyword-channel > div {
   width: 46%;

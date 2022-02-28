@@ -8,25 +8,44 @@ import {
   fetchAddGmailModalState,
   fetchDiscordModalState,
   fetchProxyGroupModalState,
+  fetchAddJoinerModalState,
+  fetchInviteJoinerSettingModalState,
 } from "./features/counterSlice";
-import { ProxyGroupModal, DiscordAccountModal, AddGmailModal } from "./modals";
-import { ProxyPage, LinkOpenerPage, OneClickPage } from "./pages";
+import {
+  ProxyGroupModal,
+  DiscordAccountModal,
+  AddGmailModal,
+  InviteJoinerAccountModal,
+  InviteJoinerSettingModal,
+} from "./modals";
+import {
+  ProxyPage,
+  LinkOpenerPage,
+  OneClickPage,
+  InviteJoinerPage,
+  TwitterPage,
+} from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RoutePath } from "./constant";
 import { Routes, Route } from "react-router-dom";
 
-
 function App() {
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
   const addGmailModalState = useSelector(fetchAddGmailModalState);
+  const inviteModalState = useSelector(fetchAddJoinerModalState);
+  const inviteSettigModalState = useSelector(
+    fetchInviteJoinerSettingModalState
+  );
 
   return (
     <div className="app">
       {proxyModalState && <ProxyGroupModal />}
       {addGmailModalState && <AddGmailModal />}
       {discordModalState && <DiscordAccountModal />}
+      {inviteModalState && <InviteJoinerAccountModal />}
+      {inviteSettigModalState && <InviteJoinerSettingModal />}
       <div className="app sidebar">
         <AppSidebar />
       </div>
@@ -38,6 +57,11 @@ function App() {
             <DragBar />
             <AppController />
             <Routes>
+            <Route path={RoutePath.twitter} element={<TwitterPage />} />
+              <Route
+                path={RoutePath.inviteJoiner}
+                element={<InviteJoinerPage />}
+              />
               <Route path={RoutePath.linkOpener} element={<LinkOpenerPage />} />
               <Route path={RoutePath.proxy} element={<ProxyPage />} />
               <Route path={RoutePath.oneclick} element={<OneClickPage />} />

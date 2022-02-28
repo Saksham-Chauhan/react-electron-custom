@@ -82,7 +82,7 @@ function DiscordAccount() {
           <span>Cancel</span>
         </div>
         <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>{Object.keys(editState).length === 3 ? "Edit" : "Create"}</span>
+          <span>{Object.keys(editState).length === 3 ? "Save" : "Create"}</span>
         </div>
       </div>
     </ModalWrapper>

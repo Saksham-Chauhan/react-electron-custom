@@ -1,7 +1,9 @@
 import {
   appendChannelInArrayList,
+  appendClaimerDiscordAccount,
   appendDiscordAccount,
   appendKeywordInArrayList,
+  fetchClaimerDiscordAccountList,
   fetchDiscordAccountList,
   fetchIJChannelList,
   fetchIJKeywordList,
@@ -116,4 +118,33 @@ export const deleteChannelFromList = (data) => (dispatch, getState) => {
     let filter = tempCurrentList.filter((data) => data.id !== word.id);
     dispatch(appendChannelInArrayList({ list: filter, key: "inviteJoiner" }));
   }
+};
+
+export const addClaimerAccountInList = (account) => (dispatch, getState) => {
+  const currentAccountList = fetchClaimerDiscordAccountList(getState());
+  let tempCurrentAccount = [...currentAccountList];
+  let newAccount = { ...account };
+  newAccount["id"] = generateId();
+  let combiner = [...tempCurrentAccount, newAccount];
+  dispatch(appendClaimerDiscordAccount(combiner));
+};
+
+export const deleteClaimerAccountFromList =
+  (account) => (dispatch, getState) => {
+    const currentAccountList = fetchClaimerDiscordAccountList(getState());
+    let tempCurrentAccount = [...currentAccountList];
+    let afterFilter = tempCurrentAccount.filter(
+      (acc) => acc["id"] !== account["id"]
+    );
+    dispatch(appendClaimerDiscordAccount(afterFilter));
+  };
+
+export const editClaimerAccountFromList = (account) => (dispatch, getState) => {
+  const currentAccountList = fetchClaimerDiscordAccountList(getState());
+  let tempCurrentAccount = [...currentAccountList];
+  let afterUpdate = tempCurrentAccount.map((data) => {
+    if (data["id"] === account["id"]) return account;
+    return data;
+  });
+  dispatch(appendClaimerDiscordAccount(afterUpdate));
 };

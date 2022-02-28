@@ -33,7 +33,7 @@ function Proxy() {
       tempData["proxyList"].length > 0
     ) {
       setTempList([...tempData["proxyList"]]);
-    }else setTempList([])
+    } else setTempList([]);
   }, [tempData]);
 
   const handleOpenModal = () => {
@@ -76,9 +76,7 @@ function Proxy() {
       </div>
       <div className="right-container">
         <TopWrapper>
-          <div className="page-padding-section">
-            <GroupStatusCard title={tempData["groupName"]} />
-          </div>
+          <GroupStatusCard title={tempData["groupName"]} />
         </TopWrapper>
         <div className="page-padding-section">
           <AppSpacer spacer={20} />

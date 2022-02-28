@@ -38,7 +38,7 @@ function LeftSection({ handleOpenModal, accountList, selctedMonitorToken }) {
     dispatch(deleteAccountFromList(account));
   };
   return (
-    <div>
+    <React.Fragment>
       <TopWrapper>
         <GroupTitle onClick={handleOpenModal} title="Link Opener" />
       </TopWrapper>
@@ -64,7 +64,7 @@ function LeftSection({ handleOpenModal, accountList, selctedMonitorToken }) {
           />
         ))}
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 

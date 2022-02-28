@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0px 20px;
 }
 .group-title > span {
   font-weight: 500;
@@ -18,7 +17,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-left: 25px;
+  /* margin-left: 25px; */
 }
 .group-title.btn > img {
   height: 16px;

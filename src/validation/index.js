@@ -59,3 +59,5 @@ export const discordAccountSchema = joi.object({
   discordToken: joi.string().required().label("Enter token"),
   id: joi.optional(),
 });
+
+

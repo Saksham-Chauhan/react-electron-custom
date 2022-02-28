@@ -38,14 +38,14 @@ function InputWithList({
         )}
         <AppSpacer spacer={10} />
         <div className="scroll-list">
-          {list?.map((data) =>
+          {list?.map((data, index) =>
             !isLogs ? (
-              <div key={data["id"]} className="scroll-list-item">
+              <div key={data["id"] || index} className="scroll-list-item">
                 <span>{data["label"]}</span>
                 <img onClick={() => onDelete(data)} src={trash} alt="" />
               </div>
             ) : (
-              <div key={data["id"]} className="scroll-list-item">
+              <div key={data["id"] || index} className="scroll-list-item">
                 <span>{data["label"]}</span>
               </div>
             )

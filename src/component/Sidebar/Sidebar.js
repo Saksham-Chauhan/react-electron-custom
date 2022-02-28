@@ -27,7 +27,6 @@ import activeUpdate from "../../assests/sidebarImage/activeUpdate.svg";
 import activeBrowser from "../../assests/sidebarImage/activeBrowser.svg";
 import activeDiscord from "../../assests/sidebarImage/activeDiscord.svg";
 import acticveHarvester from "../../assests/sidebarImage/acticveHarvester.svg";
-
 import { RoutePath } from "../../constant";
 
 const iconData = [
@@ -104,10 +103,9 @@ const Sidebar = () => {
           defaultIcon={data.defaultIcon}
           activeIcon={data.activeIcon}
           activeClassName={active === idx ? "activeLink" : ""}
-          oneClick={() => handleActivePage(idx)}
+          onClick={() => handleActivePage(idx)}
         />
       ))}
-
       <div className="updateIcon">
         <SidebarOption
           pageTo={"/appupdate"}
