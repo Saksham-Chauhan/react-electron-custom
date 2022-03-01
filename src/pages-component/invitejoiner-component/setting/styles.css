@@ -1,0 +1,24 @@
+.flex-btn-row {
+  display: flex;
+}
+.switch-with-text.with-no-toggle {
+  max-width: unset;
+  padding: 0.5em 1em;
+  margin-left: 20px;
+}
+.switch-with-text.with-no-toggle > span {
+  margin-left: 0px;
+}
+.claimer-token-setting-section{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.claimer-token-setting-section>.half-section{
+    width: 37%;
+  
+}
+.claimer-token-setting-section>.linkopener-urlappender-btn {
+    margin-top: 30px;
+ 
+}

@@ -1,16 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
 import { STATE_KEY } from "../constant";
+import { createSlice } from "@reduxjs/toolkit";
 import { ProxyState } from "./initial-state/proxy";
 import { discordAccount } from "./initial-state/discordAccount";
+import { twitterInitialState } from "./initial-state/twitter";
+
 const initialState = {
   tempStorage: {},
   editStorage: {},
   ...ProxyState,
   ...discordAccount,
+  ...twitterInitialState,
   modals: {
     proxyGroup: false,
     discordAccount: false,
     addGmail: false,
+    inviteJoinerAccount: false,
+    inviteJoinerSetting: false,
   },
 };
 
@@ -38,6 +43,14 @@ export const counterSlice = createSlice({
     setSelectedMonitorTokenLO: (state, action) => {
       state.selectedMonitorTokenLO = action.payload;
     },
+    appendLogList: (state, action) => {
+      const { key, list } = action.payload;
+      state[key].logList = list;
+    },
+    clearLogList: (state, action) => {
+      const { key } = action.payload;
+      state[key].logList = [];
+    },
     setSelectedClaimerTokenIJ: (state, action) => {
       state.selectedClaimerTokenIJ = action.payload;
     },
@@ -49,18 +62,48 @@ export const counterSlice = createSlice({
       const { key, list } = action.payload;
       state[key].channelList = list;
     },
+    appendClaimerDiscordAccount: (state, action) => {
+      state.claimerAccountList = action.payload;
+    },
+    setIJLOSetting: (state, action) => {
+      const { key, value } = action.payload;
+      state.setting[key] = value;
+    },
+    appendDataInTwitterList: (state, action) => {
+      const { key, data } = action.payload;
+      state[key] = data;
+    },
+    setTwitterSetting: (state, action) => {
+      state.twitterSetting = action.payload;
+    },
+    setTweetsInFeeder: (state, action) => {
+      const { key, tweet } = action.payload;
+      if (key === "LATEST") {
+        state.latesTweetlist = tweet;
+      } else {
+        state.featureTweetList = tweet;
+      }
+    },
   },
 });
 
 export const {
-  appendProxyGroupInList,
+  clearLogList,
+  appendLogList,
   setModalState,
+  setIJLOSetting,
   setTempStorage,
-  appendDiscordAccount,
   setEditStorage,
-  setSelectedMonitorTokenLO,
-  appendKeywordInArrayList,
+  setTweetsInFeeder,
+  setTwitterSetting,
+  appendDiscordAccount,
+  appendProxyGroupInList,
+  appendDataInTwitterList,
   appendChannelInArrayList,
+  appendKeywordInArrayList,
+  setSelectedMonitorTokenLO,
+  setSelectedClaimerTokenIJ,
+  appendClaimerDiscordAccount,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -78,18 +121,41 @@ export const fetchDiscordAccountList = (state) =>
   state[STATE_KEY].discordAccount;
 export const fetchSelectedMinitorTokenLinkOpener = (state) =>
   state[STATE_KEY].selectedMonitorTokenLO;
+export const fetchLOKeywordList = (state) =>
+  state[STATE_KEY].linkOpener.keyWordList;
+export const fetchLOChannelList = (state) =>
+  state[STATE_KEY].linkOpener.channelList;
+export const fetchLOSettingState = (state) =>
+  state[STATE_KEY].setting.linkOpener;
+export const fetchLinkOpenerLogState = (state) =>
+  state[STATE_KEY].linkOpener.logList;
+// ADD GMAIL
+export const fetchAddGmailModalState = (state) =>
+  state[STATE_KEY].modals.addGmail;
+
+// invite joiner
+export const fetchClaimerDiscordAccountList = (state) =>
+  state[STATE_KEY].claimerAccountList;
 export const fetchSelectedClaimerTokenInviteJoiner = (state) =>
   state[STATE_KEY].selectedClaimerTokenIJ;
 export const fetchIJKeywordList = (state) =>
   state[STATE_KEY].inviteJoiner.keyWordList;
-export const fetchLOKeywordList = (state) =>
-  state[STATE_KEY].linkOpener.keyWordList;
-
 export const fetchIJChannelList = (state) =>
   state[STATE_KEY].inviteJoiner.channelList;
-export const fetchLOChannelList = (state) =>
-  state[STATE_KEY].linkOpener.channelList;
-// ADD GMAIL
+export const fetchAddJoinerModalState = (state) =>
+  state[STATE_KEY].modals.inviteJoinerAccount;
+export const fetchInviteJoinerSettingModalState = (state) =>
+  state[STATE_KEY].modals.inviteJoinerSetting;
+export const fetchIJSettingState = (state) =>
+  state[STATE_KEY].setting.inviteJoiner;
 
-export const fetchAddGmailModalState = (state) =>
-  state[STATE_KEY].modals.addGmail;
+// TWITTER
+export const fetchTwitterKeywordList = (state) =>
+  state[STATE_KEY].twitterKeywordList;
+export const fetchTwitterUserList = (state) =>
+  state[STATE_KEY].twitterUserNameList;
+export const fetchTwitterSettingState = (state) =>
+  state[STATE_KEY].twitterSetting;
+export const fetchLatestTweetList = (state) => state[STATE_KEY].latesTweetlist;
+export const fetchFeatureTweetList = (state) =>
+  state[STATE_KEY].featureTweetList;

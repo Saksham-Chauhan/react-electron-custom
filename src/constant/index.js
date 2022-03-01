@@ -11,6 +11,6 @@ export const RoutePath = {
   accountGen: "/accountGen",
   profile: "/profile",
   spoofer: "/spoofer",
-  twitter: "/twitter",
+  twitter: "/twitter/*",
   setting: "/setting",
 };

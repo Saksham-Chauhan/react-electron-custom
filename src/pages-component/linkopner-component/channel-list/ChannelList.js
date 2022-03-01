@@ -27,6 +27,7 @@ function ChannelList({ channelList }) {
   return (
     <div>
       <InputFieldWithScrollList
+        placeHolder="Enter channel ID"
         inputProps={{
           value: channel,
           onChange: handleChannelChange,

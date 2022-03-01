@@ -12,11 +12,13 @@
     "axios": "^0.26.0",
     "concurrently": "^7.0.0",
     "current-processes": "^0.2.1",
+    "discord.js-selfbot": "^12.0.2",
     "electron-is-dev": "^2.0.0",
     "electron-updater": "^4.6.5",
     "fuse.js": "^6.5.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
+    "open": "^8.4.0",
     "react": "^17.0.2",
     "react-detect-offline": "^2.4.5",
     "react-dom": "^17.0.2",
@@ -28,6 +30,8 @@
     "react-toastify": "^8.2.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
+    "twit": "^2.2.11",
+    "user-agents": "^1.0.939",
     "uuid": "^8.3.2",
     "wait-on": "^6.0.1"
   },
@@ -70,7 +74,7 @@
     "productName": "Kyro",
     "appId": "com.kyro.koders",
     "files": [
-        "build/**/*"
+      "build/**/*"
     ],
     "win": {
         "artifactName": "${productName}-${version}.${ext}",
@@ -93,5 +97,5 @@
         "deleteAppDataOnUninstall": true,
         "oneClick": "false"
     }
-}
+  }
 }

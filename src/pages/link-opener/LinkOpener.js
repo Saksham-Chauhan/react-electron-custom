@@ -1,28 +1,99 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./styles.css";
 import {
   ChannelSection,
   KeywordSection,
   LinkOpenerSetting,
-  LinkOpenerLeftSection,
   LinkOpenerLogSection,
   LinkOpenerTopSection,
+  LinkOpenerLeftSection,
+  LinkOpenerAdditionalSetting,
 } from "../../pages-component";
-import { useDispatch, useSelector } from "react-redux";
 import {
   setModalState,
   fetchLOChannelList,
   fetchLOKeywordList,
+  fetchLOSettingState,
+  fetchLinkOpenerLogState,
   fetchDiscordAccountList,
   fetchSelectedMinitorTokenLinkOpener,
 } from "../../features/counterSlice";
+import { toastWarning } from "../../toaster";
+import sound from "../../assests/audio/sound.mp3";
+import { useDispatch, useSelector } from "react-redux";
+import { makeLogText, makeStrOfArr } from "../../helper";
+import { discordTokenRegExp } from "../../constant/regex";
+import { addLogInList } from "../../features/logic/discord-account";
+import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
+
+const open = window.require("open");
+const { Client } = window.require("discord.js-selfbot");
 
 function LinkOpener() {
   const dispatch = useDispatch();
   const keywordList = useSelector(fetchLOKeywordList);
   const channelList = useSelector(fetchLOChannelList);
+  const logList = useSelector(fetchLinkOpenerLogState);
+  const settingOption = useSelector(fetchLOSettingState);
   const accountList = useSelector(fetchDiscordAccountList);
-  const selctedMonitorToken = useSelector(fetchSelectedMinitorTokenLinkOpener);
+  const selectedMonitorToken = useSelector(fetchSelectedMinitorTokenLinkOpener);
+
+  const playSound = () => {
+    let ring = new Audio(sound);
+    ring.play();
+  };
+
+  useEffect(() => {
+    let monitor = new Client();
+    try {
+      monitor.on("ready", (msg) => {
+        console.log("Link opener is Ready..");
+      });
+
+      monitor.on("message", async (message) => {
+        let content = message.content;
+        if (makeStrOfArr(channelList).includes(message.channel.id)) {
+          if (testUrlRegex(content)) {
+            let flag = containsKeyword(makeStrOfArr(keywordList), content);
+            if (keywordList.length === 0 || flag) {
+              if (checkOptions(settingOption, content)) {
+                dispatch(
+                  addLogInList({ key: "LO", log: makeLogText(content) })
+                );
+                if (settingOption.playSound) {
+                  playSound();
+                }
+                if (settingOption?.selectedChromeUser) {
+                  open(content, {
+                    app: {
+                      name: open.apps.chrome,
+                      // arguments: [
+                      //   `--profile-directory=${settingOption.selectedChromeUser}`,
+                      // ],
+                    },
+                  });
+                } else {
+                  open(content, {
+                    app: { name: open.apps.chrome },
+                  });
+                }
+              }
+            }
+          }
+        }
+      });
+      if (settingOption?.linkOpenerState) {
+        if (discordTokenRegExp.test(selectedMonitorToken)) {
+          monitor.login(selectedMonitorToken);
+        } else toastWarning("Select monitor token");
+      } else {
+        console.log("Destroying  monitor...");
+        monitor.destroy();
+      }
+    } catch (error) {
+      console.log("Error in Link Opener", error);
+    }
+  }, [keywordList, channelList, settingOption, selectedMonitorToken, dispatch]);
 
   /**
    * function handle modal state
@@ -35,7 +106,12 @@ function LinkOpener() {
     <div className="page-section">
       <div className="left-container">
         <LinkOpenerLeftSection
-          {...{ handleOpenModal, accountList, selctedMonitorToken }}
+          {...{
+            handleOpenModal,
+            accountList,
+            selectedMonitorToken,
+            settingOption,
+          }}
         />
       </div>
       <div className="right-container">
@@ -43,14 +119,23 @@ function LinkOpener() {
         <div className="page-padding-section">
           <div className="linkopener-flex-wrapper">
             <div className="linkopner-left-section">
-              <LinkOpenerSetting />
+              <LinkOpenerSetting
+                {...{
+                  selectedMonitorToken,
+                  settingOption,
+                }}
+              />
               <div className="flex-keyword-channel">
                 <ChannelSection {...{ channelList }} />
                 <KeywordSection {...{ keywordList }} />
               </div>
             </div>
             <div className="linkopner-right-section">
-              <LinkOpenerLogSection />
+              <LinkOpenerAdditionalSetting {...{ settingOption }} />
+
+              <div className="linkopener-right-logs">
+                <LinkOpenerLogSection list={logList} />
+              </div>
             </div>
           </div>
         </div>

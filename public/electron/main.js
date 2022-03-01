@@ -1,10 +1,13 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
+
 const isDev = require("electron-is-dev");
 const currentProcesses = require("current-processes");
 const { autoUpdater } = require("electron-updater");
 const _ = require("lodash");
+const spooferManager = require("./script/manager/spoof-manager");
 const auth = require("./auth");
+const fetchTweets = require("./helper/fetchTweet");
 let win = null;
 let mainWindow = null;
 let splash = null;
@@ -97,25 +100,25 @@ function createWindow() {
     },
     titleBarStyle: "customButtonsOnHover",
   });
+  mainWindow.webContents.openDevTools();
   if (isDev) {
-    mainWindow.webContents.openDevTools();
   } else {
     console.log(`This is Build Product ${app.getVersion()} Version`);
   }
 
   splash = new BrowserWindow({width: 700, height: 390, transparent: true, frame: false, alwaysOnTop: true});
   splash.loadURL(
-    isDev 
-    ? `file://${path.join(__dirname, "../splash.html")}`
-    : `file://${path.join(__dirname, "../../build/splash.html")}`
+    isDev
+      ? `file://${path.join(__dirname, "../splash.html")}`
+      : `file://${path.join(__dirname, "../../build/splash.html")}`
   );
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000/"
       : `file://${path.join(__dirname, "../../build/index.html")}`
   );
-  mainWindow.once('ready-to-show', () => {
-    splash.close();
+  mainWindow.once("ready-to-show", () => {
+    splash.destroy();
     mainWindow.show();
   });
 }
@@ -274,7 +277,6 @@ function scanProcesses() {
         sorted[i].name.toLowerCase() === "wireshark" ||
         sorted[i].name.toLowerCase() === "fiddler"
       ) {
-        console.log("fuck out of here");
         app.quit();
       }
     }
@@ -351,4 +353,30 @@ async function sendUpdateDownloaded() {
 ipcMain.on("checkForUpdates", () => {
   checkProcesses();
   updateCheck();
+});
+
+//Twitter section IPC
+ipcMain.handle(
+  "fetchTweets",
+  (e, { consumerKey, consumerSecret, userHandler }) => {
+    return fetchTweets(consumerKey, consumerSecret, userHandler);
+  }
+);
+
+// Spoofer IPC
+ipcMain.on("start-spoofer", (_, data) => {
+  spooferManager.addSpoofer(data);
+  spooferManager.startSpoofer(data.id);
+});
+
+ipcMain.on("stop-spoofer", (_, data) => {
+  spooferManager.stopSpoofer(data.id);
+});
+
+ipcMain.on("toggle-spoofer", (_, data) => {
+  spooferManager.toggleSpoofer(data.id);
+});
+
+ipcMain.on("delete-spoofer", (_, data) => {
+  spooferManager.deleteSpoofer(data.id);
 });

@@ -1,16 +1,19 @@
 .group-card {
+  margin-bottom: 0.6em;
+}
+
+.group-card-inner {
   display: flex;
   align-items: center;
   padding: 0.8em;
   background: var(--card-bg);
   border-radius: 4px;
-  margin-bottom: 0.6em;
-  cursor: pointer;
   height: 61px;
 }
-.group-card.active-card,
-.group-card:hover {
+.group-card-inner.active-card,
+.group-card-inner:hover {
   background: var(--active-card);
+  cursor: pointer;
 }
 .group-card-content {
   display: block;
@@ -36,7 +39,7 @@
 }
 .action-col-icon > img {
   height: 12px;
-  margin: 0px 2px;
+  margin: 0px 5px;
 }
 .group-card-content.clip-text {
   width: 100px;

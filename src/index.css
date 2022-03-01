@@ -26,7 +26,7 @@ code {
   --red: #a31013;
   --stop: #1e53e6;
   --start: #2aa73b;
-  --status:#4CFF00;
+  --status: #4cff00;
   --primary-offset: 1;
   --primary: rgba(255, 255, 255, var(--primary-offset));
   --sidebar-bg: #311172;
@@ -41,6 +41,8 @@ code {
   );
   --btn-bg: #131a3c;
   --placeholder: #706a6a;
+  --active-input: #30e2e7;
+  --scrollbar-bg: rgba(255, 255, 255, 0.5);
 }
 
 /* HIDE DEFAULT ARROW WHEN INPUT TYPE IS NUMBER */
