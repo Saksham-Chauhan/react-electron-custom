@@ -11,3 +11,4 @@ export { default as AppInputField } from "./input-field/InputField";
 export { default as AppToggler } from "./switch/Switch";
 export { default as AppFooter } from "./footer/Footer";
 export { default as AppSidebar } from "./Sidebar/Sidebar";
+export { default as AppCheckbox } from "./checkbox/Checkbox";

@@ -46,10 +46,11 @@ export const containsKeyword = (keywordsLO, message) => {
  * If message is Discord invite link ot twitter link ignore
  * and return false else return true
  */
-export const checkOptions = (options, message) => {
-  if (options.discord && checkDiscordInvite(message)) return false; // means it's a discord invite, hence ignore this link in link opener
-  //   if (options.twitter && checkTwitterLink(message)) return false;
 
+export const checkOptions = (options, message) => {
+  if (options.ignoreDiscordInviteLink && checkDiscordInvite(message))
+    return false; // means it's a discord invite, hence ignore this link in link opener
+  if (options.ignoreTwitterLink && checkTwitterLink(message)) return false;
   return true;
 };
 

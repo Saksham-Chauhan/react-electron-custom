@@ -12,8 +12,15 @@ import {
 } from "../../../features/counterSlice";
 import discord from "../../../assests/images/discord.svg";
 import { deleteAccountFromList } from "../../../features/logic/discord-account";
+import { isValueInUse } from "../../../helper";
+import { toastWarning } from "../../../toaster";
 
-function LeftSection({ handleOpenModal, accountList, selctedMonitorToken }) {
+function LeftSection({
+  handleOpenModal,
+  accountList,
+  selectedMonitorToken,
+  settingOption,
+}) {
   const dispatch = useDispatch();
 
   /**
@@ -35,8 +42,16 @@ function LeftSection({ handleOpenModal, accountList, selctedMonitorToken }) {
    * function handle delete account card state
    **/
   const handleDeleteAccount = (account) => {
-    dispatch(deleteAccountFromList(account));
+    const result = isValueInUse(
+      accountList,
+      "discordToken",
+      selectedMonitorToken
+    );
+    if (!result && settingOption?.linkOpenerState) {
+      dispatch(deleteAccountFromList(account));
+    } else toastWarning("Token in use!!");
   };
+
   return (
     <React.Fragment>
       <TopWrapper>
@@ -56,7 +71,7 @@ function LeftSection({ handleOpenModal, accountList, selctedMonitorToken }) {
             isCustomAction={true}
             cardTitle={account["accountName"]}
             activeClass={
-              account["discordToken"] === selctedMonitorToken
+              account["discordToken"] === selectedMonitorToken
                 ? "active-card"
                 : ""
             }

@@ -8,7 +8,7 @@ export const selectStyles = {
     border: "1px solid rgba(255, 255, 255, 0.15)",
     boxSizing: "border-box",
     "&:hover": {
-      border: state.isFocused && "1px solid #386EB4",
+      border: state.isFocused && "1px solid #30e2e7",
     },
   }),
   control: (styles) => ({
@@ -90,12 +90,9 @@ export const selectCustomStyles = {
     padding: "4px 3px",
     paddingLeft: "10px",
     borderRadius: "5px",
-    border: "1px solid transparent",
     boxSizing: "border-box",
     backgroundColor: "#121538",
-    "&:hover": {
-      border: state.isFocused && "1px solid #386EB4",
-    },
+    border: state.isFocused ? "1px solid #30e2e7" : "1px solid transparent",
   }),
   control: (styles) => ({
     ...styles,
@@ -149,7 +146,7 @@ export const selectCustomStyles = {
     ...styles,
     zIndex: 3,
     backgroundColor: "#10172c",
-    border: "1px solid #386EB4",
+    border: "1px solid #30e2e7",
     marginLeft: "-10px",
   }),
   option: (provided, state) => ({

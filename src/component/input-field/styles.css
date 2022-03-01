@@ -10,9 +10,8 @@
   font-size: 17.525px;
   line-height: 26px;
 }
-.custom-label-input{
+.custom-label-input {
   background: #121538 !important;
-
 }
 .input-field-box {
   margin-top: 0.4em;
@@ -34,6 +33,10 @@
 .input-field-box > textarea {
   overflow-y: scroll;
   resize: none;
+}
+.input-field-box > input:focus,
+.input-field-box > textarea:focus {
+  border-color: var(--active-input);
 }
 .input-field-box > textarea::-webkit-scrollbar {
   width: 4px;

@@ -1,8 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
 import { STATE_KEY } from "../constant";
+import { createSlice } from "@reduxjs/toolkit";
 import { ProxyState } from "./initial-state/proxy";
 import { discordAccount } from "./initial-state/discordAccount";
 import { twitterInitialState } from "./initial-state/twitter";
+
 const initialState = {
   tempStorage: {},
   editStorage: {},
@@ -42,6 +43,14 @@ export const counterSlice = createSlice({
     setSelectedMonitorTokenLO: (state, action) => {
       state.selectedMonitorTokenLO = action.payload;
     },
+    appendLogList: (state, action) => {
+      const { key, list } = action.payload;
+      state[key].logList = list;
+    },
+    clearLogList: (state, action) => {
+      const { key } = action.payload;
+      state[key].logList = [];
+    },
     setSelectedClaimerTokenIJ: (state, action) => {
       state.selectedClaimerTokenIJ = action.payload;
     },
@@ -79,20 +88,22 @@ export const counterSlice = createSlice({
 });
 
 export const {
-  appendProxyGroupInList,
+  clearLogList,
+  appendLogList,
   setModalState,
+  setIJLOSetting,
   setTempStorage,
-  appendDiscordAccount,
   setEditStorage,
+  setTweetsInFeeder,
+  setTwitterSetting,
+  appendDiscordAccount,
+  appendProxyGroupInList,
+  appendDataInTwitterList,
+  appendChannelInArrayList,
+  appendKeywordInArrayList,
   setSelectedMonitorTokenLO,
   setSelectedClaimerTokenIJ,
-  appendKeywordInArrayList,
-  appendChannelInArrayList,
   appendClaimerDiscordAccount,
-  setIJLOSetting,
-  appendDataInTwitterList,
-  setTwitterSetting,
-  setTweetsInFeeder,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -110,27 +121,27 @@ export const fetchDiscordAccountList = (state) =>
   state[STATE_KEY].discordAccount;
 export const fetchSelectedMinitorTokenLinkOpener = (state) =>
   state[STATE_KEY].selectedMonitorTokenLO;
-export const fetchSelectedClaimerTokenInviteJoiner = (state) =>
-  state[STATE_KEY].selectedClaimerTokenIJ;
-export const fetchIJKeywordList = (state) =>
-  state[STATE_KEY].inviteJoiner.keyWordList;
 export const fetchLOKeywordList = (state) =>
   state[STATE_KEY].linkOpener.keyWordList;
-
-export const fetchIJChannelList = (state) =>
-  state[STATE_KEY].inviteJoiner.channelList;
 export const fetchLOChannelList = (state) =>
   state[STATE_KEY].linkOpener.channelList;
 export const fetchLOSettingState = (state) =>
   state[STATE_KEY].setting.linkOpener;
+export const fetchLinkOpenerLogState = (state) =>
+  state[STATE_KEY].linkOpener.logList;
 // ADD GMAIL
-
 export const fetchAddGmailModalState = (state) =>
   state[STATE_KEY].modals.addGmail;
 
 // invite joiner
 export const fetchClaimerDiscordAccountList = (state) =>
   state[STATE_KEY].claimerAccountList;
+export const fetchSelectedClaimerTokenInviteJoiner = (state) =>
+  state[STATE_KEY].selectedClaimerTokenIJ;
+export const fetchIJKeywordList = (state) =>
+  state[STATE_KEY].inviteJoiner.keyWordList;
+export const fetchIJChannelList = (state) =>
+  state[STATE_KEY].inviteJoiner.channelList;
 export const fetchAddJoinerModalState = (state) =>
   state[STATE_KEY].modals.inviteJoinerAccount;
 export const fetchInviteJoinerSettingModalState = (state) =>

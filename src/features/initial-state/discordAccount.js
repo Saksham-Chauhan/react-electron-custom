@@ -17,6 +17,9 @@ export const discordAccount = {
     linkOpener: {
       linkOpenerState: false,
       selectedChromeUser: "",
+      playSound: false,
+      ignoreTwitterLink: false,
+      ignoreDiscordInviteLink: false,
     },
     inviteJoiner: {
       inviteCode: "",

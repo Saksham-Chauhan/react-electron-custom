@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
+
 const isDev = require("electron-is-dev");
 const currentProcesses = require("current-processes");
 const { autoUpdater } = require("electron-updater");

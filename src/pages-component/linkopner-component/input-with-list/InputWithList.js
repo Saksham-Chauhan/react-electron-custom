@@ -9,9 +9,10 @@ function InputWithList({
   title = "Channel ID[s]",
   placeHolder = "Enter User Name",
   isLogs = false,
-  list = [{ value: "id", label: "Label" }],
+  list = [],
   btnProps,
   inputProps,
+  logAction,
   onDelete,
 }) {
   return (
@@ -28,28 +29,28 @@ function InputWithList({
           </div>
         ) : (
           <div className="input-field-flex-log-section">
-            <div className="plus-icon-btn btn">
+            <div onClick={logAction?.onExport} className="plus-icon-btn btn">
               <img src={exportIcon} alt="" />
             </div>
-            <div className="plus-icon-btn btn">
+            <div onClick={logAction?.onClear} className="plus-icon-btn btn">
               <img src={trash} alt="" />
             </div>
           </div>
         )}
         <AppSpacer spacer={10} />
         <div className="scroll-list">
-          {list?.map((data, index) =>
-            !isLogs ? (
-              <div key={data["id"] || index} className="scroll-list-item">
-                <span>{data["label"]}</span>
-                <img onClick={() => onDelete(data)} src={trash} alt="" />
-              </div>
-            ) : (
-              <div key={data["id"] || index} className="scroll-list-item">
-                <span>{data["label"]}</span>
-              </div>
-            )
-          )}
+          {!isLogs
+            ? list?.map((data, index) => (
+                <div key={data["id"] || index} className="scroll-list-item">
+                  <span>{data["label"]}</span>
+                  <img onClick={() => onDelete(data)} src={trash} alt="" />
+                </div>
+              ))
+            : list?.map((data, index) => (
+                <div key={`${data}-${index}`} className="scroll-list-item">
+                  <span>{data}</span>
+                </div>
+              ))}
         </div>
       </div>
     </div>

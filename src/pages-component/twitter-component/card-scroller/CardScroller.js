@@ -2,7 +2,7 @@ import React from "react";
 import "./styles.css";
 import trash from "../../../assests/images/trash.svg";
 import { AppSpacer } from "../../../component";
-function CardScroller({ title, list }) {
+function CardScroller({ title, list, isFeatureTweet = false }) {
   return (
     <div className="twitter-scroller-outer">
       <h3>{title}</h3>

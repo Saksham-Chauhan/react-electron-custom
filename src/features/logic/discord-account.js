@@ -3,12 +3,17 @@ import {
   appendClaimerDiscordAccount,
   appendDiscordAccount,
   appendKeywordInArrayList,
+  appendLogList,
   fetchClaimerDiscordAccountList,
   fetchDiscordAccountList,
   fetchIJChannelList,
   fetchIJKeywordList,
+  fetchLinkOpenerLogState,
   fetchLOChannelList,
   fetchLOKeywordList,
+  fetchLOSettingState,
+  setIJLOSetting,
+  setSelectedMonitorTokenLO,
 } from "../counterSlice";
 import { generateId } from "../../helper";
 
@@ -42,6 +47,10 @@ export const deleteAccountFromList =
       (account) => account["id"] !== tempAccount["id"]
     );
     dispatch(appendDiscordAccount(afterDelete));
+    // TODO:: TEMPORARY SOLUTION
+    setTimeout(() => {
+      dispatch(setSelectedMonitorTokenLO(""));
+    }, 500);
   };
 
 export const addKeywordInList = (data) => (dispatch, getState) => {
@@ -147,4 +156,35 @@ export const editClaimerAccountFromList = (account) => (dispatch, getState) => {
     return data;
   });
   dispatch(appendClaimerDiscordAccount(afterUpdate));
+};
+
+export const linkOpenerSettingHandler = (data) => (dispatch, getState) => {
+  const settingState = fetchLOSettingState(getState());
+  let settingObj = { ...settingState };
+  const { key, checked, value } = data;
+  if (key === "TOGGLER_STATE") {
+    settingObj["linkOpenerState"] = checked;
+  } else if (key === "CHROME_USER") {
+    settingObj["selectedChromeUser"] = value;
+  } else if (key === "SOUND") {
+    settingObj["playSound"] = checked;
+  } else if (key === "IGNORE_TWITTER_LINK") {
+    settingObj["ignoreTwitterLink"] = checked;
+  } else {
+    settingObj["ignoreDiscordInviteLink"] = checked;
+  }
+  dispatch(setIJLOSetting({ key: "linkOpener", value: settingObj }));
+};
+
+export const addLogInList = (data) => (dispatch, getState) => {
+  const { key, log } = data;
+  if (key === "LO") {
+    console.log("CALL", data);
+    const logList = fetchLinkOpenerLogState(getState());
+    let combiner = [...logList, log];
+    // console.log(combiner);
+    dispatch(appendLogList({ key: "linkOpener", list: combiner }));
+  } else {
+    // dispatch(appendLogList({ key: "inviteJoiner", list: combiner }));
+  }
 };
