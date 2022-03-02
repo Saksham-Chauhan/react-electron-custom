@@ -4,7 +4,7 @@ import rigthTic from "../../../assests/sidebarImage/rigthTic.svg";
 import questionMark from "../../../assests/sidebarImage/questionMark.svg";
 import FlopTic from "../../../assests/sidebarImage/FlopTic.svg";
 import chemistry from "../../../assests/images/chemistry.svg";
-import play from "../../../assests/sidebarImage/play.svg";
+import play from "../../../assests/images/play.svg";
 import trash from "../../../assests/images/trash.svg";
 import edit from "../../../assests/images/edit.svg";
 

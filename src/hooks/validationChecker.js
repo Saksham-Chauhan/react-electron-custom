@@ -9,10 +9,9 @@ import { toastWarning } from "../toaster";
 export const validationChecker = (schema, dataTovalid) => {
   const { error } = schema.validate(dataTovalid);
   if (error?.details.length > 0) {
-    for (let i = 0; i < error?.details.length || 0; i++) {
-      toastWarning(error[i].context.label);
-      break;
-    }
+    error?.details.forEach((err) => {
+      toastWarning(err.context.label);
+    });
     return false;
   } else return true;
 };

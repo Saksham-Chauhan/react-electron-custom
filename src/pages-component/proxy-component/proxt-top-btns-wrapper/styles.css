@@ -8,6 +8,9 @@
   align-items: center;
   width: 50%;
 }
+.page-top-btns-wrapper > .page-left-container.spoofer-page {
+  width: 100%;
+}
 .page-top-btns-wrapper > .page-right-container {
   justify-content: flex-end;
 }
@@ -53,6 +56,9 @@
   justify-content: center;
   margin-left: 8px;
 }
+.icon-btn-wrapper > img {
+  height: 19px;
+}
 .remove-btn {
   display: flex;
   align-items: center;
@@ -66,4 +72,17 @@
   line-height: 23px;
   color: var(--red);
   margin-left: 10px;
+}
+
+/* spoofer page css */
+.btn-with-no-icon {
+  margin-left: 0.5em;
+  padding: 0px 1.5em;
+}
+.btn-with-no-icon.remove-btn > span {
+  margin-left: 0px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--active-input);
 }

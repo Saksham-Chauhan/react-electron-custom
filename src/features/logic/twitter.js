@@ -1,7 +1,12 @@
 import {
+  appendApInList,
   appendDataInTwitterList,
+  fetchAPIlistState,
+  fetchFeatureTweetList,
+  fetchLatestTweetList,
   fetchTwitterKeywordList,
   fetchTwitterUserList,
+  setTweetsInFeeder,
 } from "../counterSlice";
 import { generateId } from "../../helper";
 
@@ -49,4 +54,27 @@ export const deleteTwitterDatafromList = (data) => (dispatch, getState) => {
       appendDataInTwitterList({ key: "twitterKeywordList", data: afterFilter })
     );
   }
+};
+
+export const appendNewTweetInList = (data) => (dispatch, getState) => {
+  const { key, tweet } = data;
+  if (key === "LATEST") {
+    const latestTweet = fetchLatestTweetList(getState());
+    let combiner = { ...latestTweet };
+    combiner[tweet["tweet_id"]] = tweet;
+    dispatch(setTweetsInFeeder({ key, list: combiner }));
+  } else {
+    const featureTweetList = fetchFeatureTweetList(getState());
+    let combiner = { ...featureTweetList };
+    combiner[tweet["tweet_id"]] = tweet;
+    dispatch(setTweetsInFeeder({ key, list: combiner }));
+  }
+};
+
+export const addNewApiInList = (apiObj) => (dispatch, getState) => {
+  const currentApiList = fetchAPIlistState(getState());
+  let obj = { ...apiObj };
+  obj["id"] = generateId();
+  let combiner = [...currentApiList, obj];
+  dispatch(appendApInList(combiner));
 };

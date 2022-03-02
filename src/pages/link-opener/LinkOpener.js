@@ -26,7 +26,6 @@ import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
 
-const open = window.require("open");
 const { Client } = window.require("discord.js-selfbot");
 
 function LinkOpener() {
@@ -64,17 +63,15 @@ function LinkOpener() {
                   playSound();
                 }
                 if (settingOption?.selectedChromeUser) {
-                  open(content, {
-                    app: {
-                      name: open.apps.chrome,
-                      // arguments: [
-                      //   `--profile-directory=${settingOption.selectedChromeUser}`,
-                      // ],
-                    },
+                  window.open(content, {
+                    app: [
+                      "chrome",
+                      `--profile-directory=${settingOption?.selectedChromeUser}`,
+                    ],
                   });
                 } else {
-                  open(content, {
-                    app: { name: open.apps.chrome },
+                  window.open(content, {
+                    app: ["chrome"],
                   });
                 }
               }

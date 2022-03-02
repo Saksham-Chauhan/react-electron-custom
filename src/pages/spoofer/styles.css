@@ -1,0 +1,9 @@
+.spoofer-page-outer-section {
+  height: 100%;
+  background: red;
+}
+.spoofer-page-inner-section {
+  background: blue;
+  padding: 0px 1em;
+  height: calc(100% - 68px);
+}

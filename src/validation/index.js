@@ -56,8 +56,17 @@ export const spooferSchema = joi.object({
 
 export const discordAccountSchema = joi.object({
   accountName: joi.string().required().label("Enter Account name"),
-  discordToken: joi.string().required().label("Enter token"),
+  discordToken: joi
+    .string()
+    .required()
+    .pattern(new RegExp("/[a-zA-Z0-9.-]{40,}/"))
+    .label("Enter valid token"),
   id: joi.optional(),
 });
 
-
+export const twiiterApiSchema = joi.object({
+  apiKey: joi.string().required().label("Enter API key"),
+  apiSecret: joi.string().required().label("Enter API Secret"),
+  accessToken: joi.string().required().label("Enter Access token"),
+  accessSecret: joi.string().required().label("Enter Access secret"),
+});

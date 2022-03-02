@@ -27,3 +27,8 @@ export { default as TwitterUserListSection } from "./twitter-component/user-list
 export { default as TwitterKeywordListSection } from "./twitter-component/keyword-list/KeywordScrollList";
 export { default as TwitterPageTopSection } from "./twitter-component/top-section/TopSection";
 export { default as TwitterPageCardScroll } from "./twitter-component/card-scroller/CardScroller";
+export { default as TwitterPageTweetCard } from "./twitter-component/tweet-card/TweetCard";
+
+//SPOOF PAGE COMPONENT
+export { default as SpooferTopSection } from "./spoof-component/spoof-top-section/TopSection";
+export { default as SpooferTopBtnsWrraper } from "./spoof-component/spoof-top-btns/SpoofTopBtns";

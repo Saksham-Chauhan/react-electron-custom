@@ -77,17 +77,29 @@ export const counterSlice = createSlice({
       state.twitterSetting = action.payload;
     },
     setTweetsInFeeder: (state, action) => {
-      const { key, tweet } = action.payload;
+      const { key, list } = action.payload;
       if (key === "LATEST") {
-        state.latesTweetlist = tweet;
+        state.latesTweetlist = list;
       } else {
-        state.featureTweetList = tweet;
+        state.featureTweetList = list;
       }
+    },
+    clearTweetsFeeder: (state, action) => {
+      const key = action.payload;
+      if (key === "LATEST") {
+        state.latesTweetlist = {};
+      } else {
+        state.featureTweetList = {};
+      }
+    },
+    appendApInList: (state, action) => {
+      state.twitterApiList = action.payload;
     },
   },
 });
 
 export const {
+  appendApInList,
   clearLogList,
   appendLogList,
   setModalState,
@@ -95,6 +107,7 @@ export const {
   setTempStorage,
   setEditStorage,
   setTweetsInFeeder,
+  clearTweetsFeeder,
   setTwitterSetting,
   appendDiscordAccount,
   appendProxyGroupInList,
@@ -159,3 +172,4 @@ export const fetchTwitterSettingState = (state) =>
 export const fetchLatestTweetList = (state) => state[STATE_KEY].latesTweetlist;
 export const fetchFeatureTweetList = (state) =>
   state[STATE_KEY].featureTweetList;
+export const fetchAPIlistState = (state) => state[STATE_KEY].twitterApiList;

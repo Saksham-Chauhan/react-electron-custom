@@ -1,8 +1,8 @@
 import webhookHandler from "../../../../helper/webhook";
 const { ipcRenderer } = window.require("electron");
 const axios = require("axios");
-// const QrCode = window.require("qrcode-reader");
-// const Jimp = window.require("jimp");
+const QrCode = window.require("qrcode-reader");
+const Jimp = window.require("jimp");
 
 let filteredArray, base64Text, re, binaryText;
 
@@ -48,42 +48,47 @@ function mathSolver(tweetText) {
     return null;
   }
 }
-// eslint-disable-next-line no-unused-vars
+
 async function ocrResolver(media) {
   let ocrArr = [];
-  for (const m of media) {
-    if (m.type === "photo") {
-      const text = await ipcRenderer.invoke("imageText", m.media_url);
-      if (text) {
-        ocrArr.push(text);
+  for (const key in media) {
+    let mediaArr = media[key];
+    for (let i = 0; i < mediaArr.length; i++) {
+      if (mediaArr[i].type === "photo") {
+        const text = await ipcRenderer.invoke(
+          "imageText",
+          mediaArr[i].media_url
+        );
+        if (text) {
+          ocrArr.push(text);
+        }
       }
     }
   }
+
   return ocrArr;
 }
-// eslint-disable-next-line no-unused-vars
-// async function qrResolver(media) {
-//   let qrArr = [];
-//   for (let m of media) {
-//     // let response = await axios.get(m.media_url, {
-//     //     responseType: "arraybuffer",
-//     // });
-//     // const buffer = Buffer.from(response.data, "base64");
-//     // console.log(buffer);
-//     const image = await Jimp.read(m.media_url);
-//     const qr = new QrCode();
-//     qr.callback = (err, res) => {
-//       if (res) {
-//         qrArr.push(res.result);
-//       }
-//     };
-//     qr.decode(image.bitmap);
-//   }
-//   if (qrArr.length === 0) {
-//     return null;
-//   }
-//   return qrArr;
-// }
+
+async function qrResolver(media) {
+  let qrArr = [];
+  for (const key in media) {
+    let mediaArr = media[key];
+    for (let i = 0; i < mediaArr.length; i++) {
+      const image = await Jimp.read(mediaArr[i].media_url);
+      const qr = new QrCode();
+      qr.callback = (err, res) => {
+        if (res) {
+          qrArr.push(res.result);
+        }
+      };
+      qr.decode(image.bitmap);
+    }
+  }
+  if (qrArr.length === 0) {
+    return null;
+  }
+  return qrArr;
+}
 
 // Checks Pastebin Links (helper)
 async function _parsePasteHaste(url, pattern) {
@@ -115,7 +120,6 @@ const pastebinParser = async (urls) => {
 
 // Checks URLs for given keywords
 function urlParser(urls, keywords) {
-  // console.log("urls", urls);
   let response = [];
   for (let url of urls) {
     const urlName = url.expanded_url;
@@ -134,6 +138,7 @@ function urlParser(urls, keywords) {
 
 const scanner = async (tweetObject, keywords, webhooks, openerFlag) => {
   let FTObject = Object.assign({}, tweetObject);
+
   const user = {
     name: tweetObject.user.name,
     screen_name: tweetObject.user.screen_name,
@@ -144,7 +149,8 @@ const scanner = async (tweetObject, keywords, webhooks, openerFlag) => {
     FTObject.mathSolved = mathSolver(tweetObject.text);
   }
   FTObject.base64Text = base64Check(tweetObject.text);
-
+  const qrText = await qrResolver(FTObject.extended_entities);
+  const ocrText = await ocrResolver(FTObject.extended_entities);
   if (FTObject.entities.urls.length > 0) {
     // Pastebin Parsing
     FTObject.pastebinText = await pastebinParser(FTObject.entities.urls);
@@ -205,25 +211,60 @@ const scanner = async (tweetObject, keywords, webhooks, openerFlag) => {
     }
   } else if ("inviteExtracted" in FTObject) {
     FTObject.featured_type = "Invite extracted";
-  } else if ("qrText" in FTObject && FTObject.qrText !== null) {
+  }
+
+  delete FTObject["geo"];
+  delete FTObject["lang"];
+  delete FTObject["place"];
+  delete FTObject["source"];
+  delete FTObject["entities"];
+  delete FTObject["favorited"];
+  delete FTObject["retweeted"];
+  delete FTObject["truncated"];
+  delete FTObject["coordinates"];
+  delete FTObject["contributors"];
+  delete FTObject["retweet_count"];
+  delete FTObject["favorite_count"];
+  delete FTObject["is_quote_status"];
+  delete FTObject["possibly_sensitive"];
+  delete FTObject["in_reply_to_user_id"];
+  delete FTObject["in_reply_to_status_id"];
+  delete FTObject["in_reply_to_user_id_str"];
+  delete FTObject["in_reply_to_screen_name"];
+  delete FTObject["in_reply_to_status_id_str"];
+  let obj = {};
+  obj["tweet_id"] = FTObject["id"];
+  obj["userName"] = FTObject["user"]["screen_name"];
+  obj[
+    "tweetLink"
+  ] = `https://twitter.com/${FTObject.user.screen_name}/status/${FTObject.id_str}`;
+  obj["profileLink"] = `https://twitter.com/${FTObject.user.screen_name}`;
+  obj[
+    "followingLink"
+  ] = `https://twitter.com/${FTObject.user.screen_name}/following`;
+  delete FTObject["user"];
+  delete FTObject["id"];
+  delete FTObject["extended_entities"];
+  obj["qrText"] = qrText;
+  obj["ocrText"] = ocrText;
+  if ("qrText" in obj && obj.qrText !== null) {
     FTObject.featured_type = "QR";
     webhookHandler(
       webhooks,
       user,
       "QR Found",
-      FTObject.qrText.toString().split(",").join("\n")
+      obj.qrText.toString().split(",").join("\n")
     );
-  } else if ("ocrText" in FTObject) {
+  } else if ("ocrText" in obj) {
     FTObject.featured_type = "OCR";
     webhookHandler(
       webhooks,
       user,
       "OCR Found",
-      FTObject.ocrText.toString().split(",").join("\n")
+      obj.ocrText.toString().split(",").join("\n")
     );
   }
-
-  return FTObject;
+  return { ...FTObject, ...obj };
 };
 
 export default scanner;
