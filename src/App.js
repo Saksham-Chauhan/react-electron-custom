@@ -10,6 +10,7 @@ import {
   fetchProxyGroupModalState,
   fetchAddJoinerModalState,
   fetchInviteJoinerSettingModalState,
+  fetchSpoofModalState,
 } from "./features/counterSlice";
 import {
   ProxyGroupModal,
@@ -17,6 +18,7 @@ import {
   AddGmailModal,
   InviteJoinerAccountModal,
   InviteJoinerSettingModal,
+  AddSpoofModal,
 } from "./modals";
 import {
   ProxyPage,
@@ -36,12 +38,14 @@ function App() {
   const discordModalState = useSelector(fetchDiscordModalState);
   const addGmailModalState = useSelector(fetchAddGmailModalState);
   const inviteModalState = useSelector(fetchAddJoinerModalState);
+  const spoofModalState = useSelector(fetchSpoofModalState);
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
 
   return (
     <div className="app">
+      {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
       {addGmailModalState && <AddGmailModal />}
       {discordModalState && <DiscordAccountModal />}

@@ -1,11 +1,19 @@
 import React from "react";
-import searchIcon from "../../../assests/images/search.svg";
+import { useDispatch } from "react-redux";
 import play from "../../../assests/images/play.svg";
 import plus from "../../../assests/images/plus.svg";
 import stop from "../../../assests/images/stop.svg";
 import trash from "../../../assests/images/trash.svg";
+import searchIcon from "../../../assests/images/search.svg";
+import { setModalState } from "../../../features/counterSlice";
 
 function SpoofTopBtns() {
+  const dispatch = useDispatch();
+
+  const handleOpenModal = () => {
+    dispatch(setModalState("spoofModal"));
+  };
+
   return (
     <div className="page-top-btns-wrapper">
       <div className="page-left-container spoofer-page">
@@ -18,7 +26,7 @@ function SpoofTopBtns() {
             type="search"
           />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div onClick={handleOpenModal} className="icon-btn-wrapper btn">
           <img src={plus} alt="" />
         </div>
         <div className="icon-btn-wrapper btn">

@@ -47,11 +47,11 @@ export const spooferSchema = joi.object({
   url: joi.optional(),
   proxyName: joi.string().required().label("Select Proxy"),
   quantity: joi.number().required().min(1).label("Enter quantity value"),
-  delay: joi.optional(),
   disableImages: joi.optional(),
   id: joi.optional(),
   status: joi.optional(),
   proxyValue: joi.optional(),
+  isDisableImage: joi.optional(),
 });
 
 export const discordAccountSchema = joi.object({

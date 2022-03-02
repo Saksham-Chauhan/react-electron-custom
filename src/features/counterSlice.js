@@ -3,19 +3,21 @@ import { createSlice } from "@reduxjs/toolkit";
 import { ProxyState } from "./initial-state/proxy";
 import { discordAccount } from "./initial-state/discordAccount";
 import { twitterInitialState } from "./initial-state/twitter";
-
+import { spoofInitialState } from "./initial-state/spoof";
 const initialState = {
   tempStorage: {},
   editStorage: {},
   ...ProxyState,
   ...discordAccount,
   ...twitterInitialState,
+  ...spoofInitialState,
   modals: {
     proxyGroup: false,
     discordAccount: false,
     addGmail: false,
     inviteJoinerAccount: false,
     inviteJoinerSetting: false,
+    spoofModal: false,
   },
 };
 
@@ -95,11 +97,15 @@ export const counterSlice = createSlice({
     appendApInList: (state, action) => {
       state.twitterApiList = action.payload;
     },
+    appendSpooferInList: (state, action) => {
+      state.spoofTabe = action.payload;
+    },
   },
 });
 
 export const {
   appendApInList,
+  appendSpooferInList,
   clearLogList,
   appendLogList,
   setModalState,
@@ -173,3 +179,8 @@ export const fetchLatestTweetList = (state) => state[STATE_KEY].latesTweetlist;
 export const fetchFeatureTweetList = (state) =>
   state[STATE_KEY].featureTweetList;
 export const fetchAPIlistState = (state) => state[STATE_KEY].twitterApiList;
+
+// SPOOF
+export const fetchSpoofModalState = (state) =>
+  state[STATE_KEY].modals.spoofModal;
+export const fetchSpoofTableList = (state) => state[STATE_KEY].spoofTabe;

@@ -5,11 +5,8 @@ export const selectStyles = {
     padding: "4px 3px",
     paddingLeft: "10px",
     borderRadius: "5px",
-    border: "1px solid rgba(255, 255, 255, 0.15)",
     boxSizing: "border-box",
-    "&:hover": {
-      border: state.isFocused && "1px solid #30e2e7",
-    },
+    border: state.isFocused ? "1px solid #30e2e7" : "1px solid  #121638",
   }),
   control: (styles) => ({
     ...styles,
@@ -56,26 +53,25 @@ export const selectStyles = {
       borderRadius: "10px",
       backgroundColor: "#386EB4",
     },
-    padding: "0px 5px",
+    padding: "0px",
   }),
 
   menu: (styles) => ({
     ...styles,
     zIndex: 3,
-    backgroundColor: "#10172c",
-    border: "1px solid #386EB4",
+    backgroundColor: "#121538",
+    border: "1px solid  var(--active-input)",
     marginLeft: "-10px",
   }),
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "#ffffff" : "rgba(255, 255, 255, 0.5)",
+    color: state.isSelected ? "var(--primary)" : "var(--scrollbar-bg)",
     padding: "10px",
     fontSize: "13px",
     lineHeight: "17px",
-    fontFamily: "SF-400",
-    backgroundColor: state.isSelected
-      ? "rgba(255, 255, 255, 0.02)"
-      : "transparent",
+    fontFamily: "Poppins",
+    fontWeight: "400",
+    backgroundColor: state.isSelected ? "var(--sidebar-bg)" : "transparent",
     "&:hover": {
       backgroundColor: "rgba(255, 255, 255, 0.02)",
     },
@@ -151,14 +147,13 @@ export const selectCustomStyles = {
   }),
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "#ffffff" : "rgba(255, 255, 255, 0.5)",
+    color: state.isSelected ? "var(--primary)" : "var(--scrollbar-bg)",
     padding: "10px",
     fontSize: "13px",
     lineHeight: "17px",
-    fontFamily: "SF-400",
-    backgroundColor: state.isSelected
-      ? "rgba(255, 255, 255, 0.02)"
-      : "transparent",
+    fontFamily: "Poppins",
+    fontWeight: "400",
+    backgroundColor: state.isSelected ? "var(--scrollbar-bg)" : "transparent",
     "&:hover": {
       backgroundColor: "rgba(255, 255, 255, 0.02)",
     },

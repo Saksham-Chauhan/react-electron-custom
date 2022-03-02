@@ -1,6 +1,7 @@
 import React from "react";
 import { AppSpacer } from "../../component";
 import {
+  SpooferTableSection,
   SpooferTopBtnsWrraper,
   SpooferTopSection,
 } from "../../pages-component";
@@ -10,8 +11,10 @@ function Spoofer() {
     <div className="spoofer-page-outer-section">
       <SpooferTopSection />
       <div className="spoofer-page-inner-section">
-        <AppSpacer spacer={10} />
+        <AppSpacer spacer={30} />
         <SpooferTopBtnsWrraper />
+        <AppSpacer spacer={20} />
+        <SpooferTableSection />
       </div>
     </div>
   );
