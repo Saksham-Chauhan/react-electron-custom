@@ -2,7 +2,8 @@ const { ipcRenderer } = window.require("electron");
 const minimizeApp = () => ipcRenderer.send("minimize");
 const closeApp = () => ipcRenderer.send("close");
 const maximizeApp = () => ipcRenderer.send("maximize");
-
+const errorToaster = (callback) =>
+  ipcRenderer.on("error", (_, err) => callback(err));
 // Spoof IPC
 const startSpoofer = (spoof) => ipcRenderer.send("start-spoofer", spoof);
 
@@ -33,4 +34,5 @@ module.exports = {
   toggleSpoofer,
   deleteSpoofer,
   spooferToaster,
+  errorToaster,
 };

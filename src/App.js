@@ -32,9 +32,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RoutePath } from "./constant";
 import { Routes, Route } from "react-router-dom";
-import { spooferToaster } from "./helper/electron-bridge";
-import { updateSpooferStatus } from "./features/logic/spoof";
-
+import { spooferToaster, errorToaster } from "./helper/electron-bridge";
+import {
+  updateSpooferStatus,
+  resetSpooferStatus,
+} from "./features/logic/spoof";
+import { toastWarning } from "./toaster";
 function App() {
   const dispatch = useDispatch();
   const proxyModalState = useSelector(fetchProxyGroupModalState);
@@ -47,11 +50,13 @@ function App() {
   );
 
   useEffect(() => {
+    dispatch(resetSpooferStatus());
     spooferToaster((data) => {
       if (Object.keys(data).length > 0) {
         dispatch(updateSpooferStatus(data));
       }
     });
+    errorToaster((err) => toastWarning(err));
   }, [dispatch]);
 
   return (

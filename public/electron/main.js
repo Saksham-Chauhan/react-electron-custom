@@ -156,6 +156,7 @@ ipcMain.on("close", () => {
 ipcMain.handle("get-app-version", () => {
   return app.getVersion();
 });
+
 ipcMain.on("minimize", () => {
   mainWindow.minimize();
 });
@@ -180,6 +181,7 @@ app.on("activate", () => {
 });
 
 app.on("window-all-closed", function () {
+  spooferManager.deleteAllSpoofer();
   app.quit();
 });
 

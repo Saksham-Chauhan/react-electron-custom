@@ -31,3 +31,14 @@ export const updateSpooferStatus = (data) => (dispatch, getState) => {
   });
   dispatch(appendSpooferInList(afterUpdate));
 };
+
+export const resetSpooferStatus = (data) => (dispatch, getState) => {
+  const currentList = fetchSpoofTableList(getState());
+  let templist = [...currentList];
+  let afterUpdate = templist.map((data) => {
+    let obj = { ...data };
+    obj["status"] = "Idle";
+    return obj;
+  });
+  dispatch(appendSpooferInList(afterUpdate));
+};
