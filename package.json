@@ -35,7 +35,7 @@
     "redux-thunk": "^2.4.1",
     "tesseract.js": "^2.1.5",
     "twit": "^2.2.11",
-    "user-agents": "^1.0.939",
+    "user-agents": "^1.0.943",
     "uuid": "^8.3.2",
     "wait-on": "^6.0.1"
   },
@@ -46,7 +46,8 @@
     "eject": "react-scripts eject",
     "dev": "concurrently -k \"npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron .",
-    "electron-pack-win": "react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -w"
+    "electron-pack-win": "set GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -w",
+    "electron-pack-mac": "export GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -m"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -81,15 +82,21 @@
     ],
     "win": {
       "artifactName": "${productName}-${version}.${ext}",
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "public/electron/img/icon.ico"
+    },
+    "dmg": {
+      "title": "Kyro",
+      "background": "public/images/mac_background.png",
+      "icon": "public/images/installer.icns"
     },
     "mac": {
       "artifactName": "${productName}-${version}.${ext}",
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "public/images/icon.icns"
     },
     "nsis": {
-      "installerIcon": "public/electron/img/win.ico",
-      "installerHeaderIcon": "public/electron/img/win.ico",
+      "installerIcon": "public/images/installer.ico",
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": true,
       "oneClick": "false"

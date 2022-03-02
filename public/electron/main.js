@@ -106,13 +106,7 @@ function createWindow() {
     console.log(`This is Build Product ${app.getVersion()} Version`);
   }
 
-  splash = new BrowserWindow({
-    width: 750,
-    height: 250,
-    transparent: true,
-    frame: false,
-    alwaysOnTop: true,
-  });
+  splash = new BrowserWindow({width: 700, height: 390, transparent: true, frame: false, alwaysOnTop: true});
   splash.loadURL(
     isDev
       ? `file://${path.join(__dirname, "../splash.html")}`
