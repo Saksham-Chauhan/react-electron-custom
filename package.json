@@ -46,7 +46,7 @@
     "dev": "concurrently -k \"npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron .",
     "electron-pack-win": "set GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -w",
-    "electron-pack-mac": "set GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -m"
+    "electron-pack-mac": "export GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -m"
   },
   "eslintConfig": {
     "extends": "react-app"
