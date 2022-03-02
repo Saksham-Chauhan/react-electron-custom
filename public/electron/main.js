@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
-
+const Tesseract = require("tesseract.js");
 const isDev = require("electron-is-dev");
 const currentProcesses = require("current-processes");
 const { autoUpdater } = require("electron-updater");
@@ -362,6 +362,12 @@ ipcMain.handle(
     return fetchTweets(consumerKey, consumerSecret, userHandler);
   }
 );
+ipcMain.handle("imageText", async (event, url) => {
+  const {
+    data: { text },
+  } = await Tesseract.recognize(url, "eng");
+  return text;
+});
 
 // Spoofer IPC
 ipcMain.on("start-spoofer", (_, data) => {

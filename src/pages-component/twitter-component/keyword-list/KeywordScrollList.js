@@ -27,6 +27,7 @@ function KeywordScrollList({ keyWordList }) {
   return (
     <div>
       <InputFieldWithScrollList
+        isComingSoon={true}
         btnProps={{ onClick: handleAddKeyword }}
         inputProps={{
           value: keyword,

@@ -1,12 +1,42 @@
-import React from "react";
-import back from "../../../assests/images/back.svg";
+import React, { useState } from "react";
 import "./styles.css";
-import { TwitterPageTopSection } from "../../../pages-component";
+import { useDispatch } from "react-redux";
+import back from "../../../assests/images/back.svg";
+import { twiiterApiSchema } from "../../../validation";
 import { AppInputField, AppSpacer } from "../../../component";
-function SettingScreen({ handleScreen }) {
+import { TwitterPageTopSection } from "../../../pages-component";
+import { addNewApiInList } from "../../../features/logic/twitter";
+import { validationChecker } from "../../../hooks/validationChecker";
+
+function SettingScreen({ handleScreen, latestTweetList }) {
+  const dispatch = useDispatch();
+  const [twitterApi, setTwitterApi] = useState({
+    apiKey: "",
+    apiSecret: "",
+    accessToken: "",
+    accessSecret: "",
+  });
+
+  const handleChange = (e) => {
+    const { value, name } = e.target;
+    setTwitterApi((pre) => {
+      return { ...pre, [name]: value };
+    });
+  };
+
+  const handleSubmit = () => {
+    const result = validationChecker(twiiterApiSchema, twitterApi);
+    if (result) {
+      dispatch(addNewApiInList(twitterApi));
+    }
+  };
+
   return (
     <div>
-      <TwitterPageTopSection title="Twitter Settings " />
+      <TwitterPageTopSection
+        subText={`${Object.keys(latestTweetList).length || 0} tweets`}
+        title="Twitter Settings"
+      />
       <AppSpacer spacer={30} />
       <div className="twitter-setting-page-inner">
         <div onClick={handleScreen} className="twitter-setting-page-back btn">
@@ -21,24 +51,36 @@ function SettingScreen({ handleScreen }) {
               hideLabel={true}
               isCustomLabel={true}
               fieldTitle=""
+              name="apiKey"
+              value={twitterApi?.apiKey}
+              onChange={handleChange}
               placeholderText="Enter API Key"
             />
             <AppInputField
               hideLabel={true}
               isCustomLabel={true}
               fieldTitle=""
+              name="apiSecret"
+              value={twitterApi?.apiSecret}
+              onChange={handleChange}
               placeholderText="Enter API Secret"
             />
             <AppInputField
               hideLabel={true}
               isCustomLabel={true}
               fieldTitle=""
+              name="accessToken"
+              value={twitterApi?.accessToken}
+              onChange={handleChange}
               placeholderText="Enter Access Token"
             />
             <AppInputField
               hideLabel={true}
               isCustomLabel={true}
               fieldTitle=""
+              name="accessSecret"
+              value={twitterApi?.accessSecret}
+              onChange={handleChange}
               placeholderText="Enter Access Token Secret"
             />
             <AppSpacer spacer={15} />
@@ -52,7 +94,7 @@ function SettingScreen({ handleScreen }) {
             </div>
             <AppSpacer spacer={15} />
             <div className="setting-twitter-flex full">
-              <div className="btn">
+              <div onClick={handleSubmit} className="btn">
                 <span>Save Token</span>
               </div>
             </div>
@@ -62,15 +104,10 @@ function SettingScreen({ handleScreen }) {
             <AppInputField
               hideLabel={true}
               isCustomLabel={true}
+              isSelect={true}
               fieldTitle=""
               placeholderText="Enter Claimer Group"
             />
-            <AppSpacer spacer={15} />
-            <div className="setting-twitter-flex full">
-              <div className="btn">
-                <span>Save Token</span>
-              </div>
-            </div>
           </div>
           <div>
             <h3>Chrome Users</h3>
@@ -81,12 +118,6 @@ function SettingScreen({ handleScreen }) {
               isSelect={true}
               placeholderText="Select Chrome Profile"
             />
-            <AppSpacer spacer={15} />
-            <div className="setting-twitter-flex full">
-              <div className="btn">
-                <span>Save Chrome user</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>

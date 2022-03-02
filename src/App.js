@@ -24,6 +24,7 @@ import {
   OneClickPage,
   InviteJoinerPage,
   TwitterPage,
+  SpooferPage,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -57,7 +58,8 @@ function App() {
             <DragBar />
             <AppController />
             <Routes>
-            <Route path={RoutePath.twitter} element={<TwitterPage />} />
+              <Route path={RoutePath.spoofer} element={<SpooferPage />} />
+              <Route path={RoutePath.twitter} element={<TwitterPage />} />
               <Route
                 path={RoutePath.inviteJoiner}
                 element={<InviteJoinerPage />}

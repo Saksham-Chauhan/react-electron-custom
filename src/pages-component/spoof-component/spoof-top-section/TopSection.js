@@ -1,10 +1,10 @@
 import React from "react";
 import { GroupStatusCard, TopWrapper } from "../../../component";
 
-function TopSection({ title = "Twitter", subText = "10 tweets" }) {
+function TopSection() {
   return (
     <TopWrapper>
-      <GroupStatusCard subText={subText} {...{ title }} />
+      <GroupStatusCard title="Spoofer" subText="88 Tasks Running" />
     </TopWrapper>
   );
 }

@@ -57,10 +57,12 @@
   height: calc(100% - 50px);
   overflow-y: scroll;
 }
-.input-field-with-scroll-inner > .scroll-list::-webkit-scrollbar {
+.input-field-with-scroll-inner > .scroll-list::-webkit-scrollbar,
+.scroll-card-content::-webkit-scrollbar {
   width: 4px;
 }
-.input-field-with-scroll-inner > .scroll-list::-webkit-scrollbar-thumb {
+.input-field-with-scroll-inner > .scroll-list::-webkit-scrollbar-thumb,
+.scroll-card-content::-webkit-scrollbar-thumb {
   background: var(--scrollbar-bg);
   border-radius: 14px;
 }
@@ -96,4 +98,17 @@
   align-items: center;
   border-radius: 7.30208px;
   margin-left: 10px;
+}
+/* coming soon css */
+.input-field-with-scroll-inner > .coming-soon-feature {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.input-field-with-scroll-inner > .coming-soon-feature > p {
+  font-weight: 500;
+  font-size: 16.3182px;
+  line-height: 17px;
+  color: var(--primary);
 }
