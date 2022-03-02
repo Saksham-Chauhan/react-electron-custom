@@ -31,7 +31,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
     "twit": "^2.2.11",
-    "user-agents": "^1.0.939",
+    "user-agents": "^1.0.943",
     "uuid": "^8.3.2",
     "wait-on": "^6.0.1"
   },
@@ -77,25 +77,25 @@
       "build/**/*"
     ],
     "win": {
-        "artifactName": "${productName}-${version}.${ext}",
-        "target": "nsis",
-        "icon": "public/electron/img/icon.ico"
+      "artifactName": "${productName}-${version}.${ext}",
+      "target": "nsis",
+      "icon": "public/electron/img/icon.ico"
     },
-    "dmg":{
+    "dmg": {
       "title": "Kyro",
       "background": "public/images/mac_background.png",
       "icon": "public/images/installer.icns"
     },
     "mac": {
-        "artifactName": "${productName}-${version}.${ext}",
-        "target": "dmg",
-        "icon": "public/images/icon.icns"
+      "artifactName": "${productName}-${version}.${ext}",
+      "target": "dmg",
+      "icon": "public/images/icon.icns"
     },
     "nsis": {
       "installerIcon": "public/images/installer.ico",
-        "allowToChangeInstallationDirectory": true,
-        "deleteAppDataOnUninstall": true,
-        "oneClick": "false"
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "oneClick": "false"
     }
   }
 }
