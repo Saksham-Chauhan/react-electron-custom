@@ -12,6 +12,8 @@ import {
   addDiscordAccountInList,
   editDiscordAccountInList,
 } from "../../features/logic/discord-account";
+import { discordTokenRegExp } from "../../constant/regex";
+import { toastWarning } from "../../toaster";
 
 function DiscordAccount() {
   const dispatch = useDispatch();
@@ -42,14 +44,16 @@ function DiscordAccount() {
 
   const handleSubmit = () => {
     const result = validationChecker(discordAccountSchema, account);
-    if (result) {
-      if (Object.keys(editState).length === 0) {
-        dispatch(addDiscordAccountInList(account));
-      } else {
-        dispatch(editDiscordAccountInList(account));
+    if (discordTokenRegExp.test(account.discordToken)) {
+      if (result) {
+        if (Object.keys(editState).length === 0) {
+          dispatch(addDiscordAccountInList(account));
+        } else {
+          dispatch(editDiscordAccountInList(account));
+        }
+        handleCloseModal();
       }
-      handleCloseModal();
-    }
+    } else toastWarning("Invalid token ");
   };
 
   return (

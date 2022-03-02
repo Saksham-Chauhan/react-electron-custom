@@ -56,11 +56,7 @@ export const spooferSchema = joi.object({
 
 export const discordAccountSchema = joi.object({
   accountName: joi.string().required().label("Enter Account name"),
-  discordToken: joi
-    .string()
-    .required()
-    .pattern(new RegExp("/[a-zA-Z0-9.-]{40,}/"))
-    .label("Enter valid token"),
+  discordToken: joi.optional(),
   id: joi.optional(),
 });
 
