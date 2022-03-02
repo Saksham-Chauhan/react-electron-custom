@@ -5,4 +5,4 @@ export const UrlRegexp =
 
 export const TweetHandlerRegExp = /^@?(\w){1,15}$/;
 
-export const discordTokenRegExp = /[a-zA-Z0-9.-_]{40,}/;
+export const discordTokenRegExp = /^[0-9A-Za-z_.-]+$/;

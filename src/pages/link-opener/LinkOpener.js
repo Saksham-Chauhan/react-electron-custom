@@ -18,11 +18,9 @@ import {
   fetchDiscordAccountList,
   fetchSelectedMinitorTokenLinkOpener,
 } from "../../features/counterSlice";
-import { toastWarning } from "../../toaster";
 import sound from "../../assests/audio/sound.mp3";
 import { useDispatch, useSelector } from "react-redux";
 import { makeLogText, makeStrOfArr } from "../../helper";
-import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
 
@@ -80,9 +78,7 @@ function LinkOpener() {
         }
       });
       if (settingOption?.linkOpenerState) {
-        if (discordTokenRegExp.test(selectedMonitorToken)) {
-          monitor.login(selectedMonitorToken);
-        } else toastWarning("Select monitor token");
+        monitor.login(selectedMonitorToken["discordToken"]);
       } else {
         console.log("Destroying  monitor...");
         monitor.destroy();
@@ -120,6 +116,7 @@ function LinkOpener() {
                 {...{
                   selectedMonitorToken,
                   settingOption,
+                  accountList,
                 }}
               />
               <div className="flex-keyword-channel">

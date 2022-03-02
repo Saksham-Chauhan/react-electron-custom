@@ -12,6 +12,9 @@ const toggleSpoofer = (spoof) => ipcRenderer.send("toggle-spoofer", spoof);
 
 const deleteSpoofer = (spoof) => ipcRenderer.send("delete-spoofer", spoof);
 
+const spooferToaster = (callback) =>
+  ipcRenderer.on("spoofer-toaster", (_, data) => callback(data));
+
 // TWITTER IPC
 const getTweets = (consumerKey, consumerSecret, userHandler) =>
   ipcRenderer.invoke("fetchTweets", {
@@ -29,4 +32,5 @@ module.exports = {
   stopSpoofer,
   toggleSpoofer,
   deleteSpoofer,
+  spooferToaster,
 };

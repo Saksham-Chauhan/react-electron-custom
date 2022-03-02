@@ -39,7 +39,10 @@
 }
 .action-col-icon > img {
   height: 12px;
-  margin: 0px 5px;
+  width: 16px;
+}
+.action-col-icon > img:first-of-type {
+  margin-right: 0.5em;
 }
 .group-card-content.clip-text {
   width: 100px;

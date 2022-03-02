@@ -38,7 +38,7 @@ function SpoofTopBtns() {
         <div className="icon-btn-wrapper btn">
           <img src={trash} alt="" />
         </div>
-        <div className="btn-with-no-icon remove-btn">
+        <div className="btn-with-no-icon btn remove-btn">
           <span>Launch All</span>
         </div>
       </div>

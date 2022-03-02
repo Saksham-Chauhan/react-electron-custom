@@ -95,18 +95,24 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: false,
+      devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
   });
-  mainWindow.webContents.openDevTools();
   if (isDev) {
+    mainWindow.webContents.openDevTools();
   } else {
     console.log(`This is Build Product ${app.getVersion()} Version`);
   }
 
-  splash = new BrowserWindow({width: 700, height: 390, transparent: true, frame: false, alwaysOnTop: true});
+  splash = new BrowserWindow({
+    width: 700,
+    height: 390,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
   splash.loadURL(
     isDev
       ? `file://${path.join(__dirname, "../splash.html")}`

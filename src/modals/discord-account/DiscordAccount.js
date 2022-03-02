@@ -43,8 +43,8 @@ function DiscordAccount() {
   };
 
   const handleSubmit = () => {
-    const result = validationChecker(discordAccountSchema, account);
     if (discordTokenRegExp.test(account.discordToken)) {
+      const result = validationChecker(discordAccountSchema, account);
       if (result) {
         if (Object.keys(editState).length === 0) {
           dispatch(addDiscordAccountInList(account));
@@ -53,7 +53,7 @@ function DiscordAccount() {
         }
         handleCloseModal();
       }
-    } else toastWarning("Invalid token ");
+    } else toastWarning("Invalid token");
   };
 
   return (

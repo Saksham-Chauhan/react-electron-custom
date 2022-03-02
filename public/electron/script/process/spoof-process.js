@@ -168,6 +168,7 @@ class SpooferInstance {
     });
 
     this.win.on("closed", () => {
+      this.sendToaster("Close");
       this.win = null;
     });
   }
@@ -198,8 +199,10 @@ class SpooferInstance {
   }
 
   closeBrowser() {
+    console.log("Closing...");
     this.win?.close();
     this.sendToaster("Stopped");
+    console.log("Closed!!");
   }
 
   setStatus(status) {

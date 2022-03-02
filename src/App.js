@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 import bot from "./assests/images/bot.svg";
 import chip from "./assests/images/chip.svg";
@@ -32,8 +32,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RoutePath } from "./constant";
 import { Routes, Route } from "react-router-dom";
+import { spooferToaster } from "./helper/electron-bridge";
+import { updateSpooferStatus } from "./features/logic/spoof";
 
 function App() {
+  const dispatch = useDispatch();
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
   const addGmailModalState = useSelector(fetchAddGmailModalState);
@@ -42,6 +45,14 @@ function App() {
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
+
+  useEffect(() => {
+    spooferToaster((data) => {
+      if (Object.keys(data).length > 0) {
+        dispatch(updateSpooferStatus(data));
+      }
+    });
+  }, [dispatch]);
 
   return (
     <div className="app">
