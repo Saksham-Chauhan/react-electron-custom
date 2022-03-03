@@ -1,6 +1,6 @@
 {
   "name": "kyro-v1",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "homepage": "./",
   "dependencies": {
@@ -78,6 +78,10 @@
   "build": {
     "productName": "Kyro",
     "appId": "com.kyro.koders",
+    "publish":{
+      "provider": "generic",
+      "url": "http://161.97.112.22:9001"
+    },
     "files": [
       "build/**/*"
     ],

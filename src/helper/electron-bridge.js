@@ -4,7 +4,9 @@ const closeApp = () => ipcRenderer.send("close");
 const maximizeApp = () => ipcRenderer.send("maximize");
 const errorToaster = (callback) =>
   ipcRenderer.on("error", (_, err) => callback(err));
-
+const checkForUpdates = () => {
+  ipcRenderer.send("checkForUpdates");
+};
 const updateNotAvailable = (callback) =>
   ipcRenderer.on("update:not-avail", () => callback());
 // Spoof IPC
@@ -48,4 +50,5 @@ module.exports = {
   proxyTester,
   proxyTestResultListener,
   updateNotAvailable,
+  checkForUpdates,
 };

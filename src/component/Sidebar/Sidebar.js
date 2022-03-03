@@ -28,6 +28,8 @@ import activeBrowser from "../../assests/sidebarImage/activeBrowser.svg";
 import activeDiscord from "../../assests/sidebarImage/activeDiscord.svg";
 import acticveHarvester from "../../assests/sidebarImage/acticveHarvester.svg";
 import { RoutePath } from "../../constant";
+import { checkForUpdates } from "../../helper/electron-bridge";
+const pjson  = require("../../../package.json")
 
 const iconData = [
   {
@@ -109,10 +111,11 @@ const Sidebar = () => {
       <div className="updateIcon">
         <SidebarOption
           pageTo={"/appupdate"}
+          onClick={() => checkForUpdates}
           defaultIcon={AppUpdate}
           activeIcon={activeUpdate}
         />
-        <p>V: 0.0.1</p>
+        <p>V: {pjson.version}</p>
       </div>
     </div>
   );
