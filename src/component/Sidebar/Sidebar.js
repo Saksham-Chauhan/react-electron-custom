@@ -3,19 +3,18 @@ import SidebarOption from "./SideBarOption/SidebarOption";
 import "./Sidebar.css";
 import { RoutePath } from "../../constant";
 // deafault Icons
-import logo from "../../assests/sidebarImage/logo.svg";
-import AppUpdate from "../../assests/sidebarImage/AppUpdate.svg";
+import logo from "../../assests/images/logo.svg";
+import defaultUpdate from "../../assests/activeDefault/update-default.svg";
 // active Icons
 import activeDashboard from "../../assests/activeDefault/dashboard-active.svg";
 import activeAccgen from "../../assests/activeDefault/accgen-active.svg";
 import activeOneclick from "../../assests/activeDefault/oneclick-active.svg";
 import activeProxy from "../../assests/activeDefault/proxy-active.svg";
-
 import activeLinkOpener from "../../assests/activeDefault/link-active.svg";
 import activeProfile from "../../assests/activeDefault/profile-active.svg";
 import activeTwitter from "../../assests/activeDefault/twitter-active.svg";
 import activeSettings from "../../assests/activeDefault/settings-active.svg";
-import activeUpdate from "../../assests/sidebarImage/activeUpdate.svg";
+import activeUpdate from "../../assests/activeDefault/update-active.svg";
 import activeSpoof from "../../assests/activeDefault/spoof-active.svg";
 import activeInvite from "../../assests//activeDefault/invite-active.svg";
 
@@ -62,6 +61,7 @@ const iconData = [
     pageTo: RoutePath.settings,
     activeIcon: activeSettings,
   },
+
 ];
 
 const Sidebar = () => {
@@ -74,7 +74,7 @@ const Sidebar = () => {
   return (
     <div className="sidebarMain">
       <div className="sidebarMain--logo-wrapper">
-        <img src={logo} alt="kyrs-logo" />
+        <img src={logo} alt="logo" />
       </div>
       {iconData.map((data, idx) => (
         <SidebarOption
@@ -88,7 +88,7 @@ const Sidebar = () => {
       <div className="updateIcon">
         <SidebarOption
           pageTo={"/appupdate"}
-          defaultIcon={AppUpdate}
+          defaultIcon={defaultUpdate}
           activeIcon={activeUpdate}
         />
         <p>V: 0.0.1</p>

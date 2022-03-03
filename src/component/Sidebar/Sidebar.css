@@ -17,43 +17,26 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  bottom: 5px;
-  left: 1.2%;
+  bottom: 3px;
 }
 
-.updateIcon a {
-  margin: 0px;
-}
+
 .updateIcon p {
-  font-size: 15px;
+  font-size: 12px;
   color: var(--primary);
   font-style: normal;
   font-weight: normal;
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 15px;
   color: #a1a1a1;
-  margin-top: 5px;
-}
-
-.activeimage {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.activeimage > img {
-  width: 28px;
-  height: 23px;
+  margin-top: 3px;
 }
 
 /* /icon animation */
 /* home_animation Icon animation  */
 .home_animation {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background-image: url("../../assests/activeDefault/dashboard-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -62,11 +45,11 @@
 
 .home_animation:hover {
   height: 23px;
-  width: 26px;
-  background: url("../../assests/KyroTools-Animation/dashboard-animation.svg");
+  width: 23px;
+  background: url("../../assests/sidebar_animation/dashboard-animation.svg");
   animation: backgroundScroll;
-  animation-duration: 1.5s;
-  animation-timing-function: steps(6);
+  animation-duration: 1s;
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -76,7 +59,7 @@
 
 .OneClick_animation {
   height: 23px;
-  width: 28px;
+  width: 20px;
   background-image: url("../../assests/activeDefault/oneclick-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -85,11 +68,11 @@
 
 .OneClick_animation:hover {
   height: 23px;
-  width: 28px;
-  background: url("../../assests/KyroTools-Animation/oneclick-animation.svg");
+  width: 20px;
+  background: url("../../assests/sidebar_animation/oneclick-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(4);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -98,7 +81,7 @@
 
 /* Profile_animation Icons Animation  */
 .Profile_animation {
-  height: 26px;
+  height: 23px;
   width: 28px;
   background-image: url("../../assests/activeDefault/profile-default.svg");
   background-repeat: no-repeat;
@@ -109,10 +92,10 @@
 .Profile_animation:hover {
   height: 23px;
   width: 28px;
-  background: url("../../assests/KyroTools-Animation/profile-animation.svg");
+  background: url("../../assests/sidebar_animation/profile-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(3);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -132,7 +115,7 @@
 .Proxy_animation:hover {
   height: 23px;
   width: 28px;
-  background: url("../../assests/KyroTools-Animation/proxy-animation.svg");
+  background: url("../../assests/sidebar_animation/proxy-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
   animation-timing-function: steps(5);
@@ -145,7 +128,7 @@
 /* AccounGen_animation Icons Animation  */
 .AccounGen_animation {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background-image: url("../../assests/activeDefault/accgen-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -154,11 +137,11 @@
 
 .AccounGen_animation:hover {
   height: 23px;
-  width: 28px;
-  background: url("../../assests/KyroTools-Animation/accountgen-animation.svg");
+  width: 23px;
+  background: url("../../assests/sidebar_animation/accountgen-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(2);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -178,10 +161,10 @@
 .linkOpner_animation:hover {
   height: 23px;
   width: 28px;
-  background: url("../../assests/KyroTools-Animation/linkopener-animation.svg");
+  background: url("../../assests/sidebar_animation/linkopener-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(4);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -192,7 +175,7 @@
 /* inviteJoiner_animation Icons Animation  */
 .inviteJoiner_animation {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background-image: url("../../assests/activeDefault/invite-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -201,11 +184,11 @@
 
 .inviteJoiner_animation:hover {
   height: 23px;
-  width: 28px;
-  background: url("../../assests/KyroTools-Animation/invitejoiner-animation.svg");
+  width: 23px;
+  background: url("../../assests/sidebar_animation/invitejoiner-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(3);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -216,7 +199,7 @@
 /*spoofer_animation Icons Animation  */
 .spoofer_animation {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background-image: url("../../assests/activeDefault/spoof-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -225,11 +208,11 @@
 
 .spoofer_animation:hover {
   height: 23px;
-  width: 28px;
-  background: url("../../assests/KyroTools-Animation/spoofer-animation.svg");
+  width: 23px;
+  background: url("../../assests/sidebar_animation/spoofer-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(4);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -250,10 +233,10 @@
 .twitter_animation:hover {
   height: 23px;
   width: 28px;
-  background: url("../../assests/KyroTools-Animation/twitter-animation.svg");
+  background: url("../../assests/sidebar_animation/twitter-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(4);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -273,10 +256,10 @@
 .setting_animation:hover {
   height: 23px;
   width: 28px;
-  background: url("../../assests/KyroTools-Animation/settings-animation.svg");
+  background: url("../../assests/sidebar_animation/settings-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(4);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
@@ -286,8 +269,8 @@
 
 /*setting_animation Icons Animation  */
 .update_animation {
-  height: 23px;
-  width: 28px;
+  height: 28px;
+  width: 23px;
   background-image: url("../../assests/activeDefault/update-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -295,12 +278,12 @@
 }
 
 .update_animation:hover {
-  height: 23px;
-  width: 28px;
-  background: url("../../assests/activeDefault/update-active.svg");
+  height: 28px;
+  width: 23px;
+  background: url("../../assests/sidebar_animation/updater-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
-  animation-timing-function: steps(4);
+  animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   background-repeat: repeat-x;
   background-position: center;
