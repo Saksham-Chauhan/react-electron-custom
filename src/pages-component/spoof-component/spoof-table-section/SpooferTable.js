@@ -1,18 +1,16 @@
 import React from "react";
 import "./styles.css";
-import TableRow from "../spoof-table-row/SpooferTableRow";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchSpoofTableList } from "../../../features/counterSlice";
-import { deleteSpooferFromList } from "../../../features/logic/spoof";
 import {
-  deleteSpoofer,
-  startSpoofer,
   stopSpoofer,
+  startSpoofer,
   toggleSpoofer,
+  deleteSpoofer,
 } from "../../../helper/electron-bridge";
+import { useDispatch } from "react-redux";
+import TableRow from "../spoof-table-row/SpooferTableRow";
+import { deleteSpooferFromList } from "../../../features/logic/spoof";
 
-function SpooferTable() {
-  const tableList = useSelector(fetchSpoofTableList);
+function SpooferTable({ tableList }) {
   const dispatch = useDispatch();
 
   const handleStart = (spoof, setValue) => {

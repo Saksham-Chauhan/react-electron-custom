@@ -12,6 +12,15 @@ const PageListSearchPattern = {
   ],
   ACCOUNTGEN: ["site", "proxy", "amount", "mobile", "profile"],
   PROXY: ["status", "proxy"],
+  SPOOF: [
+    "url",
+    "status",
+    "quantity",
+    "proxyName",
+    "proxyValue",
+    "disableImages",
+    "isDisableImage",
+  ],
 };
 
 /**

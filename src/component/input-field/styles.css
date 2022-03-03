@@ -42,7 +42,7 @@
   width: 4px;
 }
 .input-field-box > textarea::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: var(--scrollbar-bg);
   border-radius: 10px;
 }
 .input-field-box > input::placeholder,

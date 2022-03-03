@@ -76,11 +76,16 @@ function Proxy() {
       </div>
       <div className="right-container">
         <TopWrapper>
-          <GroupStatusCard title={tempData["groupName"]} />
+          <GroupStatusCard
+            subText={` ${
+              tempList.filter((d) => d["status"] !== "Bad").length
+            } Proxies running`}
+            title={tempData["groupName"]}
+          />
         </TopWrapper>
         <div className="page-padding-section">
           <AppSpacer spacer={20} />
-          <ProxyTopBtnsWrapper {...{ search, handleSearching }} />
+          <ProxyTopBtnsWrapper {...{ search, handleSearching, tempData }} />
           <AppSpacer spacer={20} />
           <ProxyTableContainer list={tempList} />
         </div>

@@ -11,6 +11,7 @@ import {
   fetchAddJoinerModalState,
   fetchInviteJoinerSettingModalState,
   fetchSpoofModalState,
+  fetchEditProxyModalState,
 } from "./features/counterSlice";
 import {
   ProxyGroupModal,
@@ -19,6 +20,7 @@ import {
   InviteJoinerAccountModal,
   InviteJoinerSettingModal,
   AddSpoofModal,
+  EditProxySingleModal,
 } from "./modals";
 import {
   ProxyPage,
@@ -32,12 +34,19 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RoutePath } from "./constant";
 import { Routes, Route } from "react-router-dom";
-import { spooferToaster, errorToaster } from "./helper/electron-bridge";
+import {
+  spooferToaster,
+  errorToaster,
+  proxyTestResultListener,
+  updateNotAvailable,
+} from "./helper/electron-bridge";
 import {
   updateSpooferStatus,
   resetSpooferStatus,
 } from "./features/logic/spoof";
-import { toastWarning } from "./toaster";
+import { toastInfo, toastWarning } from "./toaster";
+import { proxyStatusUpdater } from "./features/logic/proxy";
+
 function App() {
   const dispatch = useDispatch();
   const proxyModalState = useSelector(fetchProxyGroupModalState);
@@ -45,6 +54,7 @@ function App() {
   const addGmailModalState = useSelector(fetchAddGmailModalState);
   const inviteModalState = useSelector(fetchAddJoinerModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
+  const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
@@ -56,11 +66,16 @@ function App() {
         dispatch(updateSpooferStatus(data));
       }
     });
+    proxyTestResultListener((res) => {
+      dispatch(proxyStatusUpdater(res));
+    });
+    updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
   }, [dispatch]);
 
   return (
     <div className="app">
+      {proxyEditModalState && <EditProxySingleModal />}
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
       {addGmailModalState && <AddGmailModal />}

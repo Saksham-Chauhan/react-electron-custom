@@ -41,6 +41,7 @@ export const addProxyGroupSchema = joi.object({
   proxyList: joi.array(),
   groupName: joi.string().required().label("Enter group name"),
   proxies: joi.optional(),
+  type: joi.optional(),
 });
 
 export const spooferSchema = joi.object({

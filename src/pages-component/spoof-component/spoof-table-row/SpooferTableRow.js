@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import stop from "../../../assests/images/stop.svg";
+import play from "../../../assests/images/play.svg";
 import trash from "../../../assests/images/trash.svg";
 import toggle from "../../../assests/images/toggle.svg";
-import play from "../../../assests/images/play.svg";
-import stop from "../../../assests/images/stop.svg";
+
 function SpooferTableRow({
   index,
   spoof,
@@ -12,6 +13,15 @@ function SpooferTableRow({
   onStop,
 }) {
   const [isStart, setIsStart] = useState(false);
+
+  useEffect(() => {
+    if (spoof["status"] === "Stopped") {
+      setIsStart(false);
+    } else if (spoof["status"] === "Running") {
+      setIsStart(true);
+    }
+  }, [spoof]);
+
   return (
     <div className="spoofer-page-table-header tbody">
       <div>{index}</div>
@@ -24,7 +34,7 @@ function SpooferTableRow({
           {!isStart ? (
             <img onClick={() => onStart(spoof, setIsStart)} src={play} alt="" />
           ) : (
-            <img onClick={() => onStart(spoof, setIsStart)} src={stop} alt="" />
+            <img onClick={() => onStop(spoof, setIsStart)} src={stop} alt="" />
           )}
 
           <img onClick={() => onDelete(spoof)} src={trash} alt="" />

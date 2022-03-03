@@ -4,3 +4,4 @@ export { default as AddGmailModal } from "./addGmail/AddGmail";
 export { default as InviteJoinerAccountModal } from "./invite-joiner-account/InviteJoinerAccount";
 export { default as InviteJoinerSettingModal } from "./invite-joiner-setting/InviteJoinerSettings";
 export { default as AddSpoofModal } from "./add-spoof/AddSpoofer";
+export { default as EditProxySingleModal } from "./edit-proxy/EditProxy";

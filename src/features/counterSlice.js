@@ -18,6 +18,7 @@ const initialState = {
     inviteJoinerAccount: false,
     inviteJoinerSetting: false,
     spoofModal: false,
+    editProxy: false,
   },
 };
 
@@ -133,7 +134,8 @@ export const fetchEditStorageState = (state) => state[STATE_KEY].editStorage;
 export const fetchProxyGroupList = (state) => state[STATE_KEY].proxyGroup;
 export const fetchProxyGroupModalState = (state) =>
   state[STATE_KEY].modals.proxyGroup;
-
+export const fetchEditProxyModalState = (state) =>
+  state[STATE_KEY].modals.editProxy;
 // LINK OPNER SELECTOR
 export const fetchDiscordModalState = (state) =>
   state[STATE_KEY].modals.discordAccount;

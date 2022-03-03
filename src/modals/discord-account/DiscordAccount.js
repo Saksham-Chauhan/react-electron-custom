@@ -29,7 +29,7 @@ function DiscordAccount() {
     return () => {
       dispatch(setEditStorage({}));
     };
-  }, [editState]);
+  }, [editState, dispatch]);
 
   const handleCloseModal = () => {
     dispatch(setModalState("discordAccount"));

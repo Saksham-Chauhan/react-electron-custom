@@ -36,7 +36,7 @@ class SpooferManager {
     if (id in this.bots) {
       this.bots[id].toggleBrowser();
     } else {
-      this.senError("Instance not created");
+      this.sendError("Instance not created");
     }
   }
 
@@ -52,7 +52,7 @@ class SpooferManager {
       delete this.bots[id];
     }
   }
-  senError(msg) {
+  sendError(msg) {
     if (global.mainWin) {
       global.mainWin.webContents.send("error", msg);
     }

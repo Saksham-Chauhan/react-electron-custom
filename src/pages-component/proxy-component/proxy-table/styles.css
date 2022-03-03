@@ -1,33 +1,36 @@
 .tbl-header {
-  display: flex;
   background: var(--sidebar-bg);
   padding: 0.7em 1em;
   border-radius: 5px;
-  align-items: center;
 }
-.tbl-header > .tbl-header-title {
+.tbl-header-inner {
+  display: flex;
+  align-items: center;
+  width: 99.5%;
+}
+.tbl-header-inner > .tbl-header-title {
   font-weight: 500;
   font-size: 15px;
   line-height: 22px;
   color: var(--scrollbar-bg);
   text-transform: capitalize;
 }
-.tbl-header > .tbl-header-title:nth-child(1) {
+.tbl-header-inner > .tbl-header-title:nth-child(1) {
   width: 10%;
 }
-.tbl-header > .tbl-header-title:nth-child(2) {
+.tbl-header-inner > .tbl-header-title:nth-child(2) {
   width: 20%;
 }
-.tbl-header > .tbl-header-title:nth-child(3) {
+.tbl-header-inner > .tbl-header-title:nth-child(3) {
   width: 20%;
 }
-.tbl-header > .tbl-header-title:nth-child(4) {
+.tbl-header-inner > .tbl-header-title:nth-child(4) {
   width: 20%;
 }
-.tbl-header > .tbl-header-title:nth-child(5) {
+.tbl-header-inner > .tbl-header-title:nth-child(5) {
   width: 20%;
 }
-.tbl-header > .tbl-header-title:nth-child(6) {
+.tbl-header-inner > .tbl-header-title:nth-child(6) {
   width: 20%;
 }
 

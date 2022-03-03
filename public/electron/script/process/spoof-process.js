@@ -27,12 +27,12 @@ class SpooferInstance {
   }
 
   init() {
-    this.sendToaster("Created");
+    this.sendStatus("Running");
   }
 
   deleteBrowser() {
     if (this.isLaunched) {
-      this.win.destroy();
+      this.win?.destroy();
       this.isDeleted = true;
     } else {
       this.isDeleted = true;
@@ -147,7 +147,7 @@ class SpooferInstance {
     });
 
     this.win.on("closed", () => {
-      this.sendToaster("Close..");
+      this.sendStatus("Stopped");
       this.win = null;
     });
   }
@@ -158,13 +158,13 @@ class SpooferInstance {
     if (win !== null) {
       if (!win.isVisible()) {
         win.show();
-        this.sendToaster("Open");
+        this.sendStatus("Opened");
       } else {
         win.hide();
-        this.sendToaster("Close");
+        this.sendStatus("Closed");
       }
     } else {
-      this.sendToaster("Instance Not created");
+      this.mainWin.webContents.send("error", "Instance Not created");
     }
   }
 
@@ -176,23 +176,19 @@ class SpooferInstance {
   }
 
   closeBrowser() {
-    try {
-      if (this.win !== null) {
-        console.log("Closing...");
-        this.win.close();
-        this.sendToaster("Stopppedddd");
-        console.log("Closed!!");
-      }
-    } catch (e) {
-      console.log("Err", e);
+    if (this.win !== null) {
+      this.win.close();
+      this.sendStatus("Stopped");
     }
   }
 
-  sendToaster(msg) {
-    this.mainWin.webContents.send("spoofer-toaster", {
-      status: msg,
-      id: this.id,
-    });
+  sendStatus(msg) {
+    if (this.mainWin) {
+      this.mainWin.webContents.send("spoofer-toaster", {
+        status: msg,
+        id: this.id,
+      });
+    }
   }
 }
 

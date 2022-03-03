@@ -4,6 +4,9 @@ const closeApp = () => ipcRenderer.send("close");
 const maximizeApp = () => ipcRenderer.send("maximize");
 const errorToaster = (callback) =>
   ipcRenderer.on("error", (_, err) => callback(err));
+
+const updateNotAvailable = (callback) =>
+  ipcRenderer.on("update:not-avail", () => callback());
 // Spoof IPC
 const startSpoofer = (spoof) => ipcRenderer.send("start-spoofer", spoof);
 
@@ -16,6 +19,8 @@ const deleteSpoofer = (spoof) => ipcRenderer.send("delete-spoofer", spoof);
 const spooferToaster = (callback) =>
   ipcRenderer.on("spoofer-toaster", (_, data) => callback(data));
 
+const launchSpoofer = (spoof) => ipcRenderer.send("launch-spoofer", spoof);
+
 // TWITTER IPC
 const getTweets = (consumerKey, consumerSecret, userHandler) =>
   ipcRenderer.invoke("fetchTweets", {
@@ -24,6 +29,10 @@ const getTweets = (consumerKey, consumerSecret, userHandler) =>
     userHandler,
   });
 
+// PROXY IPC
+const proxyTester = (proxy) => ipcRenderer.send("proxy-tester", proxy);
+const proxyTestResultListener = (callback) =>
+  ipcRenderer.on("proxy-test-result", (_, res) => callback(res));
 module.exports = {
   minimizeApp,
   closeApp,
@@ -35,4 +44,8 @@ module.exports = {
   deleteSpoofer,
   spooferToaster,
   errorToaster,
+  launchSpoofer,
+  proxyTester,
+  proxyTestResultListener,
+  updateNotAvailable,
 };

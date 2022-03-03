@@ -1,16 +1,35 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { setModalState } from "../../features/counterSlice";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchEditStorageState,
+  setEditStorage,
+  setModalState,
+} from "../../features/counterSlice";
 import { AppInputField, ModalWrapper, AppSpacer } from "../../component";
 import { validationChecker } from "../../hooks/validationChecker";
 import { addProxyGroupSchema } from "../../validation";
 import { ProxyRegExp } from "../../constant/regex";
 import { generateId } from "../../helper";
-import { addProxyGroupInList } from "../../features/logic/proxy";
+import {
+  addProxyGroupInList,
+  editProxyGroup,
+} from "../../features/logic/proxy";
 
 function ProxyGroup() {
   const dispatch = useDispatch();
+  const editState = useSelector(fetchEditStorageState);
   const [proxy, setProxy] = useState({ groupName: "", proxies: "" });
+
+  useEffect(() => {
+    if (Object.keys(editState).length > 0) {
+      setProxy((pre) => {
+        return { ...editState };
+      });
+    }
+    return () => {
+      dispatch(setEditStorage({}));
+    };
+  }, [editState, dispatch]);
 
   const handleCloseModal = () => {
     dispatch(setModalState("proxyGroup"));
@@ -22,27 +41,52 @@ function ProxyGroup() {
       return { ...pre, [name]: value };
     });
   };
-
-  const handleSubmit = () => {
+  const handleCreateProxyGroup = () => {
     let valid = [];
-    const validationResult = validationChecker(addProxyGroupSchema, proxy);
-    if (validationResult) {
-      const proxyString = proxy.proxies.split("\n");
-      for (let i = 0; i < proxyString.length; i++) {
-        if (ProxyRegExp.test(proxyString[i])) {
-          let obj = {};
-          obj["id"] = generateId();
-          obj["proxy"] = proxyString[i];
-          obj["checked"] = false;
-          obj["status"] = "N/A";
-          valid.push(obj);
-        }
+    const proxyString = proxy.proxies.split("\n");
+    for (let i = 0; i < proxyString.length; i++) {
+      if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
       }
-      let proxyGroup = { ...proxy };
-      proxyGroup["id"] = generateId();
+    }
+    let proxyGroup = { ...proxy };
+    proxyGroup["id"] = generateId();
+    proxyGroup["proxyList"] = valid;
+    proxyGroup["proxies"] = valid.map((proxy) => proxy["proxy"]).join("\n");
+    dispatch(addProxyGroupInList(proxyGroup));
+  };
+  const handleEditProxyGroup = () => {
+    let valid = [];
+    let proxyGroup = { ...proxy };
+    const proxyString = proxy.proxies.split("\n");
+    for (let i = 0; i < proxyString.length; i++) {
+      if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
+      }
       proxyGroup["proxyList"] = valid;
       proxyGroup["proxies"] = valid.map((proxy) => proxy["proxy"]).join("\n");
-      dispatch(addProxyGroupInList(proxyGroup));
+    }
+    dispatch(editProxyGroup(proxyGroup));
+  };
+
+  const handleSubmit = () => {
+    const validationResult = validationChecker(addProxyGroupSchema, proxy);
+    if (validationResult) {
+      if (Object.keys(editState).length > 0) {
+        handleEditProxyGroup();
+      } else {
+        handleCreateProxyGroup();
+      }
       handleCloseModal();
     }
   };
