@@ -24,6 +24,10 @@ const getTweets = (consumerKey, consumerSecret, userHandler) =>
     userHandler,
   });
 
+const checkForUpdates = () => {
+  ipcRenderer.send("checkForUpdates");
+}
+
 module.exports = {
   minimizeApp,
   closeApp,
@@ -35,4 +39,5 @@ module.exports = {
   deleteSpoofer,
   spooferToaster,
   errorToaster,
+  checkForUpdates
 };
