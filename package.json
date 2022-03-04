@@ -78,7 +78,7 @@
   "build": {
     "productName": "Kyro",
     "appId": "com.kyro.koders",
-    "publish":{
+    "publish": {
       "provider": "generic",
       "url": "http://161.97.112.22:9001"
     },

@@ -90,6 +90,7 @@ const Sidebar = () => {
         <SidebarOption
           pageTo={"/appupdate"}
           defaultIcon={defaultUpdate}
+          activeIcon={activeUpdate}
           onClick={() => checkForUpdates}
         />
         <p>V: {pjson.version}</p>

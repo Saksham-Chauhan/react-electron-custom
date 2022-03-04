@@ -59,7 +59,7 @@
 
 .OneClick_animation {
   height: 23px;
-  width: 20px;
+  width: 21px;
   background-image: url("../../assests/activeDefault/oneclick-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -68,7 +68,7 @@
 
 .OneClick_animation:hover {
   height: 23px;
-  width: 20px;
+  width: 21px;
   background: url("../../assests/sidebar_animation/oneclick-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
@@ -82,7 +82,7 @@
 /* Profile_animation Icons Animation  */
 .Profile_animation {
   height: 23px;
-  width: 28px;
+  width: 26px;
   background-image: url("../../assests/activeDefault/profile-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -91,7 +91,7 @@
 
 .Profile_animation:hover {
   height: 23px;
-  width: 28px;
+  width: 26px;
   background: url("../../assests/sidebar_animation/profile-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
@@ -105,7 +105,7 @@
 /* Proxy Icon animation  */
 .Proxy_animation {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background-image: url("../../assests/activeDefault/proxy-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -114,7 +114,7 @@
 
 .Proxy_animation:hover {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background: url("../../assests/sidebar_animation/proxy-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
@@ -151,7 +151,7 @@
 /* Link opener Icons Animation  */
 .linkOpner_animation {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background-image: url("../../assests/activeDefault/link-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -160,7 +160,7 @@
 
 .linkOpner_animation:hover {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background: url("../../assests/sidebar_animation/linkopener-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
@@ -223,7 +223,7 @@
 /*twitter_animation Icons Animation  */
 .twitter_animation {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background-image: url("../../assests/activeDefault/twitter-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -232,7 +232,7 @@
 
 .twitter_animation:hover {
   height: 23px;
-  width: 28px;
+  width: 23px;
   background: url("../../assests/sidebar_animation/twitter-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
@@ -245,8 +245,8 @@
 }
 /*setting_animation Icons Animation  */
 .setting_animation {
-  height: 23px;
-  width: 28px;
+  height: 24px;
+  width: 26px;
   background-image: url("../../assests/activeDefault/settings-default.svg");
   background-repeat: no-repeat;
   background-position: center;
@@ -254,8 +254,8 @@
 }
 
 .setting_animation:hover {
-  height: 23px;
-  width: 28px;
+  height: 25px;
+  width: 27px;
   background: url("../../assests/sidebar_animation/settings-animation.svg");
   animation: backgroundScroll;
   animation-duration: 1s;
@@ -269,8 +269,8 @@
 
 /*setting_animation Icons Animation  */
 .update_animation {
-  height: 28px;
-  width: 23px;
+  height: 25px;
+  width: 27px;
   background-image: url("../../assests/activeDefault/update-default.svg");
   background-repeat: no-repeat;
   background-position: center;
