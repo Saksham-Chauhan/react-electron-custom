@@ -4,6 +4,8 @@ import { ProxyState } from "./initial-state/proxy";
 import { discordAccount } from "./initial-state/discordAccount";
 import { twitterInitialState } from "./initial-state/twitter";
 import { spoofInitialState } from "./initial-state/spoof";
+import { settingInitialState } from "./initial-state/setting";
+
 const initialState = {
   tempStorage: {},
   editStorage: {},
@@ -11,6 +13,7 @@ const initialState = {
   ...discordAccount,
   ...twitterInitialState,
   ...spoofInitialState,
+  ...settingInitialState,
   modals: {
     proxyGroup: false,
     discordAccount: false,
@@ -19,16 +22,16 @@ const initialState = {
     inviteJoinerSetting: false,
     spoofModal: false,
     editProxy: false,
+    claimerGroup: false,
   },
 };
 
 export const counterSlice = createSlice({
   name: STATE_KEY,
   initialState,
-
   reducers: {
     appendProxyGroupInList: (state, action) => {
-      state.proxyGroup = action.payload;
+      state.proxyGroupList = action.payload;
     },
     setModalState: (state, action) => {
       const key = action.payload;
@@ -54,6 +57,9 @@ export const counterSlice = createSlice({
     clearLogList: (state, action) => {
       const { key } = action.payload;
       state[key].logList = [];
+    },
+    setLOchromeUser: (state, action) => {
+      state.linkOpener.selectedChromeUser = action.payload;
     },
     setSelectedClaimerTokenIJ: (state, action) => {
       state.selectedClaimerTokenIJ = action.payload;
@@ -99,8 +105,34 @@ export const counterSlice = createSlice({
     appendApInList: (state, action) => {
       state.twitterApiList = action.payload;
     },
+    setTwitterChromeUser: (state, action) => {
+      state.twitterSelectedChromeUser = action.payload;
+    },
+    setTwitterClaimerGroup: (state, action) => {
+      state.twitterSelectedClaimerGroup = action.payload;
+    },
+    incrementApiRotater: (state, action) => {
+      const { twitterApiList, apiRotaterIndex } = state;
+      if (apiRotaterIndex < twitterApiList.length) {
+        state.apiRotaterIndex += 1;
+      } else {
+        state.apiRotaterIndex -= 1;
+      }
+    },
     appendSpooferInList: (state, action) => {
       state.spoofTabe = action.payload;
+    },
+    appendClaimerGroupInList: (state, action) => {
+      state.claimerAccountList = action.payload;
+    },
+    appendChromeUserInList: (state, action) => {
+      state.chromeUserList = action.payload;
+    },
+    setWebhookSetting: (state, action) => {
+      state.webhookSetting = action.payload;
+    },
+    appendWebhookInList: (state, action) => {
+      state.webhookList = action.payload;
     },
   },
 });
@@ -125,13 +157,21 @@ export const {
   setSelectedMonitorTokenLO,
   setSelectedClaimerTokenIJ,
   appendClaimerDiscordAccount,
+  incrementApiRotater,
+  appendClaimerGroupInList,
+  appendChromeUserInList,
+  setWebhookSetting,
+  appendWebhookInList,
+  setTwitterChromeUser,
+  setTwitterClaimerGroup,
+  setLOchromeUser,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
 export const fetchTempStorageState = (state) => state[STATE_KEY].tempStorage;
 export const fetchEditStorageState = (state) => state[STATE_KEY].editStorage;
 // PROXY SELECTOR
-export const fetchProxyGroupList = (state) => state[STATE_KEY].proxyGroup;
+export const fetchProxyGroupList = (state) => state[STATE_KEY].proxyGroupList;
 export const fetchProxyGroupModalState = (state) =>
   state[STATE_KEY].modals.proxyGroup;
 export const fetchEditProxyModalState = (state) =>
@@ -151,6 +191,8 @@ export const fetchLOSettingState = (state) =>
   state[STATE_KEY].setting.linkOpener;
 export const fetchLinkOpenerLogState = (state) =>
   state[STATE_KEY].linkOpener.logList;
+export const fetchLOchromeUserState = (state) =>
+  state[STATE_KEY].linkOpener.selectedChromeUser;
 // ADD GMAIL
 export const fetchAddGmailModalState = (state) =>
   state[STATE_KEY].modals.addGmail;
@@ -182,8 +224,22 @@ export const fetchLatestTweetList = (state) => state[STATE_KEY].latesTweetlist;
 export const fetchFeatureTweetList = (state) =>
   state[STATE_KEY].featureTweetList;
 export const fetchAPIlistState = (state) => state[STATE_KEY].twitterApiList;
-
+export const fetchApiRotaterIndex = (state) => state[STATE_KEY].apiRotaterIndex;
+export const fetchTwitterChromeUserState = (state) =>
+  state[STATE_KEY].twitterSelectedChromeUser;
+export const fetchTwitterClaimerGroupState = (state) =>
+  state[STATE_KEY].twitterSelectedClaimerGroup;
 // SPOOF
 export const fetchSpoofModalState = (state) =>
   state[STATE_KEY].modals.spoofModal;
 export const fetchSpoofTableList = (state) => state[STATE_KEY].spoofTabe;
+// SETTING
+export const fetchClaimerGroupModalState = (state) =>
+  state[STATE_KEY].modals.claimerGroup;
+export const fetchClaimerGroupList = (state) =>
+  state[STATE_KEY].claimerAccountList;
+export const fetchChromeUserListState = (state) =>
+  state[STATE_KEY].chromeUserList;
+export const fetchWebhookSettingState = (state) =>
+  state[STATE_KEY].webhookSetting;
+export const fetchWebhookListState = (state) => state[STATE_KEY].webhookList;

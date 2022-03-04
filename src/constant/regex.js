@@ -6,3 +6,10 @@ export const UrlRegexp =
 export const TweetHandlerRegExp = /^@?(\w){1,15}$/;
 
 export const discordTokenRegExp = /^[0-9A-Za-z_.-]+$/;
+
+export const channelRegexExp = /[0-9]/;
+
+export const webhoookRegExp =
+  /^.*(discord|discordapp)\.com\/api\/webhooks\/([\d]+)\/([a-zA-Z0-9_-]+)$/;
+
+export const chromeRegExp = /^[a-zA-Z0-9-_]+$/;

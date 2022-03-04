@@ -17,6 +17,7 @@ import {
   fetchLinkOpenerLogState,
   fetchDiscordAccountList,
   fetchSelectedMinitorTokenLinkOpener,
+  fetchLOchromeUserState,
 } from "../../features/counterSlice";
 import sound from "../../assests/audio/sound.mp3";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +26,7 @@ import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
 
 const { Client } = window.require("discord.js-selfbot");
+const open = window.require("open");
 
 function LinkOpener() {
   const dispatch = useDispatch();
@@ -34,6 +36,7 @@ function LinkOpener() {
   const settingOption = useSelector(fetchLOSettingState);
   const accountList = useSelector(fetchDiscordAccountList);
   const selectedMonitorToken = useSelector(fetchSelectedMinitorTokenLinkOpener);
+  const selectedChrome = useSelector(fetchLOchromeUserState);
 
   const playSound = () => {
     let ring = new Audio(sound);
@@ -60,16 +63,20 @@ function LinkOpener() {
                 if (settingOption.playSound) {
                   playSound();
                 }
-                if (settingOption?.selectedChromeUser) {
-                  window.open(content, {
-                    app: [
-                      "chrome",
-                      `--profile-directory=${settingOption?.selectedChromeUser}`,
-                    ],
+                if (Object.keys(selectedChrome).length > 0) {
+                  await open(content, {
+                    app: {
+                      name: "google chrome",
+                      arguments: [
+                        `--profile-directory=${selectedChrome["value"]}`,
+                      ],
+                    },
                   });
                 } else {
-                  window.open(content, {
-                    app: ["chrome"],
+                  await open(content, {
+                    app: {
+                      name: "google chrome",
+                    },
                   });
                 }
               }
@@ -86,7 +93,14 @@ function LinkOpener() {
     } catch (error) {
       console.log("Error in Link Opener", error);
     }
-  }, [keywordList, channelList, settingOption, selectedMonitorToken, dispatch]);
+  }, [
+    keywordList,
+    channelList,
+    settingOption,
+    selectedMonitorToken,
+    selectedChrome,
+    dispatch,
+  ]);
 
   /**
    * function handle modal state

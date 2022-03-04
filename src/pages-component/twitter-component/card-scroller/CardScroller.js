@@ -5,7 +5,12 @@ import { TwitterPageTweetCard } from "../..";
 import { AppSpacer } from "../../../component";
 import trash from "../../../assests/images/trash.svg";
 import utils from "../../../pages/twitter/utils/feature-tweets/helper";
-
+import { useSelector } from "react-redux";
+import {
+  fetchTwitterChromeUserState,
+  fetchTwitterClaimerGroupState,
+} from "../../../features/counterSlice";
+const open = window.require("open");
 // TODO after creatimg setting page comment out the code and map the corresponding data
 function CardScroller({
   title,
@@ -14,42 +19,53 @@ function CardScroller({
   onClearTweets,
   twitterSetting,
 }) {
+  const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
+  const selectedChrome = useSelector(fetchTwitterChromeUserState);
   useEffect(() => {
     if (isFeatureTweet) {
-      Object.keys(list).map((data) => {
+      Object.keys(list).forEach(async (data) => {
         let ft = { ...list[data] };
         if (ft.urlsExtracted) {
           for (let url of ft.urlsExtracted) {
             let inviteCode = utils.isDiscordInvite(url);
             if (inviteCode) {
               if (twitterSetting?.startAutoInviteJoiner) {
-                // let info = await axios.post(
-                //   `https://discordapp.com/api/v9/invites/${inviteCode}`,
-                //   {},
-                //   {
-                //     headers: {
-                //       Authorization: token,
-                //     },
-                //   }
-                // );
-                // if (info.status === 200) {
-                //   console.log(`Successfully Joined `);
-                // } else {
-                //   console.log(`Failed to join ${url}`);
-                // }
+                let tokenArray = selectedClaimer["value"].split("\n");
+                console.log(tokenArray);
+                tokenArray.forEach(async (token) => {
+                  let info = await axios.post(
+                    `https://discordapp.com/api/v9/invites/${inviteCode}`,
+                    {},
+                    {
+                      headers: {
+                        Authorization: token,
+                      },
+                    }
+                  );
+                  if (info.status === 200) {
+                    console.log(`Successfully Joined `);
+                  } else {
+                    console.log(`Failed to join ${url}`);
+                  }
+                });
               }
             } else {
               if (twitterSetting?.startAutoLinkOpener) {
-                // window.open(url, {
-                //   app: ["chrome", `--profile-directory=${currentUser}`],
-                // });
+                await open(url, {
+                  app: {
+                    name: "google chrome",
+                    arguments: [
+                      `--profile-directory=${selectedChrome["value"]}`,
+                    ],
+                  },
+                });
               }
             }
           }
         }
       });
     }
-  }, [list, isFeatureTweet, twitterSetting]);
+  }, [list, isFeatureTweet, twitterSetting, selectedClaimer, selectedChrome]);
 
   return (
     <div className="twitter-scroller-outer">
@@ -84,12 +100,12 @@ function CardScroller({
               return (
                 <TwitterPageTweetCard
                   tweetMsgLink={text}
+                  key={`${tweet["id"]}-${index}`}
                   tweetUser={tweet["userName"]}
                   tweetTime={tweet["created_at"]}
                   tweetLink={tweet["tweetLink"]}
                   tweetUserFollowing={tweet["followingLink"]}
                   tweetUserProfileLink={tweet["profileLink"]}
-                  key={`${tweet["id"]}-${index}`}
                 />
               );
             } else {

@@ -15,6 +15,11 @@
   background: var(--table-row);
   width: 99.5%;
 }
+.spoofer-page-table-header.tbody > div {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
 .spoofer-table-scroller {
   height: calc(100% - 34px - 20px);
   overflow-y: scroll;

@@ -14,7 +14,12 @@ function ProxyTableRow({ data, index, onEdit, onDelete, onTest }) {
       <div className="tbl-header-title body">{proxyArr[3]}</div>
       <div
         style={{
-          color: data["status"] === "Bad" ? "var(--red)" : "var(--status)",
+          color:
+            data["status"] === "Bad"
+              ? "var(--red)"
+              : data["status"] === "N/A"
+              ? "var(--primary)"
+              : "var(--status)",
         }}
         className="tbl-header-title body"
       >

@@ -13,7 +13,9 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
             name="twitterMonitor"
             onChange={handleToggle}
           />
-          <span>Turn OFF Monitor</span>
+          <span>
+            Turn {twitterSetting?.twitterMonitor ? "OFF" : "ON"} Monitor
+          </span>
         </div>
         <div
           style={{ padding: "0.8em 1em" }}
@@ -37,7 +39,10 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
               name="startAutoLinkOpener"
               onChange={handleToggle}
             />
-            <span>Start Auto Link Opener</span>
+            <span>
+              {twitterSetting?.startAutoLinkOpener ? "Stop" : "Start"} Auto Link
+              Opener
+            </span>
           </div>
           <div className="switch-with-text">
             <AppToggler
@@ -46,7 +51,10 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
               name="startAutoInviteJoiner"
               onChange={handleToggle}
             />
-            <span>Stop Auto Invite Joiner</span>
+            <span>
+              {twitterSetting?.startAutoInviteJoiner ? "Stop" : "Start"} Auto
+              Invite Joiner
+            </span>
           </div>
         </div>
       </div>

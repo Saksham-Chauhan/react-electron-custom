@@ -4,12 +4,15 @@ const Tesseract = require("tesseract.js");
 const isDev = require("electron-is-dev");
 const currentProcesses = require("current-processes");
 const { autoUpdater } = require("electron-updater");
+const NetworkSpeed = require("network-speed");
 const _ = require("lodash");
 const ping = require("ping");
 const spooferManager = require("./script/manager/spoof-manager");
 const auth = require("./auth");
 const fetchTweets = require("./helper/fetchTweet");
-const { result } = require("lodash");
+
+const testNetworkSpeed = new NetworkSpeed();
+
 let win = null;
 let mainWindow = null;
 let splash = null;
@@ -97,7 +100,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: !isDev ? false : true,
+      // devTools: !isDev ? false : true,:: FIXME: uncomment in production
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
@@ -424,4 +427,39 @@ ipcMain.on("proxy-tester", async (event, data) => {
       status: response !== null ? response["avg"] : "Bad",
     });
   }
+});
+
+// NEWTORK SPEED
+async function getNetworkDownloadSpeed() {
+  const baseUrl = "https://eu.httpbin.org/stream-bytes/500000";
+  const fileSizeInBytes = 500000;
+  const speed = await testNetworkSpeed.checkDownloadSpeed(
+    baseUrl,
+    fileSizeInBytes
+  );
+  return speed.kbps;
+}
+
+async function getNetworkUploadSpeed() {
+  const options = {
+    hostname: "www.google.com",
+    port: 80,
+    path: "/catchers/544b09b4599c1d0200000289",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const fileSizeInBytes = 2000000;
+  const speed = await testNetworkSpeed.checkUploadSpeed(
+    options,
+    fileSizeInBytes
+  );
+  return speed.kbps;
+}
+
+ipcMain.handle("get-speed", async () => {
+  const download = await getNetworkDownloadSpeed();
+  const upload = await getNetworkUploadSpeed();
+  return { download, upload };
 });

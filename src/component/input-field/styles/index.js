@@ -47,11 +47,11 @@ export const selectStyles = {
     maxHeight: "250px",
     marginRight: "5px",
     "&::-webkit-scrollbar": {
-      width: "5px",
+      width: "4px",
     },
     "&::-webkit-scrollbar-thumb": {
       borderRadius: "10px",
-      backgroundColor: "#386EB4",
+      backgroundColor: "var(--scrollbar-bg)",
     },
     padding: "0px",
   }),
@@ -129,13 +129,13 @@ export const selectCustomStyles = {
     maxHeight: "250px",
     marginRight: "5px",
     "&::-webkit-scrollbar": {
-      width: "5px",
+      width: "4px",
     },
     "&::-webkit-scrollbar-thumb": {
       borderRadius: "10px",
-      backgroundColor: "#386EB4",
+      backgroundColor: "var(--scrollbar-bg)",
     },
-    padding: "0px 5px",
+    padding: "0px",
   }),
 
   menu: (styles) => ({
@@ -153,7 +153,7 @@ export const selectCustomStyles = {
     lineHeight: "17px",
     fontFamily: "Poppins",
     fontWeight: "400",
-    backgroundColor: state.isSelected ? "var(--scrollbar-bg)" : "transparent",
+    backgroundColor: state.isSelected ? "var(--sidebar-bg)" : "transparent",
     "&:hover": {
       backgroundColor: "rgba(255, 255, 255, 0.02)",
     },

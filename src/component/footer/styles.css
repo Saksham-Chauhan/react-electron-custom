@@ -22,3 +22,18 @@
 .footer-connection-status > img {
   height: 16px;
 }
+.footer-app-network-speed {
+  display: flex;
+  align-items: center;
+  margin-right: 1.5em;
+}
+.footer-app-network-speed > span {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--primary);
+  margin-left: 0.5em;
+}
+.footer-app-network-speed > span:first-of-type {
+  margin-right: 1em;
+}

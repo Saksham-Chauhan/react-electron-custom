@@ -56,3 +56,33 @@
   line-height: 20px;
   color: var(--primary);
 }
+.api-keys-scroll-acrea {
+  padding: 1em;
+  background: var(--sidebar-bg);
+  height: 200px;
+  border-radius: 7.30208px;
+  overflow-y: scroll;
+}
+.api-keys-scroll-acrea::-webkit-scrollbar {
+  width: 4px;
+}
+.api-keys-scroll-acrea::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--scrollbar-bg);
+}
+.api-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+}
+.api-list-item > span {
+  font-size: 13.1437px;
+  line-height: 20px;
+  color: var(--primary);
+  text-transform: capitalize;
+}
+.api-list-item > img {
+  height: 15px;
+  cursor: pointer;
+}

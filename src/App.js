@@ -12,6 +12,8 @@ import {
   fetchInviteJoinerSettingModalState,
   fetchSpoofModalState,
   fetchEditProxyModalState,
+  fetchClaimerGroupModalState,
+  fetchWebhookSettingState,
 } from "./features/counterSlice";
 import {
   ProxyGroupModal,
@@ -21,6 +23,7 @@ import {
   InviteJoinerSettingModal,
   AddSpoofModal,
   EditProxySingleModal,
+  ClaimerGroupModal,
 } from "./modals";
 import {
   ProxyPage,
@@ -29,6 +32,7 @@ import {
   InviteJoinerPage,
   TwitterPage,
   SpooferPage,
+  SettingPage,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -54,10 +58,15 @@ function App() {
   const addGmailModalState = useSelector(fetchAddGmailModalState);
   const inviteModalState = useSelector(fetchAddJoinerModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
+  const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const proxyEditModalState = useSelector(fetchEditProxyModalState);
+  const globalSetting = useSelector(fetchWebhookSettingState);
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
+  const animClass = !globalSetting.bgAnimation
+    ? "kyro-bot"
+    : "kyro-bot-no-animation";
 
   useEffect(() => {
     dispatch(resetSpooferStatus());
@@ -75,8 +84,9 @@ function App() {
 
   return (
     <div className="app">
-      {proxyEditModalState && <EditProxySingleModal />}
       {spoofModalState && <AddSpoofModal />}
+      {claimerGroupmodalState && <ClaimerGroupModal />}
+      {proxyEditModalState && <EditProxySingleModal />}
       {proxyModalState && <ProxyGroupModal />}
       {addGmailModalState && <AddGmailModal />}
       {discordModalState && <DiscordAccountModal />}
@@ -88,11 +98,12 @@ function App() {
       <div className="app page-section">
         <div className="app overlay-wrapper">
           <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
-          <img id="kyro-bot" src={bot} alt="bot-animatable-icon" />
+          <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
             <DragBar />
             <AppController />
             <Routes>
+              <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />
               <Route

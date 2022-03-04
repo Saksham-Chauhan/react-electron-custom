@@ -1,20 +1,28 @@
 import React from "react";
+import "./styles.css";
+import {
+  setModalState,
+  setEditStorage,
+  setLOchromeUser,
+  fetchLOchromeUserState,
+  fetchChromeUserListState,
+} from "../../../features/counterSlice";
+import { isValueInUse } from "../../../helper";
+import { toastWarning } from "../../../toaster";
 import {
   deleteAccountFromList,
   linkOpenerSettingHandler,
 } from "../../../features/logic/discord-account";
-import "./styles.css";
-import { useDispatch } from "react-redux";
-import { toastWarning } from "../../../toaster";
-import { isValueInUse } from "../../../helper";
 import edit from "../../../assests/images/edit.svg";
 import trash from "../../../assests/images/trash.svg";
+import { useDispatch, useSelector } from "react-redux";
 import { discordTokenRegExp } from "../../../constant/regex";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
-import { setEditStorage, setModalState } from "../../../features/counterSlice";
 
 function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const dispatch = useDispatch();
+  const chromeList = useSelector(fetchChromeUserListState);
+  const selectedChrome = useSelector(fetchLOchromeUserState);
 
   /**
    * function handle modal state
@@ -28,10 +36,6 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
     if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
       dispatch(linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked }));
     } else toastWarning("Select Monitor token");
-  };
-
-  const handleChromeuserSelection = ({ value }) => {
-    dispatch(linkOpenerSettingHandler({ key: "CHROME_USER", value }));
   };
 
   /**
@@ -67,6 +71,10 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
     } else toastWarning("Select Monitor token");
   };
 
+  const handleSelectedChrome = (user) => {
+    dispatch(setLOchromeUser(user));
+  };
+
   return (
     <div>
       <AppSpacer spacer={30} />
@@ -94,9 +102,11 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
           fieldTitle="Chrome User"
           hideLabel={true}
           isCustomLabel={true}
-          onChange={handleChromeuserSelection}
+          onChange={handleSelectedChrome}
           isSelect={true}
+          selectOptions={chromeList}
           placeholderText="Select Chrome Profile"
+          value={chromeList.filter((d) => d["id"] === selectedChrome?.id)}
         />
       </div>
       <AppSpacer spacer={20} />

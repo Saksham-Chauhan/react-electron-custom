@@ -7,6 +7,7 @@ export const discordAccount = {
     keyWordList: [],
     channelList: [],
     logList: [],
+    selectedChromeUser: {},
   },
   inviteJoiner: {
     keyWordList: [],

@@ -33,3 +33,10 @@ export { default as TwitterPageTweetCard } from "./twitter-component/tweet-card/
 export { default as SpooferTopSection } from "./spoof-component/spoof-top-section/TopSection";
 export { default as SpooferTopBtnsWrraper } from "./spoof-component/spoof-top-btns/SpoofTopBtns";
 export { default as SpooferTableSection } from "./spoof-component/spoof-table-section/SpooferTable";
+
+// SETTING PAGE COMPONENET
+export { default as SeetingUserProfile } from "./setting-component/user-profile/UserProfile";
+export { default as SettingTopSection } from "./setting-component/setting-top/SettingTop";
+export { default as SettingChromeUserSection } from "./setting-component/chrome-user/ChromeUser";
+export { default as SettingCalimerGroupSection } from "./setting-component/claimer-group/CalimerGroup";
+export { default as SettingWebhookSection } from "./setting-component/webhook-section/WebhookSetting";

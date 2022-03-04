@@ -136,7 +136,14 @@ function urlParser(urls, keywords) {
   return response;
 }
 
-const scanner = async (tweetObject, keywords, webhooks, openerFlag) => {
+const scanner = async (
+  tweetObject,
+  keywords,
+  webhooks,
+  option,
+  webhookSetting,
+  featureList
+) => {
   let FTObject = Object.assign({}, tweetObject);
 
   const user = {
@@ -152,56 +159,62 @@ const scanner = async (tweetObject, keywords, webhooks, openerFlag) => {
   const qrText = await qrResolver(FTObject.extended_entities);
   const ocrText = await ocrResolver(FTObject.extended_entities);
   if (FTObject.entities.urls.length > 0) {
-    // Pastebin Parsing
     FTObject.pastebinText = await pastebinParser(FTObject.entities.urls);
-    //send pasbin content to webhook
-
-    // If openerFlag is true parse URLs
-    if (openerFlag) {
+    if (option?.startAutoLinkOpener) {
       FTObject.urlsExtracted = urlParser(FTObject.entities.urls, keywords);
     }
   }
-
-  // Assign a featured tweet type
   if (FTObject.binaryText !== null) {
     FTObject.featured_type = "Binary";
-    webhookHandler(
-      webhooks,
-      user,
-      "Binary Found",
-      FTObject.binaryText.toString().split(",").join("\n")
-    );
+    if (webhookSetting?.twitterMonitor && !(FTObject["id"] in featureList)) {
+      webhookHandler(
+        webhooks,
+        user,
+        "Binary Found",
+        FTObject.binaryText.toString().split(",").join("\n")
+      );
+    }
   } else if (FTObject.base64Text !== null) {
     FTObject.featured_type = "Base64";
-    webhookHandler(
-      webhooks,
-      user,
-      "base64 Found",
-      FTObject.binaryText.toString().split(",").join("\n")
-    );
+    if (webhookSetting?.twitterMonitor && !(FTObject["id"] in featureList)) {
+      webhookHandler(
+        webhooks,
+        user,
+        "base64 Found",
+        FTObject.binaryText.toString().split(",").join("\n")
+      );
+    }
   } else if (FTObject.mathSolved !== null) {
     FTObject.featured_type = "Maths";
-    webhookHandler(
-      webhooks,
-      user,
-      "Maths",
-      FTObject.mathSolved.toString().split(",").join("\n")
-    );
+    if (webhookSetting?.twitterMonitor && !(FTObject["id"] in featureList)) {
+      webhookHandler(
+        webhooks,
+        user,
+        "Maths Solved",
+        FTObject.mathSolved.toString().split(",").join("\n")
+      );
+    }
   } else if (
     typeof FTObject.pastebinText !== "undefined" &&
     FTObject.pastebinText !== null &&
     FTObject.pastebinText.length > 0
   ) {
     FTObject.featured_type = "Pastebin";
-    webhookHandler(
-      webhooks,
-      user,
-      "Pastbin Text",
-      FTObject.pastebinText.toString().split(",").join("\n")
-    );
+    if (webhookSetting?.twitterMonitor && !(FTObject["id"] in featureList)) {
+      webhookHandler(
+        webhooks,
+        user,
+        "Pastbin Text",
+        FTObject.pastebinText.toString().split(",").join("\n")
+      );
+    }
   } else if ("urlsExtracted" in FTObject) {
     FTObject.featured_type = "URLs extracted";
-    if (webhooks.length > 0) {
+    if (
+      webhooks.length > 0 &&
+      webhookSetting?.twitterMonitor &&
+      !(FTObject["id"] in featureList)
+    ) {
       webhookHandler(
         webhooks,
         user,
@@ -249,20 +262,24 @@ const scanner = async (tweetObject, keywords, webhooks, openerFlag) => {
   obj["ocrText"] = ocrText;
   if ("qrText" in obj && obj.qrText !== null) {
     FTObject.featured_type = "QR";
-    webhookHandler(
-      webhooks,
-      user,
-      "QR Found",
-      obj.qrText.toString().split(",").join("\n")
-    );
+    if (webhookSetting?.twitterMonitor && !(obj["tweet_id"] in featureList)) {
+      webhookHandler(
+        webhooks,
+        user,
+        "QR Found",
+        obj.qrText.toString().split(",").join("\n")
+      );
+    }
   } else if ("ocrText" in obj) {
     FTObject.featured_type = "OCR";
-    webhookHandler(
-      webhooks,
-      user,
-      "OCR Found",
-      obj.ocrText.toString().split(",").join("\n")
-    );
+    if (webhookSetting?.twitterMonitor && !(obj["tweet_id"] in featureList)) {
+      webhookHandler(
+        webhooks,
+        user,
+        "OCR Found",
+        obj.ocrText.toString().split(",").join("\n")
+      );
+    }
   }
   return { ...FTObject, ...obj };
 };

@@ -78,3 +78,9 @@ export const addNewApiInList = (apiObj) => (dispatch, getState) => {
   let combiner = [...currentApiList, obj];
   dispatch(appendApInList(combiner));
 };
+
+export const removeApiFromList = (api) => (dispatch, getState) => {
+  const currentApiList = fetchAPIlistState(getState());
+  let afterFilter = currentApiList.filter((a) => a["id"] !== api["id"]);
+  dispatch(appendApInList(afterFilter));
+};

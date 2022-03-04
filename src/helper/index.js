@@ -31,4 +31,29 @@ const downloadLogs = (content) => {
   a.click();
 };
 
+export const makeClaimerSelectOption = (list) => {
+  if (list.length > 0) {
+    return list.map((d) => {
+      let obj = {};
+      obj["label"] = d["name"];
+      obj["id"] = d["id"];
+      obj["value"] = d["claimerToken"];
+      return obj;
+    });
+  } else return [];
+};
+
+export const getClaimerValue = (list, obj) => {
+  const result = list.filter((data) => data["id"] === obj["id"]);
+  if (result.length > 0) {
+    return [
+      {
+        value: result[0]["claimerToken"],
+        label: result[0]["name"],
+        id: result[0]["id"],
+      },
+    ];
+  } else return [];
+};
+
 export const handleExportLogs = (logs) => downloadLogs(logs);

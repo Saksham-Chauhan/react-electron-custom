@@ -5,6 +5,8 @@ import {
   deleteTwitterDatafromList,
 } from "../../../features/logic/twitter";
 import { InputFieldWithScrollList } from "../..";
+import { TweetHandlerRegExp } from "../../../constant/regex";
+import { toastWarning } from "../../../toaster";
 
 function UserScrollList({ userList }) {
   const [user, setUser] = useState("");
@@ -16,8 +18,10 @@ function UserScrollList({ userList }) {
   };
 
   const handleUserAdd = () => {
-    dispatch(addTwitterKeywordInList({ key: "USER", word: user }));
-    setUser("");
+    if (TweetHandlerRegExp.test(user) && user.length > 0) {
+      dispatch(addTwitterKeywordInList({ key: "USER", word: user }));
+      setUser("");
+    } else toastWarning("Enter valid twitter handler");
   };
 
   const handleDeleteUser = (word) => {

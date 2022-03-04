@@ -9,4 +9,7 @@ export const twitterInitialState = {
     startAutoInviteJoiner: false,
   },
   twitterApiList: [],
+  apiRotaterIndex: 0,
+  twitterSelectedClaimerGroup: {},
+  twitterSelectedChromeUser: {},
 };

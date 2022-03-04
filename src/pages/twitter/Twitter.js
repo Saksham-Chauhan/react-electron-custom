@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import "./styles.css";
 import {
   setTwitterSetting,
+  clearTweetsFeeder,
+  fetchAPIlistState,
   fetchTwitterUserList,
-  fetchTwitterKeywordList,
-  fetchTwitterSettingState,
+  fetchApiRotaterIndex,
   fetchLatestTweetList,
   fetchFeatureTweetList,
-  clearTweetsFeeder,
+  fetchTwitterKeywordList,
+  fetchTwitterSettingState,
+  fetchWebhookSettingState,
+  incrementApiRotater,
 } from "../../features/counterSlice";
 import {
   TwitterTopLeftSection,
@@ -17,25 +21,28 @@ import {
   TwitterKeywordListSection,
 } from "../../pages-component";
 import { AppSpacer } from "../../component";
-import tweetConfig from "../../config/twitter";
 import { useDispatch, useSelector } from "react-redux";
+import tweetHelper from "./utils/feature-tweets/helper";
 import { getTweets } from "../../helper/electron-bridge";
 import { TweetHandlerRegExp } from "../../constant/regex";
-import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import twitterScanner from "./utils/feature-tweets/scanner";
+import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { appendNewTweetInList } from "../../features/logic/twitter";
-import tweetHelper from "./utils/feature-tweets/helper";
+import { toastWarning } from "../../toaster";
 
 const TWEET_FETCH_TIME = 5 * 1000;
 
 function Twitter() {
   const dispatch = useDispatch();
+  const apiList = useSelector(fetchAPIlistState);
   const userList = useSelector(fetchTwitterUserList);
   const [settingPage, setSettingPage] = useState(false);
+  const rotaterIndex = useSelector(fetchApiRotaterIndex);
   const keyWordList = useSelector(fetchTwitterKeywordList);
   const latestTweetList = useSelector(fetchLatestTweetList);
   const featureTweetList = useSelector(fetchFeatureTweetList);
   const twitterSetting = useSelector(fetchTwitterSettingState);
+  const webhookSetting = useSelector(fetchWebhookSettingState);
 
   useEffect(() => {
     let timer = null;
@@ -46,8 +53,8 @@ function Twitter() {
         userList.forEach(async (tweetUser) => {
           if (TweetHandlerRegExp.test(tweetUser["value"])) {
             const newTweets = await getTweets(
-              tweetConfig.keys[0].consumer_key,
-              tweetConfig.keys[0].consumer_secret,
+              apiList[rotaterIndex].apiKey,
+              apiList[rotaterIndex].apiSecret,
               tweetUser["value"]
             );
             dispatch(
@@ -60,10 +67,11 @@ function Twitter() {
               newTweets,
               keyWordList,
               webhook,
-              twitterSetting?.startAutoLinkOpener || false
+              twitterSetting,
+              webhookSetting,
+              latestTweetList
             );
             if (filteredTweets.featured_type) {
-              console.log(filteredTweets);
               dispatch(
                 appendNewTweetInList({ key: "FEATURE", tweet: filteredTweets })
               );
@@ -72,23 +80,44 @@ function Twitter() {
         });
       } catch (error) {
         console.log("Error in fetching tweets", error);
+        // FIXME: need to test api rotation functionality
+        dispatch(incrementApiRotater());
       }
     };
+
     if (twitterSetting?.twitterMonitor) {
       timer = setInterval(fetchTweets, TWEET_FETCH_TIME);
     } else {
       clearInterval(timer);
     }
+
     return () => {
       clearInterval(timer);
     };
-  }, [userList, keyWordList, twitterSetting, dispatch]);
+  }, [
+    userList,
+    keyWordList,
+    twitterSetting,
+    dispatch,
+    apiList,
+    rotaterIndex,
+    webhookSetting,
+    latestTweetList,
+  ]);
 
   const handleToggle = (event) => {
     let prevState = { ...twitterSetting };
     const { name, checked } = event.target;
     prevState[name] = checked;
-    dispatch(setTwitterSetting(prevState));
+    if (name === "twitterMonitor") {
+      if (apiList.length > 0) {
+        dispatch(setTwitterSetting(prevState));
+      } else {
+        toastWarning("Add some API keys");
+      }
+    } else {
+      dispatch(setTwitterSetting(prevState));
+    }
   };
 
   const handleScreen = () => {
@@ -119,7 +148,15 @@ function Twitter() {
           }}
         />
       ) : (
-        <TwitterSettingScreen {...{ handleScreen, latestTweetList }} />
+        <TwitterSettingScreen
+          {...{
+            handleScreen,
+            latestTweetList,
+            apiList,
+            rotaterIndex,
+            twitterSetting,
+          }}
+        />
       )}
     </div>
   );

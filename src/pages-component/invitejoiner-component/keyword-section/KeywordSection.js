@@ -5,14 +5,17 @@ import {
   addKeywordInList,
   deleteKeywordFromList,
 } from "../../../features/logic/discord-account";
+import { toastWarning } from "../../../toaster";
 
 function KeywordSection({ keywordList }) {
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
 
   const handleAddKeyword = () => {
-    dispatch(addKeywordInList({ key: "IJ", word: keyword }));
-    setKeyword("");
+    if (keyword.length > 0 && keyword !== "") {
+      dispatch(addKeywordInList({ key: "IJ", word: keyword }));
+      setKeyword("");
+    } else toastWarning("Enter valid keyword");
   };
 
   const handleKeywordChange = (e) => {

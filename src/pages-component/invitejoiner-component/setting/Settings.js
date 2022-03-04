@@ -1,14 +1,25 @@
 import React from "react";
 import "./styles.css";
-import { useDispatch } from "react-redux";
-import { setModalState } from "../../../features/counterSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchClaimerGroupList,
+  fetchSelectedClaimerTokenInviteJoiner,
+  setModalState,
+  setSelectedClaimerTokenIJ,
+} from "../../../features/counterSlice";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
+import { getClaimerValue, makeClaimerSelectOption } from "../../../helper";
 
 function Settings() {
   const dispatch = useDispatch();
-
+  const claimerList = useSelector(fetchClaimerGroupList);
+  const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
   const handleOpenModal = () => {
     dispatch(setModalState("inviteJoinerSetting"));
+  };
+
+  const handleClaimer = (data) => {
+    dispatch(setSelectedClaimerTokenIJ(data));
   };
 
   return (
@@ -34,7 +45,10 @@ function Settings() {
             isCustomLabel={true}
             hideLabel={true}
             placeholderText="Select Token"
+            selectOptions={makeClaimerSelectOption(claimerList)}
             isSelect={true}
+            onChange={handleClaimer}
+            value={getClaimerValue(claimerList, selectedToken)}
           />
         </div>
         <div className="half-section">

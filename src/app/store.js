@@ -7,7 +7,16 @@ import { persistReducer } from "redux-persist";
 const persistConfig = {
   key: "Kyros-storage",
   storage,
-  blacklist: [],
+  blacklist: [
+    "addGmail",
+    "editProxy",
+    "proxyGroup",
+    "spoofModal",
+    "editStorage",
+    "discordAccount",
+    "inviteJoinerAccount",
+    "inviteJoinerSetting",
+  ],
 };
 
 const persistKyrosReducer = persistReducer(persistConfig, counterReducer);
