@@ -1,6 +1,6 @@
 import React from "react";
 import "./InputGroup.css";
-import searchIcon from "../../../assests/sidebarImage/searchIcon.svg";
+import searchIcon from "../../../assests/images/search.svg";
 import trash from "../../../assests/images/trash.svg";
 import test from "../../../assests/images/chemistry.svg";
 import edit from "../../../assests/images/edit.svg";

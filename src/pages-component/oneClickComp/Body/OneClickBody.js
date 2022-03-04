@@ -1,8 +1,8 @@
 import React from "react";
 import "./OneClickBody.css";
-import rigthTic from "../../../assests/sidebarImage/rigthTic.svg";
-import questionMark from "../../../assests/sidebarImage/questionMark.svg";
-import FlopTic from "../../../assests/sidebarImage/FlopTic.svg";
+import rigthTic from "../../../assests/images/oneclick_success.svg";
+import questionMark from "../../../assests/images/oneclick_idle.svg";
+import FlopTic from "../../../assests/images/oneclick_warning.svg";
 import chemistry from "../../../assests/images/chemistry.svg";
 import play from "../../../assests/images/play.svg";
 import trash from "../../../assests/images/trash.svg";
