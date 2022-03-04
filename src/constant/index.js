@@ -3,14 +3,12 @@ export const STATE_KEY = "kyro-tools";
 export const RoutePath = {
   home: "/",
   oneclick: "/oneclick",
+  profile: "/profile",
   proxy: "/proxy",
-  account: "/account",
-  settings: "/settings",
+  accountGen: "/accountGen",
   linkOpener: "/linkOpener",
   inviteJoiner: "/inviteJoiner",
-  accountGen: "/accountGen",
-  profile: "/profile",
   spoofer: "/spoofer",
   twitter: "/twitter/*",
-  setting: "/setting",
+  settings: "/settings",
 };

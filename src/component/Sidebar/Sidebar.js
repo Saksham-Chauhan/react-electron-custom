@@ -1,89 +1,68 @@
 import React, { useState } from "react";
 import SidebarOption from "./SideBarOption/SidebarOption";
 import "./Sidebar.css";
-// deafault Icone
-import logo from "../../assests/sidebarImage/logo.svg";
-import dashboard from "../../assests/sidebarImage/dashboard.svg";
-import oneClick from "../../assests/sidebarImage/oneClick.svg";
-import acountIcon from "../../assests/sidebarImage/acountIcon.svg";
-import proxy from "../../assests/sidebarImage/proxy.svg";
-import link_opner from "../../assests/sidebarImage/link_opner.svg";
-import twitter from "../../assests/sidebarImage/twitter.svg";
-import settings from "../../assests/sidebarImage/settings.svg";
-import AppUpdate from "../../assests/sidebarImage/AppUpdate.svg";
-import Browser from "../../assests/sidebarImage/Browser.svg";
-import discordIcon from "../../assests/sidebarImage/discordIcon.svg";
-import harvester from "../../assests/sidebarImage/harvester.svg";
-
-// active Icons
-import activeOneClick from "../../assests/sidebarImage/activeOneClick.svg";
-import ActiveProxy from "../../assests/sidebarImage/activeProxy.svg";
-import activeLinkOpner from "../../assests/sidebarImage/activeLinkOpner.svg";
-import activeAcountIcon from "../../assests/sidebarImage/activeAcountIcon.svg";
-import activeDashboard from "../../assests/sidebarImage/activeDashboard.svg";
-import activeTwitter from "../../assests/sidebarImage/activeTwitter.svg";
-import activeSettings from "../../assests/sidebarImage/activeSettings.svg";
-import activeUpdate from "../../assests/sidebarImage/activeUpdate.svg";
-import activeBrowser from "../../assests/sidebarImage/activeBrowser.svg";
-import activeDiscord from "../../assests/sidebarImage/activeDiscord.svg";
-import acticveHarvester from "../../assests/sidebarImage/acticveHarvester.svg";
 import { RoutePath } from "../../constant";
+import logo from "../../assests/images/logo.svg";
+import defaultUpdate from "../../assests/activeDefault/update-default.svg";
+import activeDashboard from "../../assests/activeDefault/dashboard-active.svg";
+import activeAccgen from "../../assests/activeDefault/accgen-active.svg";
+import activeOneclick from "../../assests/activeDefault/oneclick-active.svg";
+import activeProxy from "../../assests/activeDefault/proxy-active.svg";
+import activeLinkOpener from "../../assests/activeDefault/link-active.svg";
+import activeProfile from "../../assests/activeDefault/profile-active.svg";
+import activeTwitter from "../../assests/activeDefault/twitter-active.svg";
+import activeSettings from "../../assests/activeDefault/settings-active.svg";
+import activeUpdate from "../../assests/activeDefault/update-active.svg";
+import activeSpoof from "../../assests/activeDefault/spoof-active.svg";
+import activeInvite from "../../assests//activeDefault/invite-active.svg";
 import { checkForUpdates } from "../../helper/electron-bridge";
 const pjson  = require("../../../package.json")
+
 
 const iconData = [
   {
     pageTo: RoutePath.home,
-    defaultIcon: dashboard,
     activeIcon: activeDashboard,
   },
   {
     pageTo: RoutePath.oneclick,
-    defaultIcon: oneClick,
-    activeIcon: activeOneClick,
+    activeIcon: activeOneclick,
   },
 
   {
-    pageTo: RoutePath.oneclick,
-    defaultIcon: harvester,
-    activeIcon: acticveHarvester,
+    pageTo: RoutePath.profile,
+    activeIcon: activeProfile,
   },
   {
     pageTo: RoutePath.proxy,
-    defaultIcon: proxy,
-    activeIcon: ActiveProxy,
+    activeIcon: activeProxy,
   },
   {
-    pageTo: RoutePath.profile,
-    defaultIcon: acountIcon,
-    activeIcon: activeAcountIcon,
+    pageTo: RoutePath.accountGen,
+    activeIcon: activeAccgen,
   },
 
   {
     pageTo: RoutePath.linkOpener,
-    defaultIcon: link_opner,
-    activeIcon: activeLinkOpner,
+    activeIcon: activeLinkOpener,
   },
   {
     pageTo: RoutePath.inviteJoiner,
-    defaultIcon: discordIcon,
-    activeIcon: activeDiscord,
+    activeIcon: activeInvite,
   },
   {
     pageTo: RoutePath.spoofer,
-    defaultIcon: Browser,
-    activeIcon: activeBrowser,
+    activeIcon: activeSpoof,
   },
   {
     pageTo: RoutePath.twitter,
-    defaultIcon: twitter,
     activeIcon: activeTwitter,
   },
   {
-    pageTo: RoutePath.setting,
-    defaultIcon: settings,
+    pageTo: RoutePath.settings,
     activeIcon: activeSettings,
   },
+
 ];
 
 const Sidebar = () => {
@@ -96,13 +75,12 @@ const Sidebar = () => {
   return (
     <div className="sidebarMain">
       <div className="sidebarMain--logo-wrapper">
-        <img src={logo} alt="kyrs-logo" />
+        <img src={logo} alt="logo" />
       </div>
       {iconData.map((data, idx) => (
         <SidebarOption
           key={idx}
           pageTo={data.pageTo}
-          defaultIcon={data.defaultIcon}
           activeIcon={data.activeIcon}
           activeClassName={active === idx ? "activeLink" : ""}
           onClick={() => handleActivePage(idx)}
@@ -111,9 +89,8 @@ const Sidebar = () => {
       <div className="updateIcon">
         <SidebarOption
           pageTo={"/appupdate"}
+          defaultIcon={defaultUpdate}
           onClick={() => checkForUpdates}
-          defaultIcon={AppUpdate}
-          activeIcon={activeUpdate}
         />
         <p>V: {pjson.version}</p>
       </div>
