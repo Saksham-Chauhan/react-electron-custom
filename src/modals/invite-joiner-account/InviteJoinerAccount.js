@@ -31,7 +31,7 @@ function InviteJoinerAccount() {
     return () => {
       dispatch(setEditStorage({}));
     };
-  }, [editState]);
+  }, [editState, dispatch]);
 
   const handleCloseModal = () => {
     dispatch(setModalState("inviteJoinerAccount"));

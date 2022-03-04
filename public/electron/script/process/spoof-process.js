@@ -2,7 +2,6 @@ const path = require("path");
 const electron = require("electron");
 const UserAgent = require("user-agents");
 
-const ipcMain = electron.ipcMain;
 const session = electron.session;
 const BrowserWindow = electron.BrowserWindow;
 
@@ -28,34 +27,18 @@ class SpooferInstance {
   }
 
   init() {
-    this.setStatus("Not Launch");
-    this.sendToaster("Created");
-
-    // # LAUNCH BROWSER BUT LET IT STAY HIDDEN
-    ipcMain.on(`launchBrowser taskId-${this.id}`, (evt) => {
-      if (!this.isLaunched && !this.isDeleted) {
-        this.launchBrowser();
-        this.mainWin.webContents.send(`launchBrowser taskId-${this.id} hide`);
-      }
-    });
-
-    // # LAUNCH ALL BROWSER BUT LET IT STAY HIDDEN
-    ipcMain.on(`launch-all-instance`, (evt) => {
-      if (!this.isLaunched && !this.isDeleted) {
-        this.launchBrowser();
-        this.mainWin.webContents.send(`launchBrowser taskId-${this.id} hide`);
-      }
-    });
+    this.sendStatus("Running");
   }
 
   deleteBrowser() {
     if (this.isLaunched) {
-      this.win.destroy();
+      this.win?.destroy();
       this.isDeleted = true;
     } else {
       this.isDeleted = true;
     }
   }
+
   clearCookie() {
     if (this.isLaunched) {
       console.log(this.win.getTitle());
@@ -93,7 +76,6 @@ class SpooferInstance {
 
   // LAUNCH BROWSER
   launchBrowser() {
-    this.setStatus("Open");
     this.isLaunched = true;
     this.win = new BrowserWindow({
       width: 500,
@@ -160,14 +142,12 @@ class SpooferInstance {
     this.win.on("page-title-updated", (evt, title) => {
       evt.preventDefault();
       // # update title when title update
-      this.mainWin.webContents.send(
-        `browserTask taskId-${this.id} SetTitle`,
-        title
-      );
+
       // # if title change, notify user
     });
 
     this.win.on("closed", () => {
+      this.sendStatus("Stopped");
       this.win = null;
     });
   }
@@ -178,15 +158,13 @@ class SpooferInstance {
     if (win !== null) {
       if (!win.isVisible()) {
         win.show();
-        this.setStatus("Open");
-        this.sendToaster("Open");
+        this.sendStatus("Opened");
       } else {
         win.hide();
-        this.setStatus("Close");
-        this.sendToaster("Close");
+        this.sendStatus("Closed");
       }
     } else {
-      this.sendToaster("Not created");
+      this.mainWin.webContents.send("error", "Instance Not created");
     }
   }
 
@@ -198,23 +176,19 @@ class SpooferInstance {
   }
 
   closeBrowser() {
-    this.win?.close();
-    this.sendToaster("Stopped");
+    if (this.win !== null) {
+      this.win.close();
+      this.sendStatus("Stopped");
+    }
   }
 
-  setStatus(status) {
-    this.status = status;
-    this.mainWin.webContents.send(
-      `browserTask taskId-${this.id} SetStatus`,
-      status
-    );
-  }
-
-  sendToaster(msg) {
-    this.mainWin.webContents.send("spoofer-toaster", {
-      status: msg,
-      id: this.id,
-    });
+  sendStatus(msg) {
+    if (this.mainWin) {
+      this.mainWin.webContents.send("spoofer-toaster", {
+        status: msg,
+        id: this.id,
+      });
+    }
   }
 }
 

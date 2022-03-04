@@ -32,3 +32,4 @@ export { default as TwitterPageTweetCard } from "./twitter-component/tweet-card/
 //SPOOF PAGE COMPONENT
 export { default as SpooferTopSection } from "./spoof-component/spoof-top-section/TopSection";
 export { default as SpooferTopBtnsWrraper } from "./spoof-component/spoof-top-btns/SpoofTopBtns";
+export { default as SpooferTableSection } from "./spoof-component/spoof-table-section/SpooferTable";

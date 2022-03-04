@@ -7,13 +7,42 @@ import test from "../../../assests/images/chemistry.svg";
 import searchIcon from "../../../assests/images/search.svg";
 import exportIcon from "../../../assests/images/export.svg";
 import importIcon from "../../../assests/images/import.svg";
-import { deleteProxyGroup } from "../../../features/logic/proxy";
+import {
+  deleteProxyGroup,
+  removeBadProxy,
+} from "../../../features/logic/proxy";
+import { setEditStorage, setModalState } from "../../../features/counterSlice";
+import { toastWarning } from "../../../toaster";
+import { proxyTester } from "../../../helper/electron-bridge";
 
-function ProxyTopBtnsWrapper({ search, handleSearching }) {
+function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
   const dispatch = useDispatch();
 
   const handleDeleteGroup = () => {
-    dispatch(deleteProxyGroup());
+    if (Object.keys(tempData).length > 0) {
+      dispatch(deleteProxyGroup());
+    } else toastWarning("Select proxy group");
+  };
+
+  const handleEditGroup = () => {
+    if (Object.keys(tempData).length > 0) {
+      dispatch(setEditStorage(tempData));
+      dispatch(setModalState("proxyGroup"));
+    } else toastWarning("Select proxy group");
+  };
+
+  const handleTestproxy = () => {
+    if (Object.keys(tempData).length > 0) {
+      tempData["proxyList"].forEach((proxy) => {
+        proxyTester(proxy);
+      });
+    } else toastWarning("Select proxy group");
+  };
+
+  const handleRemoveBadProxy = () => {
+    if (Object.keys(tempData).length > 0) {
+      dispatch(removeBadProxy());
+    } else toastWarning("Select proxy group");
   };
 
   return (
@@ -28,10 +57,10 @@ function ProxyTopBtnsWrapper({ search, handleSearching }) {
             type="search"
           />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div onClick={handleTestproxy} className="icon-btn-wrapper btn">
           <img src={test} alt="" />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div onClick={handleEditGroup} className="icon-btn-wrapper btn">
           <img src={edit} alt="" />
         </div>
         <div onClick={handleDeleteGroup} className="icon-btn-wrapper btn">
@@ -39,7 +68,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching }) {
         </div>
       </div>
       <div className="page-right-container">
-        <div className="remove-btn btn">
+        <div onClick={handleRemoveBadProxy} className="remove-btn btn">
           <img src={trash} alt="" />
           <span>Remove Bad Proxies</span>
         </div>

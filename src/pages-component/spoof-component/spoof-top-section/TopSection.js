@@ -1,10 +1,18 @@
 import React from "react";
 import { GroupStatusCard, TopWrapper } from "../../../component";
 
-function TopSection() {
+const STATUS_MATCH = ["Running", "Opened"];
+
+function TopSection({ tableList }) {
   return (
     <TopWrapper>
-      <GroupStatusCard title="Spoofer" subText="88 Tasks Running" />
+      <GroupStatusCard
+        title="Spoofer"
+        subText={`${
+          tableList.filter((spoof) => STATUS_MATCH.includes(spoof["status"]))
+            .length
+        }  Tasks Running`}
+      />
     </TopWrapper>
   );
 }

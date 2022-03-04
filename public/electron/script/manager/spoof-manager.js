@@ -20,9 +20,23 @@ class SpooferManager {
     }
   }
 
+  stopAllSpoofer() {
+    Object.keys(this.bots).forEach((spoof) => {
+      this.stopSpoofer(spoof);
+    });
+  }
+
+  deleteAllSpoofer() {
+    Object.keys(this.bots).forEach((spoof) => {
+      this.deleteSpoofer(spoof);
+    });
+  }
+
   toggleSpoofer(id) {
     if (id in this.bots) {
       this.bots[id].toggleBrowser();
+    } else {
+      this.sendError("Instance not created");
     }
   }
 
@@ -36,6 +50,11 @@ class SpooferManager {
     if (id in this.bots) {
       this.bots[id].deleteBrowser();
       delete this.bots[id];
+    }
+  }
+  sendError(msg) {
+    if (global.mainWin) {
+      global.mainWin.webContents.send("error", msg);
     }
   }
 }

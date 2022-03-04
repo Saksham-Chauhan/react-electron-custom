@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AppInputField,
   AppSpacer,
   AppToggler,
+  LabelWithToolTip,
   ModalWrapper,
 } from "../../component";
 import {
@@ -12,7 +13,7 @@ import {
   setIJLOSetting,
   setModalState,
 } from "../../features/counterSlice";
-import help from "../../assests/images/help.svg";
+
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
   const editState = useSelector(fetchIJSettingState);
@@ -82,10 +83,7 @@ function InviteJoinerSettings() {
       </div>
       <AppSpacer spacer={30} />
       <div className="joiner-custom-input">
-        <div className="custom-joiner-label">
-          <label>Invite Code</label>
-          <img src={help} alt="help-icon" />
-        </div>
+        <LabelWithToolTip labelText="Invite Code" />
         <AppInputField
           onChange={handleInviteChange}
           placeholderText="Enter Invite Code"
@@ -95,10 +93,7 @@ function InviteJoinerSettings() {
       </div>
       <AppSpacer spacer={20} />
       <div className="joiner-custom-input">
-        <div className="custom-joiner-label">
-          <label>React</label>
-          <img src={help} alt="help-icon" />
-        </div>
+        <LabelWithToolTip labelText="React" />
         <AppSpacer spacer={5} />
         <div className="joiner-custom-toggle">
           <AppToggler
@@ -144,10 +139,7 @@ function InviteJoinerSettings() {
       </div>
       <AppSpacer spacer={20} />
       <div className="joiner-custom-input">
-        <div className="custom-joiner-label">
-          <label>Accept Rules</label>
-          <img src={help} alt="help-icon" />
-        </div>
+        <LabelWithToolTip labelText="Accept Rules" />
         <AppSpacer spacer={5} />
         <div className="joiner-custom-toggle">
           <AppToggler

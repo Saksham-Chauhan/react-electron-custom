@@ -3,19 +3,22 @@ import { createSlice } from "@reduxjs/toolkit";
 import { ProxyState } from "./initial-state/proxy";
 import { discordAccount } from "./initial-state/discordAccount";
 import { twitterInitialState } from "./initial-state/twitter";
-
+import { spoofInitialState } from "./initial-state/spoof";
 const initialState = {
   tempStorage: {},
   editStorage: {},
   ...ProxyState,
   ...discordAccount,
   ...twitterInitialState,
+  ...spoofInitialState,
   modals: {
     proxyGroup: false,
     discordAccount: false,
     addGmail: false,
     inviteJoinerAccount: false,
     inviteJoinerSetting: false,
+    spoofModal: false,
+    editProxy: false,
   },
 };
 
@@ -41,6 +44,7 @@ export const counterSlice = createSlice({
       state.discordAccount = action.payload;
     },
     setSelectedMonitorTokenLO: (state, action) => {
+      console.log(action);
       state.selectedMonitorTokenLO = action.payload;
     },
     appendLogList: (state, action) => {
@@ -95,11 +99,15 @@ export const counterSlice = createSlice({
     appendApInList: (state, action) => {
       state.twitterApiList = action.payload;
     },
+    appendSpooferInList: (state, action) => {
+      state.spoofTabe = action.payload;
+    },
   },
 });
 
 export const {
   appendApInList,
+  appendSpooferInList,
   clearLogList,
   appendLogList,
   setModalState,
@@ -126,7 +134,8 @@ export const fetchEditStorageState = (state) => state[STATE_KEY].editStorage;
 export const fetchProxyGroupList = (state) => state[STATE_KEY].proxyGroup;
 export const fetchProxyGroupModalState = (state) =>
   state[STATE_KEY].modals.proxyGroup;
-
+export const fetchEditProxyModalState = (state) =>
+  state[STATE_KEY].modals.editProxy;
 // LINK OPNER SELECTOR
 export const fetchDiscordModalState = (state) =>
   state[STATE_KEY].modals.discordAccount;
@@ -173,3 +182,8 @@ export const fetchLatestTweetList = (state) => state[STATE_KEY].latesTweetlist;
 export const fetchFeatureTweetList = (state) =>
   state[STATE_KEY].featureTweetList;
 export const fetchAPIlistState = (state) => state[STATE_KEY].twitterApiList;
+
+// SPOOF
+export const fetchSpoofModalState = (state) =>
+  state[STATE_KEY].modals.spoofModal;
+export const fetchSpoofTableList = (state) => state[STATE_KEY].spoofTabe;

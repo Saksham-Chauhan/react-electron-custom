@@ -41,26 +41,23 @@ export const addProxyGroupSchema = joi.object({
   proxyList: joi.array(),
   groupName: joi.string().required().label("Enter group name"),
   proxies: joi.optional(),
+  type: joi.optional(),
 });
 
 export const spooferSchema = joi.object({
   url: joi.optional(),
   proxyName: joi.string().required().label("Select Proxy"),
   quantity: joi.number().required().min(1).label("Enter quantity value"),
-  delay: joi.optional(),
   disableImages: joi.optional(),
   id: joi.optional(),
   status: joi.optional(),
   proxyValue: joi.optional(),
+  isDisableImage: joi.optional(),
 });
 
 export const discordAccountSchema = joi.object({
   accountName: joi.string().required().label("Enter Account name"),
-  discordToken: joi
-    .string()
-    .required()
-    .pattern(new RegExp("/[a-zA-Z0-9.-]{40,}/"))
-    .label("Enter valid token"),
+  discordToken: joi.optional(),
   id: joi.optional(),
 });
 

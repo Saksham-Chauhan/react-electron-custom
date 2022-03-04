@@ -12,3 +12,4 @@ export { default as AppToggler } from "./switch/Switch";
 export { default as AppFooter } from "./footer/Footer";
 export { default as AppSidebar } from "./Sidebar/Sidebar";
 export { default as AppCheckbox } from "./checkbox/Checkbox";
+export { default as LabelWithToolTip } from "./tooltip-label/LabelWithTooltip";

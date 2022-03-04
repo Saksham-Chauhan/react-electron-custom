@@ -1,36 +1,76 @@
 import React from "react";
-import searchIcon from "../../../assests/images/search.svg";
+import {
+  stopSpoofer,
+  startSpoofer,
+  deleteSpoofer,
+  launchSpoofer,
+} from "../../../helper/electron-bridge";
+import { useDispatch } from "react-redux";
+import { toastWarning } from "../../../toaster";
 import play from "../../../assests/images/play.svg";
 import plus from "../../../assests/images/plus.svg";
 import stop from "../../../assests/images/stop.svg";
 import trash from "../../../assests/images/trash.svg";
+import searchIcon from "../../../assests/images/search.svg";
+import { setModalState } from "../../../features/counterSlice";
 
-function SpoofTopBtns() {
+function SpoofTopBtns({ tableList, search, handleSearching }) {
+  const dispatch = useDispatch();
+
+  const handleOpenModal = () => {
+    dispatch(setModalState("spoofModal"));
+  };
+
+  const handleAll = (key) => {
+    if (tableList.length > 0) {
+      tableList.forEach((spoof) => {
+        if (key === "LAUNCH") {
+          launchSpoofer(spoof);
+        } else if (key === "START") {
+          startSpoofer(spoof);
+        } else if (key === "STOP") {
+          stopSpoofer(spoof);
+        } else {
+          deleteSpoofer(spoof);
+        }
+      });
+    } else toastWarning("Create some spoof");
+  };
+
   return (
     <div className="page-top-btns-wrapper">
       <div className="page-left-container spoofer-page">
         <div className="page-top-search-container">
           <img src={searchIcon} alt="search-icon" />
           <input
-            // value={search}
-            // onChange={handleSearching}
+            value={search}
+            onChange={handleSearching}
             placeholder="Search"
             type="search"
           />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div onClick={handleOpenModal} className="icon-btn-wrapper btn">
           <img src={plus} alt="" />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div
+          onClick={() => handleAll("START")}
+          className="icon-btn-wrapper btn"
+        >
           <img src={play} alt="" />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div onClick={() => handleAll("STOP")} className="icon-btn-wrapper btn">
           <img src={stop} alt="" />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div
+          onClick={() => handleAll("DELETE")}
+          className="icon-btn-wrapper btn"
+        >
           <img src={trash} alt="" />
         </div>
-        <div className="btn-with-no-icon remove-btn">
+        <div
+          onClick={() => handleAll("LAUNCH")}
+          className="btn-with-no-icon btn remove-btn"
+        >
           <span>Launch All</span>
         </div>
       </div>

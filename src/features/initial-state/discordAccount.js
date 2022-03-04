@@ -1,7 +1,7 @@
 export const discordAccount = {
   discordAccount: [],
   claimerAccountList: [],
-  selectedMonitorTokenLO: "",
+  selectedMonitorTokenLO: {},
   selectedClaimerTokenIJ: {},
   linkOpener: {
     keyWordList: [],

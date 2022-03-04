@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import SidebarOption from "./SideBarOption/SidebarOption";
 import "./Sidebar.css";
 import { RoutePath } from "../../constant";
-// deafault Icons
 import logo from "../../assests/images/logo.svg";
 import defaultUpdate from "../../assests/activeDefault/update-default.svg";
-// active Icons
 import activeDashboard from "../../assests/activeDefault/dashboard-active.svg";
 import activeAccgen from "../../assests/activeDefault/accgen-active.svg";
 import activeOneclick from "../../assests/activeDefault/oneclick-active.svg";
@@ -17,6 +15,9 @@ import activeSettings from "../../assests/activeDefault/settings-active.svg";
 import activeUpdate from "../../assests/activeDefault/update-active.svg";
 import activeSpoof from "../../assests/activeDefault/spoof-active.svg";
 import activeInvite from "../../assests//activeDefault/invite-active.svg";
+import { checkForUpdates } from "../../helper/electron-bridge";
+const pjson  = require("../../../package.json")
+
 
 const iconData = [
   {
@@ -89,9 +90,9 @@ const Sidebar = () => {
         <SidebarOption
           pageTo={"/appupdate"}
           defaultIcon={defaultUpdate}
-          activeIcon={activeUpdate}
+          onClick={() => checkForUpdates}
         />
-        <p>V: 0.0.1</p>
+        <p>V: {pjson.version}</p>
       </div>
     </div>
   );

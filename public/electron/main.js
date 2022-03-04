@@ -5,9 +5,11 @@ const isDev = require("electron-is-dev");
 const currentProcesses = require("current-processes");
 const { autoUpdater } = require("electron-updater");
 const _ = require("lodash");
+const ping = require("ping");
 const spooferManager = require("./script/manager/spoof-manager");
 const auth = require("./auth");
 const fetchTweets = require("./helper/fetchTweet");
+const { result } = require("lodash");
 let win = null;
 let mainWindow = null;
 let splash = null;
@@ -95,18 +97,24 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: false,
+      devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
   });
-  mainWindow.webContents.openDevTools();
   if (isDev) {
+    mainWindow.webContents.openDevTools();
   } else {
     console.log(`This is Build Product ${app.getVersion()} Version`);
   }
 
-  splash = new BrowserWindow({width: 700, height: 390, transparent: true, frame: false, alwaysOnTop: true});
+  splash = new BrowserWindow({
+    width: 700,
+    height: 390,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
   splash.loadURL(
     isDev
       ? `file://${path.join(__dirname, "../splash.html")}`
@@ -150,6 +158,7 @@ ipcMain.on("close", () => {
 ipcMain.handle("get-app-version", () => {
   return app.getVersion();
 });
+
 ipcMain.on("minimize", () => {
   mainWindow.minimize();
 });
@@ -174,6 +183,7 @@ app.on("activate", () => {
 });
 
 app.on("window-all-closed", function () {
+  spooferManager.deleteAllSpoofer();
   app.quit();
 });
 
@@ -385,4 +395,33 @@ ipcMain.on("toggle-spoofer", (_, data) => {
 
 ipcMain.on("delete-spoofer", (_, data) => {
   spooferManager.deleteSpoofer(data.id);
+});
+
+ipcMain.on("launch-spoofer", (_, data) => {
+  spooferManager.addSpoofer(data);
+  spooferManager.startSpoofer(data.id);
+  spooferManager.toggleSpoofer(data.id);
+});
+
+// proxy IPC
+const proxyTester = async (proxy) => {
+  let res = await ping.promise.probe(proxy);
+  if (res["time"] !== "unknown") {
+    return res;
+  } else {
+    return null;
+  }
+};
+
+ipcMain.on("proxy-tester", async (event, data) => {
+  const { proxy } = data;
+  let proxyArr = proxy.split(":");
+  if (proxyArr.length === 4) {
+    let proxyWithPort = proxyArr[0];
+    const response = await proxyTester(proxyWithPort);
+    event.sender.send("proxy-test-result", {
+      ...data,
+      status: response !== null ? response["avg"] : "Bad",
+    });
+  }
 });

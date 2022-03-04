@@ -58,11 +58,13 @@
   overflow-y: scroll;
 }
 .input-field-with-scroll-inner > .scroll-list::-webkit-scrollbar,
-.scroll-card-content::-webkit-scrollbar {
+.scroll-card-content::-webkit-scrollbar,
+.spoofer-table-scroller::-webkit-scrollbar {
   width: 4px;
 }
 .input-field-with-scroll-inner > .scroll-list::-webkit-scrollbar-thumb,
-.scroll-card-content::-webkit-scrollbar-thumb {
+.scroll-card-content::-webkit-scrollbar-thumb,
+.spoofer-table-scroller::-webkit-scrollbar-thumb {
   background: var(--scrollbar-bg);
   border-radius: 14px;
 }
