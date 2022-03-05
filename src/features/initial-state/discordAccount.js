@@ -1,5 +1,5 @@
 export const discordAccount = {
-  discordAccount: [],
+  discordAccountList: [],
   claimerAccountList: [],
   selectedMonitorTokenLO: {},
   selectedClaimerTokenIJ: {},

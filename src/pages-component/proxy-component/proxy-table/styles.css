@@ -35,13 +35,13 @@
 }
 
 .table-body-scroll {
-  height: 72vh;
+  height: 70vh;
   overflow-y: scroll;
 }
 .table-body-scroll::-webkit-scrollbar {
   width: 5px;
 }
 .table-body-scroll::-webkit-scrollbar-thumb {
-  background: var(--sidebar-bg);
+  background: var(--scrollbar-bg);
   border-radius: 10px;
 }

@@ -10,5 +10,5 @@ export const RoutePath = {
   inviteJoiner: "/inviteJoiner",
   spoofer: "/spoofer",
   twitter: "/twitter/*",
-  settings: "/settings",
+  setting: "/settings",
 };

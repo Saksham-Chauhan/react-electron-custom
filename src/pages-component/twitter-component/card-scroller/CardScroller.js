@@ -11,7 +11,7 @@ import {
   fetchTwitterClaimerGroupState,
 } from "../../../features/counterSlice";
 const open = window.require("open");
-// TODO after creatimg setting page comment out the code and map the corresponding data
+
 function CardScroller({
   title,
   list = [],
@@ -21,6 +21,7 @@ function CardScroller({
 }) {
   const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
   const selectedChrome = useSelector(fetchTwitterChromeUserState);
+
   useEffect(() => {
     if (isFeatureTweet) {
       Object.keys(list).forEach(async (data) => {
@@ -86,7 +87,6 @@ function CardScroller({
               } else if (tweet.featured_type === "Base64") {
                 text = tweet.base64Text;
               } else if (tweet.featured_type === "Maths") {
-                console.log(tweet);
                 text = tweet.mathSolved;
               } else if (tweet.featured_type === "Pastebin") {
                 text = tweet.pastebinText.toString();

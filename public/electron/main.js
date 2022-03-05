@@ -10,7 +10,7 @@ const ping = require("ping");
 const spooferManager = require("./script/manager/spoof-manager");
 const auth = require("./auth");
 const fetchTweets = require("./helper/fetchTweet");
-
+const fs = require("fs");
 const testNetworkSpeed = new NetworkSpeed();
 
 let win = null;
@@ -100,7 +100,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: !isDev ? false : true,:: FIXME: uncomment in production
+      devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",

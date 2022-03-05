@@ -47,7 +47,7 @@ export const deleteAccountFromList =
       (account) => account["id"] !== tempAccount["id"]
     );
     dispatch(appendDiscordAccount(afterDelete));
-    dispatch(setSelectedMonitorTokenLO(""));
+    dispatch(setSelectedMonitorTokenLO({}));
   };
 
 export const addKeywordInList = (data) => (dispatch, getState) => {

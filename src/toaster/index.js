@@ -17,7 +17,7 @@ export const toastSuccess = (msg = "🦄 Wow so easy!") => {
 };
 
 export const toastWarning = (msg = "🦄 Wow so easy!") => {
-  toast.warn(msg, TOAST_CONFIGURATION);
+  toast.warn(msg, { ...TOAST_CONFIGURATION });
 };
 
 export const toastInfo = (msg = "🦄 Wow so easy!") => {

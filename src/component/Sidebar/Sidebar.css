@@ -1,294 +1,117 @@
 .sidebarMain {
   height: 100%;
   width: 100%;
-  padding-top: 12px;
-}
-.sidebarMain--logo-wrapper > img {
-  height: 40px;
+  padding-top: 1.2em;
 }
 .sidebarMain--logo-wrapper {
   display: flex;
   justify-content: center;
   margin-bottom: 30px;
 }
-
-.updateIcon {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  bottom: 3px;
+.sidebarMain--logo-wrapper > img {
+  height: 40px;
+  object-fit: contain;
+}
+.sidebar-main-middle {
+  width: 100%;
 }
 
+/* /icon animation */
+/* home_animation Icon animation  */
 
-.updateIcon p {
-  font-size: 12px;
-  color: var(--primary);
+.sidebar-option-inner.home:hover > img,
+.sidebar-option-inner.oneclick:hover > img,
+.sidebar-option-inner.profile:hover > img,
+.sidebar-option-inner.proxy:hover > img,
+.sidebar-option-inner.account:hover > img,
+.sidebar-option-inner.linkopener:hover > img,
+.sidebar-option-inner.invitejoiner:hover > img,
+.sidebar-option-inner.twitter:hover > img,
+.sidebar-option-inner.setting:hover > img,
+.sidebar-option-inner.spoofer:hover > img,
+.sidebar-option-inner.update:hover > img {
+  display: none;
+}
+.bg-animation-css {
+  animation: backgroundScroll;
+  animation-duration: 2s;
+  animation-timing-function: steps(5);
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  background-repeat: repeat-x;
+  background-size: 100% 100%;
+}
+.sidebar-option-inner.home:hover {
+  background: url("../../assests/sidebar_animation/dashboard-animation.svg");
+}
+
+.sidebar-option-inner.oneclick:hover {
+  background: url("../../assests/sidebar_animation/oneclick-animation.svg");
+}
+.sidebar-option-inner.profile > img {
+  /* height: 23px;
+  width: 23px;
+  background-size: 10%; */
+  /* display: none; */
+}
+.sidebar-option-inner.profile:hover {
+  background-image: url("../../assests/sidebar_animation/profile-animation.svg");
+}
+
+.sidebar-option-inner.proxy:hover {
+  background: url("../../assests/sidebar_animation/proxy-animation.svg");
+}
+
+.sidebar-option-inner.account:hover {
+  background: url("../../assests/sidebar_animation/accountgen-animation.svg");
+}
+
+.sidebar-option-inner.linkopener:hover {
+  background: url("../../assests/sidebar_animation/linkopener-animation.svg");
+}
+
+.sidebar-option-inner.invitejoiner:hover {
+  background: url("../../assests/sidebar_animation/invitejoiner-animation.svg");
+}
+
+.sidebar-option-inner.spoofer:hover {
+  background: url("../../assests/sidebar_animation/spoofer-animation.svg");
+}
+
+.sidebar-option-inner.twitter:hover {
+  background: url("../../assests/sidebar_animation/twitter-animation.svg");
+}
+
+.sidebar-option-inner.setting:hover {
+  background: url("../../assests/sidebar_animation/settings-animation.svg");
+  background-size: 23px 20px;
+}
+.sidebar-option-inner.update {
+  animation: backgroundVerticalScroll;
+  animation-duration: 1s;
+  animation-timing-function: steps(5);
+  animation-iteration-count: infinite;
+  background-repeat: repeat-y;
+  background-size: 100% 100%;
+}
+.sidebar-option-inner.update:hover {
+  background: url("../../assests/sidebar_animation/updater-animation.svg");
+}
+.sidebar-main-bottom {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: var(--sidebar-width);
+}
+.sidebar-main-bottom > p {
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 15px;
   color: #a1a1a1;
-  margin-top: 3px;
-}
-
-/* /icon animation */
-/* home_animation Icon animation  */
-.home_animation {
-  height: 23px;
-  width: 23px;
-  background-image: url("../../assests/activeDefault/dashboard-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.home_animation:hover {
-  height: 23px;
-  width: 23px;
-  background: url("../../assests/sidebar_animation/dashboard-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-}
-/* .OneClick_animation  */
-
-.OneClick_animation {
-  height: 23px;
-  width: 21px;
-  background-image: url("../../assests/activeDefault/oneclick-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.OneClick_animation:hover {
-  height: 23px;
-  width: 21px;
-  background: url("../../assests/sidebar_animation/oneclick-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-}
-
-/* Profile_animation Icons Animation  */
-.Profile_animation {
-  height: 23px;
-  width: 26px;
-  background-image: url("../../assests/activeDefault/profile-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.Profile_animation:hover {
-  height: 23px;
-  width: 26px;
-  background: url("../../assests/sidebar_animation/profile-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-}
-
-/* Proxy Icon animation  */
-.Proxy_animation {
-  height: 23px;
-  width: 23px;
-  background-image: url("../../assests/activeDefault/proxy-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.Proxy_animation:hover {
-  height: 23px;
-  width: 23px;
-  background: url("../../assests/sidebar_animation/proxy-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-}
-
-/* AccounGen_animation Icons Animation  */
-.AccounGen_animation {
-  height: 23px;
-  width: 23px;
-  background-image: url("../../assests/activeDefault/accgen-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.AccounGen_animation:hover {
-  height: 23px;
-  width: 23px;
-  background: url("../../assests/sidebar_animation/accountgen-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-}
-
-/* Link opener Icons Animation  */
-.linkOpner_animation {
-  height: 23px;
-  width: 23px;
-  background-image: url("../../assests/activeDefault/link-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.linkOpner_animation:hover {
-  height: 23px;
-  width: 23px;
-  background: url("../../assests/sidebar_animation/linkopener-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-  border-radius: 0px 0px 15px 0px;
-}
-
-/* inviteJoiner_animation Icons Animation  */
-.inviteJoiner_animation {
-  height: 23px;
-  width: 23px;
-  background-image: url("../../assests/activeDefault/invite-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.inviteJoiner_animation:hover {
-  height: 23px;
-  width: 23px;
-  background: url("../../assests/sidebar_animation/invitejoiner-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-  border-radius: 0px 0px 15px 0px;
-}
-
-/*spoofer_animation Icons Animation  */
-.spoofer_animation {
-  height: 23px;
-  width: 23px;
-  background-image: url("../../assests/activeDefault/spoof-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.spoofer_animation:hover {
-  height: 23px;
-  width: 23px;
-  background: url("../../assests/sidebar_animation/spoofer-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-  border-radius: 0px 0px 15px 0px;
-}
-
-/*twitter_animation Icons Animation  */
-.twitter_animation {
-  height: 23px;
-  width: 23px;
-  background-image: url("../../assests/activeDefault/twitter-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.twitter_animation:hover {
-  height: 23px;
-  width: 23px;
-  background: url("../../assests/sidebar_animation/twitter-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-  border-radius: 0px 0px 15px 0px;
-}
-/*setting_animation Icons Animation  */
-.setting_animation {
-  height: 24px;
-  width: 26px;
-  background-image: url("../../assests/activeDefault/settings-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.setting_animation:hover {
-  height: 25px;
-  width: 27px;
-  background: url("../../assests/sidebar_animation/settings-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-  border-radius: 0px 0px 15px 0px;
-}
-
-/*setting_animation Icons Animation  */
-.update_animation {
-  height: 25px;
-  width: 27px;
-  background-image: url("../../assests/activeDefault/update-default.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.update_animation:hover {
-  height: 28px;
-  width: 23px;
-  background: url("../../assests/sidebar_animation/updater-animation.svg");
-  animation: backgroundScroll;
-  animation-duration: 1s;
-  animation-timing-function: steps(5);
-  animation-iteration-count: infinite;
-  background-repeat: repeat-x;
-  background-position: center;
-  cursor: pointer;
-  border-radius: 0px 0px 15px 0px;
+  text-align: center;
 }
 
 @keyframes backgroundScroll {
@@ -298,6 +121,17 @@
   }
   to {
     background-position: -100% 0;
+    background-size: cover;
+  }
+}
+
+@keyframes backgroundVerticalScroll {
+  from {
+    background-position: 0 0;
+    background-size: cover;
+  }
+  to {
+    background-position: 0 -100%;
     background-size: cover;
   }
 }

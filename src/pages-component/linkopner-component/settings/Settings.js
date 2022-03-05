@@ -33,42 +33,48 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
 
   const handleLinkOpenerToggle = (e) => {
     const { checked } = e.target;
-    if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
-      dispatch(linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked }));
-    } else toastWarning("Select Monitor token");
+    if (accountList.length > 0) {
+      if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
+        dispatch(linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked }));
+      } else toastWarning("Select Monitor token");
+    } else toastWarning("Create some account");
   };
 
   /**
    * function handle edit account card state
    **/
   const handleEditAccount = () => {
-    if (Object.keys(selectedMonitorToken).length > 0) {
-      const result = isValueInUse(
-        accountList,
-        "discordToken",
-        selectedMonitorToken
-      );
-      if (!result && !settingOption?.linkOpenerState) {
-        dispatch(setEditStorage(selectedMonitorToken));
-        handleOpenModal();
-      } else toastWarning("Token in use!!");
-    } else toastWarning("Select Monitor token");
+    if (accountList.length > 0) {
+      if (Object.keys(selectedMonitorToken).length > 0) {
+        const result = isValueInUse(
+          accountList,
+          "discordToken",
+          selectedMonitorToken
+        );
+        if (!result && !settingOption?.linkOpenerState) {
+          dispatch(setEditStorage(selectedMonitorToken));
+          handleOpenModal();
+        } else toastWarning("Token in use!!");
+      } else toastWarning("Select Monitor token");
+    } else toastWarning("Create some account");
   };
 
   /**
    * function handle delete account card state
    **/
   const handleDeleteAccount = () => {
-    if (Object.keys(selectedMonitorToken).length > 0) {
-      const result = isValueInUse(
-        accountList,
-        "discordToken",
-        selectedMonitorToken
-      );
-      if (!result && !settingOption?.linkOpenerState) {
-        dispatch(deleteAccountFromList(selectedMonitorToken));
-      } else toastWarning("Token in use!!");
-    } else toastWarning("Select Monitor token");
+    if (accountList.length > 0) {
+      if (Object.keys(selectedMonitorToken).length > 0) {
+        const result = isValueInUse(
+          accountList,
+          "discordToken",
+          selectedMonitorToken
+        );
+        if (!result && !settingOption?.linkOpenerState) {
+          dispatch(deleteAccountFromList(selectedMonitorToken));
+        } else toastWarning("Token in use!!");
+      } else toastWarning("Select Monitor token");
+    } else toastWarning("Create some account");
   };
 
   const handleSelectedChrome = (user) => {
@@ -85,7 +91,9 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
             id="link-opener-toggle-state"
             onChange={handleLinkOpenerToggle}
           />
-          <span>Stop Auto Link Opener</span>
+          <span>
+            {settingOption?.linkOpenerState ? "Stop" : "Start"} Auto Link Opener
+          </span>
         </div>
         <div onClick={handleEditAccount} className="linkopener-acc btn">
           <img src={edit} alt="" />

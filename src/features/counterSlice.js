@@ -44,7 +44,7 @@ export const counterSlice = createSlice({
       state.editStorage = action.payload;
     },
     appendDiscordAccount: (state, action) => {
-      state.discordAccount = action.payload;
+      state.discordAccountList = action.payload;
     },
     setSelectedMonitorTokenLO: (state, action) => {
       console.log(action);
@@ -180,7 +180,7 @@ export const fetchEditProxyModalState = (state) =>
 export const fetchDiscordModalState = (state) =>
   state[STATE_KEY].modals.discordAccount;
 export const fetchDiscordAccountList = (state) =>
-  state[STATE_KEY].discordAccount;
+  state[STATE_KEY].discordAccountList;
 export const fetchSelectedMinitorTokenLinkOpener = (state) =>
   state[STATE_KEY].selectedMonitorTokenLO;
 export const fetchLOKeywordList = (state) =>

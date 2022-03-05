@@ -11,9 +11,10 @@ import {
   deleteProxyGroup,
   removeBadProxy,
 } from "../../../features/logic/proxy";
-import { setEditStorage, setModalState } from "../../../features/counterSlice";
 import { toastWarning } from "../../../toaster";
+import { handleExportLogs } from "../../../helper";
 import { proxyTester } from "../../../helper/electron-bridge";
+import { setEditStorage, setModalState } from "../../../features/counterSlice";
 
 function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
   const dispatch = useDispatch();
@@ -42,6 +43,16 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
   const handleRemoveBadProxy = () => {
     if (Object.keys(tempData).length > 0) {
       dispatch(removeBadProxy());
+    } else toastWarning("Select proxy group");
+  };
+
+  const handleExportProxy = () => {
+    if (Object.keys(tempData).length > 0) {
+      if (tempData["proxyList"].length > 0) {
+        let obj = {};
+        obj["proxies"] = tempData["proxyList"];
+        handleExportLogs(JSON.stringify(obj), "application/json");
+      } else toastWarning("Nothing to Import");
     } else toastWarning("Select proxy group");
   };
 
@@ -75,7 +86,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
         <div className="icon-btn-wrapper btn">
           <img src={importIcon} alt="" />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div onClick={handleExportProxy} className="icon-btn-wrapper btn">
           <img src={exportIcon} alt="" />
         </div>
       </div>

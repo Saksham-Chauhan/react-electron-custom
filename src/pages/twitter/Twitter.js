@@ -116,7 +116,9 @@ function Twitter() {
         toastWarning("Add some API keys");
       }
     } else {
-      dispatch(setTwitterSetting(prevState));
+      if (prevState["twitterMonitor"]) {
+        dispatch(setTwitterSetting(prevState));
+      } else toastWarning("Start twitter monitor");
     }
   };
 

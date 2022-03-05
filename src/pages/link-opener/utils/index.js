@@ -34,8 +34,10 @@ export const userJoiner = (
 
 export const containsKeyword = (keywordsLO, message) => {
   let flag = false;
+
   for (let i = 0; i < keywordsLO.length; i++)
     if (message.includes(keywordsLO[i])) {
+      console.log(keywordsLO, message, keywordsLO[i]);
       flag = true;
       break;
     }

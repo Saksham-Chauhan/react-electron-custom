@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { makeLogText, makeStrOfArr } from "../../helper";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
+import { toastInfo } from "../../toaster";
 
 const { Client } = window.require("discord.js-selfbot");
 const open = window.require("open");
@@ -48,6 +49,7 @@ function LinkOpener() {
     try {
       monitor.on("ready", (msg) => {
         console.log("Link opener is Ready..");
+        toastInfo("Link opener is Ready");
       });
 
       monitor.on("message", async (message) => {

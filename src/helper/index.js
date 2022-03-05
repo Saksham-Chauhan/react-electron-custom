@@ -20,12 +20,17 @@ export const makeLogText = (msg) => {
 
 export const generateId = () => uuid();
 
-const downloadLogs = (content) => {
-  let data = content.map((v) => v).join("\n");
+const downloadLogs = (content, type = "text/plain") => {
+  let data;
+  if (type === "application/json") {
+    data = content;
+  } else {
+    data = content.map((v) => v).join("\n");
+  }
   const d = new Date();
   const fileName = `${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
   const a = document.createElement("a");
-  const file = new Blob([data], { type: "text/plain" });
+  const file = new Blob([data], { type });
   a.href = URL.createObjectURL(file);
   a.download = fileName;
   a.click();
@@ -56,4 +61,4 @@ export const getClaimerValue = (list, obj) => {
   } else return [];
 };
 
-export const handleExportLogs = (logs) => downloadLogs(logs);
+export const handleExportLogs = (logs, type) => downloadLogs(logs, type);
