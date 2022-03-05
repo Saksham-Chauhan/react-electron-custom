@@ -34,8 +34,10 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const handleLinkOpenerToggle = (e) => {
     const { checked } = e.target;
     if (accountList.length > 0) {
-      if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
-        dispatch(linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked }));
+      if (Object.keys(selectedMonitorToken).length > 0) {
+        if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
+          dispatch(linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked }));
+        } else toastWarning("Select valid token");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
   };

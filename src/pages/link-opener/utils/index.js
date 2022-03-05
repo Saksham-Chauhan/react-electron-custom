@@ -34,10 +34,8 @@ export const userJoiner = (
 
 export const containsKeyword = (keywordsLO, message) => {
   let flag = false;
-
   for (let i = 0; i < keywordsLO.length; i++)
     if (message.includes(keywordsLO[i])) {
-      console.log(keywordsLO, message, keywordsLO[i]);
       flag = true;
       break;
     }
@@ -53,7 +51,7 @@ export const checkOptions = (options, message) => {
   if (options.ignoreDiscordInviteLink && checkDiscordInvite(message))
     return false; // means it's a discord invite, hence ignore this link in link opener
   if (options.ignoreTwitterLink && checkTwitterLink(message)) return false;
-  return true;
+  return options.linkOpenerState ? true : false;
 };
 
 const webHookStart = (webhook, user = "", data = "", time = "") => {
