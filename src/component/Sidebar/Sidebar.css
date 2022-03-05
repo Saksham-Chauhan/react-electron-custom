@@ -48,14 +48,10 @@
 .sidebar-option-inner.oneclick:hover {
   background: url("../../assests/sidebar_animation/oneclick-animation.svg");
 }
-.sidebar-option-inner.profile > img {
-  /* height: 23px;
-  width: 23px;
-  background-size: 10%; */
-  /* display: none; */
-}
+
 .sidebar-option-inner.profile:hover {
   background-image: url("../../assests/sidebar_animation/profile-animation.svg");
+  width: 23px;
 }
 
 .sidebar-option-inner.proxy:hover {
@@ -64,6 +60,7 @@
 
 .sidebar-option-inner.account:hover {
   background: url("../../assests/sidebar_animation/accountgen-animation.svg");
+  width: 22px;
 }
 
 .sidebar-option-inner.linkopener:hover {
