@@ -1,7 +1,8 @@
 import React from "react";
 import "./InputGroup.css";
 import searchIcon from "../../../assests/images/search.svg";
-import trash from "../../../assests/images/trash.svg";
+import UseAnimations from 'react-useanimations';
+import trash2 from 'react-useanimations/lib/trash2';
 import test from "../../../assests/images/chemistry.svg";
 import edit from "../../../assests/images/edit.svg";
 
@@ -21,7 +22,7 @@ const InputGroup = () => {
           <img src={edit} alt="" />
         </div>
         <div className="icon-btn-wrapper btn">
-          <img src={trash} alt="" />
+        <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
         </div>
       </div>
     </div>

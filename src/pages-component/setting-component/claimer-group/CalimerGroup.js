@@ -1,7 +1,8 @@
 import React from "react";
 import plus from "../../../assests/images/plus.svg";
 import edit from "../../../assests/images/edit.svg";
-import trash from "../../../assests/images/trash.svg";
+import UseAnimations from 'react-useanimations';
+import trash2 from 'react-useanimations/lib/trash2';
 import "./styles.css";
 import { AppSpacer } from "../../../component";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,7 +45,7 @@ function CalimerGroup() {
             <span>{group["name"]}</span>
             <div className="claimer-group-item-action">
               <img onClick={() => handleEdit(group)} src={edit} alt="" />
-              <img onClick={() => handleDelete(group)} src={trash} alt="" />
+              <UseAnimations onClick={() => handleDelete(group)} animation={trash2} strokeColor="#B60E0E" size={22} wrapperStyle={{cursor:"pointer", paddingBottom:"3px"}}></UseAnimations>
             </div>
           </div>
         ))}

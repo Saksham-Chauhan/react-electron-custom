@@ -1,8 +1,6 @@
 import React from "react";
 import "./styles.css";
 import wifi from "../../assests/images/wifi.svg";
-import edit from "../../assests/images/edit.svg";
-import trash from "../../assests/images/trash.svg";
 
 function GroupCard({
   cardIcon = wifi,
@@ -24,12 +22,6 @@ function GroupCard({
           <h5>{cardTitle}</h5>
           {!hideSubText && <p>{cardSubtitle} proxies</p>}
         </div>
-        {isCustomAction && (
-          <div className="action-col-icon">
-            <img onClick={actionColumn.onEdit} src={edit} alt="" />
-            <img onClick={actionColumn.onDelete} src={trash} alt="" />
-          </div>
-        )}
       </div>
     </div>
   );

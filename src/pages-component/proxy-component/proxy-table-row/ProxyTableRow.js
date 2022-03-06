@@ -1,7 +1,8 @@
 import React from "react";
 import "./styles.css";
 import edit from "../../../assests/images/edit.svg";
-import trash from "../../../assests/images/trash.svg";
+import UseAnimations from 'react-useanimations';
+import trash2 from 'react-useanimations/lib/trash2';
 import test from "../../../assests/images/chemistry.svg";
 
 function ProxyTableRow({ data, index, onEdit, onDelete, onTest }) {
@@ -28,12 +29,7 @@ function ProxyTableRow({ data, index, onEdit, onDelete, onTest }) {
       <div className="tbl-header-title body action-col">
         <img onClick={() => onTest(data)} src={test} className="btn" alt="" />
         <img onClick={() => onEdit(data)} src={edit} className="btn" alt="" />
-        <img
-          onClick={() => onDelete(data)}
-          src={trash}
-          className="btn"
-          alt=""
-        />
+        <UseAnimations onClick={() => onDelete(data)} animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
       </div>
     </div>
   );

@@ -3,7 +3,8 @@ import "./styles.css";
 import axios from "axios";
 import { TwitterPageTweetCard } from "../..";
 import { AppSpacer } from "../../../component";
-import trash from "../../../assests/images/trash.svg";
+import UseAnimations from 'react-useanimations';
+import trash2 from 'react-useanimations/lib/trash2';
 import utils from "../../../pages/twitter/utils/feature-tweets/helper";
 import { useSelector } from "react-redux";
 import {
@@ -74,7 +75,7 @@ function CardScroller({
       <AppSpacer spacer={10} />
       <div className="twitter-scroller-inner">
         <div onClick={onClearTweets} className="twitter-scroller-del-btn btn">
-          <img src={trash} alt="del-icon" />
+        <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
         </div>
         <AppSpacer spacer={10} />
         <div className="scroll-card-content">

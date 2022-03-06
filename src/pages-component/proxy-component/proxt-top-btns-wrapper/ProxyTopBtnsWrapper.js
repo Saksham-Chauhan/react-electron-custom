@@ -2,7 +2,6 @@ import React from "react";
 import "./styles.css";
 import { useDispatch } from "react-redux";
 import edit from "../../../assests/images/edit.svg";
-import trash from "../../../assests/images/trash.svg";
 import test from "../../../assests/images/chemistry.svg";
 import searchIcon from "../../../assests/images/search.svg";
 import exportIcon from "../../../assests/images/export.svg";
@@ -15,6 +14,8 @@ import { toastWarning } from "../../../toaster";
 import { handleExportLogs } from "../../../helper";
 import { proxyTester } from "../../../helper/electron-bridge";
 import { setEditStorage, setModalState } from "../../../features/counterSlice";
+import UseAnimations from 'react-useanimations';
+import trash2 from 'react-useanimations/lib/trash2';
 
 function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
   const dispatch = useDispatch();
@@ -75,12 +76,12 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
           <img src={edit} alt="" />
         </div>
         <div onClick={handleDeleteGroup} className="icon-btn-wrapper btn">
-          <img src={trash} alt="" />
+          <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25}></UseAnimations>
         </div>
       </div>
       <div className="page-right-container">
         <div onClick={handleRemoveBadProxy} className="remove-btn btn">
-          <img src={trash} alt="" />
+        <UseAnimations animation={trash2} strokeColor="#B60E0E" size={27} wrapperStyle={{paddingBottom:"2px"}}></UseAnimations>
           <span>Remove Bad Proxies</span>
         </div>
         <div className="icon-btn-wrapper btn">
