@@ -15,8 +15,7 @@
   font-size: 12px;
   line-height: 17px;
   color: var(--primary);
-  margin-left: 01em;
+  margin-left: 0.5em;
 }
-.linkopener-acc > img {
-  height: 15px;
-}
+
+

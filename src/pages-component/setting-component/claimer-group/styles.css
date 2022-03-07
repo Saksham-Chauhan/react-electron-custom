@@ -46,6 +46,7 @@
 .claimer-group-item-action > img {
   height: 16px;
   cursor: pointer;
+  padding-right: 2px;
 }
 .claimer-group-item-action > img:last-of-type {
   margin-left: 0.5em;

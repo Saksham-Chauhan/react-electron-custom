@@ -2,8 +2,9 @@ import React from "react";
 import "./styles.css";
 import { AppSpacer } from "../../../component";
 import plus from "../../../assests/images/plus.svg";
-import trash from "../../../assests/images/trash.svg";
 import exportIcon from "../../../assests/images/export.svg";
+import UseAnimations from 'react-useanimations';
+import trash2 from 'react-useanimations/lib/trash2';
 
 function InputWithList({
   title = "Channel ID[s]",
@@ -39,7 +40,7 @@ function InputWithList({
                   <img src={exportIcon} alt="" />
                 </div>
                 <div onClick={logAction?.onClear} className="plus-icon-btn btn">
-                  <img src={trash} alt="" />
+                <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25}></UseAnimations>
                 </div>
               </div>
             )}
@@ -49,7 +50,7 @@ function InputWithList({
                 ? list?.map((data, index) => (
                     <div key={data["id"] || index} className="scroll-list-item">
                       <span>{data["label"]}</span>
-                      <img onClick={() => onDelete(data)} src={trash} alt="" />
+                      <UseAnimations onClick={() => onDelete(data)} animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
                     </div>
                   ))
                 : list?.map((data, index) => (

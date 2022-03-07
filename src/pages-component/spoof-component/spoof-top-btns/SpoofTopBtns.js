@@ -10,8 +10,9 @@ import { toastWarning } from "../../../toaster";
 import play from "../../../assests/images/play.svg";
 import plus from "../../../assests/images/plus.svg";
 import stop from "../../../assests/images/stop.svg";
-import trash from "../../../assests/images/trash.svg";
 import searchIcon from "../../../assests/images/search.svg";
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
 import { setModalState } from "../../../features/counterSlice";
 
 function SpoofTopBtns({ tableList, search, handleSearching }) {
@@ -65,7 +66,12 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
           onClick={() => handleAll("DELETE")}
           className="icon-btn-wrapper btn"
         >
-          <img src={trash} alt="" />
+          <UseAnimations
+            animation={trash2}
+            strokeColor="#B60E0E"
+            size={25}
+            wrapperStyle={{ cursor: "pointer", paddingBottom: "2px" }}
+          ></UseAnimations>
         </div>
         <div
           onClick={() => handleAll("LAUNCH")}

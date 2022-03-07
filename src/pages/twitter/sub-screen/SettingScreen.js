@@ -10,7 +10,8 @@ import {
   removeApiFromList,
 } from "../../../features/logic/twitter";
 import { validationChecker } from "../../../hooks/validationChecker";
-import trash from "../../../assests/images/trash.svg";
+import UseAnimations from 'react-useanimations';
+import trash2 from 'react-useanimations/lib/trash2';
 import { toastWarning } from "../../../toaster";
 import {
   fetchChromeUserListState,
@@ -153,11 +154,7 @@ function SettingScreen({
               {apiList.map((api, index) => (
                 <div key={api["id"]} className="api-list-item">
                   <span>{api["apiName"]}</span>
-                  <img
-                    onClick={() => handleApiDelete(api, index)}
-                    src={trash}
-                    alt="api-remove-icon"
-                  />
+                  <UseAnimations onClick={() => handleApiDelete(api, index)} animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
                 </div>
               ))}
             </div>

@@ -5,8 +5,8 @@ import questionMark from "../../../assests/images/oneclick_idle.svg";
 import FlopTic from "../../../assests/images/oneclick_warning.svg";
 import chemistry from "../../../assests/images/chemistry.svg";
 import play from "../../../assests/images/play.svg";
-import trash from "../../../assests/images/trash.svg";
-import edit from "../../../assests/images/edit.svg";
+import UseAnimations from 'react-useanimations';
+import trash2 from 'react-useanimations/lib/trash2';
 
 const TableData = [
   {
@@ -16,7 +16,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "0.7",
-    Action: [play, edit, trash],
+    Action: [play, chemistry],
   },
   {
     no: "2",
@@ -25,7 +25,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "0.8",
-    Action: [play, edit, trash],
+    Action: [play, chemistry],
   },
   {
     no: "3",
@@ -34,7 +34,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "0.8",
-    Action: [play, edit, trash, chemistry],
+    Action: [play, chemistry],
   },
   {
     no: "4",
@@ -43,7 +43,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "0.8",
-    Action: [play, edit, trash, chemistry],
+    Action: [play, chemistry],
   },
   {
     no: "5",
@@ -52,7 +52,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "N/A",
-    Action: [play, edit, trash, chemistry],
+    Action: [play, chemistry],
   },
   {
     no: "6",
@@ -61,7 +61,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "N/A",
-    Action: [play, edit, trash, chemistry],
+    Action: [play, chemistry],
   },
   {
     no: "7",
@@ -70,7 +70,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "N/A",
-    Action: [play, edit, trash, chemistry],
+    Action: [play, chemistry],
   },
   {
     no: "8",
@@ -79,7 +79,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "N/A",
-    Action: [play, edit, trash, chemistry],
+    Action: [play, chemistry],
   },
   {
     no: "9",
@@ -88,7 +88,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "N/A",
-    Action: [play, edit, trash, chemistry],
+    Action: [play, chemistry],
   },
   {
     no: "10",
@@ -97,7 +97,7 @@ const TableData = [
     Prosy: "none",
     Status: "watching Youtube",
     Score: "N/A",
-    Action: [play, edit, trash, chemistry],
+    Action: [play, chemistry],
   },
 ];
 
@@ -111,7 +111,7 @@ const OneClickBody = () => {
         <li>Proxy</li>
         <li>Status</li>
         <li>Score</li>
-        <li>Action</li>
+        <li>Actions</li>
       </ul>
 
       {TableData.map((data, idx) => (
@@ -125,10 +125,11 @@ const OneClickBody = () => {
           <li>{data.Status}</li>
           <li style={{ paddingLeft: "20px" }}>{data.Score}</li>
           <li>
-            {/* Icons ? */}
-            {data.Action.map((Icon, idx) => (
-              <img src={Icon} alt={Icon} key={idx} />
-            ))}
+          <div className="oneclick-actions">
+        <img src={play} className="btn" alt="" />
+        <img src={chemistry} className="btn" alt="" />
+        <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
+      </div>
           </li>
         </ul>
       ))}
