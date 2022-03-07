@@ -34,7 +34,7 @@
 }
 .bg-animation-css {
   animation: backgroundScroll;
-  animation-duration: 2s;
+  animation-duration: 1s;
   animation-timing-function: steps(5);
   animation-iteration-count: infinite;
   animation-fill-mode: forwards;
@@ -60,7 +60,7 @@
 
 .sidebar-option-inner.account:hover {
   background: url("../../assests/sidebar_animation/accountgen-animation.svg");
-  width: 22px;
+  /* width: 22px; */
 }
 
 .sidebar-option-inner.linkopener:hover {
