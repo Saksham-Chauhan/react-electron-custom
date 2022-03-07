@@ -13,9 +13,9 @@ import {
   deleteAccountFromList,
   linkOpenerSettingHandler,
 } from "../../../features/logic/discord-account";
-import edit from "../../../assests/images/edit.svg";
 import UseAnimations from 'react-useanimations';
 import trash2 from 'react-useanimations/lib/trash2';
+import edit from 'react-useanimations/lib/edit';
 import { useDispatch, useSelector } from "react-redux";
 import { discordTokenRegExp } from "../../../constant/regex";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
@@ -97,7 +97,7 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
           </span>
         </div>
         <div onClick={handleEditAccount} className="linkopener-acc btn">
-          <img src={edit} alt="" />
+        <UseAnimations animation={edit} strokeColor="#ffff" size={20} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
           <span>Edit Account</span>
         </div>
         <div onClick={handleDeleteAccount} className="linkopener-acc btn">

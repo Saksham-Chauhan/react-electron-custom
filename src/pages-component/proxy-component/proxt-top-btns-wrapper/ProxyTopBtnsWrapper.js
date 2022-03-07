@@ -1,8 +1,8 @@
 import React from "react";
 import "./styles.css";
 import { useDispatch } from "react-redux";
-import edit from "../../../assests/images/edit.svg";
 import test from "../../../assests/images/chemistry.svg";
+import add from "../../../assests/images/plus.svg";
 import searchIcon from "../../../assests/images/search.svg";
 import exportIcon from "../../../assests/images/export.svg";
 import importIcon from "../../../assests/images/import.svg";
@@ -16,6 +16,7 @@ import { proxyTester } from "../../../helper/electron-bridge";
 import { setEditStorage, setModalState } from "../../../features/counterSlice";
 import UseAnimations from 'react-useanimations';
 import trash2 from 'react-useanimations/lib/trash2';
+import edit from 'react-useanimations/lib/edit';
 
 function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
   const dispatch = useDispatch();
@@ -69,11 +70,14 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
             type="search"
           />
         </div>
+        <div className="icon-btn-wrapper btn">
+          <img src={add} alt="" />
+        </div>
         <div onClick={handleTestproxy} className="icon-btn-wrapper btn">
           <img src={test} alt="" />
         </div>
         <div onClick={handleEditGroup} className="icon-btn-wrapper btn">
-          <img src={edit} alt="" />
+          <UseAnimations animation={edit} strokeColor="#fff" size={25}></UseAnimations>
         </div>
         <div onClick={handleDeleteGroup} className="icon-btn-wrapper btn">
           <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25}></UseAnimations>

@@ -38,3 +38,9 @@
 .SectionTwo ul li img {
   margin-right: 15px;
 }
+.oneclick-actions{
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  height: 18px;
+}

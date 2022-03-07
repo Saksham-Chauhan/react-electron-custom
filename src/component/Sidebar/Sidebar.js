@@ -28,8 +28,7 @@ import defaultInvite from "../../assests//activeDefault/invite-default.svg";
 import defaultTwitter from "../../assests/activeDefault/twitter-default.svg";
 import defaultSettings from "../../assests/activeDefault/settings-default.svg";
 import defaultSpoof from "../../assests/activeDefault/spoof-default.svg";
-import defaultUpdate from "../../assests/activeDefault/update-default.svg";
-
+import defaultUpdate from "../../assests/activeDefault/update-default.svg"
 import { checkForUpdates } from "../../helper/electron-bridge";
 const pjson = require("../../../package.json");
 

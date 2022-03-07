@@ -4,7 +4,7 @@ import searchIcon from "../../../assests/images/search.svg";
 import UseAnimations from 'react-useanimations';
 import trash2 from 'react-useanimations/lib/trash2';
 import test from "../../../assests/images/chemistry.svg";
-import edit from "../../../assests/images/edit.svg";
+import add from "../../../assests/images/plus.svg";
 
 
 const InputGroup = () => {
@@ -16,10 +16,10 @@ const InputGroup = () => {
           <input placeholder="Search" type="search" />
         </div>
         <div className="icon-btn-wrapper btn">
-          <img src={test} alt="" />
+          <img src={add} alt="" />
         </div>
         <div className="icon-btn-wrapper btn">
-          <img src={edit} alt="" />
+          <img src={test} alt="" />
         </div>
         <div className="icon-btn-wrapper btn">
         <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>

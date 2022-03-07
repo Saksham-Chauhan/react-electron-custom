@@ -170,7 +170,7 @@ function AddSpoofer() {
           <span>Cancel</span>
         </div>
         <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>Join</span>
+          <span>Create</span>
         </div>
       </div>
     </ModalWrapper>
