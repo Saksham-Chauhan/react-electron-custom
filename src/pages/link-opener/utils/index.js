@@ -49,9 +49,9 @@ export const containsKeyword = (keywordsLO, message) => {
 
 export const checkOptions = (options, message) => {
   if (options.ignoreDiscordInviteLink && checkDiscordInvite(message))
-    return false; // means it's a discord invite, hence ignore this link in link opener
+    return false;
   if (options.ignoreTwitterLink && checkTwitterLink(message)) return false;
-  return options.linkOpenerState ? true : false;
+  return true;
 };
 
 const webHookStart = (webhook, user = "", data = "", time = "") => {
@@ -119,14 +119,3 @@ export const handleWebhook = async (
     }, delay);
   } else webHookStart(webhook, user, data);
 };
-
-const downloadLogs = (content, fileName, contentType) => {
-  const a = document.createElement("a");
-  const file = new Blob([content], { type: contentType });
-  a.href = URL.createObjectURL(file);
-  a.download = fileName;
-  a.click();
-};
-
-export const handleLogsExport = (name, logs) =>
-  downloadLogs(logs, name, "text/plain");

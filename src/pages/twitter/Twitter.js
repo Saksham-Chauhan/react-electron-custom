@@ -4,6 +4,7 @@ import {
   setTwitterSetting,
   clearTweetsFeeder,
   fetchAPIlistState,
+  incrementApiRotater,
   fetchTwitterUserList,
   fetchApiRotaterIndex,
   fetchLatestTweetList,
@@ -11,7 +12,7 @@ import {
   fetchTwitterKeywordList,
   fetchTwitterSettingState,
   fetchWebhookSettingState,
-  incrementApiRotater,
+  fetchWebhookListState,
 } from "../../features/counterSlice";
 import {
   TwitterTopLeftSection,
@@ -21,6 +22,7 @@ import {
   TwitterKeywordListSection,
 } from "../../pages-component";
 import { AppSpacer } from "../../component";
+import { toastWarning } from "../../toaster";
 import { useDispatch, useSelector } from "react-redux";
 import tweetHelper from "./utils/feature-tweets/helper";
 import { getTweets } from "../../helper/electron-bridge";
@@ -28,7 +30,6 @@ import { TweetHandlerRegExp } from "../../constant/regex";
 import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { appendNewTweetInList } from "../../features/logic/twitter";
-import { toastWarning } from "../../toaster";
 
 const TWEET_FETCH_TIME = 5 * 1000;
 
@@ -38,6 +39,7 @@ function Twitter() {
   const userList = useSelector(fetchTwitterUserList);
   const [settingPage, setSettingPage] = useState(false);
   const rotaterIndex = useSelector(fetchApiRotaterIndex);
+  const webhookList = useSelector(fetchWebhookListState);
   const keyWordList = useSelector(fetchTwitterKeywordList);
   const latestTweetList = useSelector(fetchLatestTweetList);
   const featureTweetList = useSelector(fetchFeatureTweetList);
@@ -46,8 +48,6 @@ function Twitter() {
 
   useEffect(() => {
     let timer = null;
-    const webhook =
-      "https://discord.com/api/webhooks/948212028475060244/uyvDxt2Fxk0CKh8X5haF4t6MG0y-db2999iesTuVD8EBg55E6u4v-ffv7L0C2yPy96rA";
     const fetchTweets = () => {
       try {
         userList.forEach(async (tweetUser) => {
@@ -57,25 +57,30 @@ function Twitter() {
               apiList[rotaterIndex].apiSecret,
               tweetUser["value"]
             );
-            dispatch(
-              appendNewTweetInList({
-                key: "LATEST",
-                tweet: tweetHelper.extractDataFromTweet(newTweets),
-              })
-            );
-            const filteredTweets = await twitterScanner(
-              newTweets,
-              keyWordList,
-              webhook,
-              twitterSetting,
-              webhookSetting,
-              latestTweetList
-            );
-            if (filteredTweets.featured_type) {
+            if (newTweets !== undefined) {
               dispatch(
-                appendNewTweetInList({ key: "FEATURE", tweet: filteredTweets })
+                appendNewTweetInList({
+                  key: "LATEST",
+                  tweet: tweetHelper.extractDataFromTweet(newTweets),
+                })
               );
-            }
+              const filteredTweets = await twitterScanner(
+                newTweets,
+                keyWordList,
+                webhookList[0],
+                twitterSetting,
+                webhookSetting,
+                latestTweetList
+              );
+              if (filteredTweets.featured_type) {
+                dispatch(
+                  appendNewTweetInList({
+                    key: "FEATURE",
+                    tweet: filteredTweets,
+                  })
+                );
+              }
+            } else console.log("No New Tweets is found !!!");
           }
         });
       } catch (error) {
@@ -95,16 +100,20 @@ function Twitter() {
       clearInterval(timer);
     };
   }, [
-    userList,
-    keyWordList,
-    twitterSetting,
-    dispatch,
     apiList,
+    userList,
+    dispatch,
+    webhookList,
+    keyWordList,
     rotaterIndex,
+    twitterSetting,
     webhookSetting,
     latestTweetList,
   ]);
 
+  /**
+   * function handle start stop switch btn
+   **/
   const handleToggle = (event) => {
     let prevState = { ...twitterSetting };
     const { name, checked } = event.target;
@@ -122,10 +131,16 @@ function Twitter() {
     }
   };
 
+  /**
+   * function handle navigate to twitter setting page
+   **/
   const handleScreen = () => {
     setSettingPage(!settingPage);
   };
 
+  /**
+   * function handle clearAll tweets in latest and feature section
+   **/
   const handleDeleteAllTweets = (key) => {
     if (key === "LATEST") {
       dispatch(clearTweetsFeeder(key));
@@ -214,3 +229,12 @@ const DefaultTwitterScreen = ({
     </div>
   </React.Fragment>
 );
+
+// {
+//   consumer_key: "gYk4H5IhLUjmx5Kqb40ZJ8vmq",
+//   consumer_secret: "1xFOIZIyAU5QalGkNv0cggrmm2DXwjnnQItsKOW2C356IRdfsh",
+// },
+// {
+//   consumer_key: "cCPyXGNaaGzh5QWSGrUpl9aAe",
+//   consumer_secret: "JX3QpsLoOFxepOvefL4uN9tNW7WzRQZSbGOQjlof5hyQ638CVU",
+// },

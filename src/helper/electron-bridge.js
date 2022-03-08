@@ -46,6 +46,10 @@ const proxyTester = (proxy) => ipcRenderer.send("proxy-tester", proxy);
 const proxyTestResultListener = (callback) =>
   ipcRenderer.on("proxy-test-result", (_, res) => callback(res));
 
+// LO IPC
+
+const startLOmonitor = (token) => ipcRenderer.invoke("start-lo-monitor", token);
+const stopLOmonitor = () => ipcRenderer.send("stop-lo-monitor");
 module.exports = {
   minimizeApp,
   closeApp,
@@ -63,4 +67,6 @@ module.exports = {
   updateNotAvailable,
   checkForUpdates,
   fetchNetworkSpeed,
+  startLOmonitor,
+  stopLOmonitor,
 };
