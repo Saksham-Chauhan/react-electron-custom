@@ -13,3 +13,6 @@ export const webhoookRegExp =
   /^.*(discord|discordapp)\.com\/api\/webhooks\/([\d]+)\/([a-zA-Z0-9_-]+)$/;
 
 export const chromeRegExp = /^[a-zA-Z0-9-_]+$/;
+
+export const discordInvideCode =
+  /(https:\/\/)?(www\.)?(((discord(app)?)?\.com\/invite)|((discord(app)?)?\.gg))\/(?<invite>.+)/;
