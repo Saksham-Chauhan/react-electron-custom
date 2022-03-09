@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./styles.css";
 import {
   ChannelSection,
@@ -14,95 +14,82 @@ import {
   fetchLOChannelList,
   fetchLOKeywordList,
   fetchLOSettingState,
-  fetchLinkOpenerLogState,
-  fetchDiscordAccountList,
-  fetchSelectedMinitorTokenLinkOpener,
   fetchLOchromeUserState,
+  fetchDiscordAccountList,
+  fetchLinkOpenerLogState,
+  fetchSelectedMinitorTokenLinkOpener,
 } from "../../features/counterSlice";
+import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
-import { useDispatch, useSelector, connect } from "react-redux";
 import { makeLogText, makeStrOfArr } from "../../helper";
+import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
-import { discordTokenRegExp } from "../../constant/regex";
-import { toastWarning } from "../../toaster";
 
 const { Client } = window.require("discord.js-selfbot");
 const open = window.require("open");
-
-//       monitor.on("message", async (message) => {
-//         let content = message.content;
-//         console.log(content);
-//         if (makeStrOfArr(channelList).includes(message.channel.id)) {
-//           if (testUrlRegex(content)) {
-//             let flag = containsKeyword(makeStrOfArr(keywordList), content);
-//             if (keywordList.length === 0 || flag) {
-//               if (checkOptions(settingOption, content)) {
-//                 message.reply("Called many time");
-//                 dispatch(
-//                   addLogInList({ key: "LO", log: makeLogText(content) })
-//                 );
-//                 if (settingOption.playSound) {
-//                   playSound();
-//                 }
-//                 if (Object.keys(selectedChrome).length > 0) {
-//                   await open(content, {
-//                     app: {
-//                       name: "google chrome",
-//                       arguments: [
-//                         `--profile-directory=${selectedChrome["value"]}`,
-//                       ],
-// //                     },
-//                   });
-//                 } else {
-//                   await open(content, {
-//                     app: {
-//                       name: "google chrome",
-//                     },
-//                   });
-//                 }
-//               }
-//             }
-//           }
-//         }
-// });
 
 class LinkOpener extends React.PureComponent {
   monitor = new Client();
   constructor(props) {
     super(props);
     this.state = {
-      isPlay: false,
+      settingOption: {},
+      keywordLIST: [],
+      channelLIST: [],
+      selectedChrome: {},
     };
   }
+
   playSound() {
     let ring = new Audio(sound);
     ring.play();
   }
+
+  async checkSettingOption(content, channelID) {
+    const { settingOption, channelLIST, keywordLIST, selectedChrome } =
+      this.state;
+    let channel = channelLIST;
+    let keyword = keywordLIST;
+    if (makeStrOfArr(channel).includes(channelID)) {
+      if (testUrlRegex(content)) {
+        let flag = containsKeyword(makeStrOfArr(keyword), content);
+        if (keyword.length === 0 || flag) {
+          if (checkOptions(settingOption, content)) {
+            if (settingOption.playSound) {
+              this.playSound();
+            }
+            this.props.handleSendLog(content);
+          }
+          if (Object.keys(selectedChrome).length > 0) {
+            open(content, {
+              app: {
+                name: open.apps.chrome,
+                arguments: [`--profile-directory=${selectedChrome["value"]}`],
+              },
+            });
+          } else {
+            await open(content, {
+              app: {
+                name: open.apps.chrome,
+              },
+            });
+          }
+        }
+      }
+    }
+  }
+
   componentDidMount() {
-    const { settingOption, keywordList, channelList, selectedChrome } =
-      this.props;
+    const { settingOption } = this.props;
     try {
       this.monitor.on("ready", () => {
         console.log("Link opener is Ready..");
       });
       this.monitor.on("message", async (message) => {
         let content = message.content;
-        if (makeStrOfArr(channelList).includes(message.channel.id)) {
-          if (testUrlRegex(content)) {
-            let flag = containsKeyword(makeStrOfArr(keywordList), content);
-            if (keywordList.length === 0 || flag) {
-              if (checkOptions(settingOption, content)) {
-                if (settingOption.playSound) {
-                  this.playSound();
-                }
-                console.log("MESSAGE", content);
-                this.props.handleSendLog(content);
-                // message.reply("I think that not going to work ");
-              }
-            }
-          }
-        }
+        let channelID = message.channel.id;
+        this.checkSettingOption(content, channelID);
       });
       if (settingOption?.linkOpenerState) {
         console.log("Already Opened so don't open Again");
@@ -112,18 +99,29 @@ class LinkOpener extends React.PureComponent {
     }
   }
   componentDidUpdate(prevProps) {
-    const { selectedMonitorToken, settingOption } = this.props;
+    const {
+      selectedMonitorToken,
+      settingOption,
+      keywordList,
+      channelList,
+      selectedChrome,
+    } = this.props;
     if (
       selectedMonitorToken !== prevProps.selectedMonitorToken ||
-      settingOption.linkOpenerState !== prevProps.settingOption.linkOpenerState
+      settingOption !== prevProps.settingOption
     ) {
       if (
         settingOption.linkOpenerState !==
         prevProps.settingOption.linkOpenerState
       ) {
         const { discordToken } = selectedMonitorToken;
+        this.setState({
+          settingOption: settingOption,
+          channelLIST: channelList,
+          keywordLIST: keywordList,
+          selectedChrome: selectedChrome,
+        });
         if (settingOption?.linkOpenerState) {
-          console.log("Starting  monitor...");
           if (discordTokenRegExp.test(discordToken)) {
             this.monitor.login(discordToken);
           }
@@ -132,19 +130,27 @@ class LinkOpener extends React.PureComponent {
           this.monitor.destroy();
           console.log("After destroying", this.monitor.user);
         }
+      } else if (prevProps.settingOption !== settingOption) {
+        this.setState({ settingOption: settingOption });
+      } else if (prevProps.keywordList !== keywordList) {
+        this.setState({ keywordLIST: keywordList });
+      } else if (prevProps.channelList !== channelList) {
+        this.setState({ channelLIST: channelList });
+      } else if (prevProps.selectedChrome !== selectedChrome) {
+        this.setState({ selectedChrome: selectedChrome });
       }
     }
   }
 
   render() {
     const {
+      logList,
       accountList,
-      selectedMonitorToken,
-      settingOption,
       keywordList,
       channelList,
-      logList,
+      settingOption,
       handleOpenModal,
+      selectedMonitorToken,
     } = this.props;
 
     return (

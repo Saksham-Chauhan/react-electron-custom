@@ -13,6 +13,8 @@ import {
   fetchTwitterSettingState,
   fetchWebhookSettingState,
   fetchWebhookListState,
+  fetchTwitterClaimerGroupState,
+  fetchTwitterChromeUserState,
 } from "../../features/counterSlice";
 import {
   TwitterTopLeftSection,
@@ -22,7 +24,7 @@ import {
   TwitterKeywordListSection,
 } from "../../pages-component";
 import { AppSpacer } from "../../component";
-import { toastWarning } from "../../toaster";
+import { toastSuccess, toastWarning } from "../../toaster";
 import { useDispatch, useSelector } from "react-redux";
 import tweetHelper from "./utils/feature-tweets/helper";
 import { getTweets } from "../../helper/electron-bridge";
@@ -30,6 +32,8 @@ import { TweetHandlerRegExp } from "../../constant/regex";
 import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { appendNewTweetInList } from "../../features/logic/twitter";
+import axios from "axios";
+const open = window.require("open");
 
 const TWEET_FETCH_TIME = 5 * 1000;
 
@@ -45,6 +49,8 @@ function Twitter() {
   const featureTweetList = useSelector(fetchFeatureTweetList);
   const twitterSetting = useSelector(fetchTwitterSettingState);
   const webhookSetting = useSelector(fetchWebhookSettingState);
+  const selectedChrome = useSelector(fetchTwitterChromeUserState);
+  const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
 
   useEffect(() => {
     let timer = null;
@@ -57,14 +63,18 @@ function Twitter() {
               apiList[rotaterIndex].apiSecret,
               tweetUser["value"]
             );
+
             if (newTweets !== undefined) {
+              if (new Date(newTweets["created_at"]) >= new Date()) {
+                console.log("OOOOO");
+              }
               dispatch(
                 appendNewTweetInList({
                   key: "LATEST",
                   tweet: tweetHelper.extractDataFromTweet(newTweets),
                 })
               );
-              const filteredTweets = await twitterScanner(
+              const ft = await twitterScanner(
                 newTweets,
                 keyWordList,
                 webhookList[0],
@@ -72,15 +82,50 @@ function Twitter() {
                 webhookSetting,
                 latestTweetList
               );
-              if (filteredTweets.featured_type) {
-                dispatch(
-                  appendNewTweetInList({
-                    key: "FEATURE",
-                    tweet: filteredTweets,
-                  })
-                );
+              if (ft.featured_type) {
+                dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
+                if (
+                  ft.urlsExtracted?.length > 0 &&
+                  !(ft["tweet_id"] in latestTweetList)
+                ) {
+                  for (let url of ft.urlsExtracted) {
+                    let inviteCode = tweetHelper.isDiscordInvite(url);
+                    if (inviteCode) {
+                      if (twitterSetting?.startAutoInviteJoiner) {
+                        let tokenArray = selectedClaimer["value"].split("\n");
+                        tokenArray.forEach(async (token) => {
+                          try {
+                            const info = await axios({
+                              url: `https://discord.com/api/v9/invites/${inviteCode}`,
+                              headers: { authorization: token },
+                            });
+                            if (info.status === 200) {
+                              console.log("Joined the server", info.data.guild);
+                              toastSuccess(
+                                `Successfully Joined ${info.data.guild.name}`
+                              );
+                            }
+                          } catch (err) {
+                            console.log("Error in joining server", err.message);
+                          }
+                        });
+                      }
+                    } else {
+                      if (twitterSetting?.startAutoLinkOpener) {
+                        await open(url, {
+                          app: {
+                            name: open.apps.chrome,
+                            arguments: [
+                              `--profile-directory=${selectedChrome["value"]}`,
+                            ],
+                          },
+                        });
+                      }
+                    }
+                  }
+                }
               }
-            } else console.log("No New Tweets is found !!!");
+            }
           }
         });
       } catch (error) {
@@ -109,6 +154,7 @@ function Twitter() {
     twitterSetting,
     webhookSetting,
     latestTweetList,
+    selectedClaimer,
   ]);
 
   /**
@@ -125,9 +171,7 @@ function Twitter() {
         toastWarning("Add some API keys");
       }
     } else {
-      if (prevState["twitterMonitor"]) {
-        dispatch(setTwitterSetting(prevState));
-      } else toastWarning("Start twitter monitor");
+      dispatch(setTwitterSetting(prevState));
     }
   };
 

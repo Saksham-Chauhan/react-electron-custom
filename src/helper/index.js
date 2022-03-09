@@ -13,9 +13,27 @@ export const isValueInUse = (arrOfObj, key, targetValue) => {
   return valid;
 };
 
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export const makeLogText = (msg) => {
   const d = new Date();
-  return `${d.toDateString()}:${d.toLocaleTimeString()} - ${msg}`;
+  return `[${DAYS[d.getDay()]}, ${d.getDate()} ${
+    MONTHS[d.getMonth()]
+  } ${d.getFullYear()}  ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}] - ${msg}`;
 };
 
 export const generateId = () => uuid();
@@ -62,3 +80,5 @@ export const getClaimerValue = (list, obj) => {
 };
 
 export const handleExportLogs = (logs, type) => downloadLogs(logs, type);
+
+export const tweetTimeToEpoch = (str) => {};

@@ -50,6 +50,7 @@ import {
 } from "./features/logic/spoof";
 import { toastInfo, toastWarning } from "./toaster";
 import { proxyStatusUpdater } from "./features/logic/proxy";
+import { closelinkOpenerMonitor } from "./features/logic/discord-account";
 
 function App() {
   const dispatch = useDispatch();
@@ -69,6 +70,7 @@ function App() {
     : "kyro-bot-no-animation";
 
   useEffect(() => {
+    dispatch(closelinkOpenerMonitor());
     dispatch(resetSpooferStatus());
     spooferToaster((data) => {
       if (Object.keys(data).length > 0) {

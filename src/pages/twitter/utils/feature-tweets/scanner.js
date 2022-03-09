@@ -117,21 +117,24 @@ const pastebinParser = async (urls) => {
 
   return binArr;
 };
-
+const KEYWORD_FEATURE_COMING_SOON = true;
 // Checks URLs for given keywords
 function urlParser(urls, keywords) {
   let response = [];
-  for (let url of urls) {
-    const urlName = url.expanded_url;
-    for (let k of keywords) {
-      if (urlName.includes(k)) response.push(urlName);
+  for (let url in urls) {
+    const urlName = urls[url].expanded_url;
+    if (!KEYWORD_FEATURE_COMING_SOON) {
+      for (let k of keywords) {
+        if (urlName.includes(k)) response.push(urlName);
+      }
+    } else {
+      response.push(urlName);
     }
   }
   filteredArray = () =>
     response.filter(function (item, pos) {
       return response.indexOf(item) === pos;
     });
-
   response = filteredArray(response);
   return response;
 }
@@ -160,7 +163,7 @@ const scanner = async (
   const ocrText = await ocrResolver(FTObject.extended_entities);
   if (FTObject.entities.urls.length > 0) {
     FTObject.pastebinText = await pastebinParser(FTObject.entities.urls);
-    if (option?.startAutoLinkOpener) {
+    if (option?.startAutoLinkOpener || option?.startAutoInviteJoiner) {
       FTObject.urlsExtracted = urlParser(FTObject.entities.urls, keywords);
     }
   }
@@ -210,11 +213,7 @@ const scanner = async (
     }
   } else if ("urlsExtracted" in FTObject) {
     FTObject.featured_type = "URLs extracted";
-    if (
-      webhooks.length > 0 &&
-      webhookSetting?.twitterMonitor &&
-      !(FTObject["id"] in featureList)
-    ) {
+    if (webhookSetting?.twitterMonitor && !(FTObject["id"] in featureList)) {
       webhookHandler(
         webhooks,
         user,
@@ -225,26 +224,6 @@ const scanner = async (
   } else if ("inviteExtracted" in FTObject) {
     FTObject.featured_type = "Invite extracted";
   }
-
-  delete FTObject["geo"];
-  delete FTObject["lang"];
-  delete FTObject["place"];
-  delete FTObject["source"];
-  delete FTObject["entities"];
-  delete FTObject["favorited"];
-  delete FTObject["retweeted"];
-  delete FTObject["truncated"];
-  delete FTObject["coordinates"];
-  delete FTObject["contributors"];
-  delete FTObject["retweet_count"];
-  delete FTObject["favorite_count"];
-  delete FTObject["is_quote_status"];
-  delete FTObject["possibly_sensitive"];
-  delete FTObject["in_reply_to_user_id"];
-  delete FTObject["in_reply_to_status_id"];
-  delete FTObject["in_reply_to_user_id_str"];
-  delete FTObject["in_reply_to_screen_name"];
-  delete FTObject["in_reply_to_status_id_str"];
   let obj = {};
   obj["tweet_id"] = FTObject["id"];
   obj["userName"] = FTObject["user"]["screen_name"];
@@ -255,11 +234,10 @@ const scanner = async (
   obj[
     "followingLink"
   ] = `https://twitter.com/${FTObject.user.screen_name}/following`;
-  delete FTObject["user"];
-  delete FTObject["id"];
-  delete FTObject["extended_entities"];
+
   obj["qrText"] = qrText;
   obj["ocrText"] = ocrText;
+  obj["isJoined"] = false;
   if ("qrText" in obj && obj.qrText !== null) {
     FTObject.featured_type = "QR";
     if (webhookSetting?.twitterMonitor && !(obj["tweet_id"] in featureList)) {
@@ -281,6 +259,28 @@ const scanner = async (
       );
     }
   }
+  delete FTObject["id"];
+  delete FTObject["geo"];
+  delete FTObject["user"];
+  delete FTObject["lang"];
+  delete FTObject["place"];
+  delete FTObject["source"];
+  delete FTObject["entities"];
+  delete FTObject["favorited"];
+  delete FTObject["retweeted"];
+  delete FTObject["truncated"];
+  delete FTObject["coordinates"];
+  delete FTObject["contributors"];
+  delete FTObject["retweet_count"];
+  delete FTObject["favorite_count"];
+  delete FTObject["is_quote_status"];
+  delete FTObject["extended_entities"];
+  delete FTObject["possibly_sensitive"];
+  delete FTObject["in_reply_to_user_id"];
+  delete FTObject["in_reply_to_status_id"];
+  delete FTObject["in_reply_to_user_id_str"];
+  delete FTObject["in_reply_to_screen_name"];
+  delete FTObject["in_reply_to_status_id_str"];
   return { ...FTObject, ...obj };
 };
 

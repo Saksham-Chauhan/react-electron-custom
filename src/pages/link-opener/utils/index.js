@@ -51,7 +51,7 @@ export const checkOptions = (options, message) => {
   if (options.ignoreDiscordInviteLink && checkDiscordInvite(message))
     return false;
   if (options.ignoreTwitterLink && checkTwitterLink(message)) return false;
-  return true;
+  return options?.linkOpenerState ? true : false;
 };
 
 const webHookStart = (webhook, user = "", data = "", time = "") => {

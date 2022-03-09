@@ -74,6 +74,10 @@
     "react-error-overlay": "^6.0.9"
   },
   "main": "public/electron/main.js",
+  "author": {
+    "name": "Koders",
+    "url": "https://koders.in"
+  },
   "resolutions": {
     "//": "See https://github.com/facebook/create-react-app/issues/11773",
     "react-error-overlay": "6.0.9"

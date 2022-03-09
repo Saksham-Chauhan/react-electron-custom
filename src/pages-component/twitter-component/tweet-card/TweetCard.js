@@ -24,7 +24,6 @@ function TweetCard({
           <img src={bird} alt="" />
           <span>{tweetUser}</span>
         </div>
-
         <span>{tweetMsgLink}</span>
       </div>
       <AppSpacer spacer={20} />

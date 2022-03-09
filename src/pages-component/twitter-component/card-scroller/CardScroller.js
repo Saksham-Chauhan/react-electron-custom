@@ -1,81 +1,28 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./styles.css";
-import axios from "axios";
 import { TwitterPageTweetCard } from "../..";
 import { AppSpacer } from "../../../component";
-import UseAnimations from 'react-useanimations';
-import trash2 from 'react-useanimations/lib/trash2';
-import utils from "../../../pages/twitter/utils/feature-tweets/helper";
-import { useSelector } from "react-redux";
-import {
-  fetchTwitterChromeUserState,
-  fetchTwitterClaimerGroupState,
-} from "../../../features/counterSlice";
-const open = window.require("open");
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
 
 function CardScroller({
   title,
   list = [],
   isFeatureTweet = false,
   onClearTweets,
-  twitterSetting,
 }) {
-  const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
-  const selectedChrome = useSelector(fetchTwitterChromeUserState);
-
-  useEffect(() => {
-    if (isFeatureTweet) {
-      Object.keys(list).forEach(async (data) => {
-        let ft = { ...list[data] };
-        if (ft.urlsExtracted) {
-          for (let url of ft.urlsExtracted) {
-            let inviteCode = utils.isDiscordInvite(url);
-            if (inviteCode) {
-              if (twitterSetting?.startAutoInviteJoiner) {
-                let tokenArray = selectedClaimer["value"].split("\n");
-                console.log(tokenArray);
-                tokenArray.forEach(async (token) => {
-                  let info = await axios.post(
-                    `https://discordapp.com/api/v9/invites/${inviteCode}`,
-                    {},
-                    {
-                      headers: {
-                        Authorization: token,
-                      },
-                    }
-                  );
-                  if (info.status === 200) {
-                    console.log(`Successfully Joined `);
-                  } else {
-                    console.log(`Failed to join ${url}`);
-                  }
-                });
-              }
-            } else {
-              if (twitterSetting?.startAutoLinkOpener) {
-                await open(url, {
-                  app: {
-                    name: "google chrome",
-                    arguments: [
-                      `--profile-directory=${selectedChrome["value"]}`,
-                    ],
-                  },
-                });
-              }
-            }
-          }
-        }
-      });
-    }
-  }, [list, isFeatureTweet, twitterSetting, selectedClaimer, selectedChrome]);
-
   return (
     <div className="twitter-scroller-outer">
       <h3>{title}</h3>
       <AppSpacer spacer={10} />
       <div className="twitter-scroller-inner">
         <div onClick={onClearTweets} className="twitter-scroller-del-btn btn">
-        <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
+          <UseAnimations
+            animation={trash2}
+            strokeColor="#B60E0E"
+            size={25}
+            wrapperStyle={{ cursor: "pointer" }}
+          ></UseAnimations>
         </div>
         <AppSpacer spacer={10} />
         <div className="scroll-card-content">
@@ -87,12 +34,18 @@ function CardScroller({
                 text = tweet.binaryText;
               } else if (tweet.featured_type === "Base64") {
                 text = tweet.base64Text;
-              } else if (tweet.featured_type === "Maths") {
+              } else if (
+                tweet.featured_type === "Maths" ||
+                !!tweet.mathSolved
+              ) {
                 text = tweet.mathSolved;
               } else if (tweet.featured_type === "Pastebin") {
                 text = tweet.pastebinText.toString();
-              } else if (tweet.featured_type === "URLs extracted") {
-                text = tweet.urlsExtracted;
+              } else if (
+                tweet.featured_type === "URLs extracted" ||
+                tweet.urlsExtracted?.length > 0
+              ) {
+                text = tweet.urlsExtracted.toString();
               } else if (tweet.featured_type === "QR") {
                 text = tweet.qrText.toString();
               } else if (tweet.featured_type === "OCR") {

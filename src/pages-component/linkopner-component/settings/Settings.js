@@ -6,6 +6,8 @@ import {
   setLOchromeUser,
   fetchLOchromeUserState,
   fetchChromeUserListState,
+  fetchLOChannelList,
+  fetchLOKeywordList,
 } from "../../../features/counterSlice";
 import { isValueInUse } from "../../../helper";
 import { toastWarning } from "../../../toaster";
@@ -13,9 +15,9 @@ import {
   deleteAccountFromList,
   linkOpenerSettingHandler,
 } from "../../../features/logic/discord-account";
-import UseAnimations from 'react-useanimations';
-import trash2 from 'react-useanimations/lib/trash2';
-import edit from 'react-useanimations/lib/edit';
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
+import edit from "react-useanimations/lib/edit";
 import { useDispatch, useSelector } from "react-redux";
 import { discordTokenRegExp } from "../../../constant/regex";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
@@ -24,7 +26,8 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const dispatch = useDispatch();
   const chromeList = useSelector(fetchChromeUserListState);
   const selectedChrome = useSelector(fetchLOchromeUserState);
-
+  const keywordList = useSelector(fetchLOKeywordList);
+  const channelList = useSelector(fetchLOChannelList);
   /**
    * function handle modal state
    **/
@@ -36,9 +39,15 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
     const { checked } = e.target;
     if (accountList.length > 0) {
       if (Object.keys(selectedMonitorToken).length > 0) {
-        if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
-          dispatch(linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked }));
-        } else toastWarning("Select valid token");
+        if (channelList.length > 0) {
+          if (keywordList.length > 0) {
+            if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
+              dispatch(
+                linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked })
+              );
+            } else toastWarning("Select valid token");
+          } else toastWarning("Enter some keywords");
+        } else toastWarning("Enter some channel id");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
   };
@@ -99,11 +108,21 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
           </span>
         </div>
         <div onClick={handleEditAccount} className="linkopener-acc btn">
-        <UseAnimations animation={edit} strokeColor="#ffff" size={20} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
+          <UseAnimations
+            animation={edit}
+            strokeColor="#ffff"
+            size={20}
+            wrapperStyle={{ cursor: "pointer" }}
+          ></UseAnimations>
           <span>Edit Account</span>
         </div>
         <div onClick={handleDeleteAccount} className="linkopener-acc btn">
-        <UseAnimations animation={trash2} strokeColor="#B60E0E" size={20} wrapperStyle={{cursor:"pointer", paddingBottom:"1px"}}></UseAnimations>
+          <UseAnimations
+            animation={trash2}
+            strokeColor="#B60E0E"
+            size={20}
+            wrapperStyle={{ cursor: "pointer", paddingBottom: "1px" }}
+          ></UseAnimations>
           <span>Delete Account</span>
         </div>
       </div>

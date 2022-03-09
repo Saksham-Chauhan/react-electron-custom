@@ -183,3 +183,10 @@ export const addLogInList = (data) => (dispatch, getState) => {
     // dispatch(appendLogList({ key: "inviteJoiner", list: combiner }));
   }
 };
+
+export const closelinkOpenerMonitor = () => (dispatch, getState) => {
+  const settingState = fetchLOSettingState(getState());
+  let settingObj = { ...settingState };
+  settingObj["linkOpenerState"] = false;
+  dispatch(setIJLOSetting({ key: "linkOpener", value: settingObj }));
+};
