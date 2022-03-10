@@ -1,0 +1,34 @@
+.login {
+  height: 100vh;
+  overflow: hidden;
+}
+.login > .robo {
+  position: absolute;
+  top: 15%;
+  left: 6%;
+}
+.login > .bg-two {
+  position: absolute;
+  top: 27%;
+  left: 53%;
+}
+.login > .bg-three {
+  position: absolute;
+  bottom: 8%;
+  right: 51%;
+}
+.bg-four {
+  position: absolute;
+  right: 0;
+  top: 70%;
+}
+.bg-five {
+  position: absolute;
+  top: 16%;
+  left: 32%;
+}
+.bg-six {
+  position: absolute;
+  bottom: 19%;
+  left: 4%;
+}

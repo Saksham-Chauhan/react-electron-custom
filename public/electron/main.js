@@ -18,58 +18,58 @@ let mainWindow = null;
 let splash = null;
 
 // AUTH WINDOW CREATION
-// function createAuthWindow() {
-//   destroyAuthWin();
-//   win = new BrowserWindow({
-//     width: 550,
-//     height: 800,
-//     webPreferences: {
-//       nodeIntegration: false,
-//       contextIsolation: false,
-//     },
-//     transparent: true,
-//     frame: false,
-//     devTools: false,
-//   });
-//   win.loadURL(auth.getAuthenticationURL());
-//   const {
-//     session: { webRequest },
-//   } = win.webContents;
-// const filter = {
-//   urls: [auth.redirect_uri],
-// };
-// webRequest.onBeforeRequest(filter, async ({ url }) => {
-//   try {
-//     await auth.loadTokens(url);
-//     await auth.login();
-//     if (!mainWindow) return;
-//     mainWindow.reload();
-//     return destroyAuthWin();
-//   } catch (error) {
-//     destroyAuthWin();
+function createAuthWindow() {
+  destroyAuthWin();
+  win = new BrowserWindow({
+    width: 550,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: false,
+    },
+    transparent: true,
+    frame: false,
+    devTools: false,
+  });
+  win.loadURL(auth.getAuthenticationURL());
+  const {
+    session: { webRequest },
+  } = win.webContents;
+  const filter = {
+    urls: [auth.redirect_uri],
+  };
+  webRequest.onBeforeRequest(filter, async ({ url }) => {
+    try {
+      await auth.loadTokens(url);
+      await auth.login();
+      if (!mainWindow) return;
+      mainWindow.reload();
+      return destroyAuthWin();
+    } catch (error) {
+      destroyAuthWin();
 
-//     const options = {
-//       type: "question",
-//       defaultId: 2,
-//       title: "Login Error",
-//       message: "Login Failed",
-//       detail: "You are not allowed to login",
-//     };
-//       dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
-//     }
-//   });
-//   win.on("authenticated", () => {
-//     destroyAuthWin();
-//   });
-//   win.on("closed", () => {
-//     win = null;
-//   });
-// }
-// function destroyAuthWin() {
-//   if (!win) return;
-//   win.close();
-//   win = null;
-// }
+      const options = {
+        type: "question",
+        defaultId: 2,
+        title: "Login Error",
+        message: "Login Failed",
+        detail: "You are not allowed to login",
+      };
+      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+    }
+  });
+  win.on("authenticated", () => {
+    destroyAuthWin();
+  });
+  win.on("closed", () => {
+    win = null;
+  });
+}
+function destroyAuthWin() {
+  if (!win) return;
+  win.close();
+  win = null;
+}
 
 // MAIN WINDOW CREATOR
 function createWindow() {
@@ -100,7 +100,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: !isDev ? false : true,
+      // devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
@@ -140,13 +140,13 @@ function createWindow() {
 //   auth.logout();
 // });
 
-// ipcMain.on("auth", () => {
-//   createAuthWindow();
-// });
+ipcMain.on("auth", () => {
+  createAuthWindow();
+});
 
 // ipcMain.handle("get-user", () => {
-//     return auth.getCurrentUser();
-//   });
+//   return auth.getCurrentUser();
+// });
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

@@ -1,0 +1,87 @@
+.logininner {
+  color: white;
+  width: 100%;
+  padding: 0 8%;
+}
+.logininner > div {
+  width: 45%;
+  margin-left: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+  padding: 0 2%;
+}
+.logininner > div > h1 {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 50.9261px;
+  line-height: 76px;
+  color: #ffffff;
+}
+.logininner > div > h2 {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 36px;
+  color: #ffffff;
+  margin-top: 1rem;
+}
+
+.logininner > div > h3 {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  text-align: center;
+  color: #ffffff;
+  margin-top: 1rem;
+}
+.login-button {
+  height: 100%;
+  width: 100%;
+  outline: none;
+  border: none;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 27px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 1s;
+  background: var(--app-bg);
+  border-radius: 8px;
+}
+.login-button:hover {
+  transition: all 1s;
+  background: linear-gradient(
+    90.13deg,
+    #be26f3 28.5%,
+    #e000d5 52.1%,
+    #fc944f 94.51%
+  );
+}
+.login-button > img {
+  margin-right: 10px;
+}
+.logininner > div > div {
+  margin-top: 2.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 2px;
+  width: 81%;
+  height: 50px;
+  background: linear-gradient(
+    90.13deg,
+    #be26f3 28.5%,
+    #e000d5 52.1%,
+    #fc944f 94.51%
+  );
+}

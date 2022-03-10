@@ -33,6 +33,7 @@ import {
   TwitterPage,
   SpooferPage,
   SettingPage,
+  Login,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -94,33 +95,43 @@ function App() {
       {discordModalState && <DiscordAccountModal />}
       {inviteModalState && <InviteJoinerAccountModal />}
       {inviteSettigModalState && <InviteJoinerSettingModal />}
-      <div className="app sidebar">
-        <AppSidebar />
-      </div>
-      <div className="app page-section">
-        <div className="app overlay-wrapper">
-          <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
-          <img id={animClass} src={bot} alt="bot-animatable-icon" />
-          <div className="page-section-overlay">
-            <DragBar />
-            <AppController />
-            <Routes>
-              <Route path={RoutePath.setting} element={<SettingPage />} />
-              <Route path={RoutePath.spoofer} element={<SpooferPage />} />
-              <Route path={RoutePath.twitter} element={<TwitterPage />} />
-              <Route
-                path={RoutePath.inviteJoiner}
-                element={<InviteJoinerPage />}
-              />
-              <Route path={RoutePath.linkOpener} element={<LinkOpenerPage />} />
-              <Route path={RoutePath.proxy} element={<ProxyPage />} />
-              <Route path={RoutePath.oneclick} element={<OneClickPage />} />
-            </Routes>
-            <AppFooter />
+
+      {false ? (
+        <>
+          <div className="app sidebar">
+            <AppSidebar />
           </div>
-        </div>
-        <ToastContainer />
-      </div>
+          <div className="app page-section">
+            <div className="app overlay-wrapper">
+              <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
+              <img id={animClass} src={bot} alt="bot-animatable-icon" />
+              <div className="page-section-overlay">
+                <DragBar />
+                <AppController />
+                <Routes>
+                  <Route path={RoutePath.setting} element={<SettingPage />} />
+                  <Route path={RoutePath.spoofer} element={<SpooferPage />} />
+                  <Route path={RoutePath.twitter} element={<TwitterPage />} />
+                  <Route
+                    path={RoutePath.inviteJoiner}
+                    element={<InviteJoinerPage />}
+                  />
+                  <Route
+                    path={RoutePath.linkOpener}
+                    element={<LinkOpenerPage />}
+                  />
+                  <Route path={RoutePath.proxy} element={<ProxyPage />} />
+                  <Route path={RoutePath.oneclick} element={<OneClickPage />} />
+                </Routes>
+                <AppFooter />
+              </div>
+            </div>
+            <ToastContainer />
+          </div>
+        </>
+      ) : (
+        <Login />
+      )}
     </div>
   );
 }

@@ -40,3 +40,6 @@ export { default as SettingTopSection } from "./setting-component/setting-top/Se
 export { default as SettingChromeUserSection } from "./setting-component/chrome-user/ChromeUser";
 export { default as SettingCalimerGroupSection } from "./setting-component/claimer-group/CalimerGroup";
 export { default as SettingWebhookSection } from "./setting-component/webhook-section/WebhookSetting";
+
+//LOGIN COMPONENTS
+export { default as LoginInner } from "./login-component/LoginInner";
