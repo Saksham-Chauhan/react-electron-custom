@@ -29,8 +29,7 @@ function KeywordSection({ keywordList }) {
   return (
     <div>
       <InputFieldWithScrollList
-        placeHolder="Enter Keywords"
-        title="Keywords"
+        placeHolder="Enter channel ID"
         list={keywordList}
         btnProps={{ onClick: handleAddKeyword }}
         inputProps={{
