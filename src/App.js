@@ -37,6 +37,7 @@ import {
   SpooferPage,
   SettingPage,
   Login,
+  DashboardPage,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -135,6 +136,7 @@ function App() {
               <Route path={RoutePath.linkOpener} element={<LinkOpenerPage />} />
               <Route path={RoutePath.proxy} element={<ProxyPage />} />
               <Route path={RoutePath.oneclick} element={<OneClickPage />} />
+              <Route path={RoutePath.home} element={<DashboardPage />} />
             </Routes>
             <AppFooter />
           </div>

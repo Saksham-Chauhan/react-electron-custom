@@ -43,3 +43,8 @@ export { default as SettingWebhookSection } from "./setting-component/webhook-se
 
 //LOGIN COMPONENTS
 export { default as LoginInner } from "./login-component/LoginInner";
+
+//DASHBOARD COMPONENTS
+export { default as DashboardButton } from "./dashboard-components/dashboard-buttons/DashboardButton";
+export { default as DashboardChart } from "./dashboard-components/dashboard-chart/DashboardChart";
+export { default as ChartLabel } from "./dashboard-components/chart-label/ChartLabel";

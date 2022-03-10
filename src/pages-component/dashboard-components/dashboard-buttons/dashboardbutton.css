@@ -1,0 +1,29 @@
+.centerd {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dashboard-button {
+  width: 14%;
+  background: var(--active-card);
+  border-radius: 3.9px;
+  padding: 13px;
+  text-decoration: none;
+  color: var(--primary);
+  margin: 20px 15px;
+}
+.dashboard-button > img {
+  width: 16%;
+  margin-right: 12px;
+}
+.dashboard-button > p {
+  flex-direction: column;
+}
+.dashboard-button > p > .text,
+.value {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11.8944px;
+  line-height: 18px;
+}
