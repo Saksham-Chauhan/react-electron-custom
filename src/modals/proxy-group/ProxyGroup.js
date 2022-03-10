@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchEditStorageState,
+  fetchIsAddnewProxyModalState,
+  openAddNewProxyModal,
   setEditStorage,
   setModalState,
 } from "../../features/counterSlice";
@@ -12,12 +14,14 @@ import { ProxyRegExp } from "../../constant/regex";
 import { generateId } from "../../helper";
 import {
   addProxyGroupInList,
+  addProxyInList,
   editProxyGroup,
 } from "../../features/logic/proxy";
 
 function ProxyGroup() {
   const dispatch = useDispatch();
   const editState = useSelector(fetchEditStorageState);
+  const addProxy = useSelector(fetchIsAddnewProxyModalState);
   const [proxy, setProxy] = useState({ groupName: "", proxies: "" });
 
   useEffect(() => {
@@ -25,11 +29,16 @@ function ProxyGroup() {
       setProxy((pre) => {
         return { ...editState };
       });
+    } else if (Object.keys(addProxy).length > 0) {
+      setProxy((pre) => {
+        return { ...addProxy, proxies: "" };
+      });
     }
     return () => {
       dispatch(setEditStorage({}));
+      dispatch(openAddNewProxyModal({}));
     };
-  }, [editState, dispatch]);
+  }, [editState, addProxy, dispatch]);
 
   const handleCloseModal = () => {
     dispatch(setModalState("proxyGroup"));
@@ -84,6 +93,8 @@ function ProxyGroup() {
     if (validationResult) {
       if (Object.keys(editState).length > 0) {
         handleEditProxyGroup();
+      } else if (Object.keys(addProxy).length > 0) {
+        handleAddProxyInGroup();
       } else {
         handleCreateProxyGroup();
       }
@@ -91,19 +102,54 @@ function ProxyGroup() {
     }
   };
 
+  const handleAddProxyInGroup = () => {
+    let valid = [];
+    let proxyGroup = { ...proxy };
+    const proxyString = proxy.proxies.split("\n");
+    for (let i = 0; i < proxyString.length; i++) {
+      if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
+      }
+    }
+    let preProxyList = addProxy["proxyList"];
+    let combiner = [...preProxyList, ...valid];
+    proxyGroup["proxyList"] = combiner;
+    proxyGroup["proxies"] = combiner.map((proxy) => proxy["proxy"]).join("\n");
+    dispatch(addProxyInList(proxyGroup));
+  };
+
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Create Proxy Group</h2>
+        <h2>
+          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Proxy Group
+        </h2>
       </div>
       <AppSpacer spacer={30} />
-      <AppInputField
-        onChange={handleChange}
-        value={proxy.groupName}
-        placeholderText="Enter Proxy Group Name"
-        fieldTitle="Proxy Group Name"
-        name="groupName"
-      />
+      {Object.keys(addProxy).length > 0 ? (
+        <AppInputField
+          onChange={handleChange}
+          value={proxy.groupName}
+          placeholderText="Enter Proxy Group Name"
+          fieldTitle="Proxy Group Name"
+          name="groupName"
+          disabled={true}
+        />
+      ) : (
+        <AppInputField
+          onChange={handleChange}
+          value={proxy.groupName}
+          placeholderText="Enter Proxy Group Name"
+          fieldTitle="Proxy Group Name"
+          name="groupName"
+        />
+      )}
+
       <AppSpacer spacer={10} />
       <AppInputField
         onChange={handleChange}
@@ -119,7 +165,7 @@ function ProxyGroup() {
           <span>Cancel</span>
         </div>
         <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>Create</span>
+          <span>{Object.keys(editState).length > 0 ? "Save" : "Create"}</span>
         </div>
       </div>
     </ModalWrapper>

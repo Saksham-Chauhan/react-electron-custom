@@ -7,6 +7,7 @@ export const twitterInitialState = {
     twitterMonitor: false,
     startAutoLinkOpener: false,
     startAutoInviteJoiner: false,
+    monitorStartDate: "",
   },
   twitterApiList: [],
   apiRotaterIndex: 0,

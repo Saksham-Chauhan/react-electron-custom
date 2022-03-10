@@ -35,7 +35,8 @@ import { appendNewTweetInList } from "../../features/logic/twitter";
 import axios from "axios";
 const open = window.require("open");
 
-const TWEET_FETCH_TIME = 5 * 1000;
+// FIXME:: decrease the time gap to ms instead of sec
+const TWEET_FETCH_TIME = 1000;
 
 function Twitter() {
   const dispatch = useDispatch();
@@ -63,63 +64,68 @@ function Twitter() {
               apiList[rotaterIndex].apiSecret,
               tweetUser["value"]
             );
-
             if (newTweets !== undefined) {
-              if (new Date(newTweets["created_at"]) >= new Date()) {
-                console.log("OOOOO");
-              }
-              dispatch(
-                appendNewTweetInList({
-                  key: "LATEST",
-                  tweet: tweetHelper.extractDataFromTweet(newTweets),
-                })
-              );
-              const ft = await twitterScanner(
-                newTweets,
-                keyWordList,
-                webhookList[0],
-                twitterSetting,
-                webhookSetting,
-                latestTweetList
-              );
-              if (ft.featured_type) {
-                dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
-                if (
-                  ft.urlsExtracted?.length > 0 &&
-                  !(ft["tweet_id"] in latestTweetList)
-                ) {
-                  for (let url of ft.urlsExtracted) {
-                    let inviteCode = tweetHelper.isDiscordInvite(url);
-                    if (inviteCode) {
-                      if (twitterSetting?.startAutoInviteJoiner) {
-                        let tokenArray = selectedClaimer["value"].split("\n");
-                        tokenArray.forEach(async (token) => {
-                          try {
-                            const info = await axios({
-                              url: `https://discord.com/api/v9/invites/${inviteCode}`,
-                              headers: { authorization: token },
-                            });
-                            if (info.status === 200) {
-                              console.log("Joined the server", info.data.guild);
-                              toastSuccess(
-                                `Successfully Joined ${info.data.guild.name}`
+              const twitterStart = twitterSetting["monitorStartDate"];
+              if (new Date(newTweets["created_at"]) > new Date(twitterStart)) {
+                dispatch(
+                  appendNewTweetInList({
+                    key: "LATEST",
+                    tweet: tweetHelper.extractDataFromTweet(newTweets),
+                  })
+                );
+                const ft = await twitterScanner(
+                  newTweets,
+                  keyWordList,
+                  webhookList[0],
+                  twitterSetting,
+                  webhookSetting,
+                  latestTweetList
+                );
+                if (ft.featured_type) {
+                  dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
+                  if (
+                    ft.urlsExtracted?.length > 0 &&
+                    !(ft["tweet_id"] in latestTweetList)
+                  ) {
+                    for (let url of ft.urlsExtracted) {
+                      let inviteCode = tweetHelper.isDiscordInvite(url);
+                      if (inviteCode) {
+                        if (twitterSetting?.startAutoInviteJoiner) {
+                          let tokenArray = selectedClaimer["value"].split("\n");
+                          tokenArray.forEach(async (token) => {
+                            try {
+                              const info = await axios({
+                                url: `https://discord.com/api/v9/invites/${inviteCode}`,
+                                headers: { authorization: token },
+                              });
+                              if (info.status === 200) {
+                                console.log(
+                                  "Joined the server",
+                                  info.data.guild
+                                );
+                                toastSuccess(
+                                  `Successfully Joined ${info.data.guild.name}`
+                                );
+                              }
+                            } catch (err) {
+                              console.log(
+                                "Error in joining server",
+                                err.message
                               );
                             }
-                          } catch (err) {
-                            console.log("Error in joining server", err.message);
-                          }
-                        });
-                      }
-                    } else {
-                      if (twitterSetting?.startAutoLinkOpener) {
-                        await open(url, {
-                          app: {
-                            name: open.apps.chrome,
-                            arguments: [
-                              `--profile-directory=${selectedChrome["value"]}`,
-                            ],
-                          },
-                        });
+                          });
+                        }
+                      } else {
+                        if (twitterSetting?.startAutoLinkOpener) {
+                          await open(url, {
+                            app: {
+                              name: open.apps.chrome,
+                              arguments: [
+                                `--profile-directory=${selectedChrome["value"]}`,
+                              ],
+                            },
+                          });
+                        }
                       }
                     }
                   }
@@ -153,6 +159,7 @@ function Twitter() {
     rotaterIndex,
     twitterSetting,
     webhookSetting,
+    selectedChrome,
     latestTweetList,
     selectedClaimer,
   ]);
@@ -166,7 +173,14 @@ function Twitter() {
     prevState[name] = checked;
     if (name === "twitterMonitor") {
       if (apiList.length > 0) {
-        dispatch(setTwitterSetting(prevState));
+        if (userList.length > 0) {
+          if (!prevState["twitterMonitor"]) {
+            prevState["monitorStartDate"] = "";
+          } else {
+            prevState["monitorStartDate"] = new Date().toUTCString();
+          }
+          dispatch(setTwitterSetting(prevState));
+        } else toastWarning("Enter some twitter handlers");
       } else {
         toastWarning("Add some API keys");
       }
@@ -186,6 +200,11 @@ function Twitter() {
    * function handle clearAll tweets in latest and feature section
    **/
   const handleDeleteAllTweets = (key) => {
+    let prevState = { ...twitterSetting };
+    if (prevState["twitterMonitor"]) {
+      prevState["monitorStartDate"] = new Date().toUTCString();
+      dispatch(setTwitterSetting(prevState));
+    }
     if (key === "LATEST") {
       dispatch(clearTweetsFeeder(key));
     } else {

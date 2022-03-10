@@ -50,6 +50,11 @@ const proxyTestResultListener = (callback) =>
 
 const startLOmonitor = (token) => ipcRenderer.invoke("start-lo-monitor", token);
 const stopLOmonitor = () => ipcRenderer.send("stop-lo-monitor");
+
+// LOGIN IPC
+const authUser = () => ipcRenderer.invoke("authenticate-user");
+const logoutUser = () => ipcRenderer.send("logout-user");
+
 module.exports = {
   minimizeApp,
   closeApp,
@@ -69,4 +74,6 @@ module.exports = {
   fetchNetworkSpeed,
   startLOmonitor,
   stopLOmonitor,
+  authUser,
+  logoutUser,
 };

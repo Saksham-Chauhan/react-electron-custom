@@ -139,19 +139,6 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
           value={chromeList.filter((d) => d["id"] === selectedChrome?.id)}
         />
       </div>
-      <AppSpacer spacer={20} />
-      <div className="linkopener-urlappender-section">
-        <div className="linkopner-urlappender-input">
-          <AppInputField
-            fieldTitle="URL Appender"
-            hideLabel={true}
-            isCustomLabel={true}
-          />
-        </div>
-        <div className="linkopener-urlappender-btn btn">
-          <span>Disabled</span>
-        </div>
-      </div>
       <AppSpacer spacer={35} />
     </div>
   );

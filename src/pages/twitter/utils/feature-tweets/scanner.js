@@ -248,7 +248,7 @@ const scanner = async (
         obj.qrText.toString().split(",").join("\n")
       );
     }
-  } else if ("ocrText" in obj) {
+  } else if ("ocrText" in obj && obj["ocrText"].length > 0) {
     FTObject.featured_type = "OCR";
     if (webhookSetting?.twitterMonitor && !(obj["tweet_id"] in featureList)) {
       webhookHandler(

@@ -112,3 +112,14 @@ export const editSingleProxy = (proxy) => (dispatch, getState) => {
   dispatch(setTempStorage(tempSelectedObj));
   dispatch(appendProxyGroupInList(afterUpdateGroup));
 };
+
+export const addProxyInList = (group) => (dispatch, getState) => {
+  const currentList = fetchProxyGroupList(getState());
+  let tempList = [...currentList];
+  let after = tempList.map((d) => {
+    if (d["id"] === group["id"]) return group;
+    return d;
+  });
+  dispatch(setTempStorage(group));
+  dispatch(appendProxyGroupInList(after));
+};

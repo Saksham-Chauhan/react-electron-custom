@@ -87,3 +87,22 @@
   line-height: 17px;
   color: var(--active-input);
 }
+.import-file-btn {
+  position: relative;
+}
+.import-file-btn > input {
+  -webkit-appearance: none;
+  opacity: 0;
+}
+.import-file-btn > label {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  left: 0;
+}
+.import-file-btn > img {
+  position: absolute;
+  left: 10px;
+}

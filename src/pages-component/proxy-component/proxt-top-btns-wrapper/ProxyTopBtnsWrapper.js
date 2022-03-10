@@ -13,10 +13,14 @@ import {
 import { toastWarning } from "../../../toaster";
 import { handleExportLogs } from "../../../helper";
 import { proxyTester } from "../../../helper/electron-bridge";
-import { setEditStorage, setModalState } from "../../../features/counterSlice";
-import UseAnimations from 'react-useanimations';
-import trash2 from 'react-useanimations/lib/trash2';
-import edit from 'react-useanimations/lib/edit';
+import {
+  openAddNewProxyModal,
+  setEditStorage,
+  setModalState,
+} from "../../../features/counterSlice";
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
+import edit from "react-useanimations/lib/edit";
 
 function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
   const dispatch = useDispatch();
@@ -58,6 +62,18 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
     } else toastWarning("Select proxy group");
   };
 
+  const handleAddNewProxy = () => {
+    if (Object.keys(tempData).length > 0) {
+      dispatch(openAddNewProxyModal(tempData));
+      dispatch(setModalState("proxyGroup"));
+    } else toastWarning("Select proxy group");
+  };
+
+  const handleImportProxy = (e) => {
+    const { files } = e.target;
+    console.log(files);
+  };
+
   return (
     <div className="page-top-btns-wrapper">
       <div className="page-left-container">
@@ -70,26 +86,46 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
             type="search"
           />
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div onClick={handleAddNewProxy} className="icon-btn-wrapper btn">
           <img src={add} alt="" />
         </div>
         <div onClick={handleTestproxy} className="icon-btn-wrapper btn">
           <img src={test} alt="" />
         </div>
         <div onClick={handleEditGroup} className="icon-btn-wrapper btn">
-          <UseAnimations animation={edit} strokeColor="#fff" size={25}></UseAnimations>
+          <UseAnimations
+            animation={edit}
+            strokeColor="#fff"
+            size={25}
+          ></UseAnimations>
         </div>
         <div onClick={handleDeleteGroup} className="icon-btn-wrapper btn">
-          <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25}></UseAnimations>
+          <UseAnimations
+            animation={trash2}
+            strokeColor="#B60E0E"
+            size={25}
+          ></UseAnimations>
         </div>
       </div>
       <div className="page-right-container">
         <div onClick={handleRemoveBadProxy} className="remove-btn btn">
-        <UseAnimations animation={trash2} strokeColor="#B60E0E" size={27} wrapperStyle={{paddingBottom:"2px"}}></UseAnimations>
+          <UseAnimations
+            animation={trash2}
+            strokeColor="#B60E0E"
+            size={27}
+            wrapperStyle={{ paddingBottom: "2px" }}
+          ></UseAnimations>
           <span>Remove Bad Proxies</span>
         </div>
-        <div className="icon-btn-wrapper btn">
+        <div className="icon-btn-wrapper import-file-btn btn">
           <img src={importIcon} alt="" />
+          <input
+            onChange={handleImportProxy}
+            id="proxy-import-btn"
+            type="file"
+            accept="text/*"
+          />
+          <label htmlFor="proxy-import-btn" />
         </div>
         <div onClick={handleExportProxy} className="icon-btn-wrapper btn">
           <img src={exportIcon} alt="" />

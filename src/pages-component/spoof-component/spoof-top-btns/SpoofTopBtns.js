@@ -14,6 +14,7 @@ import searchIcon from "../../../assests/images/search.svg";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import { setModalState } from "../../../features/counterSlice";
+import { deleteSpooferFromList } from "../../../features/logic/spoof";
 
 function SpoofTopBtns({ tableList, search, handleSearching }) {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
           stopSpoofer(spoof);
         } else {
           deleteSpoofer(spoof);
+          deleteSpooferFromList(spoof);
         }
       });
     } else toastWarning("Create some spoof");

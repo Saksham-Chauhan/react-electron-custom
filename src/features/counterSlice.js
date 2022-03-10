@@ -111,7 +111,7 @@ export const counterSlice = createSlice({
     setTwitterClaimerGroup: (state, action) => {
       state.twitterSelectedClaimerGroup = action.payload;
     },
-    incrementApiRotater: (state, action) => {
+    incrementApiRotater: (state) => {
       const { twitterApiList, apiRotaterIndex } = state;
       if (apiRotaterIndex < twitterApiList.length) {
         state.apiRotaterIndex += 1;
@@ -134,48 +134,57 @@ export const counterSlice = createSlice({
     appendWebhookInList: (state, action) => {
       state.webhookList = action.payload;
     },
+    openAddNewProxyModal: (state, action) => {
+      state.addProxyStorage = action.payload;
+    },
   },
 });
 
 export const {
   appendApInList,
-  appendSpooferInList,
   clearLogList,
   appendLogList,
   setModalState,
   setIJLOSetting,
   setTempStorage,
   setEditStorage,
+  setLOchromeUser,
   setTweetsInFeeder,
   clearTweetsFeeder,
   setTwitterSetting,
+  setWebhookSetting,
+  appendSpooferInList,
+  incrementApiRotater,
+  appendWebhookInList,
+  openAddNewProxyModal,
+  setTwitterChromeUser,
   appendDiscordAccount,
   appendProxyGroupInList,
+  setTwitterClaimerGroup,
+  appendChromeUserInList,
   appendDataInTwitterList,
+  appendClaimerGroupInList,
   appendChannelInArrayList,
   appendKeywordInArrayList,
   setSelectedMonitorTokenLO,
   setSelectedClaimerTokenIJ,
   appendClaimerDiscordAccount,
-  incrementApiRotater,
-  appendClaimerGroupInList,
-  appendChromeUserInList,
-  setWebhookSetting,
-  appendWebhookInList,
-  setTwitterChromeUser,
-  setTwitterClaimerGroup,
-  setLOchromeUser,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
+
 export const fetchTempStorageState = (state) => state[STATE_KEY].tempStorage;
 export const fetchEditStorageState = (state) => state[STATE_KEY].editStorage;
+
 // PROXY SELECTOR
 export const fetchProxyGroupList = (state) => state[STATE_KEY].proxyGroupList;
 export const fetchProxyGroupModalState = (state) =>
   state[STATE_KEY].modals.proxyGroup;
 export const fetchEditProxyModalState = (state) =>
   state[STATE_KEY].modals.editProxy;
+export const fetchIsAddnewProxyModalState = (state) =>
+  state[STATE_KEY].addProxyStorage;
+
 // LINK OPNER SELECTOR
 export const fetchDiscordModalState = (state) =>
   state[STATE_KEY].modals.discordAccount;
@@ -229,10 +238,12 @@ export const fetchTwitterChromeUserState = (state) =>
   state[STATE_KEY].twitterSelectedChromeUser;
 export const fetchTwitterClaimerGroupState = (state) =>
   state[STATE_KEY].twitterSelectedClaimerGroup;
+
 // SPOOF
 export const fetchSpoofModalState = (state) =>
   state[STATE_KEY].modals.spoofModal;
 export const fetchSpoofTableList = (state) => state[STATE_KEY].spoofTabe;
+
 // SETTING
 export const fetchClaimerGroupModalState = (state) =>
   state[STATE_KEY].modals.claimerGroup;

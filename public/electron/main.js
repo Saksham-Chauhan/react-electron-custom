@@ -18,58 +18,58 @@ let mainWindow = null;
 let splash = null;
 
 // AUTH WINDOW CREATION
-// function createAuthWindow() {
-//   destroyAuthWin();
-//   win = new BrowserWindow({
-//     width: 550,
-//     height: 800,
-//     webPreferences: {
-//       nodeIntegration: false,
-//       contextIsolation: false,
-//     },
-//     transparent: true,
-//     frame: false,
-//     devTools: false,
-//   });
-//   win.loadURL(auth.getAuthenticationURL());
-//   const {
-//     session: { webRequest },
-//   } = win.webContents;
-// const filter = {
-//   urls: [auth.redirect_uri],
-// };
-// webRequest.onBeforeRequest(filter, async ({ url }) => {
-//   try {
-//     await auth.loadTokens(url);
-//     await auth.login();
-//     if (!mainWindow) return;
-//     mainWindow.reload();
-//     return destroyAuthWin();
-//   } catch (error) {
-//     destroyAuthWin();
+function createAuthWindow() {
+  destroyAuthWin();
+  win = new BrowserWindow({
+    width: 550,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: false,
+    },
+    transparent: true,
+    frame: false,
+    devTools: false,
+  });
+  win.loadURL(auth.getAuthenticationURL());
+  const {
+    session: { webRequest },
+  } = win.webContents;
+  const filter = {
+    urls: [auth.redirect_uri],
+  };
+  webRequest.onBeforeRequest(filter, async ({ url }) => {
+    try {
+      await auth.loadTokens(url);
+      await auth.login();
+      if (!mainWindow) return;
+      mainWindow.reload();
+      return destroyAuthWin();
+    } catch (error) {
+      destroyAuthWin();
 
-//     const options = {
-//       type: "question",
-//       defaultId: 2,
-//       title: "Login Error",
-//       message: "Login Failed",
-//       detail: "You are not allowed to login",
-//     };
-//       dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
-//     }
-//   });
-//   win.on("authenticated", () => {
-//     destroyAuthWin();
-//   });
-//   win.on("closed", () => {
-//     win = null;
-//   });
-// }
-// function destroyAuthWin() {
-//   if (!win) return;
-//   win.close();
-//   win = null;
-// }
+      const options = {
+        type: "question",
+        defaultId: 2,
+        title: "Login Error",
+        message: "Login Failed",
+        detail: "You are not allowed to login",
+      };
+      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+    }
+  });
+  win.on("authenticated", () => {
+    destroyAuthWin();
+  });
+  win.on("closed", () => {
+    win = null;
+  });
+}
+function destroyAuthWin() {
+  if (!win) return;
+  win.close();
+  win = null;
+}
 
 // MAIN WINDOW CREATOR
 function createWindow() {
@@ -135,7 +135,13 @@ function createWindow() {
 }
 
 // IPC NECESSARY EVENTS
-
+ipcMain.handle("authenticate-user", (_, data) => {
+  createAuthWindow();
+  return auth.getCurrentUser();
+});
+ipcMain.on("logout-user", () => {
+  auth.logout();
+});
 // ipcMain.on("logout", () => {
 //   auth.logout();
 // });
@@ -426,6 +432,36 @@ ipcMain.on("proxy-tester", async (event, data) => {
       ...data,
       status: response !== null ? response["avg"] : "Bad",
     });
+  }
+});
+
+ipcMain.on("import-files", () => {
+  if (process.platform !== "darwin") {
+    dialog
+      .showOpenDialog({
+        title: "Select the File to be uploaded",
+        defaultPath: path.join(__dirname, "../images/"),
+        buttonLabel: "Upload",
+        // Restricting the user to only Text Files.
+        filters: [
+          {
+            name: "Files to import",
+            extensions: ["txt", "json"],
+          },
+        ],
+        // Specifying the File Selector Property
+        properties: ["openFile"],
+      })
+      .then((file) => {
+        console.log(file.canceled);
+        if (!file.canceled) {
+          global.filepath = file.filePaths[0].toString();
+          console.log(global.filepath);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 });
 

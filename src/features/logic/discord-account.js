@@ -174,10 +174,11 @@ export const linkOpenerSettingHandler = (data) => (dispatch, getState) => {
 };
 
 export const addLogInList = (data) => (dispatch, getState) => {
-  const { key, log } = data;
+  const { key, log, id } = data;
   if (key === "LO") {
     const logList = fetchLinkOpenerLogState(getState());
-    let combiner = [...logList, log];
+    let combiner = { ...logList };
+    combiner[id] = log;
     dispatch(appendLogList({ key: "linkOpener", list: combiner }));
   } else {
     // dispatch(appendLogList({ key: "inviteJoiner", list: combiner }));

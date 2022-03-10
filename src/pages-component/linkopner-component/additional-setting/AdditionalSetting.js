@@ -25,22 +25,22 @@ function AdditionalSetting({ settingOption }) {
         />
         <span>Play Sound</span>
       </div>
-      <div className="additional-setting-option">
+      {/* <div className="additional-setting-option">
         <AppCheckbox
           name="IGNORE_TWITTER_LINK"
           onChange={handleAdditionSetting}
           checked={settingOption?.ignoreTwitterLink}
         />
         <span>Ignore Twitter Link</span>
-      </div>
-      <div className="additional-setting-option">
+      </div> */}
+      {/* <div className="additional-setting-option">
         <AppCheckbox
           name="IGNORE_DISCORD_INVITE"
           onChange={handleAdditionSetting}
           checked={settingOption?.ignoreDiscordInviteLink}
         />
         <span>Ignore Discord Invite</span>
-      </div>
+      </div> */}
       <AppSpacer spacer={20} />
     </div>
   );

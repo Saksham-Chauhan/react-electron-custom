@@ -5,8 +5,10 @@ import {
   fetchFeatureTweetList,
   fetchLatestTweetList,
   fetchTwitterKeywordList,
+  fetchTwitterSettingState,
   fetchTwitterUserList,
   setTweetsInFeeder,
+  setTwitterSetting,
 } from "../counterSlice";
 import { generateId } from "../../helper";
 
@@ -83,4 +85,11 @@ export const removeApiFromList = (api) => (dispatch, getState) => {
   const currentApiList = fetchAPIlistState(getState());
   let afterFilter = currentApiList.filter((a) => a["id"] !== api["id"]);
   dispatch(appendApInList(afterFilter));
+};
+
+export const resetTwitterMonitor = () => (dispatch, getState) => {
+  const currentSetting = fetchTwitterSettingState(getState());
+  let tempSetting = { ...currentSetting };
+  tempSetting["twitterMonitor"] = false;
+  dispatch(setTwitterSetting(tempSetting));
 };

@@ -6,13 +6,13 @@ export const discordAccount = {
   linkOpener: {
     keyWordList: [],
     channelList: [],
-    logList: [],
+    logList: {},
     selectedChromeUser: {},
   },
   inviteJoiner: {
     keyWordList: [],
     channelList: [],
-    logList: [],
+    logList: {},
   },
   setting: {
     linkOpener: {

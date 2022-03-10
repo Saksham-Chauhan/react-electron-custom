@@ -46,34 +46,36 @@ class LinkOpener extends React.PureComponent {
     ring.play();
   }
 
-  async checkSettingOption(content, channelID) {
+  async checkSettingOption(content, channelID, msgID) {
     const { settingOption, channelLIST, keywordLIST, selectedChrome } =
       this.state;
     let channel = channelLIST;
     let keyword = keywordLIST;
+
     if (makeStrOfArr(channel).includes(channelID)) {
       if (testUrlRegex(content)) {
         let flag = containsKeyword(makeStrOfArr(keyword), content);
         if (keyword.length === 0 || flag) {
           if (checkOptions(settingOption, content)) {
+            console.log("AFTER", settingOption);
             if (settingOption.playSound) {
               this.playSound();
             }
-            this.props.handleSendLog(content);
-          }
-          if (Object.keys(selectedChrome).length > 0) {
-            open(content, {
-              app: {
-                name: open.apps.chrome,
-                arguments: [`--profile-directory=${selectedChrome["value"]}`],
-              },
-            });
-          } else {
-            await open(content, {
-              app: {
-                name: open.apps.chrome,
-              },
-            });
+            if (Object.keys(selectedChrome).length > 0) {
+              open(content, {
+                app: {
+                  name: open.apps.chrome,
+                  arguments: [`--profile-directory=${selectedChrome["value"]}`],
+                },
+              });
+            } else {
+              await open(content, {
+                app: {
+                  name: open.apps.chrome,
+                },
+              });
+            }
+            this.props.handleSendLog(content, msgID);
           }
         }
       }
@@ -89,7 +91,9 @@ class LinkOpener extends React.PureComponent {
       this.monitor.on("message", async (message) => {
         let content = message.content;
         let channelID = message.channel.id;
-        this.checkSettingOption(content, channelID);
+        let msgID = message.id;
+
+        this.checkSettingOption(content, channelID, msgID);
       });
       if (settingOption?.linkOpenerState) {
         console.log("Already Opened so don't open Again");
@@ -184,9 +188,10 @@ class LinkOpener extends React.PureComponent {
               </div>
               <div className="linkopner-right-section">
                 <LinkOpenerAdditionalSetting {...{ settingOption }} />
-
                 <div className="linkopener-right-logs">
-                  <LinkOpenerLogSection list={logList} />
+                  <LinkOpenerLogSection
+                    list={Object.keys(logList).map((key) => logList[key])}
+                  />
                 </div>
               </div>
             </div>
@@ -200,12 +205,14 @@ class LinkOpener extends React.PureComponent {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleOpenModal: () => dispatch(setModalState("discordAccount")),
-    handleSendLog: (content) =>
-      dispatch(addLogInList({ key: "LO", log: makeLogText(content) })),
+    handleSendLog: (content, msgID) =>
+      dispatch(
+        addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
+      ),
   };
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     keywordList: fetchLOKeywordList(state),
     channelList: fetchLOChannelList(state),

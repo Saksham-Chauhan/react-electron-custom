@@ -7,7 +7,7 @@ import { ComingSoon } from "../../modals";
 const oneClickPage = () => {
   return (
     <div className="oneClick">
-      {/* <ComingSoon></ComingSoon> */}
+      <ComingSoon />
       <AppSpacer spacer={10} />
       <OneClick title="One_Click" />
       <AppDivider />

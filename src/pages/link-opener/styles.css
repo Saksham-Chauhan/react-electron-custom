@@ -60,7 +60,7 @@
 }
 .flex-keyword-channel {
   display: flex;
-  height: calc(100% - 310.586px);
+  height: calc(100% - 221px);
   justify-content: space-between;
 }
 .flex-keyword-channel.invite-joiner {
@@ -70,6 +70,6 @@
   width: 46%;
 }
 .linkopener-right-logs {
-  max-height: calc(100% - 153px);
+  max-height: calc(100% - 108px);
   height: 100%;
 }

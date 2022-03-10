@@ -24,6 +24,7 @@ import {
   AddSpoofModal,
   EditProxySingleModal,
   ClaimerGroupModal,
+  ComingSoon,
 } from "./modals";
 import {
   ProxyPage,
@@ -51,6 +52,7 @@ import {
 import { toastInfo, toastWarning } from "./toaster";
 import { proxyStatusUpdater } from "./features/logic/proxy";
 import { closelinkOpenerMonitor } from "./features/logic/discord-account";
+import { resetTwitterMonitor } from "./features/logic/twitter";
 
 function App() {
   const dispatch = useDispatch();
@@ -72,6 +74,7 @@ function App() {
   useEffect(() => {
     dispatch(closelinkOpenerMonitor());
     dispatch(resetSpooferStatus());
+    dispatch(resetTwitterMonitor());
     spooferToaster((data) => {
       if (Object.keys(data).length > 0) {
         dispatch(updateSpooferStatus(data));
@@ -87,11 +90,11 @@ function App() {
   return (
     <div className="app">
       {spoofModalState && <AddSpoofModal />}
-      {claimerGroupmodalState && <ClaimerGroupModal />}
-      {proxyEditModalState && <EditProxySingleModal />}
       {proxyModalState && <ProxyGroupModal />}
       {addGmailModalState && <AddGmailModal />}
       {discordModalState && <DiscordAccountModal />}
+      {claimerGroupmodalState && <ClaimerGroupModal />}
+      {proxyEditModalState && <EditProxySingleModal />}
       {inviteModalState && <InviteJoinerAccountModal />}
       {inviteSettigModalState && <InviteJoinerSettingModal />}
       <div className="app sidebar">
@@ -105,6 +108,8 @@ function App() {
             <DragBar />
             <AppController />
             <Routes>
+              <Route path={RoutePath.profile} element={<ComingSoon />} />
+              <Route path={RoutePath.accountGen} element={<ComingSoon />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />
