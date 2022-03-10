@@ -10,7 +10,8 @@ class SpooferManager {
       data.id,
       data.url,
       proxyArr,
-      global.mainWin
+      global.mainWin,
+      data.isDisableImage
     );
   }
 

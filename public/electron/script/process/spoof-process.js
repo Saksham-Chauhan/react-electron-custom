@@ -6,7 +6,7 @@ const session = electron.session;
 const BrowserWindow = electron.BrowserWindow;
 
 class SpooferInstance {
-  constructor(id, url, proxyList, mainWin) {
+  constructor(id, url, proxyList, mainWin, isImage) {
     this.id = id;
     this.proxyList = proxyList;
     this.proxyCounter = 0;
@@ -18,6 +18,7 @@ class SpooferInstance {
     this.isLaunched = false;
     this.isDeleted = false;
     this.mainWin = mainWin;
+    this.isImage = isImage;
     this.userAgent = new UserAgent(/Chrome/, { deviceCategory: "desktop" })
       .toString()
       .replace(/\|"/g, "");
@@ -91,6 +92,7 @@ class SpooferInstance {
         webSecurity: false,
         session,
         partition: `persist:task_id_${this.id}`,
+        images: this.isImage,
       },
     });
 

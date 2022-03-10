@@ -8,6 +8,7 @@ import exportIcon from "../../../assests/images/export.svg";
 import importIcon from "../../../assests/images/import.svg";
 import {
   deleteProxyGroup,
+  readProxyFromFile,
   removeBadProxy,
 } from "../../../features/logic/proxy";
 import { toastWarning } from "../../../toaster";
@@ -69,16 +70,16 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
     } else toastWarning("Select proxy group");
   };
 
+  // FIXME:: need to implement import proxies functionality
   const handleImportProxy = (e) => {
     const { files } = e.target;
-    console.log(files, e);
-    // const reader = new FileReader();
-    // reader.onload = async (e) => {
-    //   const text = e.target.result;
-    //   console.log(text);
-    //   // alert(text)
-    // };
-    // reader.readAsText(filePath);
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const text = event.target.result;
+      const proxyArr = text.split("\n");
+      dispatch(readProxyFromFile(proxyArr));
+    };
+    reader.readAsText(files[0]);
   };
 
   return (
@@ -130,7 +131,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
             onChange={handleImportProxy}
             id="proxy-import-btn"
             type="file"
-            accept=".̀json"
+            accept="*.txt"
           />
           <label htmlFor="proxy-import-btn" />
         </div>

@@ -101,6 +101,7 @@
   height: 100%;
   border-radius: 5px;
   left: 0;
+  cursor: pointer;
 }
 .import-file-btn > img {
   position: absolute;

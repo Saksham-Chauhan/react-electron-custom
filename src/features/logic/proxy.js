@@ -1,3 +1,5 @@
+import { ProxyRegExp } from "../../constant/regex";
+import { generateId } from "../../helper";
 import {
   appendProxyGroupInList,
   fetchProxyGroupList,
@@ -122,4 +124,34 @@ export const addProxyInList = (group) => (dispatch, getState) => {
   });
   dispatch(setTempStorage(group));
   dispatch(appendProxyGroupInList(after));
+};
+
+export const readProxyFromFile = (proxyArr) => (dispatch, getState) => {
+  const currentList = fetchProxyGroupList(getState());
+  const currentSelectedGroup = fetchTempStorageState(getState());
+  let tempGroupList = [...currentList];
+  let tempSelectedObj = { ...currentSelectedGroup };
+  let valid = [];
+  for (let i = 0; i < proxyArr.length; i++) {
+    if (ProxyRegExp.test(proxyArr[i])) {
+      let obj = {};
+      obj["id"] = generateId();
+      obj["proxy"] = proxyArr[i];
+      obj["checked"] = false;
+      obj["status"] = "N/A";
+      valid.push(obj);
+    }
+  }
+  let preProxyList = tempSelectedObj["proxyList"];
+  let combiner = [...preProxyList, ...valid];
+  tempSelectedObj["proxyList"] = combiner;
+  tempSelectedObj["proxies"] = combiner
+    .map((proxy) => proxy["proxy"])
+    .join("\n");
+  let afterUpdateList = tempGroupList.map((d) => {
+    if (d["id"] === tempSelectedObj["id"]) return tempSelectedObj;
+    return d;
+  });
+  dispatch(setTempStorage(tempSelectedObj));
+  dispatch(appendProxyGroupInList(afterUpdateList));
 };

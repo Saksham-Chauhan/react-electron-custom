@@ -20,6 +20,8 @@ import {
 } from "../../pages-component";
 import "./styles.css";
 
+const IS_RUNNING_PROXY = ["Bad", "N/A"];
+
 function Proxy() {
   const dispatch = useDispatch();
   const [tempList, setTempList] = useState([]);
@@ -78,7 +80,8 @@ function Proxy() {
         <TopWrapper>
           <GroupStatusCard
             subText={` ${
-              tempList.filter((d) => d["status"] !== "Bad").length
+              tempList.filter((d) => !IS_RUNNING_PROXY.includes(d["status"]))
+                .length
             } Proxies running`}
             title={tempData["groupName"]}
           />
