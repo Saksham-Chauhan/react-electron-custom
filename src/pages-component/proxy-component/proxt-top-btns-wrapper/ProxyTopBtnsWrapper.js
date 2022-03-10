@@ -71,7 +71,14 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
 
   const handleImportProxy = (e) => {
     const { files } = e.target;
-    console.log(files);
+    console.log(files, e);
+    // const reader = new FileReader();
+    // reader.onload = async (e) => {
+    //   const text = e.target.result;
+    //   console.log(text);
+    //   // alert(text)
+    // };
+    // reader.readAsText(filePath);
   };
 
   return (
@@ -123,7 +130,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
             onChange={handleImportProxy}
             id="proxy-import-btn"
             type="file"
-            accept=".text"
+            accept=".̀json"
           />
           <label htmlFor="proxy-import-btn" />
         </div>

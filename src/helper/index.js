@@ -14,7 +14,7 @@ export const isValueInUse = (arrOfObj, key, targetValue) => {
 };
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MONTHS = [
+export const MONTHS = [
   "Jan",
   "Feb",
   "Mar",

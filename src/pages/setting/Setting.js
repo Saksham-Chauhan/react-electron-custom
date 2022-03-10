@@ -1,5 +1,7 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { AppSpacer } from "../../component";
+import { fetchLoggedUserDetails } from "../../features/counterSlice";
 import {
   SettingTopSection,
   SeetingUserProfile,
@@ -10,12 +12,14 @@ import {
 import "./styles.css";
 
 function Setting() {
+  const userDetails = useSelector(fetchLoggedUserDetails);
+
   return (
     <div className="setting-page-outer">
       <SettingTopSection />
       <div className="setting-page-padding">
         <AppSpacer spacer={50} />
-        <SeetingUserProfile />
+        <SeetingUserProfile {...{ userDetails }} />
         <AppSpacer spacer={100} />
         <div className="setting-page-section-col">
           <div className="setting-global-section">

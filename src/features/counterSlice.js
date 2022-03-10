@@ -5,7 +5,7 @@ import { discordAccount } from "./initial-state/discordAccount";
 import { twitterInitialState } from "./initial-state/twitter";
 import { spoofInitialState } from "./initial-state/spoof";
 import { settingInitialState } from "./initial-state/setting";
-
+import { initialUserState } from "./initial-state/user-initial-state";
 const initialState = {
   tempStorage: {},
   editStorage: {},
@@ -14,6 +14,7 @@ const initialState = {
   ...twitterInitialState,
   ...spoofInitialState,
   ...settingInitialState,
+  ...initialUserState,
   modals: {
     proxyGroup: false,
     discordAccount: false,
@@ -137,11 +138,15 @@ export const counterSlice = createSlice({
     openAddNewProxyModal: (state, action) => {
       state.addProxyStorage = action.payload;
     },
+    setUserDetails: (state, action) => {
+      state.userDetails = action.payload;
+    },
   },
 });
 
 export const {
   appendApInList,
+  setUserDetails,
   clearLogList,
   appendLogList,
   setModalState,
@@ -254,3 +259,6 @@ export const fetchChromeUserListState = (state) =>
 export const fetchWebhookSettingState = (state) =>
   state[STATE_KEY].webhookSetting;
 export const fetchWebhookListState = (state) => state[STATE_KEY].webhookList;
+
+// LOGIN
+export const fetchLoggedUserDetails = (state) => state[STATE_KEY].userDetails;

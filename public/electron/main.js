@@ -135,24 +135,17 @@ function createWindow() {
 }
 
 // IPC NECESSARY EVENTS
-ipcMain.handle("authenticate-user", (_, data) => {
-  createAuthWindow();
-  return auth.getCurrentUser();
-});
-ipcMain.on("logout-user", () => {
-  auth.logout();
-});
-// ipcMain.on("logout", () => {
-//   auth.logout();
-// });
-
 ipcMain.on("auth", () => {
   createAuthWindow();
 });
 
-// ipcMain.handle("get-user", () => {
-//   return auth.getCurrentUser();
-// });
+ipcMain.handle("authenticate-user", (_, __) => {
+  return auth.getCurrentUser();
+});
+
+ipcMain.on("logout-user", () => {
+  auth.logout();
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

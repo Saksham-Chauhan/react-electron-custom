@@ -39,3 +39,26 @@
   color: var(--red);
   margin-left: 0.5em;
 }
+.discord-avatar {
+  height: 50px;
+  width: 50px;
+  background: linear-gradient(
+    90.13deg,
+    #be26f3 28.5%,
+    #e000d5 52.1%,
+    #fc944f 94.51%
+  );
+  border-radius: 100%;
+  position: relative;
+}
+.discord-avatar > img {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  right: 1px;
+  height: calc(100% - 2px);
+  width: calc(100% - 2px);
+  background: var(--app-bg);
+  border-radius: 100%;
+}

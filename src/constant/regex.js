@@ -16,3 +16,5 @@ export const chromeRegExp = /^[a-zA-Z0-9-_]+$/;
 
 export const discordInvideCode =
   /(https:\/\/)?(www\.)?(((discord(app)?)?\.com\/invite)|((discord(app)?)?\.gg))\/(?<invite>.+)/;
+
+export const discordJoinedAtRegex = /\d{4}-\d{2}/;

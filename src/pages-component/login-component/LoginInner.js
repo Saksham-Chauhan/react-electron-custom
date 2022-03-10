@@ -1,11 +1,12 @@
 import React from "react";
 import "./logininner.css";
 import logo from "../../assests/images/logo.svg";
+import { auth } from "../../helper/electron-bridge";
 import discord from "../../assests/images/discord.svg";
 
-const ipcRrendrer = window.require("electron").ipcRenderer;
-
 const LoginInner = () => {
+  const handleLoginWithdiscord = () => auth();
+
   return (
     <div className="logininner">
       <div>
@@ -17,10 +18,7 @@ const LoginInner = () => {
           multi-platform bot automation.
         </h3>
         <div>
-          <button
-            className="login-button"
-            onClick={() => ipcRrendrer.send("auth")}
-          >
+          <button onClick={handleLoginWithdiscord} className="login-button">
             <img src={discord} alt="logo" />
             Log In with Discord
           </button>

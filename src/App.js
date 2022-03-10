@@ -14,6 +14,8 @@ import {
   fetchEditProxyModalState,
   fetchClaimerGroupModalState,
   fetchWebhookSettingState,
+  fetchLoggedUserDetails,
+  setUserDetails,
 } from "./features/counterSlice";
 import {
   ProxyGroupModal,
@@ -45,6 +47,8 @@ import {
   errorToaster,
   proxyTestResultListener,
   updateNotAvailable,
+  authUser,
+  decodeUser,
 } from "./helper/electron-bridge";
 import {
   updateSpooferStatus,
@@ -68,6 +72,7 @@ function App() {
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
+  const logggedUserDetails = useSelector(fetchLoggedUserDetails);
   const animClass = !globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
@@ -81,12 +86,21 @@ function App() {
         dispatch(updateSpooferStatus(data));
       }
     });
+    authUser().then((user) => {
+      if (user !== null) {
+        const decode = decodeUser(user);
+        dispatch(setUserDetails(decode));
+      }
+    });
     proxyTestResultListener((res) => {
       dispatch(proxyStatusUpdater(res));
     });
     updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
   }, [dispatch]);
+
+  // check is user log in or not
+  if (Object.keys(logggedUserDetails).length === 0) return <Login />;
 
   return (
     <div className="app">
@@ -124,6 +138,7 @@ function App() {
             </Routes>
             <AppFooter />
           </div>
+          <ToastContainer />
         </div>
       </div>
     </div>

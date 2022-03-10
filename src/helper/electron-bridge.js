@@ -1,4 +1,5 @@
 const { ipcRenderer } = window.require("electron");
+const jwt = window.require("jsonwebtoken");
 
 const minimizeApp = () => ipcRenderer.send("minimize");
 
@@ -46,14 +47,13 @@ const proxyTester = (proxy) => ipcRenderer.send("proxy-tester", proxy);
 const proxyTestResultListener = (callback) =>
   ipcRenderer.on("proxy-test-result", (_, res) => callback(res));
 
-// LO IPC
-
-const startLOmonitor = (token) => ipcRenderer.invoke("start-lo-monitor", token);
-const stopLOmonitor = () => ipcRenderer.send("stop-lo-monitor");
-
 // LOGIN IPC
-const authUser = () => ipcRenderer.invoke("authenticate-user");
+const authUser = () =>
+  ipcRenderer.invoke("authenticate-user").then((user) => user);
 const logoutUser = () => ipcRenderer.send("logout-user");
+const auth = () => ipcRenderer.send("auth");
+const decodeUser = (encodeString) =>
+  jwt.verify(encodeString, process.env.REACT_APP_JWT_SECRET_KEY);
 
 module.exports = {
   minimizeApp,
@@ -72,8 +72,8 @@ module.exports = {
   updateNotAvailable,
   checkForUpdates,
   fetchNetworkSpeed,
-  startLOmonitor,
-  stopLOmonitor,
+  decodeUser,
   authUser,
   logoutUser,
+  auth,
 };
