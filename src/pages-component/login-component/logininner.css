@@ -65,6 +65,7 @@
   background: var(--app-bg);
   border-radius: 8px;
   cursor: pointer;
+  -webkit-app-region: no-drag;
 }
 .login-button:hover {
   transition: all 1s;
@@ -74,6 +75,7 @@
     #e000d5 52.1%,
     #fc944f 94.51%
   );
+  -webkit-app-region: no-drag;
 }
 .login-button > img {
   margin-right: 10px;
@@ -91,4 +93,5 @@
     #e000d5 52.1%,
     #fc944f 94.51%
   );
+  -webkit-app-region: no-drag;
 }
