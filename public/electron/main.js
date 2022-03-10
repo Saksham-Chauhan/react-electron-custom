@@ -100,7 +100,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: !isDev ? false : true,
+      // devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
@@ -146,13 +146,13 @@ ipcMain.on("logout-user", () => {
 //   auth.logout();
 // });
 
-// ipcMain.on("auth", () => {
-//   createAuthWindow();
-// });
+ipcMain.on("auth", () => {
+  createAuthWindow();
+});
 
 // ipcMain.handle("get-user", () => {
-//     return auth.getCurrentUser();
-//   });
+//   return auth.getCurrentUser();
+// });
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

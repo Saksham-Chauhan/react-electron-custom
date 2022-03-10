@@ -123,7 +123,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
             onChange={handleImportProxy}
             id="proxy-import-btn"
             type="file"
-            accept="text/*"
+            accept=".text"
           />
           <label htmlFor="proxy-import-btn" />
         </div>

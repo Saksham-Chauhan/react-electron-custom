@@ -34,6 +34,7 @@ import {
   TwitterPage,
   SpooferPage,
   SettingPage,
+  Login,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -124,7 +125,6 @@ function App() {
             <AppFooter />
           </div>
         </div>
-        <ToastContainer />
       </div>
     </div>
   );
