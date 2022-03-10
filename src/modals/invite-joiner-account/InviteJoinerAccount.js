@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
+import { discordTokenRegExp } from "../../constant/regex";
 import {
   fetchEditStorageState,
   setEditStorage,
@@ -10,6 +11,7 @@ import {
   addClaimerAccountInList,
   editClaimerAccountFromList,
 } from "../../features/logic/discord-account";
+import { addNewIJAccount } from "../../features/logic/invite-joiner";
 import { toastWarning } from "../../toaster";
 
 const accountType = [
@@ -82,15 +84,36 @@ function InviteJoinerAccount() {
     });
   };
 
+  const handleCreateIJaccount = () => {
+    if (account.accountType === "monitor") {
+      if (discordTokenRegExp.test(account.monitorToken)) {
+        console.log("VALID MONITOR TOKEN");
+      }
+    } else {
+      let tokenArr = account?.claimerToken?.split("\n");
+      let validToken = [];
+      if (tokenArr.length > 0) {
+        tokenArr.forEach((token) => {
+          if (discordTokenRegExp.test(token)) {
+            console.log("Valid Cliame Token", token);
+            validToken.push(token);
+          }
+        });
+        console.log(validToken);
+      }
+    }
+  };
+
   const handleSubmit = () => {
     const result = checkValidation();
     if (result) {
       if (Object.keys(editState).length > 3) {
-        dispatch(editClaimerAccountFromList(account));
+        // dispatch(editClaimerAccountFromList(account));
       } else {
-        dispatch(addClaimerAccountInList(account));
+        handleCreateIJaccount();
+        // dispatch(addNewIJAccount(account))
       }
-      handleCloseModal();
+      // handleCloseModal();
     }
   };
 
@@ -128,7 +151,9 @@ function InviteJoinerAccount() {
           placeholderText="Enter Your Monitor Token"
           fieldTitle="Token"
           name="monitorToken"
-          value={account?.monitorToken}
+          value={
+            account?.monitorToken !== undefined ? account?.monitorToken : ""
+          }
         />
       ) : (
         <AppInputField

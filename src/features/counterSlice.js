@@ -6,6 +6,7 @@ import { twitterInitialState } from "./initial-state/twitter";
 import { spoofInitialState } from "./initial-state/spoof";
 import { settingInitialState } from "./initial-state/setting";
 import { initialUserState } from "./initial-state/user-initial-state";
+import { inviteJoinerInitialState } from "./initial-state/invite-joiner";
 const initialState = {
   tempStorage: {},
   editStorage: {},
@@ -15,6 +16,7 @@ const initialState = {
   ...spoofInitialState,
   ...settingInitialState,
   ...initialUserState,
+  ...inviteJoinerInitialState,
   modals: {
     proxyGroup: false,
     discordAccount: false,
@@ -141,6 +143,9 @@ export const counterSlice = createSlice({
     setUserDetails: (state, action) => {
       state.userDetails = action.payload;
     },
+    appendInviteJoinerAccount: (state, action) => {
+      state.inviteJoinerAccount = action.payload;
+    },
   },
 });
 
@@ -174,6 +179,7 @@ export const {
   setSelectedMonitorTokenLO,
   setSelectedClaimerTokenIJ,
   appendClaimerDiscordAccount,
+  appendInviteJoinerAccount,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -262,3 +268,7 @@ export const fetchWebhookListState = (state) => state[STATE_KEY].webhookList;
 
 // LOGIN
 export const fetchLoggedUserDetails = (state) => state[STATE_KEY].userDetails;
+
+// INVITE JOINER;
+export const fetchInviteJoinerListState = (state) =>
+  state[STATE_KEY].inviteJoinerAccount;
