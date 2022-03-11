@@ -9,7 +9,9 @@ function LogSection({ list }) {
   const dispatch = useDispatch();
 
   const handleClearLogs = () => {
-    dispatch(clearLogList({ key: "linkOpener" }));
+    if (list.length > 0) {
+      dispatch(clearLogList({ key: "linkOpener" }));
+    } else toastWarning("Nothing to delete");
   };
 
   const handleExport = () => {
