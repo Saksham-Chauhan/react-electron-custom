@@ -6,11 +6,18 @@ import {
   fetchSelectedClaimerTokenInviteJoiner,
   setModalState,
   setSelectedClaimerTokenIJ,
+  toggleIJMonitor,
 } from "../../../features/counterSlice";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
 import { getClaimerValue, makeClaimerSelectOption } from "../../../helper";
+import { toastWarning } from "../../../toaster";
 
-function Settings() {
+function Settings({
+  ijMonitorState,
+  tempStorage,
+  claimerAccountList,
+  keywordList,
+}) {
   const dispatch = useDispatch();
   const claimerList = useSelector(fetchClaimerGroupList);
   const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
@@ -23,12 +30,26 @@ function Settings() {
     dispatch(setSelectedClaimerTokenIJ(data));
   };
 
+  const handleIJmonitor = () => {
+    if (claimerAccountList.length > 0) {
+      if (Object.keys(tempStorage).length > 0) {
+        if (keywordList.length > 0) {
+          dispatch(toggleIJMonitor());
+        } else toastWarning("Enter some channel to monitor");
+      } else toastWarning("Select Invite joiner account");
+    } else toastWarning("Create some Invite joiner account");
+  };
+
   return (
     <div>
       <AppSpacer spacer={30} />
       <div className="flex-btn-row">
         <div className="switch-with-text">
-          <AppToggler />
+          <AppToggler
+            onChange={handleIJmonitor}
+            checked={ijMonitorState}
+            id="invite-joiner-monitor-toggle"
+          />
           <span>Stop Auto Invite Joiner</span>
         </div>
         <div

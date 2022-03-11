@@ -61,15 +61,6 @@ export const addKeywordInList = (data) => (dispatch, getState) => {
     obj["value"] = word;
     let combiner = [...tempCurrentList, obj];
     dispatch(appendKeywordInArrayList({ list: combiner, key: "linkOpener" }));
-  } else {
-    const currentList = fetchIJKeywordList(getState());
-    let tempCurrentList = [...currentList];
-    let obj = {};
-    obj["id"] = generateId();
-    obj["label"] = word;
-    obj["value"] = word;
-    let combiner = [...tempCurrentList, obj];
-    dispatch(appendKeywordInArrayList({ list: combiner, key: "inviteJoiner" }));
   }
 };
 
@@ -80,11 +71,6 @@ export const deleteKeywordFromList = (data) => (dispatch, getState) => {
     let tempCurrentList = [...currentList];
     let filter = tempCurrentList.filter((data) => data.id !== word.id);
     dispatch(appendKeywordInArrayList({ list: filter, key: "linkOpener" }));
-  } else {
-    const currentList = fetchIJKeywordList(getState());
-    let tempCurrentList = [...currentList];
-    let filter = tempCurrentList.filter((data) => data.id !== word.id);
-    dispatch(appendKeywordInArrayList({ list: filter, key: "inviteJoiner" }));
   }
 };
 

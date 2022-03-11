@@ -1,10 +1,18 @@
 import React from "react";
 import { InputFieldWithScrollList } from "../..";
+import { handleExportLogs } from "../../../helper";
+import { toastWarning } from "../../../toaster";
 
-function LogSection() {
+function LogSection({ logList }) {
+  const handleExportLog = () => {
+    if (logList.length > 0) {
+      handleExportLogs(logList);
+    } else toastWarning("Nothing to import");
+  };
+
   return (
     <div>
-      <InputFieldWithScrollList isLogs={true} title="Logs" />
+      <InputFieldWithScrollList list={logList} isLogs={true} title="Logs" />
     </div>
   );
 }

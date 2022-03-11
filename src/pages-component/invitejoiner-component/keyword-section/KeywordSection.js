@@ -1,42 +1,44 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { InputFieldWithScrollList } from "../..";
+import { channelRegexExp } from "../../../constant/regex";
 import {
-  addKeywordInList,
-  deleteKeywordFromList,
+  addChannelInList,
+  deleteChannelFromList,
 } from "../../../features/logic/discord-account";
 import { toastWarning } from "../../../toaster";
 
 function KeywordSection({ keywordList }) {
-  const [keyword, setKeyword] = useState("");
+  const [channel, setChannel] = useState("");
   const dispatch = useDispatch();
 
-  const handleAddKeyword = () => {
-    if (keyword.length > 0 && keyword !== "") {
-      dispatch(addKeywordInList({ key: "IJ", word: keyword }));
-      setKeyword("");
-    } else toastWarning("Enter valid keyword");
+  const handleAddChannel = () => {
+    if (channelRegexExp.test(channel)) {
+      dispatch(addChannelInList({ key: "IJ", word: channel }));
+      setChannel("");
+    } else toastWarning("Enter valid channel");
   };
 
-  const handleKeywordChange = (e) => {
+  const handleChannelChange = (e) => {
     const { value } = e.target;
-    setKeyword(value);
+    setChannel(value);
   };
 
-  const handleDeleteKeyword = (word) => {
-    dispatch(deleteKeywordFromList({ key: "IJ", word }));
+  const handleChannelDelete = (word) => {
+    dispatch(deleteChannelFromList({ key: "IJ", word }));
   };
+
   return (
     <div>
       <InputFieldWithScrollList
         placeHolder="Enter channel ID"
         list={keywordList}
-        btnProps={{ onClick: handleAddKeyword }}
+        btnProps={{ onClick: handleAddChannel }}
         inputProps={{
-          value: keyword,
-          onChange: handleKeywordChange,
+          value: channel,
+          onChange: handleChannelChange,
         }}
-        onDelete={handleDeleteKeyword}
+        onDelete={handleChannelDelete}
       />
     </div>
   );

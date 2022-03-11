@@ -146,11 +146,16 @@ export const counterSlice = createSlice({
     appendInviteJoinerAccount: (state, action) => {
       state.inviteJoinerAccount = action.payload;
     },
+    // INVITE JOINER
+    toggleIJMonitor: (state) => {
+      state.isInviteJoinerStart = !state.isInviteJoinerStart;
+    },
   },
 });
 
 export const {
   appendApInList,
+  toggleIJMonitor,
   setUserDetails,
   clearLogList,
   appendLogList,
@@ -222,17 +227,17 @@ export const fetchClaimerDiscordAccountList = (state) =>
   state[STATE_KEY].claimerAccountList;
 export const fetchSelectedClaimerTokenInviteJoiner = (state) =>
   state[STATE_KEY].selectedClaimerTokenIJ;
-export const fetchIJKeywordList = (state) =>
-  state[STATE_KEY].inviteJoiner.keyWordList;
 export const fetchIJChannelList = (state) =>
   state[STATE_KEY].inviteJoiner.channelList;
 export const fetchAddJoinerModalState = (state) =>
   state[STATE_KEY].modals.inviteJoinerAccount;
 export const fetchInviteJoinerSettingModalState = (state) =>
   state[STATE_KEY].modals.inviteJoinerSetting;
-export const fetchIJSettingState = (state) =>
-  state[STATE_KEY].setting.inviteJoiner;
+export const fetchIJMonitorState = (state) =>
+  state[STATE_KEY].isInviteJoinerStart;
 
+export const fetchInviteJoinerLogState = (state) =>
+  state[STATE_KEY].inviteJoiner.logList;
 // TWITTER
 export const fetchTwitterKeywordList = (state) =>
   state[STATE_KEY].twitterKeywordList;

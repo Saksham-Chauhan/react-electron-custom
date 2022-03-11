@@ -18,6 +18,7 @@ import {
   fetchDiscordAccountList,
   fetchLinkOpenerLogState,
   fetchSelectedMinitorTokenLinkOpener,
+  setTempStorage,
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
@@ -145,7 +146,9 @@ class LinkOpener extends React.PureComponent {
       }
     }
   }
-
+  componentWillUnmount() {
+    this.props.resetTempStorage();
+  }
   render() {
     const {
       logList,
@@ -209,6 +212,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(
         addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
       ),
+    resetTempStorage: () => dispatch(setTempStorage({})),
   };
 };
 

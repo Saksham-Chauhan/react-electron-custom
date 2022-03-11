@@ -8,15 +8,10 @@ import {
   LabelWithToolTip,
   ModalWrapper,
 } from "../../component";
-import {
-  fetchIJSettingState,
-  setIJLOSetting,
-  setModalState,
-} from "../../features/counterSlice";
+import { setIJLOSetting, setModalState } from "../../features/counterSlice";
 
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
-  const editState = useSelector(fetchIJSettingState);
   const [setting, setSetting] = useState({
     inviteCode: "",
     isReact: false,
