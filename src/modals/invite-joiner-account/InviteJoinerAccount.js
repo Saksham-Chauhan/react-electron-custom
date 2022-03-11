@@ -87,19 +87,18 @@ function InviteJoinerAccount() {
   const handleCreateIJaccount = () => {
     if (account.accountType === "monitor") {
       if (discordTokenRegExp.test(account.monitorToken)) {
-        console.log("VALID MONITOR TOKEN");
+        dispatch(addNewIJAccount(account));
       }
     } else {
       let tokenArr = account?.claimerToken?.split("\n");
       let validToken = [];
-      if (tokenArr.length > 0) {
-        tokenArr.forEach((token) => {
-          if (discordTokenRegExp.test(token)) {
-            console.log("Valid Cliame Token", token);
-            validToken.push(token);
-          }
-        });
-        console.log(validToken);
+      tokenArr.forEach((token) => {
+        if (discordTokenRegExp.test(token)) {
+          validToken.push(token);
+        }
+      });
+      if (validToken.length > 0) {
+        dispatch(addNewIJAccount(account));
       }
     }
   };
@@ -113,7 +112,7 @@ function InviteJoinerAccount() {
         handleCreateIJaccount();
         // dispatch(addNewIJAccount(account))
       }
-      // handleCloseModal();
+      handleCloseModal();
     }
   };
 
