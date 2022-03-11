@@ -31,14 +31,6 @@ function InviteJoinerSettings() {
     },
   });
 
-  useEffect(() => {
-    if (Object.keys(editState).length === 5) {
-      setSetting((pre) => {
-        return { ...editState };
-      });
-    }
-  }, [editState]);
-
   const handleCloseModal = () => {
     dispatch(setModalState("inviteJoinerSetting"));
   };

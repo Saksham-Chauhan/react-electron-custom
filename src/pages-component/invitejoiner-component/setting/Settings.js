@@ -14,6 +14,7 @@ function Settings() {
   const dispatch = useDispatch();
   const claimerList = useSelector(fetchClaimerGroupList);
   const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
+
   const handleOpenModal = () => {
     dispatch(setModalState("inviteJoinerSetting"));
   };

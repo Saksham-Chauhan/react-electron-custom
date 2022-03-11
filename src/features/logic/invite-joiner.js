@@ -9,6 +9,5 @@ export const addNewIJAccount = (account) => (dispatch, getState) => {
   let obj = { ...account };
   obj["id"] = generateId();
   let combiner = [...currentList, obj];
-  console.log(obj);
-  // dispatch(appendInviteJoinerAccount(combiner));
+  dispatch(appendInviteJoinerAccount(combiner));
 };

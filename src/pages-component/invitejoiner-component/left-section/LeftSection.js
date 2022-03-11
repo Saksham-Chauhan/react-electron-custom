@@ -10,17 +10,18 @@ import discord from "../../../assests/images/discord.svg";
 import {
   setEditStorage,
   setSelectedClaimerTokenIJ,
+  setTempStorage,
 } from "../../../features/counterSlice";
 import { deleteClaimerAccountFromList } from "../../../features/logic/discord-account";
 
-function LeftSection({ handleOpenModal, claimerAccountList }) {
+function LeftSection({ handleOpenModal, claimerAccountList, tempStorage }) {
   const dispatch = useDispatch();
 
   /**
    * function handle select account card
    **/
   const handleAccountSelect = (account) => {
-    dispatch(setSelectedClaimerTokenIJ(account));
+    dispatch(setTempStorage(account));
   };
 
   /**
@@ -56,11 +57,9 @@ function LeftSection({ handleOpenModal, claimerAccountList }) {
             key={account["id"]}
             isCustomAction={true}
             cardTitle={account["accountName"]}
-            // activeClass={
-            //   account["discordToken"] === selctedMonitorToken
-            //     ? "active-card"
-            //     : ""
-            // }
+            activeClass={
+              account["id"] === tempStorage["id"] ? "active-card" : ""
+            }
             onClick={() => handleAccountSelect(account)}
           />
         ))}

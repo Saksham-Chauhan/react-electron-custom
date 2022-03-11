@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchClaimerDiscordAccountList,
   fetchIJKeywordList,
+  fetchInviteJoinerListState,
+  fetchTempStorageState,
   setModalState,
+  setTempStorage,
 } from "../../features/counterSlice";
 import {
   InviteJoinerKeywordSection,
@@ -16,7 +19,15 @@ import {
 function InviteJoiner() {
   const dispatch = useDispatch();
   const keywordList = useSelector(fetchIJKeywordList);
-  const claimerAccountList = useSelector(fetchClaimerDiscordAccountList);
+  const claimerAccountList = useSelector(fetchInviteJoinerListState);
+  const tempStorage = useSelector(fetchTempStorageState);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setTempStorage({}));
+    };
+  }, [dispatch]);
+  console.log(claimerAccountList);
   /**
    * function handle modal state
    **/
@@ -27,7 +38,9 @@ function InviteJoiner() {
   return (
     <div className="page-section">
       <div className="left-container">
-        <InviteJoinerLeftSection {...{ handleOpenModal, claimerAccountList }} />
+        <InviteJoinerLeftSection
+          {...{ handleOpenModal, claimerAccountList, tempStorage }}
+        />
       </div>
       <div className="right-container invite-joiner">
         <InviteJoinerTopSection />
