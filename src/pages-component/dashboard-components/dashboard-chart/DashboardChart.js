@@ -30,12 +30,12 @@ const data = {
     {
       data: [1, 6, 4, 8, 5, 3, 20],
       pointRadius: 0,
-      borderWidth: 5,
+      borderWidth: 3,
     },
     {
       data: [0, 5, 3, 9, 4, 5, 8],
       pointRadius: 0,
-      borderWidth: 4,
+      borderWidth: 3,
     },
     {
       data: [0, 4, 5, 6, 5, 3, 7],
@@ -45,7 +45,7 @@ const data = {
     {
       data: [1, 7, 3, 9, 7, 5, 8],
       pointRadius: 0,
-      borderWidth: 2,
+      borderWidth: 3,
     },
   ],
 };

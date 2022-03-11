@@ -14,7 +14,7 @@
 }
 .dashboard-button > img {
   width: 12%;
-  margin-right: 12px;
+  margin-right: 16px;
 }
 .dashboard-button > div {
   flex-direction: column;
