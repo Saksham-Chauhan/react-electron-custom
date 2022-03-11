@@ -1,7 +1,7 @@
 .chartlabel {
   width: 30%;
   display: flex;
-  justify-content: center;
+  padding-top: 8%;
   align-items: end;
   color: white;
   flex-direction: column;

@@ -10,7 +10,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import "./dashboardchart.css";
-// import chartbg from "../../../assests/images/chartbg.svg";
+import chartbg from "../../../assests/images/chartbg.svg";
 
 ChartJS.register(
   CategoryScale,
@@ -24,6 +24,7 @@ ChartJS.register(
 const labels = ["Mon", "Tus", "Wed", "Thr", "Fri", "Sat", "Sun"];
 const colors = ["#FB49C0", "#0D24EF", "#C17168", "#3EB7E5"];
 const data = {
+  fillOpacity: 0.3,
   labels,
   datasets: [
     {
@@ -64,7 +65,6 @@ const options = {
     },
   },
   maintainAspectRatio: true,
-
   hover: {
     intersect: false,
   },
@@ -74,21 +74,23 @@ const options = {
   scales: {
     x: {
       grid: {
-        display: false,
+        display: true,
+        borderColor: "#0d0027",
+        color: "#161037",
       },
       ticks: {
         color: "#FFFFFF",
-        stepSize: 3,
+        fontFamily: "Poppins",
       },
     },
     y: {
       grid: {
         display: true,
         borderColor: "#161037",
-        borderWidth: 3,
-        // tickColor: "green",
+        color: "#161037",
       },
       ticks: {
+        stepSize: 3,
         color: "#FFFFFF",
       },
     },
@@ -106,7 +108,7 @@ const options = {
 const DashboardChart = () => {
   return (
     <div className="dashboardchart">
-      {/* <img src={chartbg} alt="" className="chartbg" /> */}
+      <img src={chartbg} alt="" className="chartbg" />
       <Line data={chartData} options={{ ...options }} />;
     </div>
   );

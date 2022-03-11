@@ -101,7 +101,7 @@ function App() {
   }, [dispatch]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length === 0) return <Login />;
+  if (Object.keys(logggedUserDetails).length !== 0) return <Login />;
 
   return (
     <div className="app">
