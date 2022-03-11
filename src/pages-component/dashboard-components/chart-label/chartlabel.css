@@ -1,3 +1,16 @@
 .chartlabel {
   width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  color: white;
+  flex-direction: column;
+}
+.chartlabel > div {
+  width: 70%;
+  margin-top: 10px;
+  margin-left: auto;
+}
+.chartlabel > div > img {
+  margin-right: 20px;
 }

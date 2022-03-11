@@ -6,7 +6,9 @@ import {
 } from "../../pages-component";
 import "./dashboard.css";
 import { TopWrapper, GroupStatusCard } from "../../component";
-import WrapperTop from "../../component/wrapper-top/WrapperTop";
+
+//IMPORT ROUTES
+import { RoutePath } from "../../constant/index";
 
 // IMPORT ICONS
 import linkOpner from "../../assests/activeDefault/link-default.svg";
@@ -21,52 +23,52 @@ import oneclick from "../../assests/activeDefault/oneclick-default.svg";
 //BUTTONS DATA
 const buttonsData = [
   {
-    to: "/",
+    to: RoutePath.linkOpener,
     image: linkOpner,
     text: "Link Opener",
     value: "39",
   },
   {
-    to: "/",
+    to: RoutePath.inviteJoiner,
     image: invite,
     text: "Invite Joiner",
     value: "25",
   },
   {
-    to: "/",
+    to: RoutePath.twitter,
     image: twitter,
     text: "Twitter Monitor",
     value: "8",
   },
   {
-    to: "/",
+    to: RoutePath.spoofer,
     image: spoof,
     text: "Spoofer",
     value: "13",
   },
   {
-    to: "/",
+    to: RoutePath.proxy,
     image: proxy,
     text: "Proxies",
     value: "88",
   },
   {
-    to: "/",
+    to: RoutePath.setting,
     image: settings,
     text: "Settings",
     value: null,
   },
   {
-    to: "/",
+    to: RoutePath.accountGen,
     image: accgen,
     text: "Account Gen",
-    value: "Comming Soon",
+    value: "Coming Soon",
   },
   {
-    to: "/",
+    to: RoutePath.oneclick,
     image: oneclick,
     text: "One-Click",
-    value: "Comming Soon",
+    value: "Coming Soon",
   },
 ];
 const DashboardPage = () => {

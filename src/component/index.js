@@ -3,7 +3,7 @@ export { default as AppSpacer } from "./spacer/Spacer";
 export { default as AppFooter } from "./footer/Footer";
 export { default as AppToggler } from "./switch/Switch";
 export { default as AppDivider } from "./divider/Divider";
-export { default as AppSidebar } from "./sidebar/Sidebar";
+export { default as AppSidebar } from "./Sidebar/Sidebar";
 export { default as AppCheckbox } from "./checkbox/Checkbox";
 export { default as GroupCard } from "./group-card/GroupCard";
 export { default as ModalWrapper } from "./modal-wrapper/Modal";

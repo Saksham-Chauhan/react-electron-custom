@@ -6,10 +6,10 @@ const DashboardButton = ({ to, image, text, value }) => {
   return (
     <Link to={to} className="dashboard-button centerd">
       <img src={image} alt="image" />
-      <p className="centerd">
+      <div className="centerd">
         <p className="text">{text}</p>
         {value ? <p className="value">{value}</p> : ""}
-      </p>
+      </div>
     </Link>
   );
 };
