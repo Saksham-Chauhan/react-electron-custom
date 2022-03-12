@@ -17,6 +17,7 @@ function ComingSoon() {
             animation={lock}
             strokeColor="var(--primary)"
             size={50}
+            wrapperStyle={{ cursor: "pointer" }}
           />
         </div>
         <AppSpacer spacer={30} />

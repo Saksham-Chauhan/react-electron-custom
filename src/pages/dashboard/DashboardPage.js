@@ -27,7 +27,7 @@ import {
   fetchSpoofTableList,
   fetchTwitterKeywordList,
 } from "../../features/counterSlice";
-
+import { ComingSoon } from "../../modals";
 const DashboardPage = () => {
   //GET PROXY LIST
   const proxyList = useSelector(fetchProxyGroupList);
@@ -107,6 +107,7 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard">
+      <ComingSoon />
       <TopWrapper>
         <GroupStatusCard title="Dasahboard" isHide={true} />
       </TopWrapper>

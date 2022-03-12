@@ -23,7 +23,8 @@ import {
 } from "../../pages-component";
 import helper from "../twitter/utils/feature-tweets/helper";
 import { checkDiscordInvite } from "../link-opener/utils";
-import axios from "axios";
+import { discordServerInviteAPI } from "../../api";
+import { ComingSoon } from "../../modals";
 
 const { Client } = window.require("discord.js-selfbot");
 
@@ -47,10 +48,7 @@ class InviteJoiner extends React.PureComponent {
         let tokenArray = selectedClaimerGroup["value"].split("\n");
         tokenArray.forEach(async (token) => {
           try {
-            const info = await axios({
-              url: `https://discord.com/api/v9/invites/${inviteCode}`,
-              headers: { authorization: token },
-            });
+            const info = await discordServerInviteAPI(inviteCode, token);
             if (info.status === 200) {
               let result = `Joined ${info.data.guild.name}`;
               this.props.handleSendLog(result, msgID);
@@ -132,6 +130,7 @@ class InviteJoiner extends React.PureComponent {
 
     return (
       <div className="page-section">
+        {process.env.NODE_ENV !== "development" && <ComingSoon />}
         <div className="left-container">
           <InviteJoinerLeftSection
             {...{ handleOpenModal, accountList, selectedToken }}

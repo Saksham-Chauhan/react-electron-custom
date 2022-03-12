@@ -41,7 +41,7 @@ function Settings({
   const safeDelayModeValue = useSelector(fetchSafeModeDelayState);
 
   const handleOpenModal = () => {
-    dispatch(setModalState("discordAccount"));
+    dispatch(setModalState("inviteJoinerSetting"));
   };
 
   const handleClaimer = (data) => {
@@ -71,7 +71,7 @@ function Settings({
         const result = isValueInUse(accountList, "discordToken", selectedToken);
         if (!result && !isMonitorStart) {
           dispatch(setEditStorage(selectedToken));
-          handleOpenModal();
+          dispatch(setModalState("discordAccount"));
         } else toastWarning("Token in use!!");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
@@ -108,7 +108,6 @@ function Settings({
   };
 
   const handleSelectProxyGroup = (group) => {
-    console.log(group);
     if (Object.keys(group).length > 0) {
       dispatch(setInviteProxyGroup(group));
     }
@@ -161,7 +160,7 @@ function Settings({
             strokeColor="#ffff"
             size={20}
             wrapperStyle={{ cursor: "pointer" }}
-          ></UseAnimations>
+          />
           <span>Edit Account</span>
         </div>
         <div onClick={handleDeleteAccount} className="linkopener-acc btn">
@@ -170,7 +169,7 @@ function Settings({
             strokeColor="#B60E0E"
             size={20}
             wrapperStyle={{ cursor: "pointer", paddingBottom: "1px" }}
-          ></UseAnimations>
+          />
           <span>Delete Account</span>
         </div>
       </div>

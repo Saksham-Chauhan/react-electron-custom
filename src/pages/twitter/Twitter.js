@@ -32,7 +32,8 @@ import { TweetHandlerRegExp } from "../../constant/regex";
 import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { appendNewTweetInList } from "../../features/logic/twitter";
-import axios from "axios";
+import { discordServerInviteAPI } from "../../api";
+
 const open = window.require("open");
 
 // FIXME:: decrease the time gap to ms instead of sec
@@ -83,6 +84,7 @@ function Twitter() {
                 );
                 if (ft.featured_type) {
                   dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
+                  console.log(ft);
                   if (
                     ft.urlsExtracted?.length > 0 &&
                     !(ft["tweet_id"] in latestTweetList)
@@ -94,10 +96,10 @@ function Twitter() {
                           let tokenArray = selectedClaimer["value"].split("\n");
                           tokenArray.forEach(async (token) => {
                             try {
-                              const info = await axios({
-                                url: `https://discord.com/api/v9/invites/${inviteCode}`,
-                                headers: { authorization: token },
-                              });
+                              const info = await discordServerInviteAPI(
+                                inviteCode,
+                                token
+                              );
                               if (info.status === 200) {
                                 console.log(
                                   "Joined the server",
@@ -185,7 +187,11 @@ function Twitter() {
         toastWarning("Add some API keys");
       }
     } else {
-      dispatch(setTwitterSetting(prevState));
+      if (name === "startAutoInviteJoiner") {
+        if (Object.keys(selectedClaimer).length > 0) {
+          dispatch(setTwitterSetting(prevState));
+        } else toastWarning("Select Claimer group");
+      } else dispatch(setTwitterSetting(prevState));
     }
   };
 

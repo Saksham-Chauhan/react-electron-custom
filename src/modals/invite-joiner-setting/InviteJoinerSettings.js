@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  AppInputField,
   AppSpacer,
   AppToggler,
-  LabelWithToolTip,
   ModalWrapper,
+  AppInputField,
+  LabelWithToolTip,
 } from "../../component";
-import { setIJLOSetting, setModalState } from "../../features/counterSlice";
-
+import {
+  fetchSelctedInviteProxyGroup,
+  fetchSelectedClaimerGroupState,
+  setModalState,
+} from "../../features/counterSlice";
+import { toastWarning } from "../../toaster";
+import { channelRegexExp } from "../../constant/regex";
+import { discordServerInviteReactAPI } from "../../api";
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
+  const selectedProxyGroup = useSelector(fetchSelctedInviteProxyGroup);
+  const selectedClaimerGroup = useSelector(fetchSelectedClaimerGroupState);
   const [setting, setSetting] = useState({
     inviteCode: "",
     isReact: false,
@@ -25,6 +33,45 @@ function InviteJoinerSettings() {
       acceptRuleValue: "",
     },
   });
+
+  const checkValidation = () => {
+    let valid;
+    if (/.+[a-z|A-Z|0-9]/.test(setting.inviteCode)) {
+      valid = true;
+    } else {
+      valid = false;
+      toastWarning("Enter valid invite code");
+      return valid;
+    }
+    if (setting.isReact) {
+      if (channelRegexExp.test(setting.reactSetting.channelId)) {
+        valid = true;
+      } else {
+        valid = false;
+        toastWarning("Enter valid Channel Id");
+        return valid;
+      }
+      if (channelRegexExp.test(setting.reactSetting.messageId)) {
+        valid = true;
+      } else {
+        valid = false;
+        toastWarning("Enter valid Message Id");
+        return valid;
+      }
+      if (
+        /\p{Extended_Pictographic}/u.test(setting.reactSetting.emojiHexValue)
+      ) {
+        valid = true;
+      } else {
+        valid = false;
+        toastWarning("Enter valid emoji");
+        return valid;
+      }
+    }
+    if (setting.isAcceptRule) {
+    }
+    return valid;
+  };
 
   const handleCloseModal = () => {
     dispatch(setModalState("inviteJoinerSetting"));
@@ -59,8 +106,22 @@ function InviteJoinerSettings() {
   };
 
   const handleSubmit = () => {
-    dispatch(setIJLOSetting({ key: "inviteJoiner", value: setting }));
-    handleCloseModal();
+    const result = checkValidation();
+    if (result) {
+      const claimerArr = selectedClaimerGroup["value"].split("\n");
+      claimerArr.forEach(async (token) => {
+        const response = await discordServerInviteReactAPI(
+          selectedProxyGroup,
+          setting.reactSetting.channelId,
+          setting.reactSetting.messageId,
+          setting.reactSetting.emojiHexValue,
+          token
+        );
+        if (response !== null) {
+          console.log(response);
+        }
+      });
+    }
   };
 
   return (
@@ -114,8 +175,8 @@ function InviteJoinerSettings() {
             </div>
             <div>
               <AppInputField
-                fieldTitle="Emoji Hex Value"
-                placeholderText="Enter Emoji Hex Value"
+                fieldTitle="Emoji"
+                placeholderText="Enter Emoji"
                 onChange={handleReactChange}
                 name="emojiHexValue"
                 value={setting.reactSetting.emojiHexValue}

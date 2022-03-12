@@ -428,36 +428,6 @@ ipcMain.on("proxy-tester", async (event, data) => {
   }
 });
 
-ipcMain.on("import-files", () => {
-  if (process.platform !== "darwin") {
-    dialog
-      .showOpenDialog({
-        title: "Select the File to be uploaded",
-        defaultPath: path.join(__dirname, "../images/"),
-        buttonLabel: "Upload",
-        // Restricting the user to only Text Files.
-        filters: [
-          {
-            name: "Files to import",
-            extensions: ["txt", "json"],
-          },
-        ],
-        // Specifying the File Selector Property
-        properties: ["openFile"],
-      })
-      .then((file) => {
-        console.log(file.canceled);
-        if (!file.canceled) {
-          global.filepath = file.filePaths[0].toString();
-          console.log(global.filepath);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-});
-
 // NEWTORK SPEED
 async function getNetworkDownloadSpeed() {
   const baseUrl = "https://eu.httpbin.org/stream-bytes/500000";

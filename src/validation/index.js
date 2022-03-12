@@ -75,3 +75,21 @@ export const claimerGroupSchema = joi.object({
   claimerList: joi.array(),
   id: joi.optional(),
 });
+
+export const inviteJoinerdirectJoineSchema = joi.object({
+  inviteCode: joi
+    .string()
+    .required()
+    .pattern(new RegExp("/.+[a-z|A-Z|0-9]/"))
+    .label("Enter valid inviteCode"),
+  isReact: false,
+  reactSetting: {
+    channelId: "",
+    messageId: "",
+    emojiHexValue: "",
+  },
+  isAcceptRule: false,
+  acceptRule: {
+    acceptRuleValue: "",
+  },
+});

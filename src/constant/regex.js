@@ -18,3 +18,5 @@ export const discordInvideCode =
   /(https:\/\/)?(www\.)?(((discord(app)?)?\.com\/invite)|((discord(app)?)?\.gg))\/(?<invite>.+)/;
 
 export const discordJoinedAtRegex = /\d{4}-\d{2}/;
+
+export const inviteJoinerEmojiRegex = /[0-9a-fA-F]/;
