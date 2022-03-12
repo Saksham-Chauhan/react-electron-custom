@@ -2,7 +2,7 @@
   height: 100vh;
   overflow: hidden;
   background: var(--app-bg);
-  -webkit-app-region: no-drag;
+  -webkit-app-region: drag;
 }
 .login > .robo {
   position: absolute;
