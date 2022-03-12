@@ -4,22 +4,22 @@
   align-items: center;
 }
 .dashboard-button {
-  width: 14%;
+  width: 17.2%;
   background: var(--active-card);
   border-radius: 3.9px;
-  padding: 13px;
+  padding: 17px 0;
   text-decoration: none;
   color: var(--primary);
-  margin: 20px 15px;
+  margin: 20px 0 0 30px;
 }
 .dashboard-button > img {
-  width: 16%;
-  margin-right: 12px;
+  width: 12%;
+  margin-right: 16px;
 }
-.dashboard-button > p {
+.dashboard-button > div {
   flex-direction: column;
 }
-.dashboard-button > p > .text,
+.dashboard-button > div > .text,
 .value {
   font-family: "Poppins";
   font-style: normal;

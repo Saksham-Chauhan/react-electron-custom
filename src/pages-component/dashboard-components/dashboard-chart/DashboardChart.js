@@ -8,7 +8,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Chart } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
+import "./dashboardchart.css";
+import chartbg from "../../../assests/images/chartbg.svg";
 
 ChartJS.register(
   CategoryScale,
@@ -19,41 +21,95 @@ ChartJS.register(
   Legend
 );
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-const colors = [
-  "red",
-  "orange",
-  "yellow",
-  "lime",
-  "green",
-  "teal",
-  "blue",
-  "purple",
-];
+const labels = ["Mon", "Tus", "Wed", "Thr", "Fri", "Sat", "Sun"];
+const colors = ["#FB49C0", "#0D24EF", "#C17168", "#3EB7E5"];
 const data = {
+  fillOpacity: 0.3,
   labels,
   datasets: [
     {
-      label: "Dataset 1",
-      data: [2, 8, 4, 9, 2, 6],
+      data: [1, 6, 4, 8, 5, 3, 20],
+      pointRadius: 0,
+      borderWidth: 3,
     },
     {
-      label: "Dataset 2",
-      data: [8, 2, 6, 8, 0, 4],
+      data: [0, 5, 3, 9, 4, 5, 8],
+      pointRadius: 0,
+      borderWidth: 3,
+    },
+    {
+      data: [0, 4, 5, 6, 5, 3, 7],
+      pointRadius: 0,
+      borderWidth: 3,
+    },
+    {
+      data: [1, 7, 3, 9, 7, 5, 8],
+      pointRadius: 0,
+      borderWidth: 3,
     },
   ],
 };
+
 const chartData = {
   ...data,
-  datasets: data.datasets.map((dataset) => ({
+  datasets: data.datasets.map((dataset, i) => ({
     ...dataset,
-    borderColor: "red",
+    borderColor: colors[i],
   })),
 };
+const options = {
+  animations: {
+    tension: {
+      duration: 1000,
+      easing: "linear",
+    },
+  },
+  maintainAspectRatio: true,
+  hover: {
+    intersect: false,
+  },
+  tension: 0.5,
+  borderCapStyle: "round",
+  responsive: true,
+  scales: {
+    x: {
+      grid: {
+        display: true,
+        borderColor: "#0d0027",
+        color: "#161037",
+      },
+      ticks: {
+        color: "#FFFFFF",
+        fontFamily: "Poppins",
+      },
+    },
+    y: {
+      grid: {
+        display: true,
+        borderColor: "#161037",
+        color: "#161037",
+      },
+      ticks: {
+        stepSize: 3,
+        color: "#FFFFFF",
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+      labels: {
+        color: "white",
+      },
+    },
+  },
+};
+
 const DashboardChart = () => {
   return (
     <div className="dashboardchart">
-      <Chart type="line" data={chartData} />;
+      <img src={chartbg} alt="" className="chartbg" />
+      <Line data={chartData} options={{ ...options }} />;
     </div>
   );
 };

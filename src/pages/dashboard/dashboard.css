@@ -1,5 +1,6 @@
-/* .dashboard {
-} */
+.dashboard {
+  background-color: var(--app-bg);
+}
 .dashboard > h1 {
   font-family: "Poppins";
   font-style: normal;
@@ -13,4 +14,7 @@
 .dashboard-buttons {
   display: flex;
   flex-wrap: wrap;
+}
+.dashboard-chart {
+  display: flex;
 }
