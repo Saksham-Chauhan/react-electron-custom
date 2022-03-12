@@ -10,18 +10,17 @@ import discord from "../../../assests/images/discord.svg";
 import {
   setEditStorage,
   setSelectedClaimerTokenIJ,
-  setTempStorage,
 } from "../../../features/counterSlice";
 import { deleteClaimerAccountFromList } from "../../../features/logic/discord-account";
 
-function LeftSection({ handleOpenModal, claimerAccountList, tempStorage }) {
+function LeftSection({ handleOpenModal, accountList, selectedToken }) {
   const dispatch = useDispatch();
 
   /**
    * function handle select account card
    **/
   const handleAccountSelect = (account) => {
-    dispatch(setTempStorage(account));
+    dispatch(setSelectedClaimerTokenIJ(account));
   };
 
   /**
@@ -46,7 +45,7 @@ function LeftSection({ handleOpenModal, claimerAccountList, tempStorage }) {
       </TopWrapper>
       <AppSpacer spacer={20} />
       <div className="group-card-scroll">
-        {claimerAccountList?.map((account) => (
+        {accountList?.map((account) => (
           <GroupCard
             actionColumn={{
               onEdit: () => handleEditAccount(account),
@@ -58,7 +57,7 @@ function LeftSection({ handleOpenModal, claimerAccountList, tempStorage }) {
             isCustomAction={true}
             cardTitle={account["accountName"]}
             activeClass={
-              account["id"] === tempStorage["id"] ? "active-card" : ""
+              account["id"] === selectedToken["id"] ? "active-card" : ""
             }
             onClick={() => handleAccountSelect(account)}
           />

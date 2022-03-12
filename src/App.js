@@ -8,7 +8,6 @@ import {
   fetchAddGmailModalState,
   fetchDiscordModalState,
   fetchProxyGroupModalState,
-  fetchAddJoinerModalState,
   fetchInviteJoinerSettingModalState,
   fetchSpoofModalState,
   fetchEditProxyModalState,
@@ -21,23 +20,22 @@ import {
   ProxyGroupModal,
   DiscordAccountModal,
   AddGmailModal,
-  InviteJoinerAccountModal,
   InviteJoinerSettingModal,
   AddSpoofModal,
   EditProxySingleModal,
   ClaimerGroupModal,
-  ComingSoon,
 } from "./modals";
 import {
   ProxyPage,
   LinkOpenerPage,
-  OneClickPage,
+  MinitingPage,
   InviteJoinerPage,
   TwitterPage,
   SpooferPage,
   SettingPage,
   Login,
   DashboardPage,
+  AccountGenPage,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -65,7 +63,6 @@ function App() {
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
   const addGmailModalState = useSelector(fetchAddGmailModalState);
-  const inviteModalState = useSelector(fetchAddJoinerModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const proxyEditModalState = useSelector(fetchEditProxyModalState);
@@ -111,7 +108,6 @@ function App() {
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {proxyEditModalState && <EditProxySingleModal />}
-      {inviteModalState && <InviteJoinerAccountModal />}
       {inviteSettigModalState && <InviteJoinerSettingModal />}
       <div className="app sidebar">
         <AppSidebar />
@@ -124,8 +120,7 @@ function App() {
             <DragBar />
             <AppController />
             <Routes>
-              <Route path={RoutePath.profile} element={<ComingSoon />} />
-              <Route path={RoutePath.accountGen} element={<ComingSoon />} />
+              <Route path={RoutePath.accountGen} element={<AccountGenPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />
@@ -135,7 +130,7 @@ function App() {
               />
               <Route path={RoutePath.linkOpener} element={<LinkOpenerPage />} />
               <Route path={RoutePath.proxy} element={<ProxyPage />} />
-              <Route path={RoutePath.oneclick} element={<OneClickPage />} />
+              <Route path={RoutePath.oneclick} element={<MinitingPage />} />
               <Route path={RoutePath.home} element={<DashboardPage />} />
             </Routes>
             <AppFooter />

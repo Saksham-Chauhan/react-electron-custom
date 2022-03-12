@@ -8,11 +8,15 @@ import {
   fetchDiscordAccountList,
   fetchIJChannelList,
   fetchIJKeywordList,
+  fetchInviteJoinerLogState,
   fetchLinkOpenerLogState,
   fetchLOChannelList,
   fetchLOKeywordList,
   fetchLOSettingState,
+  fetchSelectedClaimerTokenInviteJoiner,
+  fetchSelectedMinitorTokenLinkOpener,
   setIJLOSetting,
+  setSelectedClaimerTokenIJ,
   setSelectedMonitorTokenLO,
 } from "../counterSlice";
 import { generateId } from "../../helper";
@@ -29,12 +33,20 @@ export const addDiscordAccountInList = (account) => (dispatch, getState) => {
 export const editDiscordAccountInList =
   (editedAccount) => (dispatch, getState) => {
     const currentAccountList = fetchDiscordAccountList(getState());
+    const inviteJoinerToken = fetchSelectedClaimerTokenInviteJoiner(getState());
+    const linkOpenerToken = fetchSelectedMinitorTokenLinkOpener(getState());
     let tempCurrentAccount = [...currentAccountList];
     let tempAccount = { ...editedAccount };
     let afterUpdate = tempCurrentAccount.map((account) => {
       if (account["id"] === tempAccount["id"]) return tempAccount;
       return account;
     });
+    if (Object.keys(linkOpenerToken).length > 0) {
+      dispatch(setSelectedMonitorTokenLO(tempAccount));
+    }
+    if (Object.keys(inviteJoinerToken).length > 0) {
+      dispatch(setSelectedClaimerTokenIJ(tempAccount));
+    }
     dispatch(appendDiscordAccount(afterUpdate));
   };
 
@@ -167,7 +179,10 @@ export const addLogInList = (data) => (dispatch, getState) => {
     combiner[id] = log;
     dispatch(appendLogList({ key: "linkOpener", list: combiner }));
   } else {
-    // dispatch(appendLogList({ key: "inviteJoiner", list: combiner }));
+    const logList = fetchInviteJoinerLogState(getState());
+    let combiner = { ...logList };
+    combiner[id] = log;
+    dispatch(appendLogList({ key: "inviteJoiner", list: combiner }));
   }
 };
 

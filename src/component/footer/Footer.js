@@ -25,7 +25,7 @@ function Footer() {
         });
         timer = setTimeout(fetchSpeed, FETCH_NETWORK_SPEED_GAP);
       } catch (error) {
-        console.log("Error in getting Network Spped");
+        console.log("Error in getting Network Spped", error.message);
       }
     };
     fetchSpeed();
@@ -41,12 +41,12 @@ function Footer() {
   return (
     <div className="footer-app-status">
       <div className="footer-app-network-speed">
-        <img src={up} alt="upload-icon" />
+        <img src={down} alt="upload-icon" />
         <span>
           {makeRound(speed.upload)}
           {"\t"}Kb/s
         </span>
-        <img src={down} alt="upload-icon" />
+        <img src={up} alt="upload-icon" />
         <span>
           {makeRound(speed.download)}
           {"\t"}Kb/s

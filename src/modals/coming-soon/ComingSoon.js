@@ -17,14 +17,9 @@ function ComingSoon() {
             animation={lock}
             strokeColor="var(--primary)"
             size={50}
-          ></UseAnimations>
+          />
         </div>
         <AppSpacer spacer={30} />
-        <div className=" coming-soon-modal-lock modal-control-btns">
-          <div className="modal-cancel-btn submit btn">
-            <span>Unlock</span>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -3,4 +3,7 @@ export const inviteJoinerInitialState = {
   isInviteJoinerStart: false,
   safeModedelay: 0,
   directJoin: {},
+  isInviteJoinerModal: false,
+  selectedInviteProxyGroup: {},
+  selectedInviteClaimerGroup: {},
 };

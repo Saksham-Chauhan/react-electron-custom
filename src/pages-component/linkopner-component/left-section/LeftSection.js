@@ -8,15 +8,23 @@ import {
 } from "../../../component";
 import { setSelectedMonitorTokenLO } from "../../../features/counterSlice";
 import discord from "../../../assests/images/discord.svg";
+import { toastWarning } from "../../../toaster";
 
-function LeftSection({ handleOpenModal, accountList, selectedMonitorToken }) {
+function LeftSection({
+  handleOpenModal,
+  accountList,
+  selectedMonitorToken,
+  settingOption,
+}) {
   const dispatch = useDispatch();
 
   /**
    * function handle select account card
    **/
   const handleAccountSelect = (account) => {
-    dispatch(setSelectedMonitorTokenLO(account));
+    if (!settingOption?.linkOpenerState) {
+      dispatch(setSelectedMonitorTokenLO(account));
+    } else toastWarning("Token in use!!");
   };
 
   return (

@@ -1,8 +1,8 @@
 import React from "react";
 import plus from "../../../assests/images/plus.svg";
-import UseAnimations from 'react-useanimations';
-import trash2 from 'react-useanimations/lib/trash2';
-import edit from 'react-useanimations/lib/edit';
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
+import edit from "react-useanimations/lib/edit";
 import "./styles.css";
 import { AppSpacer } from "../../../component";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,8 +44,20 @@ function CalimerGroup() {
           <div key={group["id"]} className="claimer-group-list-item">
             <span>{group["name"]}</span>
             <div className="claimer-group-item-action">
-              <UseAnimations onClick={() => handleEdit(group)} animation={edit} strokeColor="#ffff" size={20} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
-              <UseAnimations onClick={() => handleDelete(group)} animation={trash2} strokeColor="#B60E0E" size={22} wrapperStyle={{cursor:"pointer", paddingBottom:"3px"}}></UseAnimations>
+              <UseAnimations
+                onClick={() => handleEdit(group)}
+                animation={edit}
+                strokeColor="#ffff"
+                size={20}
+                wrapperStyle={{ cursor: "pointer" }}
+              />
+              <UseAnimations
+                onClick={() => handleDelete(group)}
+                animation={trash2}
+                strokeColor="#B60E0E"
+                size={22}
+                wrapperStyle={{ cursor: "pointer", paddingBottom: "3px" }}
+              />
             </div>
           </div>
         ))}

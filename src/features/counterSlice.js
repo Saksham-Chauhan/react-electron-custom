@@ -7,6 +7,7 @@ import { spoofInitialState } from "./initial-state/spoof";
 import { settingInitialState } from "./initial-state/setting";
 import { initialUserState } from "./initial-state/user-initial-state";
 import { inviteJoinerInitialState } from "./initial-state/invite-joiner";
+
 const initialState = {
   tempStorage: {},
   editStorage: {},
@@ -150,13 +151,29 @@ export const counterSlice = createSlice({
     toggleIJMonitor: (state) => {
       state.isInviteJoinerStart = !state.isInviteJoinerStart;
     },
+    setIsIJmodal: (state) => {
+      state.isInviteJoinerModal = !state.isInviteJoinerModal;
+    },
+    setInviteProxyGroup: (state, action) => {
+      state.selectedInviteProxyGroup = action.payload;
+    },
+    setInviteJoinerDelay: (state, action) => {
+      state.safeModedelay = action.payload;
+    },
+    setSelectedClaimerGroup: (state, action) => {
+      state.selectedInviteClaimerGroup = action.payload;
+    },
   },
 });
 
 export const {
   appendApInList,
+  setInviteProxyGroup,
+  setInviteJoinerDelay,
+  setSelectedClaimerGroup,
   toggleIJMonitor,
   setUserDetails,
+  setIsIJmodal,
   clearLogList,
   appendLogList,
   setModalState,
@@ -218,6 +235,7 @@ export const fetchLinkOpenerLogState = (state) =>
   state[STATE_KEY].linkOpener.logList;
 export const fetchLOchromeUserState = (state) =>
   state[STATE_KEY].linkOpener.selectedChromeUser;
+
 // ADD GMAIL
 export const fetchAddGmailModalState = (state) =>
   state[STATE_KEY].modals.addGmail;
@@ -229,15 +247,20 @@ export const fetchSelectedClaimerTokenInviteJoiner = (state) =>
   state[STATE_KEY].selectedClaimerTokenIJ;
 export const fetchIJChannelList = (state) =>
   state[STATE_KEY].inviteJoiner.channelList;
-export const fetchAddJoinerModalState = (state) =>
-  state[STATE_KEY].modals.inviteJoinerAccount;
 export const fetchInviteJoinerSettingModalState = (state) =>
   state[STATE_KEY].modals.inviteJoinerSetting;
 export const fetchIJMonitorState = (state) =>
   state[STATE_KEY].isInviteJoinerStart;
-
+export const fetchIsInviteJoinerModalState = (state) =>
+  state[STATE_KEY].isInviteJoinerModal;
 export const fetchInviteJoinerLogState = (state) =>
   state[STATE_KEY].inviteJoiner.logList;
+export const fetchSelctedInviteProxyGroup = (state) =>
+  state[STATE_KEY].selectedInviteProxyGroup;
+export const fetchSafeModeDelayState = (state) =>
+  state[STATE_KEY].safeModedelay;
+export const fetchSelectedClaimerGroupState = (state) =>
+  state[STATE_KEY].selectedInviteClaimerGroup;
 // TWITTER
 export const fetchTwitterKeywordList = (state) =>
   state[STATE_KEY].twitterKeywordList;

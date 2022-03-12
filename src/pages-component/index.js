@@ -9,10 +9,6 @@ export { default as LinkOpenerTopSection } from "./linkopner-component/top-secti
 export { default as LinkOpenerLogSection } from "./linkopner-component/log-section/LogSection";
 export { default as LinkOpenerLeftSection } from "./linkopner-component/left-section/LeftSection";
 export { default as LinkOpenerAdditionalSetting } from "./linkopner-component/additional-setting/AdditionalSetting";
-//OneClick ,InputGroup,OneClickBody
-export { default as OneClick } from "./oneClickComp/OneClick/OneClick";
-export { default as InputGroup } from "./oneClickComp/InputGroup/InputGroup";
-export { default as OneClickBody } from "./oneClickComp/Body/OneClickBody";
 
 // invite joiner
 export { default as InviteJoinerLeftSection } from "./invitejoiner-component/left-section/LeftSection";

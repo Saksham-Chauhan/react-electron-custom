@@ -10,7 +10,6 @@ import activeAccgen from "../../assests/activeDefault/accgen-active.svg";
 import activeOneclick from "../../assests/activeDefault/oneclick-active.svg";
 import activeProxy from "../../assests/activeDefault/proxy-active.svg";
 import activeLinkOpener from "../../assests/activeDefault/link-active.svg";
-import activeProfile from "../../assests/activeDefault/profile-active.svg";
 import activeTwitter from "../../assests/activeDefault/twitter-active.svg";
 import activeSettings from "../../assests/activeDefault/settings-active.svg";
 import activeUpdate from "../../assests/activeDefault/update-active.svg";
@@ -23,13 +22,13 @@ import defaultAccgen from "../../assests/activeDefault/accgen-default.svg";
 import defaultOneclick from "../../assests/activeDefault/oneclick-default.svg";
 import defaultProxy from "../../assests/activeDefault/proxy-default.svg";
 import defaultLinkOpener from "../../assests/activeDefault/link-default.svg";
-import defaultProfile from "../../assests/activeDefault/profile-default.svg";
 import defaultInvite from "../../assests//activeDefault/invite-default.svg";
 import defaultTwitter from "../../assests/activeDefault/twitter-default.svg";
 import defaultSettings from "../../assests/activeDefault/settings-default.svg";
 import defaultSpoof from "../../assests/activeDefault/spoof-default.svg";
-import defaultUpdate from "../../assests/activeDefault/update-default.svg"
+import defaultUpdate from "../../assests/activeDefault/update-default.svg";
 import { checkForUpdates } from "../../helper/electron-bridge";
+
 const pjson = require("../../../package.json");
 
 const iconData = [
@@ -44,13 +43,6 @@ const iconData = [
     activeIcon: activeOneclick,
     activeClass: "oneclick",
     defaultIcon: defaultOneclick,
-  },
-
-  {
-    to: RoutePath.profile,
-    activeIcon: activeProfile,
-    activeClass: "profile",
-    defaultIcon: defaultProfile,
   },
   {
     to: RoutePath.proxy,
