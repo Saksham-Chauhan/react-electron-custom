@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { claimerGroupSchema } from "../../validation";
 import {
   fetchEditStorageState,
+  fetchSelectedClaimerGroupState,
   setEditStorage,
   setModalState,
+  setSelectedClaimerGroup,
 } from "../../features/counterSlice";
 import { validationChecker } from "../../hooks/validationChecker";
 import {
@@ -18,6 +20,7 @@ import { toastWarning } from "../../toaster";
 function ClaimerGroup() {
   const dispatch = useDispatch();
   const editState = useSelector(fetchEditStorageState);
+  const selectedClaimerGroup = useSelector(fetchSelectedClaimerGroupState);
   const [claimer, setClaimer] = useState({
     id: "",
     name: "",
@@ -61,6 +64,13 @@ function ClaimerGroup() {
       if (valid.length > 0) {
         if (Object.keys(editState).length > 0) {
           dispatch(editClaimerGroupFromList(obj));
+          if (obj["id"] === selectedClaimerGroup["id"]) {
+            let objClaimer = {};
+            objClaimer["label"] = obj["name"];
+            objClaimer["id"] = obj["id"];
+            objClaimer["value"] = obj["claimerToken"];
+            dispatch(setSelectedClaimerGroup(objClaimer));
+          }
         } else {
           dispatch(addGroupInClaimerList(obj));
         }

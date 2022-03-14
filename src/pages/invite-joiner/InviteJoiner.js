@@ -7,6 +7,7 @@ import {
   fetchIJMonitorState,
   fetchInviteJoinerLogState,
   fetchIsInviteJoinerModalState,
+  fetchSafeModeDelayState,
   fetchSelctedInviteProxyGroup,
   fetchSelectedClaimerGroupState,
   fetchSelectedClaimerTokenInviteJoiner,
@@ -24,7 +25,6 @@ import {
 import helper from "../twitter/utils/feature-tweets/helper";
 import { checkDiscordInvite } from "../link-opener/utils";
 import { discordServerInviteAPI } from "../../api";
-import { ComingSoon } from "../../modals";
 
 const { Client } = window.require("discord.js-selfbot");
 
@@ -40,24 +40,42 @@ class InviteJoiner extends React.PureComponent {
   }
 
   checkingMessage(content, channelID, msgID) {
-    const { keywordList, selectedClaimerGroup } = this.state;
+    const { keywordList, selectedClaimerGroup, selectedProxyGroup } =
+      this.state;
     if (makeStrOfArr(keywordList).includes(channelID)) {
       let isInviteLink = checkDiscordInvite(content);
       let inviteCode = helper.isDiscordInvite(content);
       if (inviteCode && isInviteLink) {
-        let tokenArray = selectedClaimerGroup["value"].split("\n");
-        tokenArray.forEach(async (token) => {
-          try {
-            const info = await discordServerInviteAPI(inviteCode, token);
-            if (info.status === 200) {
-              let result = `Joined ${info.data.guild.name}`;
-              this.props.handleSendLog(result, msgID);
-              console.log("Joined the server", info.data.guild);
+        const proxyArr = selectedProxyGroup["value"]?.split("\n");
+        for (let index = 0; index < proxyArr.length; index++) {
+          let proxySplit = proxyArr[index]?.split(":");
+          const proxy = {
+            host: proxySplit[0],
+            port: proxySplit[1],
+            auth: {
+              username: proxySplit[2],
+              password: proxySplit[3],
+            },
+          };
+          let tokenArray = selectedClaimerGroup["value"]?.split("\n");
+          tokenArray.forEach(async (token) => {
+            await this.sleep();
+            try {
+              const info = await discordServerInviteAPI(
+                inviteCode,
+                token,
+                proxy
+              );
+              if (info.status === 200) {
+                let result = `Joined ${info.data.guild.name} server 🥳 `;
+                this.props.handleSendLog(result, msgID);
+                console.log("Joined the server", info.data.guild);
+              }
+            } catch (err) {
+              console.log("Error in joining server", err.message);
             }
-          } catch (err) {
-            console.log("Error in joining server", err.message);
-          }
-        });
+          });
+        }
       }
     }
   }
@@ -116,6 +134,13 @@ class InviteJoiner extends React.PureComponent {
     }
   }
 
+  sleep() {
+    const { safeDelayIJtime } = this.props;
+    return new Promise((resolve) => {
+      setTimeout(resolve, Number(safeDelayIJtime));
+    });
+  }
+
   render() {
     const {
       keywordList,
@@ -130,14 +155,13 @@ class InviteJoiner extends React.PureComponent {
 
     return (
       <div className="page-section">
-        {process.env.NODE_ENV !== "development" && <ComingSoon />}
         <div className="left-container">
           <InviteJoinerLeftSection
             {...{ handleOpenModal, accountList, selectedToken }}
           />
         </div>
         <div className="right-container invite-joiner">
-          <InviteJoinerTopSection />
+          <InviteJoinerTopSection {...{ logList, selectedToken }} />
           <div className="page-padding-section">
             <div className="linkopener-flex-wrapper">
               <div className="linkopner-left-section invite-joiner">
@@ -185,6 +209,7 @@ const mapStateToProps = (state) => {
     isMonitorStart: fetchIsInviteJoinerModalState(state),
     selectedClaimerGroup: fetchSelectedClaimerGroupState(state),
     selectedProxyGroup: fetchSelctedInviteProxyGroup(state),
+    safeDelayIJtime: fetchSafeModeDelayState(state),
   };
 };
 

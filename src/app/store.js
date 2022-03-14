@@ -8,14 +8,14 @@ const persistConfig = {
   key: "Kyros-storage",
   storage,
   blacklist: [
-    "addGmail",
-    "editProxy",
     "proxyGroup",
-    "spoofModal",
-    "editStorage",
     "discordAccount",
+    "addGmail",
     "inviteJoinerAccount",
     "inviteJoinerSetting",
+    "spoofModal",
+    "editProxy",
+    "claimerGroup",
   ],
 };
 

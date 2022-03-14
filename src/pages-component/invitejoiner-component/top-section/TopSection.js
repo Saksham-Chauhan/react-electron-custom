@@ -1,10 +1,13 @@
 import React from "react";
 import { GroupStatusCard, TopWrapper } from "../../../component";
 
-function TopSection() {
+function TopSection({ logList, selectedToken }) {
   return (
     <TopWrapper>
-      <GroupStatusCard subText="2 Links opened" title="Account 1" />
+      <GroupStatusCard
+        subText={`${Object.keys(logList).length} invite joined`}
+        title={selectedToken["accountName"] || "Account 1"}
+      />
     </TopWrapper>
   );
 }

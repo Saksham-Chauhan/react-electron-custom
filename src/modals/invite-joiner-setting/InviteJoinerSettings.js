@@ -13,9 +13,12 @@ import {
   fetchSelectedClaimerGroupState,
   setModalState,
 } from "../../features/counterSlice";
-import { toastWarning } from "../../toaster";
+import { toastWarning, toastSuccess } from "../../toaster";
 import { channelRegexExp } from "../../constant/regex";
-import { discordServerInviteReactAPI } from "../../api";
+import {
+  discordServerAcceptRuleAPI,
+  discordServerInviteReactAPI,
+} from "../../api";
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
   const selectedProxyGroup = useSelector(fetchSelctedInviteProxyGroup);
@@ -31,6 +34,7 @@ function InviteJoinerSettings() {
     isAcceptRule: false,
     acceptRule: {
       acceptRuleValue: "",
+      guildID: "",
     },
   });
 
@@ -69,6 +73,22 @@ function InviteJoinerSettings() {
       }
     }
     if (setting.isAcceptRule) {
+      if (/^[0-9]+$/.test(setting.acceptRule.guildID)) {
+        valid = true;
+      } else {
+        valid = false;
+        toastWarning("Enter valid Guild Id");
+        return valid;
+      }
+      try {
+        const isJson = JSON.stringify(setting.acceptRule.acceptRuleValue);
+        JSON.parse(isJson);
+        valid = true;
+      } catch (error) {
+        valid = false;
+        toastWarning("Enter Accept riule in JSON");
+        return valid;
+      }
     }
     return valid;
   };
@@ -78,6 +98,7 @@ function InviteJoinerSettings() {
   };
 
   const handleReactChange = (e) => {
+    e.preventDefault();
     const { value, name } = e.target;
     setSetting((pre) => {
       return { ...pre, reactSetting: { ...pre.reactSetting, [name]: value } };
@@ -92,6 +113,7 @@ function InviteJoinerSettings() {
   };
 
   const handleInviteChange = (e) => {
+    e.preventDefault();
     const { value } = e.target;
     setSetting((pre) => {
       return { ...pre, inviteCode: value };
@@ -99,28 +121,62 @@ function InviteJoinerSettings() {
   };
 
   const handleAcceptRuleChange = (e) => {
+    e.preventDefault();
     const { value } = e.target;
     setSetting((pre) => {
-      return { ...pre, acceptRule: { acceptRuleValue: value } };
+      return {
+        ...pre,
+        acceptRule: { ...pre.acceptRule, acceptRuleValue: value },
+      };
+    });
+  };
+
+  const handleGuildChange = (e) => {
+    e.preventDefault();
+    const { value } = e.target;
+    setSetting((pre) => {
+      return { ...pre, acceptRule: { ...pre.acceptRule, guildID: value } };
     });
   };
 
   const handleSubmit = () => {
     const result = checkValidation();
     if (result) {
-      const claimerArr = selectedClaimerGroup["value"].split("\n");
+      const claimerArr = selectedClaimerGroup["value"]?.split("\n");
       claimerArr.forEach(async (token) => {
-        const response = await discordServerInviteReactAPI(
-          selectedProxyGroup,
-          setting.reactSetting.channelId,
-          setting.reactSetting.messageId,
-          setting.reactSetting.emojiHexValue,
-          token
-        );
-        if (response !== null) {
-          console.log(response);
+        if (setting.isReact) {
+          const response = await discordServerInviteReactAPI(
+            selectedProxyGroup,
+            setting.reactSetting.channelId,
+            setting.reactSetting.messageId,
+            setting.reactSetting.emojiHexValue,
+            token
+          );
+          if (response !== null) {
+            if (response.status === 201) {
+              toastSuccess("Reacted to the server");
+            }
+          }
+        }
+        if (setting.isAcceptRule) {
+          const response = await discordServerAcceptRuleAPI(
+            setting.acceptRule.guildID,
+            token,
+            setting.acceptRule.acceptRuleValue,
+            setting.inviteCode,
+            selectedProxyGroup
+          );
+          if (response !== null) {
+            if (response.status === 201) {
+              toastSuccess("Accept the rule");
+              // dispatch(
+              //   addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
+              // ),
+            }
+          }
         }
       });
+      handleCloseModal();
     }
   };
 
@@ -137,6 +193,7 @@ function InviteJoinerSettings() {
           placeholderText="Enter Invite Code"
           hideLabel={true}
           value={setting.inviteCode}
+          onCopy={handleInviteChange}
         />
       </div>
       <AppSpacer spacer={20} />
@@ -160,6 +217,7 @@ function InviteJoinerSettings() {
                 fieldTitle="Channel ID"
                 placeholderText="Enter Channel ID"
                 onChange={handleReactChange}
+                onCopy={handleReactChange}
                 name="channelId"
                 value={setting.reactSetting.channelId}
               />
@@ -168,6 +226,7 @@ function InviteJoinerSettings() {
               <AppInputField
                 fieldTitle="Message ID"
                 onChange={handleReactChange}
+                onCopy={handleReactChange}
                 name="messageId"
                 value={setting.reactSetting.messageId}
                 placeholderText="Enter Message ID"
@@ -178,6 +237,7 @@ function InviteJoinerSettings() {
                 fieldTitle="Emoji"
                 placeholderText="Enter Emoji"
                 onChange={handleReactChange}
+                onCopy={handleReactChange}
                 name="emojiHexValue"
                 value={setting.reactSetting.emojiHexValue}
               />
@@ -202,11 +262,20 @@ function InviteJoinerSettings() {
         {setting.isAcceptRule && (
           <div className={`accept-joiner-setting-section `}>
             <AppInputField
-              onChange={handleAcceptRuleChange}
+              placeholderText="Enter guild ID"
+              fieldTitle="Guild ID"
+              value={setting.acceptRule.guildID}
+              onChange={handleGuildChange}
+              onCopy={handleGuildChange}
+            />
+            <AppSpacer spacer={10} />
+            <AppInputField
               isMulti={true}
               multiHeight="100px"
-              placeholderText="Enter Accept Format"
               fieldTitle="Accept Format"
+              onCopy={handleAcceptRuleChange}
+              onChange={handleAcceptRuleChange}
+              placeholderText="Enter Accept Format"
               value={setting.acceptRule.acceptRuleValue}
             />
           </div>

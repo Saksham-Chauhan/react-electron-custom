@@ -54,14 +54,18 @@ async function ocrResolver(media) {
   for (const key in media) {
     let mediaArr = media[key];
     for (let i = 0; i < mediaArr.length; i++) {
-      if (mediaArr[i].type === "photo") {
-        const text = await ipcRenderer.invoke(
-          "imageText",
-          mediaArr[i].media_url
-        );
-        if (text) {
-          ocrArr.push(text);
+      try {
+        if (mediaArr[i].type === "photo") {
+          const text = await ipcRenderer.invoke(
+            "imageText",
+            mediaArr[i].media_url
+          );
+          if (text) {
+            ocrArr.push(text);
+          }
         }
+      } catch (error) {
+        console.log("Error in reading OCR", error.message);
       }
     }
   }
@@ -74,14 +78,18 @@ async function qrResolver(media) {
   for (const key in media) {
     let mediaArr = media[key];
     for (let i = 0; i < mediaArr.length; i++) {
-      const image = await Jimp.read(mediaArr[i].media_url);
-      const qr = new QrCode();
-      qr.callback = (err, res) => {
-        if (res) {
-          qrArr.push(res.result);
-        }
-      };
-      qr.decode(image.bitmap);
+      try {
+        const image = await Jimp.read(mediaArr[i].media_url);
+        const qr = new QrCode();
+        qr.callback = (err, res) => {
+          if (res) {
+            qrArr.push(res.result);
+          }
+        };
+        qr.decode(image.bitmap);
+      } catch (error) {
+        console.log("Error in reading QR code", error);
+      }
     }
   }
   if (qrArr.length === 0) {
