@@ -194,7 +194,7 @@ const mapDispatchToProps = (dispatch) => {
     handleOpenModal: () => dispatch(setModalState("discordAccount")),
     handleSendLog: (content, msgID) =>
       dispatch(
-        addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
+        addLogInList({ key: "IJ", log: makeLogText(content), id: msgID })
       ),
   };
 };

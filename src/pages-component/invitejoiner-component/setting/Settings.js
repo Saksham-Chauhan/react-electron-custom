@@ -204,6 +204,7 @@ function Settings({
             fieldTitle="Delay"
             isCustomLabel={true}
             hideLabel={true}
+            type="number"
             placeholderText="Enter Delay"
             onChange={handleDelayChange}
             value={safeDelayModeValue === 0 ? "" : safeDelayModeValue}
