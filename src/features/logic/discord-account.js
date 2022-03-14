@@ -7,7 +7,6 @@ import {
   fetchClaimerDiscordAccountList,
   fetchDiscordAccountList,
   fetchIJChannelList,
-  fetchIJKeywordList,
   fetchInviteJoinerLogState,
   fetchLinkOpenerLogState,
   fetchLOChannelList,

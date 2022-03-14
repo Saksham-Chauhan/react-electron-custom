@@ -143,13 +143,13 @@ class InviteJoiner extends React.PureComponent {
 
   render() {
     const {
+      logList,
       keywordList,
       accountList,
-      ijMonitorState,
-      logList,
-      handleOpenModal,
       selectedToken,
       isMonitorStart,
+      ijMonitorState,
+      handleOpenModal,
       selectedClaimerGroup,
     } = this.props;
 

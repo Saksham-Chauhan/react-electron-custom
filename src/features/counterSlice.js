@@ -261,6 +261,7 @@ export const fetchSafeModeDelayState = (state) =>
   state[STATE_KEY].safeModedelay;
 export const fetchSelectedClaimerGroupState = (state) =>
   state[STATE_KEY].selectedInviteClaimerGroup;
+
 // TWITTER
 export const fetchTwitterKeywordList = (state) =>
   state[STATE_KEY].twitterKeywordList;
