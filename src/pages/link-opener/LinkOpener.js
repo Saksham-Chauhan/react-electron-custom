@@ -134,6 +134,8 @@ class LinkOpener extends React.PureComponent {
         } else {
           console.log("Destroy monitor...");
           this.monitor.destroy();
+          window.location.reload();
+          console.log("After destroying", this.monitor.user);
         }
       } else if (prevProps.settingOption !== settingOption) {
         this.setState({ settingOption: settingOption });

@@ -31,6 +31,7 @@ const { Client } = window.require("discord.js-selfbot");
 
 class InviteJoiner extends React.Component {
   monitor = new Client();
+  token = "";
   constructor(props) {
     super(props);
     this.state = {
@@ -125,7 +126,8 @@ class InviteJoiner extends React.Component {
       } else {
         console.log("Destroyng monitor...");
         this.monitor.destroy();
-        console.log("After destroying", this.monitor);
+        window.location.reload();
+        console.log("After destroying", this.monitor.user);
       }
     } else if (keywordList !== prevProps.keywordList) {
       this.setState({ keywordList: keywordList });
@@ -135,6 +137,11 @@ class InviteJoiner extends React.Component {
       this.setState({ selectedProxyGroup: selectedProxyGroup });
     }
   }
+
+  doSomething = () => {
+    this.monitor.destroy();
+    console.log(this.monitor);
+  };
 
   sleep() {
     const { safeDelayIJtime } = this.props;
