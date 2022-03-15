@@ -1,0 +1,38 @@
+.window-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  z-index: 200;
+  -webkit-app-region: no-drag;
+}
+.window-button svg {
+  visibility: hidden;
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+.window-button {
+  height: 12px;
+  width: 12px;
+  margin-left: 6px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: 0.1s ease filter;
+}
+.window-button:active {
+  filter: brightness(70%);
+}
+.window-button.yellow {
+  background: #ffde46;
+}
+.window-button.green {
+  background: #00f88b;
+}
+.window-button.red {
+  background: #ff3c5d;
+}
+.window-button:hover > svg {
+  visibility: visible;
+}

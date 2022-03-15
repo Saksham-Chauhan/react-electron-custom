@@ -1,0 +1,63 @@
+.modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: transparent;
+  z-index: 10;
+  backdrop-filter: blur(2.5px);
+
+}
+.modal-inner {
+  position: absolute;
+  width: 45%;
+  top: 50%;
+  left: 50%;
+  padding: 1.8em 2.5em;
+  background: var(--app-bg);
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  background-image: url(../../assests/images/small-bot.svg);
+  background-repeat: no-repeat;
+  background-position: 95% 30px;
+  background-blend-mode: overlay;
+
+}
+
+/* modal title css */
+.modal-tilte > h2 {
+  font-weight: 600;
+  font-size: 20.4539px;
+  line-height: 31px;
+  color: var(--primary);
+}
+
+/* modal btns css */
+.modal-control-btns {
+  display: flex;
+  justify-content: space-between;
+}
+.modal-cancel-btn {
+  width: 84px;
+  height: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.7px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  padding: 0.5em;
+}
+
+.modal-cancel-btn > span {
+  font-size: 13.149px;
+  line-height: 20px;
+  color: rgba(255, 255, 255, 0.4);
+}
+.modal-cancel-btn.submit {
+  background: var(--active-card);
+  border: 0.7px solid transparent;
+}
+.modal-cancel-btn.submit > span {
+  color: var(--primary);
+}

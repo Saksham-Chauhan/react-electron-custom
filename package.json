@@ -1,0 +1,120 @@
+{
+  "name": "kyro-v1",
+  "version": "0.6.1",
+  "private": true,
+  "homepage": "./",
+  "dependencies": {
+    "@emotion/react": "^11.8.1",
+    "@reduxjs/toolkit": "^1.7.2",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.26.0",
+    "chart.js": "^3.7.1",
+    "concurrently": "^7.0.0",
+    "current-processes": "^0.2.1",
+    "discord.js-selfbot": "^12.0.2",
+    "electron-is-dev": "^2.0.0",
+    "electron-updater": "^4.6.5",
+    "framer-motion": "^6.2.8",
+    "fuse.js": "^6.5.3",
+    "jimp": "^0.16.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "network-speed": "^2.1.1",
+    "open": "^8.4.0",
+    "ping": "^0.4.1",
+    "qrcode-reader": "^1.0.4",
+    "react": "^17.0.2",
+    "react-chartjs-2": "^4.0.1",
+    "react-detect-offline": "^2.4.5",
+    "react-dom": "^17.0.2",
+    "react-number-format": "^4.9.1",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "5.0.0",
+    "react-select": "^5.2.2",
+    "react-toastify": "^8.2.0",
+    "react-tooltip": "^4.2.21",
+    "react-useanimations": "^2.0.8",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.1",
+    "tesseract.js": "^2.1.5",
+    "twit": "^2.2.11",
+    "user-agents": "^1.0.943",
+    "uuid": "^8.3.2",
+    "wait-on": "^6.0.1"
+  },
+  "scripts": {
+    "start": "set BROWSER=none && react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "concurrently -k \"npm start\" \"npm:electron\"",
+    "electron": "wait-on tcp:3000 && electron .",
+    "electron-pack-win": "set GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -w",
+    "electron-pack-mac": "export GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -m"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^17.0.1",
+    "electron-builder": "^22.14.13",
+    "react-error-overlay": "^6.0.9"
+  },
+  "main": "public/electron/main.js",
+  "author": {
+    "name": "Koders",
+    "url": "https://koders.in"
+  },
+  "resolutions": {
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9"
+  },
+  "build": {
+    "productName": "Kyro",
+    "appId": "com.kyro.koders",
+    "publish": {
+      "provider": "generic",
+      "url": "http://downloads.kyrotools.in"
+    },
+    "files": [
+      "build/**/*"
+    ],
+    "buildDependenciesFromSource": true,
+    "win": {
+      "artifactName": "${productName}-${version}.${ext}",
+      "target": "nsis",
+      "icon": "public/electron/img/icon.ico"
+    },
+    "dmg": {
+      "title": "Kyro",
+      "background": "public/images/mac_background.png",
+      "icon": "public/images/installer.icns"
+    },
+    "mac": {
+      "artifactName": "${productName}-${version}.${ext}",
+      "target": "dmg",
+      "icon": "public/images/icon.icns"
+    },
+    "nsis": {
+      "installerIcon": "public/images/installer.ico",
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "oneClick": "false"
+    }
+  }
+}

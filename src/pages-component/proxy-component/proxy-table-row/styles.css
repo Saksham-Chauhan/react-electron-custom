@@ -1,0 +1,25 @@
+.tbl-header-inner.body {
+  background: var(--table-row);
+  padding: 0.8em 1em;
+  border-radius: 5px;
+  margin-bottom: 0.6em;
+  width: 99.5%;
+}
+.tbl-header-inner.body > .tbl-header-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-transform: unset;
+  color: var(--primary);
+}
+.tbl-header-inner.body > .tbl-header-title.body {
+  opacity: 1;
+}
+.tbl-header-inner.body > .tbl-header-title.body.action-col {
+  display: flex;
+  align-items: center;
+}
+.tbl-header-inner.body > .tbl-header-title.body.action-col > img {
+  height: 18px;
+  margin-right: 10px;
+}

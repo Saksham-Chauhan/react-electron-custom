@@ -1,0 +1,64 @@
+.webhook-setting-outer {
+  height: 100%;
+}
+.webhook-setting-outer > h2,
+.system-setting > label {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 17.5333px;
+  line-height: 26px;
+  color: var(--primary);
+}
+.webhook-setting-inner {
+  background: var(--sidebar-bg);
+  padding: 1em;
+  border-radius: 7px;
+  height: calc(100% - 40px);
+}
+.webhook-input-section {
+  display: flex;
+  height: 45px;
+}
+.webhook-input-section > input {
+  background: var(--btn-bg);
+  outline: none;
+  flex: 1;
+  border: none;
+  border-radius: 7.30556px;
+  padding: 0px 1em;
+  color: var(--primary);
+  font-size: 14px;
+}
+.webhook-input-section > .webhook-test {
+  background: var(--btn-bg);
+  width: 120px;
+  margin-left: 0.8em;
+  border-radius: 7.30556px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.webhook-input-section > .webhook-test > span {
+  font-weight: 600;
+  font-size: 13.1437px;
+  line-height: 20px;
+  color: var(--primary);
+}
+.setting-toggle-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.setting-toggle-with-label {
+  display: flex;
+  align-items: center;
+}
+.setting-toggle-with-label > span {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 17px;
+  margin-left: 0.5em;
+  color: #dadada;
+}
+.system-setting > label {
+}

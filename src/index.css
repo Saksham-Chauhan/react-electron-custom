@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+:root {
+  --app-bg: #0d0027;
+  --active-link-bg: #4301c7;
+  --delete: #b60e0e;
+  --red: #a31013;
+  --stop: #1e53e6;
+  --start: #2aa73b;
+  --status: #4cff00;
+  --primary-offset: 1;
+  --primary: rgba(255, 255, 255, var(--primary-offset));
+  --sidebar-bg: #311172;
+  --card-bg: #19122d;
+  --table-row: rgba(48, 52, 57, 0.35);
+  --sidebar-width: 5.5%;
+  --active-card: linear-gradient(
+    99.49deg,
+    #f40489 -10.73%,
+    rgba(191, 38, 243, 0.8) 36.84%,
+    rgba(250, 124, 87, 0.96) 84.15%
+  );
+  --btn-bg: #131a3c;
+  --placeholder: #706a6a;
+  --active-input: #30e2e7;
+  --scrollbar-bg: rgba(255, 255, 255, 0.5);
+}
+
+/* HIDE DEFAULT ARROW WHEN INPUT TYPE IS NUMBER */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

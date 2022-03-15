@@ -1,0 +1,113 @@
+.Addgmail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(48, 52, 57, 0.35);
+  backdrop-filter: blur(2px);
+  z-index: 2;
+}
+
+.title {
+  width: 80%;
+  display: flex;
+  margin-left: 53px;
+  margin-top: 30px;
+}
+
+.inputs {
+  width: 554px;
+  height: 452px;
+  border-radius: 11px;
+  background: #0d0027;
+}
+
+.security {
+  width: 83%;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.security input {
+  outline: none;
+  border: none;
+  width: 452px;
+  height: 36px;
+  background: #0d0027;
+  border: 1px solid #121638;
+  color: white;
+  border-radius: 4px;
+  padding: 0px 10px;
+  margin-top: 10px;
+}
+
+.gmail_password input::placeholder,
+.security input::placeholder {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11.6833px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: #706a6a;
+}
+
+
+.gmail_password,
+.security p {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0em;
+  text-align: left;
+  font-size: 13.1437px;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+.gmail_password {
+  width: 82%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  margin-top: 20px;
+}
+
+.gmail_password input {
+  width: 220px;
+  height: 36px;
+  outline: none;
+  border: none;
+  background: #0d0027;
+  border: 1px solid #121638;
+  color: white;
+  border-radius: 4px;
+  padding: 0px 10px;
+  margin-top: 10px;
+}
+
+.btn button {
+  background: #0d0027;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  width: 116px;
+  height: 40px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn button:last-child {
+  background: linear-gradient(
+    97.22deg,
+    #f40488 -5.68%,
+    #b825f1 44.45%,
+    #fa8056 99.99%
+  );
+}

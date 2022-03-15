@@ -1,0 +1,11 @@
+.dashboardchart {
+  width: 70%;
+  padding: 1% 0 5% 5%;
+  margin-top: 2rem;
+}
+.chartbg {
+  position: absolute;
+  top: 30%;
+  left: 17%;
+  width: 39%;
+}
