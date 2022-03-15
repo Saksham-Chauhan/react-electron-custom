@@ -98,6 +98,7 @@ class LinkOpener extends React.PureComponent {
         let content = message.content;
         let channelID = message.channel.id;
         let msgID = message.id;
+        console.log(content);
         this.checkSettingOption(content, channelID, msgID);
       });
       if (settingOption?.linkOpenerState) {
