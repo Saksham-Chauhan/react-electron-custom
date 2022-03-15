@@ -125,7 +125,7 @@ class InviteJoiner extends React.Component {
         this.setState({ selectedProxyGroup: selectedProxyGroup });
       } else {
         console.log("Destroyng monitor...");
-        this.monitor = null;
+        this.monitor.destroy();
         console.log("After destroying", this.monitor);
       }
     } else if (keywordList !== prevProps.keywordList) {
