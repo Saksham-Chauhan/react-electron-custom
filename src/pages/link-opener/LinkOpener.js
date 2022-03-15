@@ -50,41 +50,39 @@ class LinkOpener extends React.PureComponent {
 
   async checkSettingOption(content, channelID, msgID) {
     const { isStart } = this.state;
-    if (isStart) {
-      const { settingOption, channelLIST, keywordLIST, selectedChrome } =
-        this.state;
-      let channel = channelLIST;
-      let keyword = keywordLIST;
-      if (makeStrOfArr(channel).includes(channelID)) {
-        if (testUrlRegex(content)) {
-          let flag = containsKeyword(makeStrOfArr(keyword), content);
-          if (keyword.length === 0 || flag) {
-            if (checkOptions(settingOption, content)) {
-              if (settingOption.playSound) {
-                this.playSound();
-              }
-              if (Object.keys(selectedChrome).length > 0) {
-                open(content, {
-                  app: {
-                    name: open.apps.chrome,
-                    arguments: [
-                      `--profile-directory=${selectedChrome["value"]}`,
-                    ],
-                  },
-                });
-              } else {
-                await open(content, {
-                  app: {
-                    name: open.apps.chrome,
-                  },
-                });
-              }
-              this.props.handleSendLog(content, msgID);
+    // if (isStart) {
+    const { settingOption, channelLIST, keywordLIST, selectedChrome } =
+      this.state;
+    let channel = channelLIST;
+    let keyword = keywordLIST;
+    if (makeStrOfArr(channel).includes(channelID)) {
+      if (testUrlRegex(content)) {
+        let flag = containsKeyword(makeStrOfArr(keyword), content);
+        if (keyword.length === 0 || flag) {
+          if (checkOptions(settingOption, content)) {
+            if (settingOption.playSound) {
+              this.playSound();
             }
+            if (Object.keys(selectedChrome).length > 0) {
+              open(content, {
+                app: {
+                  name: open.apps.chrome,
+                  arguments: [`--profile-directory=${selectedChrome["value"]}`],
+                },
+              });
+            } else {
+              await open(content, {
+                app: {
+                  name: open.apps.chrome,
+                },
+              });
+            }
+            this.props.handleSendLog(content, msgID);
           }
         }
       }
     }
+    // }
   }
 
   componentDidMount() {
