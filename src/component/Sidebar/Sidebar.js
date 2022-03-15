@@ -113,7 +113,7 @@ const Sidebar = () => {
           defaultIcon={defaultUpdate}
           activeIcon={activeUpdate}
           activeClass="update"
-          oneClick={checkForUpdates}
+          onClick={checkForUpdates}
         />
         <p>V: {pjson.version}</p>
       </div>

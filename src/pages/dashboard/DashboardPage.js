@@ -27,7 +27,7 @@ import {
   fetchSpoofTableList,
   fetchTwitterKeywordList,
 } from "../../features/counterSlice";
-import { ComingSoon } from "../../modals";
+
 const DashboardPage = () => {
   //GET PROXY LIST
   const proxyList = useSelector(fetchProxyGroupList);

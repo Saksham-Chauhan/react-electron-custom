@@ -151,6 +151,9 @@ export const counterSlice = createSlice({
     toggleIJMonitor: (state) => {
       state.isInviteJoinerStart = !state.isInviteJoinerStart;
     },
+    resetIJMonitor: (state) => {
+      state.isInviteJoinerStart = false;
+    },
     setIsIJmodal: (state) => {
       state.isInviteJoinerModal = !state.isInviteJoinerModal;
     },
@@ -168,6 +171,7 @@ export const counterSlice = createSlice({
 
 export const {
   appendApInList,
+  resetIJMonitor,
   setInviteProxyGroup,
   setInviteJoinerDelay,
   setSelectedClaimerGroup,

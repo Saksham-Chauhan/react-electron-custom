@@ -6,7 +6,6 @@ import {
   fetchProxyGroupList,
   fetchSafeModeDelayState,
   fetchSelctedInviteProxyGroup,
-  fetchSelectedClaimerTokenInviteJoiner,
   setEditStorage,
   setInviteJoinerDelay,
   setInviteProxyGroup,

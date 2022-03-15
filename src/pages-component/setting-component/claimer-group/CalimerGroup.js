@@ -8,7 +8,6 @@ import { AppSpacer } from "../../../component";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchClaimerGroupList,
-  fetchSelectedClaimerGroupState,
   setEditStorage,
   setModalState,
 } from "../../../features/counterSlice";

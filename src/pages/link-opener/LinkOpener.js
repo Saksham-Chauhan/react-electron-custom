@@ -25,6 +25,7 @@ import { makeLogText, makeStrOfArr } from "../../helper";
 import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
+import { toastInfo } from "../../toaster";
 
 const { Client } = window.require("discord.js-selfbot");
 const open = window.require("open");
@@ -87,13 +88,14 @@ class LinkOpener extends React.PureComponent {
     try {
       this.monitor.on("ready", () => {
         console.log("Link opener is Ready..");
+        toastInfo("Link opener is ready!!");
       });
       this.monitor.on("message", async (message) => {
         let content = message.content;
         let channelID = message.channel.id;
         let msgID = message.id;
-
-        this.checkSettingOption(content, channelID, msgID);
+        if (settingOption?.linkOpenerState)
+          this.checkSettingOption(content, channelID, msgID);
       });
       if (settingOption?.linkOpenerState) {
         console.log("Already Opened so don't open Again");
@@ -132,7 +134,6 @@ class LinkOpener extends React.PureComponent {
         } else {
           console.log("Destroy monitor...");
           this.monitor.destroy();
-          console.log("After destroying", this.monitor.user);
         }
       } else if (prevProps.settingOption !== settingOption) {
         this.setState({ settingOption: settingOption });

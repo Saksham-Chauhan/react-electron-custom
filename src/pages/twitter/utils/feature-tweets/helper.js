@@ -1,6 +1,4 @@
-// import axios from "axios";
 import { generateId } from "../../../../helper";
-const open = window.require("open");
 
 function isEmpty(values) {
   const isEmpty =

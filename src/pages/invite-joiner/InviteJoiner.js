@@ -25,10 +25,11 @@ import {
 import helper from "../twitter/utils/feature-tweets/helper";
 import { checkDiscordInvite } from "../link-opener/utils";
 import { discordServerInviteAPI } from "../../api";
+import { toastInfo } from "../../toaster";
 
 const { Client } = window.require("discord.js-selfbot");
 
-class InviteJoiner extends React.PureComponent {
+class InviteJoiner extends React.Component {
   monitor = new Client();
   constructor(props) {
     super(props);
@@ -85,6 +86,7 @@ class InviteJoiner extends React.PureComponent {
     try {
       this.monitor.on("ready", () => {
         console.log("Invite joiner is Ready..");
+        toastInfo("Invite joiner is ready!!");
       });
       this.monitor.on("message", async (message) => {
         let content = message.content;
@@ -113,6 +115,7 @@ class InviteJoiner extends React.PureComponent {
       selectedToken !== prevProps.selectedToken
     ) {
       if (ijMonitorState) {
+        this.monitor = new Client();
         console.log("Starting monitor...");
         if (discordTokenRegExp.test(selectedToken["discordToken"])) {
           this.monitor.login(selectedToken["discordToken"]);
@@ -121,9 +124,9 @@ class InviteJoiner extends React.PureComponent {
         this.setState({ selectedClaimerGroup: selectedClaimerGroup });
         this.setState({ selectedProxyGroup: selectedProxyGroup });
       } else {
-        console.log("Destroy monitor...");
-        this.monitor.destroy();
-        console.log("After destroying", this.monitor.user);
+        console.log("Destroyng monitor...");
+        this.monitor = null;
+        console.log("After destroying", this.monitor);
       }
     } else if (keywordList !== prevProps.keywordList) {
       this.setState({ keywordList: keywordList });

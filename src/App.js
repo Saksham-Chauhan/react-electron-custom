@@ -15,6 +15,7 @@ import {
   fetchWebhookSettingState,
   fetchLoggedUserDetails,
   setUserDetails,
+  resetIJMonitor,
 } from "./features/counterSlice";
 import {
   ProxyGroupModal,
@@ -79,6 +80,7 @@ function App() {
     dispatch(closelinkOpenerMonitor());
     dispatch(resetSpooferStatus());
     dispatch(resetTwitterMonitor());
+    dispatch(resetIJMonitor());
     spooferToaster((data) => {
       if (Object.keys(data).length > 0) {
         dispatch(updateSpooferStatus(data));
