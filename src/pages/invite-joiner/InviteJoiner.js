@@ -127,10 +127,13 @@ class InviteJoiner extends React.Component {
         this.setState({ keywordList: keywordList });
         this.setState({ selectedClaimerGroup: selectedClaimerGroup });
         this.setState({ selectedProxyGroup: selectedProxyGroup });
+        this.setState({ isStart: true });
       } else {
         console.log("Destroyng monitor...");
         this.monitor.destroy();
-        this.setState({ isStart: false });
+        if (this.monitor.user !== null) {
+          this.setState({ isStart: false });
+        }
         console.log("After destroying", this.monitor.user);
       }
     } else if (keywordList !== prevProps.keywordList) {
@@ -141,11 +144,6 @@ class InviteJoiner extends React.Component {
       this.setState({ selectedProxyGroup: selectedProxyGroup });
     }
   }
-
-  doSomething = () => {
-    this.monitor.destroy();
-    console.log(this.monitor);
-  };
 
   sleep() {
     const { safeDelayIJtime } = this.props;
