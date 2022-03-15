@@ -115,7 +115,6 @@ class InviteJoiner extends React.Component {
       selectedToken !== prevProps.selectedToken
     ) {
       if (ijMonitorState) {
-        this.monitor = new Client();
         console.log("Starting monitor...");
         if (discordTokenRegExp.test(selectedToken["discordToken"])) {
           this.monitor.login(selectedToken["discordToken"]);
