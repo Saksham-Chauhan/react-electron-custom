@@ -63,15 +63,17 @@ class LinkOpener extends React.PureComponent {
               if (settingOption.playSound) {
                 this.playSound();
               }
-              if (Object.keys(selectedChrome).length > 0) {
-                open(content, {
-                  app: {
-                    name: open.apps.chrome,
-                    arguments: [
-                      `--profile-directory=${selectedChrome["value"]}`,
-                    ],
-                  },
-                });
+              if (selectedChrome !== null) {
+                if (Object.keys(selectedChrome).length > 0) {
+                  await open(content, {
+                    app: {
+                      name: open.apps.chrome,
+                      arguments: [
+                        `--profile-directory=${selectedChrome["value"]}`,
+                      ],
+                    },
+                  });
+                }
               } else {
                 await open(content, {
                   app: {
