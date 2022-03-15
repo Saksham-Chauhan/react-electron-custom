@@ -39,6 +39,7 @@ class LinkOpener extends React.PureComponent {
       keywordLIST: [],
       channelLIST: [],
       selectedChrome: {},
+      isStart: true,
     };
   }
 
@@ -48,35 +49,38 @@ class LinkOpener extends React.PureComponent {
   }
 
   async checkSettingOption(content, channelID, msgID) {
-    const { settingOption, channelLIST, keywordLIST, selectedChrome } =
-      this.state;
-    let channel = channelLIST;
-    let keyword = keywordLIST;
-
-    if (makeStrOfArr(channel).includes(channelID)) {
-      if (testUrlRegex(content)) {
-        let flag = containsKeyword(makeStrOfArr(keyword), content);
-        if (keyword.length === 0 || flag) {
-          if (checkOptions(settingOption, content)) {
-            console.log("AFTER", settingOption);
-            if (settingOption.playSound) {
-              this.playSound();
+    const { isStart } = this.state;
+    if (isStart) {
+      const { settingOption, channelLIST, keywordLIST, selectedChrome } =
+        this.state;
+      let channel = channelLIST;
+      let keyword = keywordLIST;
+      if (makeStrOfArr(channel).includes(channelID)) {
+        if (testUrlRegex(content)) {
+          let flag = containsKeyword(makeStrOfArr(keyword), content);
+          if (keyword.length === 0 || flag) {
+            if (checkOptions(settingOption, content)) {
+              if (settingOption.playSound) {
+                this.playSound();
+              }
+              if (Object.keys(selectedChrome).length > 0) {
+                open(content, {
+                  app: {
+                    name: open.apps.chrome,
+                    arguments: [
+                      `--profile-directory=${selectedChrome["value"]}`,
+                    ],
+                  },
+                });
+              } else {
+                await open(content, {
+                  app: {
+                    name: open.apps.chrome,
+                  },
+                });
+              }
+              this.props.handleSendLog(content, msgID);
             }
-            if (Object.keys(selectedChrome).length > 0) {
-              open(content, {
-                app: {
-                  name: open.apps.chrome,
-                  arguments: [`--profile-directory=${selectedChrome["value"]}`],
-                },
-              });
-            } else {
-              await open(content, {
-                app: {
-                  name: open.apps.chrome,
-                },
-              });
-            }
-            this.props.handleSendLog(content, msgID);
           }
         }
       }
@@ -94,8 +98,7 @@ class LinkOpener extends React.PureComponent {
         let content = message.content;
         let channelID = message.channel.id;
         let msgID = message.id;
-        if (settingOption?.linkOpenerState)
-          this.checkSettingOption(content, channelID, msgID);
+        this.checkSettingOption(content, channelID, msgID);
       });
       if (settingOption?.linkOpenerState) {
         console.log("Already Opened so don't open Again");
@@ -134,7 +137,7 @@ class LinkOpener extends React.PureComponent {
         } else {
           console.log("Destroy monitor...");
           this.monitor.destroy();
-          window.location.reload();
+          this.setState({ isStart: false });
           console.log("After destroying", this.monitor.user);
         }
       } else if (prevProps.settingOption !== settingOption) {

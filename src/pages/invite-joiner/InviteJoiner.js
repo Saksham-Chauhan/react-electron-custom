@@ -38,45 +38,49 @@ class InviteJoiner extends React.Component {
       keywordList: [],
       selectedClaimerGroup: {},
       selectedProxyGroup: {},
+      isStart: true,
     };
   }
 
   checkingMessage(content, channelID, msgID) {
-    const { keywordList, selectedClaimerGroup, selectedProxyGroup } =
-      this.state;
-    if (makeStrOfArr(keywordList).includes(channelID)) {
-      let isInviteLink = checkDiscordInvite(content);
-      let inviteCode = helper.isDiscordInvite(content);
-      if (inviteCode && isInviteLink) {
-        const proxyArr = selectedProxyGroup["value"]?.split("\n");
-        for (let index = 0; index < proxyArr.length; index++) {
-          let proxySplit = proxyArr[index]?.split(":");
-          const proxy = {
-            host: proxySplit[0],
-            port: proxySplit[1],
-            auth: {
-              username: proxySplit[2],
-              password: proxySplit[3],
-            },
-          };
-          let tokenArray = selectedClaimerGroup["value"]?.split("\n");
-          tokenArray.forEach(async (token) => {
-            await this.sleep();
-            try {
-              const info = await discordServerInviteAPI(
-                inviteCode,
-                token,
-                proxy
-              );
-              if (info.status === 200) {
-                let result = `Joined ${info.data.guild.name} server 🥳 `;
-                this.props.handleSendLog(result, msgID);
-                console.log("Joined the server", info.data.guild);
+    const { isStart } = this.state;
+    if (isStart) {
+      const { keywordList, selectedClaimerGroup, selectedProxyGroup } =
+        this.state;
+      if (makeStrOfArr(keywordList).includes(channelID)) {
+        let isInviteLink = checkDiscordInvite(content);
+        let inviteCode = helper.isDiscordInvite(content);
+        if (inviteCode && isInviteLink) {
+          const proxyArr = selectedProxyGroup["value"]?.split("\n");
+          for (let index = 0; index < proxyArr.length; index++) {
+            let proxySplit = proxyArr[index]?.split(":");
+            const proxy = {
+              host: proxySplit[0],
+              port: proxySplit[1],
+              auth: {
+                username: proxySplit[2],
+                password: proxySplit[3],
+              },
+            };
+            let tokenArray = selectedClaimerGroup["value"]?.split("\n");
+            tokenArray.forEach(async (token) => {
+              await this.sleep();
+              try {
+                const info = await discordServerInviteAPI(
+                  inviteCode,
+                  token,
+                  proxy
+                );
+                if (info.status === 200) {
+                  let result = `Joined ${info.data.guild.name} server 🥳 `;
+                  this.props.handleSendLog(result, msgID);
+                  console.log("Joined the server", info.data.guild);
+                }
+              } catch (err) {
+                console.log("Error in joining server", err.message);
               }
-            } catch (err) {
-              console.log("Error in joining server", err.message);
-            }
-          });
+            });
+          }
         }
       }
     }
@@ -126,7 +130,7 @@ class InviteJoiner extends React.Component {
       } else {
         console.log("Destroyng monitor...");
         this.monitor.destroy();
-        window.location.reload();
+        this.setState({ isStart: false });
         console.log("After destroying", this.monitor.user);
       }
     } else if (keywordList !== prevProps.keywordList) {
@@ -211,14 +215,14 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     keywordList: fetchIJChannelList(state),
-    accountList: fetchDiscordAccountList(state),
-    ijMonitorState: fetchIJMonitorState(state),
     logList: fetchInviteJoinerLogState(state),
-    selectedToken: fetchSelectedClaimerTokenInviteJoiner(state),
-    isMonitorStart: fetchIsInviteJoinerModalState(state),
-    selectedClaimerGroup: fetchSelectedClaimerGroupState(state),
-    selectedProxyGroup: fetchSelctedInviteProxyGroup(state),
+    ijMonitorState: fetchIJMonitorState(state),
+    accountList: fetchDiscordAccountList(state),
     safeDelayIJtime: fetchSafeModeDelayState(state),
+    isMonitorStart: fetchIsInviteJoinerModalState(state),
+    selectedProxyGroup: fetchSelctedInviteProxyGroup(state),
+    selectedClaimerGroup: fetchSelectedClaimerGroupState(state),
+    selectedToken: fetchSelectedClaimerTokenInviteJoiner(state),
   };
 };
 
