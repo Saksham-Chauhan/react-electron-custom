@@ -18,6 +18,9 @@ import {
   fetchDiscordAccountList,
   fetchLinkOpenerLogState,
   fetchSelectedMinitorTokenLinkOpener,
+  fetchWebhookSettingState,
+  fetchWebhookListState,
+  fetchLoggedUserDetails,
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
@@ -52,6 +55,7 @@ class LinkOpener extends React.PureComponent {
   }
 
   async checkSettingOption(content, channelID, msgID) {
+    const { user } = this.props;
     const { isStart, webhookSetting, webhookList } = this.state;
     if (isStart) {
       const { settingOption, channelLIST, keywordLIST, selectedChrome } =
@@ -86,8 +90,12 @@ class LinkOpener extends React.PureComponent {
               }
               this.props.handleSendLog(content, msgID);
               if (webhookSetting?.linkOpener) {
-                console.log("TEST", webhookList);
-                await linkOpenerWebhook(content, webhookList[0]);
+                await linkOpenerWebhook(
+                  content,
+                  user.username,
+                  user.avatar,
+                  webhookList[0]
+                );
               }
             }
           }
@@ -167,7 +175,7 @@ class LinkOpener extends React.PureComponent {
       } else if (prevProps.selectedChrome !== selectedChrome) {
         this.setState({ selectedChrome: selectedChrome });
       } else if (
-        prevProps.webhookSetting.linkOpener !== webhookSetting.linkOpener
+        prevProps.webhookSetting?.linkOpener !== webhookSetting?.linkOpener
       ) {
         this.setState({ webhookSetting: webhookSetting });
       } else if (prevProps.webhookList !== webhookList) {
@@ -185,8 +193,10 @@ class LinkOpener extends React.PureComponent {
       settingOption,
       handleOpenModal,
       selectedMonitorToken,
+      webhookSetting,
     } = this.props;
 
+    console.log(webhookSetting);
     return (
       <div className="page-section">
         <div className="left-container">
@@ -251,6 +261,9 @@ const mapStateToProps = (state) => {
     accountList: fetchDiscordAccountList(state),
     selectedChrome: fetchLOchromeUserState(state),
     selectedMonitorToken: fetchSelectedMinitorTokenLinkOpener(state),
+    webhookSetting: fetchWebhookSettingState(state),
+    webhookList: fetchWebhookListState(state),
+    user: fetchLoggedUserDetails(state),
   };
 };
 

@@ -10,7 +10,7 @@ const ping = require("ping");
 const spooferManager = require("./script/manager/spoof-manager");
 const auth = require("./auth");
 const fetchTweets = require("./helper/fetchTweet");
-const fs = require("fs");
+const richPresence = require("discord-rich-presence")("938338403106320434");
 const testNetworkSpeed = new NetworkSpeed();
 
 let win = null;
@@ -73,28 +73,31 @@ function destroyAuthWin() {
 
 // MAIN WINDOW CREATOR
 function createWindow() {
-  //   try {
-  //     richPresence.updatePresence({
-  //       details: "Developing The Kyro Tools",
-  //       state: `V${app.getVersion()}`,
-  //       startTimestamp: Date.now(),
-  //       largeImageKey: "logo",
-  //       largeImageText: "@getKyroTools",
-  //       smallImageKey: "hearteyes",
-  //       smallImageText: "Kyro Tools",
-  //       instance: true,
-  //       buttons: [{ label: "TWITTER", url: "https://twitter.com/KyroTools" }],
-  //     });
-  //   } catch (err) {
-  //     console.log("Error in Disocrd RPC Wrapper", err.message);
-  //   }
+  try {
+    richPresence.updatePresence({
+      details: "Playing Kyro Tools",
+      state: `V${app.getVersion()}`,
+      startTimestamp: Date.now(),
+      largeImageKey: "logo",
+      largeImageText: "@getKyroTools",
+      smallImageKey: "hearteyes",
+      smallImageText: "Kyro Tools",
+      instance: true,
+      buttons: [
+        { label: "Follow us", url: "https://twitter.com/ToolsKyro" },
+        { label: "Join us", url: "https://discord.gg/vSSezmnv2H" },
+      ],
+    });
+  } catch (err) {
+    console.log("Error in Disocrd RPC Wrapper", err.message);
+  }
   mainWindow = new BrowserWindow({
     width: 1402,
     height: 800,
     resizable: true,
     frame: false,
     show: false,
-    backgroundColor: "var(--main-bg)",
+    backgroundColor: "var(--app-bg)",
     icon: path.resolve(__dirname, "img", "logo.png"),
     webPreferences: {
       nodeIntegration: true,

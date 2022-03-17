@@ -52,7 +52,7 @@ function WebhookSetting({ userDetails }) {
         dispatch(appendWebhookInList(webhook));
         setWebhook("");
       }
-    }
+    } else toastWarning("Enter valid Discord webhook");
   };
 
   return (

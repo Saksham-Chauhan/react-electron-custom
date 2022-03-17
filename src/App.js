@@ -94,7 +94,7 @@ function App() {
       if (user !== null) {
         const decode = decodeUser(user);
         if (globalSetting?.logOnOff) {
-          let title = `${decode.username}#${decode.discriminator} Just Log In 🥰 🥳 `;
+          let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
           await loggedUserWebhook(title, webhookList[0]);
         }
         dispatch(setUserDetails(decode));

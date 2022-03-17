@@ -27,7 +27,7 @@ function UserProfile({ userDetails }) {
 
   const handleLogout = async () => {
     if (option?.logOnOff) {
-      let title = `${userDetails.username}#${userDetails.discriminator} LOG OUT 🥲 `;
+      let title = `${userDetails.username}#${userDetails.discriminator} Log out 🥲 `;
       await loggedUserWebhook(title, webhookList[0]);
     }
     dispatch(setUserDetails({}));

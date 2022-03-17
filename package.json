@@ -13,6 +13,7 @@
     "chart.js": "^3.7.1",
     "concurrently": "^7.0.0",
     "current-processes": "^0.2.1",
+    "discord-rich-presence": "^0.0.8",
     "discord.js-selfbot": "^12.0.2",
     "electron-is-dev": "^2.0.0",
     "electron-updater": "^4.6.5",

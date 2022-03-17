@@ -1,21 +1,23 @@
 import axios from "axios";
+const KYRO_URL = "https://www.kyrotools.in/";
+const FOOTER = {
+  text: "Made with ❤️ by Koders",
+};
+const TITLE = "Kyro tool";
+const THUMB_NAIL = {
+  url: "https://cdn.discordapp.com/attachments/540447710239784971/953925375149355008/Kyros_logo.png",
+};
 
 async function webhookHandler(webhook, user, title, content) {
   let embed = {
     embeds: [
       {
-        title: "Kyros tool",
+        title: TITLE,
         description: title + "\t\t\t\t\t" + content,
-        url: "https://www.twitter.com/home",
+        url: KYRO_URL,
         color: 857138,
-        footer: {
-          icon_url:
-            "https://www.freepnglogos.com/uploads/twitter-logo-png/twitter-logo-vector-png-clipart-1.png",
-          text: "Twitter monitor Webhook",
-        },
-        thumbnail: {
-          url: "https://www.twitter.com/home",
-        },
+        footer: FOOTER,
+        thumbnail: THUMB_NAIL,
         author: {
           name: `New Tweet By ${user.name}`,
           url: "https://www.twitter.com/home",
@@ -35,15 +37,14 @@ export const webhookTest = async (webhook, userName, avatarProfile) => {
       {
         title: "Webhook Testing",
         description: "Webhook test successfully",
-        url: "https://www.koders.in/",
+        url: KYRO_URL,
         color: 857138,
-        thumbnail: {
-          url: avatarProfile,
-        },
+        thumbnail: THUMB_NAIL,
         author: {
           name: `Test webhook by ${userName}`,
           icon_url: avatarProfile,
         },
+        footer: FOOTER,
       },
     ],
   };
@@ -60,17 +61,12 @@ export const inviteJoinerTest = async (
   let embed = {
     embeds: [
       {
-        title: "Kyros tool",
+        title: TITLE,
         description: `${serverName} server joined successfully`,
-        url: "https://www.koders.in/",
+        url: KYRO_URL,
         color: 857138,
-        thumbnail: {
-          url: "https://www.twitter.com/home",
-        },
-        // author: {
-        //   name: `Invite joiner monitor ${userName}`,
-        //   icon_url: avatarProfile,
-        // },
+        thumbnail: THUMB_NAIL,
+        footer: FOOTER,
       },
     ],
   };
@@ -82,17 +78,12 @@ export const loggedUserWebhook = async (title, webhook) => {
   let embed = {
     embeds: [
       {
-        title: "Kyros tool",
+        title: TITLE,
         description: title,
-        url: "https://www.koders.in/",
+        url: KYRO_URL,
         color: 857138,
-        thumbnail: {
-          url: "https://www.twitter.com/home",
-        },
-        // author: {
-        //   name: `Invite joiner monitor ${userName}`,
-        //   icon_url: avatarProfile,
-        // },
+        thumbnail: THUMB_NAIL,
+        footer: FOOTER,
       },
     ],
   };
@@ -100,21 +91,25 @@ export const loggedUserWebhook = async (title, webhook) => {
   await axios.post(webhook, embed);
 };
 
-export const linkOpenerWebhook = async (link, webhook) => {
+export const linkOpenerWebhook = async (
+  link,
+  userName,
+  avatarProfile,
+  webhook
+) => {
   let embed = {
     embeds: [
       {
-        title: "Kyros tool",
-        description: `${link} link opened`,
-        url: "https://www.koders.in/",
+        title: TITLE,
+        description: `${link} Link Opened`,
+        url: KYRO_URL,
         color: 857138,
-        thumbnail: {
-          url: "https://www.twitter.com/home",
+        thumbnail: THUMB_NAIL,
+        author: {
+          name: `Invite joiner monitor ${userName}`,
+          icon_url: avatarProfile,
         },
-        // author: {
-        //   name: `Invite joiner monitor ${userName}`,
-        //   icon_url: avatarProfile,
-        // },
+        footer: FOOTER,
       },
     ],
   };
