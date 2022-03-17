@@ -108,7 +108,7 @@ const DashboardPage = () => {
   return (
     <div className="dashboard">
       <TopWrapper>
-        <GroupStatusCard title="Dasahboard" isHide={true} />
+        <GroupStatusCard title="Dashboard" isHide={true} />
       </TopWrapper>
       <div className="dashboard-buttons">
         {buttonsData.map((item, i) => {
