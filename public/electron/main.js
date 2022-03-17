@@ -76,16 +76,20 @@ function createWindow() {
   try {
     richPresence.updatePresence({
       details: "Playing Kyro Tools",
-      state: `V${app.getVersion()}`,
+      state: `v:${app.getVersion()}`,
       startTimestamp: Date.now(),
-      largeImageKey: "logo",
+      largeImageKey: "kyros_logo",
       largeImageText: "@getKyroTools",
-      smallImageKey: "hearteyes",
+      smallImageKey: "emoji",
       smallImageText: "Kyro Tools",
       instance: true,
       buttons: [
-        { label: "Follow us", url: "https://twitter.com/ToolsKyro" },
-        { label: "Join us", url: "https://discord.gg/vSSezmnv2H" },
+        { label: "Twitter", url: "https://twitter.com/KyroTools" },
+        {
+          label: "Discord",
+          url: "https://discord.gg/vSSezmnv2H",
+          backgroundColor: "#5865F2",
+        },
       ],
     });
   } catch (err) {
