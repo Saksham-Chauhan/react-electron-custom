@@ -21,12 +21,12 @@ import oneclick from "../../assests/activeDefault/nft-default.svg";
 import invite from "../../assests/images/discord-dash.svg";
 import { useSelector } from "react-redux";
 import {
-  fetchClaimerDiscordAccountList,
+  fetchInviteJoinerLogState,
   fetchDashboardModalState,
-  fetchDiscordAccountList,
+  fetchLinkOpenerLogState,
   fetchProxyGroupList,
   fetchSpoofTableList,
-  fetchTwitterKeywordList,
+  fetchLatestTweetList,
 } from "../../features/counterSlice";
 import { WelcomeScreen } from "../../modals";
 
@@ -38,13 +38,16 @@ const DashboardPage = () => {
   const modalState = useSelector(fetchDashboardModalState);
 
   //GET STATE OF LINK OPNER
-  const linkOpnerList = useSelector(fetchDiscordAccountList);
+  let linkData = useSelector(fetchLinkOpenerLogState);
+  const linkOpnerList = Object.keys(linkData).length;
 
   //GET STATE OF INVITE JOINER
-  const inviteJoinerList = useSelector(fetchClaimerDiscordAccountList);
+  let inviteData = useSelector(fetchInviteJoinerLogState);
+  const inviteJoinerList = Object.keys(inviteData).length;
 
   //GET STATE OF TWITTER
-  const twitterList = useSelector(fetchTwitterKeywordList);
+  let tweetsData = useSelector(fetchLatestTweetList);
+  let twitterList = Object.keys(tweetsData).length;
 
   //GET STATE OF SPOOFER
   const spoofList = useSelector(fetchSpoofTableList);
@@ -63,19 +66,19 @@ const DashboardPage = () => {
       to: RoutePath.linkOpener,
       image: linkOpner,
       text: "Link Opener",
-      value: linkOpnerList.length ? linkOpnerList.length : "0",
+      value: linkOpnerList ? linkOpnerList : "0",
     },
     {
       to: RoutePath.inviteJoiner,
       image: invite,
       text: "Invite Joiner",
-      value: inviteJoinerList.length ? inviteJoinerList.length : "0",
+      value: inviteJoinerList ? inviteJoinerList : "0",
     },
     {
       to: RoutePath.twitter,
       image: twitter,
       text: "Twitter Monitor",
-      value: twitterList.length ? twitterList.length : "0",
+      value: twitterList ? twitterList : "0",
     },
     {
       to: RoutePath.spoofer,

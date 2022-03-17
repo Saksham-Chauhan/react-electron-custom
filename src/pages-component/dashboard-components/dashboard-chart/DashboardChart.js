@@ -28,12 +28,12 @@ import {
   fetchSpoof,
   fetchSpoofTableList,
   fetchTweets,
-  fetchTwitterKeywordList,
   updateTweetsArray,
   updateSpoofArray,
   updateLinkArray,
   updateInviteArray,
   fetchLinkOpenerLogState,
+  fetchLatestTweetList,
   fetchInviteJoinerLogState,
 } from "../../../features/counterSlice";
 
@@ -99,7 +99,7 @@ const DashboardChart = () => {
   //GET STATE OF LINK OPNER,INVITE JOINER,TWITTER AND SPOOFER
   const discord = useSelector(fetchLinkOpenerLogState);
   const inviteJoinerobj = useSelector(fetchInviteJoinerLogState);
-  const twitterList = useSelector(fetchTwitterKeywordList);
+  const twitterList = useSelector(fetchLatestTweetList);
   const spoofList = useSelector(fetchSpoofTableList);
   const lastDate = useSelector(fetchLastDate);
 
@@ -112,7 +112,7 @@ const DashboardChart = () => {
   // //PAGES DATA GETTING FROM REDUCERS
   const linkOpnerData = Object.keys(discord).length;
   const inviteJoinerData = Object.keys(inviteJoinerobj).length;
-  const twitterData = twitterList.length;
+  const twitterData = Object.keys(twitterList).length;
   const spooferData = spoofList.length;
 
   // //FOR CHART
@@ -128,6 +128,13 @@ const DashboardChart = () => {
     let t = [...tw];
     let s = [...sp];
     const setPagesData = () => {
+      if (linkOpnerData === 0) dispatch(addlastWeekLink(0));
+      if (inviteJoinerData === 0) dispatch(addlastWeekInvite(0));
+      if (twitterData === 0) dispatch(addlastWeekTweets(0));
+      if (spooferData === 0) dispatch(addlastWeekSpoofs(spooferData));
+
+      if (spooferData < lastWeekSpoof) dispatch(addlastWeekSpoofs(spooferData));
+
       let date = new Date();
       let day = date.getDay();
       if (day > lastDate) {
@@ -139,26 +146,26 @@ const DashboardChart = () => {
       }
       if (day === 0) {
         l = [0, 0, 0, 0, 0, 0, 0];
-        l[day] = linkOpnerData - lastWeekLink;
+        l[day - 1] = linkOpnerData - lastWeekLink;
         dispatch(updateLinkArray(l));
         i = [0, 0, 0, 0, 0, 0, 0];
-        i[day] = inviteJoinerData - lastWeekInvites;
+        i[day - 1] = inviteJoinerData - lastWeekInvites;
         dispatch(updateInviteArray(i));
         t = [0, 0, 0, 0, 0, 0, 0];
-        t[day] = twitterData - lastWeekTweets;
+        t[day - 1] = twitterData - lastWeekTweets;
         dispatch(updateTweetsArray(t));
         s = [0, 0, 0, 0, 0, 0, 0];
-        s[day] = spooferData - lastWeekSpoof;
+        s[day - 1] = spooferData - lastWeekSpoof;
         dispatch(updateSpoofArray(s));
-        dispatch(addlastDate(day));
+        dispatch(addlastDate(day - 1));
       } else {
-        l[day] = linkOpnerData - lastWeekLink;
+        l[day - 1] = linkOpnerData - lastWeekLink;
         dispatch(updateLinkArray(l));
-        i[day] = inviteJoinerData - lastWeekInvites;
+        i[day - 1] = inviteJoinerData - lastWeekInvites;
         dispatch(updateInviteArray(i));
-        t[day] = twitterData - lastWeekTweets;
+        t[day - 1] = twitterData - lastWeekTweets;
         dispatch(updateTweetsArray(t));
-        s[day] = spooferData - lastWeekSpoof;
+        s[day - 1] = spooferData - lastWeekSpoof;
         dispatch(updateSpoofArray(s));
       }
     };
