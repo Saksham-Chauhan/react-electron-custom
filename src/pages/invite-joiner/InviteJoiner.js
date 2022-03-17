@@ -164,7 +164,9 @@ class InviteJoiner extends React.Component {
       this.setState({ selectedClaimerGroup: selectedClaimerGroup });
     } else if (prevProps.selectedProxyGroup !== selectedProxyGroup) {
       this.setState({ selectedProxyGroup: selectedProxyGroup });
-    } else if (prevProps.webhookSetting !== webhookSetting) {
+    } else if (
+      prevProps.webhookSetting?.inviteJoiner !== webhookSetting?.inviteJoiner
+    ) {
       this.setState({ webhookSetting: webhookSetting });
     } else if (prevProps.webhookList !== webhookList) {
       this.setState({ webhookList: webhookList });

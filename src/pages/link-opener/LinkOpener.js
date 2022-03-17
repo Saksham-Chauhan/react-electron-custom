@@ -86,6 +86,7 @@ class LinkOpener extends React.PureComponent {
               }
               this.props.handleSendLog(content, msgID);
               if (webhookSetting?.linkOpener) {
+                console.log("TEST", webhookList);
                 await linkOpenerWebhook(content, webhookList[0]);
               }
             }
@@ -165,7 +166,9 @@ class LinkOpener extends React.PureComponent {
         this.setState({ channelLIST: channelList });
       } else if (prevProps.selectedChrome !== selectedChrome) {
         this.setState({ selectedChrome: selectedChrome });
-      } else if (prevProps.webhookSetting !== webhookSetting) {
+      } else if (
+        prevProps.webhookSetting.linkOpener !== webhookSetting.linkOpener
+      ) {
         this.setState({ webhookSetting: webhookSetting });
       } else if (prevProps.webhookList !== webhookList) {
         this.setState({ webhookList: webhookList });
