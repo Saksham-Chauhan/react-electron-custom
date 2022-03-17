@@ -144,6 +144,8 @@ class LinkOpener extends React.PureComponent {
           selectedChrome: selectedChrome,
           isStart: true,
         });
+        this.setState({ webhookSetting: webhookSetting });
+        this.setState({ webhookList: webhookList });
         if (settingOption?.linkOpenerState) {
           if (discordTokenRegExp.test(discordToken)) {
             this.monitor.login(discordToken);
@@ -154,7 +156,6 @@ class LinkOpener extends React.PureComponent {
           if (this.monitor.user !== null) {
             this.setState({ isStart: false });
           }
-          console.log("After destroying", this.monitor.user);
         }
       } else if (prevProps.settingOption !== settingOption) {
         this.setState({ settingOption: settingOption });
