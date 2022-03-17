@@ -188,9 +188,11 @@ function Twitter() {
       }
     } else {
       if (name === "startAutoInviteJoiner") {
-        if (Object.keys(selectedClaimer).length > 0) {
-          dispatch(setTwitterSetting(prevState));
-        } else toastWarning("Select Claimer group");
+        if (selectedChrome !== undefined && selectedChrome !== null) {
+          if (Object.keys(selectedClaimer).length > 0) {
+            dispatch(setTwitterSetting(prevState));
+          } else toastWarning("Select Claimer group");
+        }
       } else dispatch(setTwitterSetting(prevState));
     }
   };

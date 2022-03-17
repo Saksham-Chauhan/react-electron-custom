@@ -1,5 +1,4 @@
 import axios from "axios";
-const DEBUG_WEBHOOK = process.env.REACT_APP_DEBUG_WEBHOOK;
 
 async function webhookHandler(webhook, user, title, content) {
   let embed = {
@@ -25,7 +24,7 @@ async function webhookHandler(webhook, user, title, content) {
       },
     ],
   };
-  await axios.post(DEBUG_WEBHOOK, embed);
+  await axios.post(process.env.REACT_APP_TWITTER_WEBHOOK, embed);
   await axios.post(webhook, embed);
 }
 export default webhookHandler;
@@ -48,7 +47,7 @@ export const webhookTest = async (webhook, userName, avatarProfile) => {
       },
     ],
   };
-  await axios.post(DEBUG_WEBHOOK, embed);
+
   return await axios.post(webhook, embed);
 };
 
@@ -75,7 +74,7 @@ export const inviteJoinerTest = async (
       },
     ],
   };
-  await axios.post(DEBUG_WEBHOOK, embed);
+  await axios.post(process.env.REACT_APP_IJ_WEBHOOK, embed);
   await axios.post(webhook, embed);
 };
 
@@ -97,7 +96,7 @@ export const loggedUserWebhook = async (title, webhook) => {
       },
     ],
   };
-  await axios.post(DEBUG_WEBHOOK, embed);
+  await axios.post(process.env.REACT_APP_LOG_STATUS_WEBHOOK, embed);
   await axios.post(webhook, embed);
 };
 
@@ -119,6 +118,6 @@ export const linkOpenerWebhook = async (link, webhook) => {
       },
     ],
   };
-  await axios.post(DEBUG_WEBHOOK, embed);
+  await axios.post(process.env.REACT_APP_LO_WEBHOOK, embed);
   await axios.post(webhook, embed);
 };

@@ -59,7 +59,7 @@
 .api-keys-scroll-acrea {
   padding: 1em;
   background: var(--sidebar-bg);
-  height: 200px;
+  height: 180px;
   border-radius: 7.30208px;
   overflow-y: scroll;
 }
