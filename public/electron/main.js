@@ -100,7 +100,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: !isDev ? false : true,
+      devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
@@ -108,7 +108,7 @@ function createWindow() {
   if (isDev) {
     mainWindow.webContents.openDevTools();
   } else {
-    console.log(`This is Build Product ${app.getVersion()} Version`);
+    console.log(`This is Build Product ${app.getVersion()}`);
   }
 
   splash = new BrowserWindow({
