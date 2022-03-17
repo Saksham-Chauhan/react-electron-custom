@@ -74,6 +74,7 @@
 
 .sidebar-option-inner.spoofer:hover {
   background: url("../../assests/sidebar_animation/spoofer-animation.svg");
+  width: 22px;
 }
 
 .sidebar-option-inner.twitter:hover {
@@ -82,7 +83,7 @@
 
 .sidebar-option-inner.setting:hover {
   background: url("../../assests/sidebar_animation/settings-animation.svg");
-  background-size: 23px 20px;
+  width: 22px;
 }
 .sidebar-option-inner.update:hover {
   background: url("../../assests/sidebar_animation/updater-animation.svg");
