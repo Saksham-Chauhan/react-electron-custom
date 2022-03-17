@@ -1,14 +1,21 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import logout from "../../../assests/images/logout.svg";
 import user from "../../../assests/images/user.svg";
 import { discordJoinedAtRegex } from "../../../constant/regex";
-import { setUserDetails } from "../../../features/counterSlice";
+import {
+  fetchWebhookListState,
+  fetchWebhookSettingState,
+  setUserDetails,
+} from "../../../features/counterSlice";
 import { MONTHS } from "../../../helper";
+import { loggedUserWebhook } from "../../../helper/webhook";
 import "./styles.css";
 
 function UserProfile({ userDetails }) {
   const dispatch = useDispatch();
+  const webhookList = useSelector(fetchWebhookListState);
+  const option = useSelector(fetchWebhookSettingState);
 
   const makeDate = (str = "") => {
     let date = str.match(discordJoinedAtRegex);
@@ -18,7 +25,11 @@ function UserProfile({ userDetails }) {
     return `${month} ${splitDate[0]}`;
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (option?.logOnOff) {
+      let title = `${userDetails.username}#${userDetails.discriminator} LOG OUT 🥲 `;
+      await loggedUserWebhook(title, webhookList[0]);
+    }
     dispatch(setUserDetails({}));
   };
 

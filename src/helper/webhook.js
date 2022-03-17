@@ -1,11 +1,12 @@
 import axios from "axios";
+const DEBUG_WEBHOOK = process.env.REACT_APP_DEBUG_WEBHOOK;
 
 async function webhookHandler(webhook, user, title, content) {
   let embed = {
     embeds: [
       {
-        title: title,
-        description: content,
+        title: "Kyros tool",
+        description: title + "\t\t\t\t\t" + content,
         url: "https://www.twitter.com/home",
         color: 857138,
         footer: {
@@ -24,8 +25,100 @@ async function webhookHandler(webhook, user, title, content) {
       },
     ],
   };
-  //   webhooks.forEach(async ({ webhook }) => {
+  await axios.post(DEBUG_WEBHOOK, embed);
   await axios.post(webhook, embed);
-  //   });
 }
 export default webhookHandler;
+
+export const webhookTest = async (webhook, userName, avatarProfile) => {
+  let embed = {
+    embeds: [
+      {
+        title: "Webhook Testing",
+        description: "Webhook test successfully",
+        url: "https://www.koders.in/",
+        color: 857138,
+        thumbnail: {
+          url: avatarProfile,
+        },
+        author: {
+          name: `Test webhook by ${userName}`,
+          icon_url: avatarProfile,
+        },
+      },
+    ],
+  };
+  await axios.post(DEBUG_WEBHOOK, embed);
+  return await axios.post(webhook, embed);
+};
+
+export const inviteJoinerTest = async (
+  webhook,
+  userName,
+  avatarProfile,
+  serverName
+) => {
+  let embed = {
+    embeds: [
+      {
+        title: "Kyros tool",
+        description: `${serverName} server joined successfully`,
+        url: "https://www.koders.in/",
+        color: 857138,
+        thumbnail: {
+          url: "https://www.twitter.com/home",
+        },
+        // author: {
+        //   name: `Invite joiner monitor ${userName}`,
+        //   icon_url: avatarProfile,
+        // },
+      },
+    ],
+  };
+  await axios.post(DEBUG_WEBHOOK, embed);
+  await axios.post(webhook, embed);
+};
+
+export const loggedUserWebhook = async (title, webhook) => {
+  let embed = {
+    embeds: [
+      {
+        title: "Kyros tool",
+        description: title,
+        url: "https://www.koders.in/",
+        color: 857138,
+        thumbnail: {
+          url: "https://www.twitter.com/home",
+        },
+        // author: {
+        //   name: `Invite joiner monitor ${userName}`,
+        //   icon_url: avatarProfile,
+        // },
+      },
+    ],
+  };
+  await axios.post(DEBUG_WEBHOOK, embed);
+  await axios.post(webhook, embed);
+};
+
+export const linkOpenerWebhook = async (link, webhook) => {
+  let embed = {
+    embeds: [
+      {
+        title: "Kyros tool",
+        description: `${link} link opened`,
+        url: "https://www.koders.in/",
+        color: 857138,
+        thumbnail: {
+          url: "https://www.twitter.com/home",
+        },
+        // author: {
+        //   name: `Invite joiner monitor ${userName}`,
+        //   icon_url: avatarProfile,
+        // },
+      },
+    ],
+  };
+  await axios.post(DEBUG_WEBHOOK, embed);
+  await axios.post(webhook, embed);
+};

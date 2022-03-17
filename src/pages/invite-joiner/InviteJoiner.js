@@ -11,6 +11,8 @@ import {
   fetchSelctedInviteProxyGroup,
   fetchSelectedClaimerGroupState,
   fetchSelectedClaimerTokenInviteJoiner,
+  fetchWebhookListState,
+  fetchWebhookSettingState,
   setModalState,
 } from "../../features/counterSlice";
 import { addLogInList } from "../../features/logic/discord-account";
@@ -25,7 +27,8 @@ import {
 import helper from "../twitter/utils/feature-tweets/helper";
 import { checkDiscordInvite } from "../link-opener/utils";
 import { discordServerInviteAPI } from "../../api";
-import { toastInfo } from "../../toaster";
+import { toastInfo, toastWarning } from "../../toaster";
+import { inviteJoinerTest } from "../../helper/webhook";
 
 const { Client } = window.require("discord.js-selfbot");
 
@@ -39,14 +42,21 @@ class InviteJoiner extends React.Component {
       selectedClaimerGroup: {},
       selectedProxyGroup: {},
       isStart: true,
+      webhookSetting: {},
+      webhookList: [],
     };
   }
 
   checkingMessage(content, channelID, msgID) {
     const { isStart } = this.state;
     if (isStart) {
-      const { keywordList, selectedClaimerGroup, selectedProxyGroup } =
-        this.state;
+      const {
+        keywordList,
+        selectedClaimerGroup,
+        selectedProxyGroup,
+        webhookSetting,
+        webhookList,
+      } = this.state;
       if (makeStrOfArr(keywordList).includes(channelID)) {
         let isInviteLink = checkDiscordInvite(content);
         let inviteCode = helper.isDiscordInvite(content);
@@ -75,9 +85,18 @@ class InviteJoiner extends React.Component {
                   let result = `Joined ${info.data.guild.name} server 🥳 `;
                   this.props.handleSendLog(result, msgID);
                   console.log("Joined the server", info.data.guild);
+                  if (webhookSetting?.inviteJoiner) {
+                    await inviteJoinerTest(
+                      webhookList[0],
+                      "",
+                      "",
+                      info.data.guild.name
+                    );
+                  }
                 }
               } catch (err) {
                 console.log("Error in joining server", err.message);
+                toastWarning(`Error in joininig server ${err.message}`);
               }
             });
           }
@@ -114,6 +133,8 @@ class InviteJoiner extends React.Component {
       selectedToken,
       selectedClaimerGroup,
       selectedProxyGroup,
+      webhookSetting,
+      webhookList,
     } = this.props;
     if (
       prevProps.ijMonitorState !== ijMonitorState ||
@@ -128,13 +149,14 @@ class InviteJoiner extends React.Component {
         this.setState({ selectedClaimerGroup: selectedClaimerGroup });
         this.setState({ selectedProxyGroup: selectedProxyGroup });
         this.setState({ isStart: true });
+        this.setState({ webhookSetting: webhookSetting });
+        this.setState({ webhookList: webhookList });
       } else {
         console.log("Destroyng monitor...");
         this.monitor.destroy();
         if (this.monitor.user !== null) {
           this.setState({ isStart: false });
         }
-        console.log("After destroying", this.monitor.user);
       }
     } else if (keywordList !== prevProps.keywordList) {
       this.setState({ keywordList: keywordList });
@@ -142,6 +164,10 @@ class InviteJoiner extends React.Component {
       this.setState({ selectedClaimerGroup: selectedClaimerGroup });
     } else if (prevProps.selectedProxyGroup !== selectedProxyGroup) {
       this.setState({ selectedProxyGroup: selectedProxyGroup });
+    } else if (prevProps.webhookSetting !== webhookSetting) {
+      this.setState({ webhookSetting: webhookSetting });
+    } else if (prevProps.webhookList !== webhookList) {
+      this.setState({ webhookList: webhookList });
     }
   }
 
@@ -221,6 +247,8 @@ const mapStateToProps = (state) => {
     selectedProxyGroup: fetchSelctedInviteProxyGroup(state),
     selectedClaimerGroup: fetchSelectedClaimerGroupState(state),
     selectedToken: fetchSelectedClaimerTokenInviteJoiner(state),
+    webhookSetting: fetchWebhookSettingState(state),
+    webhookList: fetchWebhookListState(state),
   };
 };
 

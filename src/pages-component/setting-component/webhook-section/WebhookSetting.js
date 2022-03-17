@@ -2,31 +2,37 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppSpacer, AppToggler } from "../../../component";
 import { webhoookRegExp } from "../../../constant/regex";
-import { fetchWebhookSettingState } from "../../../features/counterSlice";
 import {
-  addWebhookInList,
-  toggleSettingSwitch,
-} from "../../../features/logic/setting";
+  appendWebhookInList,
+  fetchWebhookListState,
+  fetchWebhookSettingState,
+} from "../../../features/counterSlice";
+import { toggleSettingSwitch } from "../../../features/logic/setting";
+import { webhookTest } from "../../../helper/webhook";
+import { toastWarning } from "../../../toaster";
 import "./styles.css";
 
-function WebhookSetting() {
+function WebhookSetting({ userDetails }) {
   const dispatch = useDispatch();
   const [webhook, setWebhook] = useState("");
   const option = useSelector(fetchWebhookSettingState);
+  const webhokkList = useSelector(fetchWebhookListState);
 
   const handleToggle = (e) => {
     const { checked, id } = e.target;
-    if (id === "link-opener") {
-      dispatch(toggleSettingSwitch({ key: "LO", checked }));
-    } else if (id === "invite-joiner") {
-      dispatch(toggleSettingSwitch({ key: "IJ", checked }));
-    } else if (id === "twitter-monitor") {
-      dispatch(toggleSettingSwitch({ key: "TWITTER", checked }));
-    } else if (id === "log-on/off") {
-      dispatch(toggleSettingSwitch({ key: "LOG", checked }));
-    } else {
-      dispatch(toggleSettingSwitch({ key: "ANIMATION", checked }));
-    }
+    if (webhokkList.length > 0) {
+      if (id === "link-opener") {
+        dispatch(toggleSettingSwitch({ key: "LO", checked }));
+      } else if (id === "invite-joiner") {
+        dispatch(toggleSettingSwitch({ key: "IJ", checked }));
+      } else if (id === "twitter-monitor") {
+        dispatch(toggleSettingSwitch({ key: "TWITTER", checked }));
+      } else if (id === "log-on/off") {
+        dispatch(toggleSettingSwitch({ key: "LOG", checked }));
+      } else {
+        dispatch(toggleSettingSwitch({ key: "ANIMATION", checked }));
+      }
+    } else toastWarning("Enter some webhook");
   };
 
   const handleChange = (e) => {
@@ -34,10 +40,18 @@ function WebhookSetting() {
     setWebhook(value);
   };
 
-  const handleTest = () => {
+  const handleWebhook = async () => {
     if (webhoookRegExp.test(webhook)) {
-      dispatch(addWebhookInList(webhook));
-      setWebhook("");
+      const webhookResponse = await webhookTest(
+        webhook,
+        userDetails.username,
+        userDetails.avatar
+      );
+
+      if (webhookResponse.status === 204) {
+        dispatch(appendWebhookInList(webhook));
+        setWebhook("");
+      }
     }
   };
 
@@ -53,7 +67,7 @@ function WebhookSetting() {
             placeholder="Enter Webhook"
             type="text"
           />
-          <div onClick={handleTest} className="webhook-test btn">
+          <div onClick={handleWebhook} className="webhook-test btn">
             <span>Test</span>
           </div>
         </div>

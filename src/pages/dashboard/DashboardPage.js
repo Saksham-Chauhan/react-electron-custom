@@ -107,7 +107,6 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard">
-      {/* <ComingSoon /> */}
       <TopWrapper>
         <GroupStatusCard title="Dasahboard" isHide={true} />
       </TopWrapper>

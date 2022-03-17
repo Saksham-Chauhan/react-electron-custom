@@ -26,6 +26,7 @@ import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
 import { toastInfo } from "../../toaster";
+import { linkOpenerWebhook } from "../../helper/webhook";
 
 const { Client } = window.require("discord.js-selfbot");
 const open = window.require("open");
@@ -40,6 +41,8 @@ class LinkOpener extends React.PureComponent {
       channelLIST: [],
       selectedChrome: {},
       isStart: true,
+      webhookSetting: {},
+      webhookList: [],
     };
   }
 
@@ -49,7 +52,7 @@ class LinkOpener extends React.PureComponent {
   }
 
   async checkSettingOption(content, channelID, msgID) {
-    const { isStart } = this.state;
+    const { isStart, webhookSetting, webhookList } = this.state;
     if (isStart) {
       const { settingOption, channelLIST, keywordLIST, selectedChrome } =
         this.state;
@@ -82,6 +85,9 @@ class LinkOpener extends React.PureComponent {
                 });
               }
               this.props.handleSendLog(content, msgID);
+              if (webhookSetting?.linkOpener) {
+                await linkOpenerWebhook(content, webhookList[0]);
+              }
             }
           }
         }
@@ -119,6 +125,8 @@ class LinkOpener extends React.PureComponent {
       keywordList,
       channelList,
       selectedChrome,
+      webhookSetting,
+      webhookList,
     } = this.props;
     if (
       selectedMonitorToken !== prevProps.selectedMonitorToken ||
@@ -156,6 +164,10 @@ class LinkOpener extends React.PureComponent {
         this.setState({ channelLIST: channelList });
       } else if (prevProps.selectedChrome !== selectedChrome) {
         this.setState({ selectedChrome: selectedChrome });
+      } else if (prevProps.webhookSetting !== webhookSetting) {
+        this.setState({ webhookSetting: webhookSetting });
+      } else if (prevProps.webhookList !== webhookList) {
+        this.setState({ webhookList: webhookList });
       }
     }
   }
@@ -184,7 +196,7 @@ class LinkOpener extends React.PureComponent {
           />
         </div>
         <div className="right-container">
-          <LinkOpenerTopSection />
+          <LinkOpenerTopSection {...{ logList }} />
           <div className="page-padding-section">
             <div className="linkopener-flex-wrapper">
               <div className="linkopner-left-section">
@@ -239,4 +251,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LinkOpener);
-// OTI5OTc4MTU4OTE5MzMxODcx.Yh9ZcQ.5XDN3rDvJ_e1GpWjnqgzUyoBSAw

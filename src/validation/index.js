@@ -64,9 +64,9 @@ export const discordAccountSchema = joi.object({
 export const twiiterApiSchema = joi.object({
   apiName: joi.string().required().label("Enter API Name"),
   apiKey: joi.string().required().label("Enter API key"),
-  apiSecret: joi.string().required().label("Enter API Secret"),
-  accessToken: joi.string().label("Enter Access token"),
-  accessSecret: joi.string().label("Enter Access secret"),
+  apiSecret: joi.string().required().label("Enter API secret"),
+  accessToken: joi.string().required().label("Enter Access token"),
+  accessSecret: joi.string().required().label("Enter Access secret"),
 });
 
 export const claimerGroupSchema = joi.object({

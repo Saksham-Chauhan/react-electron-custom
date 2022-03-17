@@ -23,7 +23,7 @@ function Setting() {
         <AppSpacer spacer={100} />
         <div className="setting-page-section-col">
           <div className="setting-global-section">
-            <SettingWebhookSection />
+            <SettingWebhookSection {...{ userDetails }} />
           </div>
           <div className="chrome-user-section">
             <SettingChromeUserSection />
