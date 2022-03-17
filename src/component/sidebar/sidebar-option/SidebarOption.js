@@ -24,8 +24,8 @@ const SideBarOption = ({
       </div>
     </Link>
   ) : (
-    <div {...props} className={`sidebar-option`}>
-      <div className={`sidebar-option-inner bg-animation-css ${activeClass} `}>
+    <div {...props} className={`sidebar-option `}>
+      <div className={`sidebar-option-inner  ${activeClass} `}>
         <img src={defaultIcon} alt="active-sidebar-icon" />
         <img src={activeIcon} alt="active-sidebar-icon" />
       </div>

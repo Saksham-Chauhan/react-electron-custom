@@ -33,7 +33,6 @@
   display: none;
 }
 .bg-animation-css {
-  cursor: pointer;
   animation: backgroundScroll;
   animation-duration: 1s;
   animation-timing-function: steps(5);
@@ -74,7 +73,6 @@
 
 .sidebar-option-inner.spoofer:hover {
   background: url("../../assests/sidebar_animation/spoofer-animation.svg");
-  width: 22px;
 }
 
 .sidebar-option-inner.twitter:hover {
@@ -83,12 +81,18 @@
 
 .sidebar-option-inner.setting:hover {
   background: url("../../assests/sidebar_animation/settings-animation.svg");
-  width: 22px;
+  background-size: 23px 20px;
+}
+.sidebar-option-inner.update {
+  animation: backgroundVerticalScroll;
+  animation-duration: 1s;
+  animation-timing-function: steps(5);
+  animation-iteration-count: infinite;
+  background-repeat: repeat-y;
+  background-size: 100% 100%;
 }
 .sidebar-option-inner.update:hover {
   background: url("../../assests/sidebar_animation/updater-animation.svg");
-  width: 22px;
-  height: 23px;
 }
 .sidebar-main-bottom {
   position: absolute;
