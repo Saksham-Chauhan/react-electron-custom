@@ -16,6 +16,7 @@ import {
   fetchLoggedUserDetails,
   setUserDetails,
   resetIJMonitor,
+  fetchWebhookListState,
 } from "./features/counterSlice";
 import {
   ProxyGroupModal,
@@ -58,6 +59,7 @@ import { toastInfo, toastWarning } from "./toaster";
 import { proxyStatusUpdater } from "./features/logic/proxy";
 import { closelinkOpenerMonitor } from "./features/logic/discord-account";
 import { resetTwitterMonitor } from "./features/logic/twitter";
+import { loggedUserWebhook } from "./helper/webhook";
 
 function App() {
   const dispatch = useDispatch();
@@ -71,7 +73,9 @@ function App() {
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
+  const webhookList = useSelector(fetchWebhookListState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
+
   const animClass = !globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
@@ -86,9 +90,13 @@ function App() {
         dispatch(updateSpooferStatus(data));
       }
     });
-    authUser().then((user) => {
+    authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
+        if (globalSetting?.logOnOff) {
+          let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
+          await loggedUserWebhook(title, webhookList[0]);
+        }
         dispatch(setUserDetails(decode));
       }
     });
@@ -97,7 +105,7 @@ function App() {
     });
     updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
-  }, [dispatch]);
+  }, [dispatch, globalSetting, webhookList]);
 
   // check is user log in or not
   if (Object.keys(logggedUserDetails).length === 0) return <Login />;

@@ -1,10 +1,17 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { GroupStatusCard, TopWrapper } from "../../../component";
+import { fetchSelectedMinitorTokenLinkOpener } from "../../../features/counterSlice";
 
-function TopSection() {
+function TopSection({ logList }) {
+  const selectedMonitorToken = useSelector(fetchSelectedMinitorTokenLinkOpener);
+
   return (
     <TopWrapper>
-      <GroupStatusCard subText="2 Links opened" title="Account 1" />
+      <GroupStatusCard
+        subText={`${Object.keys(logList).length} Links opened`}
+        title={selectedMonitorToken["accountName"] || "Account 1"}
+      />
     </TopWrapper>
   );
 }

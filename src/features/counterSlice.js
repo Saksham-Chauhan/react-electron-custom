@@ -166,7 +166,7 @@ export const counterSlice = createSlice({
       state.webhookSetting = action.payload;
     },
     appendWebhookInList: (state, action) => {
-      state.webhookList = action.payload;
+      state.webhookList = [action.payload];
     },
     openAddNewProxyModal: (state, action) => {
       state.addProxyStorage = action.payload;

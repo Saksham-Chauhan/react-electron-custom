@@ -204,6 +204,8 @@ function Settings({
             isCustomLabel={true}
             hideLabel={true}
             type="number"
+            min={0}
+            max={10 * 1000}
             placeholderText="Enter Delay"
             onChange={handleDelayChange}
             value={safeDelayModeValue === 0 ? "" : safeDelayModeValue}

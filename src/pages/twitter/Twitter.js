@@ -119,21 +119,14 @@ function Twitter() {
                         }
                       } else {
                         if (twitterSetting?.startAutoLinkOpener) {
-                          if (
-                            selectedChrome !== null &&
-                            selectedChrome !== undefined
-                          ) {
-                            if (Object.keys(selectedChrome).length > 0) {
-                              await open(url, {
-                                app: {
-                                  name: open.apps.chrome,
-                                  arguments: [
-                                    `--profile-directory=${selectedChrome["value"]}`,
-                                  ],
-                                },
-                              });
-                            }
-                          }
+                          await open(url, {
+                            app: {
+                              name: open.apps.chrome,
+                              arguments: [
+                                `--profile-directory=${selectedChrome["value"]}`,
+                              ],
+                            },
+                          });
                         }
                       }
                     }
@@ -195,9 +188,11 @@ function Twitter() {
       }
     } else {
       if (name === "startAutoInviteJoiner") {
-        if (Object.keys(selectedClaimer).length > 0) {
-          dispatch(setTwitterSetting(prevState));
-        } else toastWarning("Select Claimer group");
+        if (selectedChrome !== undefined && selectedChrome !== null) {
+          if (Object.keys(selectedClaimer).length > 0) {
+            dispatch(setTwitterSetting(prevState));
+          } else toastWarning("Select Claimer group");
+        }
       } else dispatch(setTwitterSetting(prevState));
     }
   };

@@ -22,6 +22,5 @@ export const discordAccount = {
       ignoreTwitterLink: false,
       ignoreDiscordInviteLink: false,
     },
-   
   },
 };
