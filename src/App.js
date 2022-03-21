@@ -1,65 +1,66 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 import bot from "./assests/images/bot.svg";
 import chip from "./assests/images/chip.svg";
-import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
 import {
-  fetchAddGmailModalState,
-  fetchDiscordModalState,
-  fetchProxyGroupModalState,
-  fetchInviteJoinerSettingModalState,
-  fetchSpoofModalState,
-  fetchEditProxyModalState,
-  fetchClaimerGroupModalState,
-  fetchWebhookSettingState,
-  fetchLoggedUserDetails,
   setUserDetails,
   resetIJMonitor,
+  fetchSpoofModalState,
   fetchWebhookListState,
+  fetchDiscordModalState,
+  fetchLoggedUserDetails,
+  fetchAddGmailModalState,
+  fetchWebhookSettingState,
+  fetchEditProxyModalState,
+  fetchProxyGroupModalState,
+  fetchClaimerGroupModalState,
+  fetchInviteJoinerSettingModalState,
 } from "./features/counterSlice";
 import {
-  ProxyGroupModal,
-  DiscordAccountModal,
   AddGmailModal,
-  InviteJoinerSettingModal,
   AddSpoofModal,
-  EditProxySingleModal,
+  ProxyGroupModal,
   ClaimerGroupModal,
+  DiscordAccountModal,
+  EditProxySingleModal,
+  InviteJoinerSettingModal,
 } from "./modals";
 import {
-  ProxyPage,
-  LinkOpenerPage,
-  MinitingPage,
-  InviteJoinerPage,
-  TwitterPage,
-  SpooferPage,
-  SettingPage,
   Login,
+  ProxyPage,
+  TwitterPage,
+  SettingPage,
+  SpooferPage,
+  MinitingPage,
   DashboardPage,
   AccountGenPage,
+  LinkOpenerPage,
+  InviteJoinerPage,
 } from "./pages";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { RoutePath } from "./constant";
-import { Routes, Route } from "react-router-dom";
+
 import {
-  spooferToaster,
-  errorToaster,
-  proxyTestResultListener,
-  updateNotAvailable,
   authUser,
   decodeUser,
+  errorToaster,
+  spooferToaster,
+  updateNotAvailable,
+  proxyTestResultListener,
 } from "./helper/electron-bridge";
 import {
   updateSpooferStatus,
   resetSpooferStatus,
 } from "./features/logic/spoof";
-import { toastInfo, toastWarning } from "./toaster";
-import { proxyStatusUpdater } from "./features/logic/proxy";
-import { closelinkOpenerMonitor } from "./features/logic/discord-account";
-import { resetTwitterMonitor } from "./features/logic/twitter";
+import { RoutePath } from "./constant";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { Routes, Route } from "react-router-dom";
 import { loggedUserWebhook } from "./helper/webhook";
+import { toastInfo, toastWarning } from "./toaster";
+import { useDispatch, useSelector } from "react-redux";
+import { proxyStatusUpdater } from "./features/logic/proxy";
+import { resetTwitterMonitor } from "./features/logic/twitter";
+import { closelinkOpenerMonitor } from "./features/logic/discord-account";
+import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
 
 function App() {
   const dispatch = useDispatch();
@@ -98,6 +99,8 @@ function App() {
           await loggedUserWebhook(title, webhookList[0]);
         }
         dispatch(setUserDetails(decode));
+        if (decode.roles.length > 0) {
+        } else toastWarning("Sorry , you don't have the required role 😭 😔!!");
       }
     });
     proxyTestResultListener((res) => {
@@ -108,7 +111,13 @@ function App() {
   }, [dispatch, globalSetting, webhookList]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length === 0) return <Login />;
+  if (Object.keys(logggedUserDetails).length === 0)
+    return (
+      <React.Fragment>
+        <Login />
+        <ToastContainer />
+      </React.Fragment>
+    );
 
   return (
     <div className="app">

@@ -88,6 +88,7 @@ class LinkOpener extends React.PureComponent {
                   },
                 });
               }
+              console.log("GGG", content, msgID);
               this.props.handleSendLog(content, msgID);
               if (webhookSetting?.linkOpener) {
                 await linkOpenerWebhook(
