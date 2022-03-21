@@ -1,17 +1,17 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
-const Tesseract = require("tesseract.js");
-const isDev = require("electron-is-dev");
-const currentProcesses = require("current-processes");
-const { autoUpdater } = require("electron-updater");
-const NetworkSpeed = require("network-speed");
-const _ = require("lodash");
 const ping = require("ping");
-const spooferManager = require("./script/manager/spoof-manager");
 const auth = require("./auth");
+const isDev = require("electron-is-dev");
+const Tesseract = require("tesseract.js");
+const NetworkSpeed = require("network-speed");
 const fetchTweets = require("./helper/fetchTweet");
+const { autoUpdater } = require("electron-updater");
+const currentProcesses = require("current-processes");
+const spooferManager = require("./script/manager/spoof-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const testNetworkSpeed = new NetworkSpeed();
+const _ = require("lodash");
 
 let win = null;
 let mainWindow = null;
@@ -92,6 +92,10 @@ function createWindow() {
         },
       ],
     });
+    richPresence.on("connected", () =>
+      console.log("Rich presence is connected")
+    );
+    richPresence.on("error", (err) => console.log("Rich presence error", err));
   } catch (err) {
     console.log("Error in Disocrd RPC Wrapper", err.message);
   }
