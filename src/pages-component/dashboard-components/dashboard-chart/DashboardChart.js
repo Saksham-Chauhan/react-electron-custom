@@ -170,6 +170,7 @@ const DashboardChart = () => {
       }
     };
     setPagesData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     discord,
     inviteJoinerobj,
