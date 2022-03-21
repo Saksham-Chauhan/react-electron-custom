@@ -98,8 +98,8 @@ function App() {
           let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
           await loggedUserWebhook(title, webhookList[0]);
         }
-        dispatch(setUserDetails(decode));
         if (decode.roles.length > 0) {
+          dispatch(setUserDetails(decode));
         } else toastWarning("Sorry , you don't have the required role 😭 😔!!");
       }
     });

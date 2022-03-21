@@ -87,7 +87,7 @@ async function login() {
   for (const role of res.data) {
     if (
       roles_id.includes(role.id) &&
-      role.name.toLowerCase().includes("tester")
+      role.name.toLowerCase().includes("beta")
     ) {
       roles.push(role.name);
     }

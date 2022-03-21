@@ -78,7 +78,7 @@ const WelcomeScreen = () => {
       }
       x[slideIndex - 1].style.display = "block";
     }
-  });
+  }, []);
 
   return (
     <ModalWrapper>
