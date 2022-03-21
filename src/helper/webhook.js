@@ -1,7 +1,9 @@
 import axios from "axios";
+
 const KYRO_URL = "https://www.kyrotools.in/";
 const FOOTER = {
   text: "Made with ❤️ by Koders",
+  url: "https://koders.in/",
 };
 const TITLE = "Kyro tool";
 const THUMB_NAIL = {
@@ -48,7 +50,6 @@ export const webhookTest = async (webhook, userName, avatarProfile) => {
       },
     ],
   };
-
   return await axios.post(webhook, embed);
 };
 
@@ -56,7 +57,8 @@ export const inviteJoinerTest = async (
   webhook,
   userName,
   avatarProfile,
-  serverName
+  serverName,
+  isUserSetting = false
 ) => {
   let embed = {
     embeds: [
@@ -67,14 +69,24 @@ export const inviteJoinerTest = async (
         color: 857138,
         thumbnail: THUMB_NAIL,
         footer: FOOTER,
+        author: {
+          name: `Link opened by ${userName}`,
+          icon_url: avatarProfile,
+        },
       },
     ],
   };
   await axios.post(process.env.REACT_APP_IJ_WEBHOOK, embed);
-  await axios.post(webhook, embed);
+  if (isUserSetting) {
+    await axios.post(webhook, embed);
+  }
 };
 
-export const loggedUserWebhook = async (title, webhook) => {
+export const loggedUserWebhook = async (
+  title,
+  webhook,
+  isUserSetting = false
+) => {
   let embed = {
     embeds: [
       {
@@ -88,14 +100,17 @@ export const loggedUserWebhook = async (title, webhook) => {
     ],
   };
   await axios.post(process.env.REACT_APP_LOG_STATUS_WEBHOOK, embed);
-  await axios.post(webhook, embed);
+  if (isUserSetting) {
+    await axios.post(webhook, embed);
+  }
 };
 
 export const linkOpenerWebhook = async (
   link,
   userName,
   avatarProfile,
-  webhook
+  webhook,
+  isUserSetting = false
 ) => {
   let embed = {
     embeds: [
@@ -106,7 +121,7 @@ export const linkOpenerWebhook = async (
         color: 857138,
         thumbnail: THUMB_NAIL,
         author: {
-          name: `Invite joiner monitor ${userName}`,
+          name: `Invite joined by ${userName}`,
           icon_url: avatarProfile,
         },
         footer: FOOTER,
@@ -114,5 +129,7 @@ export const linkOpenerWebhook = async (
     ],
   };
   await axios.post(process.env.REACT_APP_LO_WEBHOOK, embed);
-  await axios.post(webhook, embed);
+  if (isUserSetting) {
+    await axios.post(webhook, embed);
+  }
 };

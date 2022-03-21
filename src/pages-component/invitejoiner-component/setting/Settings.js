@@ -2,21 +2,21 @@ import React from "react";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchClaimerGroupList,
-  fetchProxyGroupList,
-  fetchSafeModeDelayState,
-  fetchSelctedInviteProxyGroup,
-  setEditStorage,
-  setInviteJoinerDelay,
-  setInviteProxyGroup,
   setModalState,
-  setSelectedClaimerGroup,
+  setEditStorage,
   toggleIJMonitor,
+  fetchProxyGroupList,
+  setInviteProxyGroup,
+  setInviteJoinerDelay,
+  fetchClaimerGroupList,
+  fetchSafeModeDelayState,
+  setSelectedClaimerGroup,
+  fetchSelctedInviteProxyGroup,
 } from "../../../features/counterSlice";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
 import {
-  getClaimerValue,
   isValueInUse,
+  getClaimerValue,
   makeClaimerSelectOption,
 } from "../../../helper";
 import { toastWarning } from "../../../toaster";
@@ -24,6 +24,9 @@ import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import edit from "react-useanimations/lib/edit";
 import { deleteAccountFromList } from "../../../features/logic/discord-account";
+
+const MIN_SAFE_DELAY_VALUE = 0;
+const MAX_SAFE_DELAY_VALUE = 10 * 1000;
 
 function Settings({
   ijMonitorState,
@@ -132,7 +135,13 @@ function Settings({
 
   const handleDelayChange = (e) => {
     const { value } = e.target;
-    dispatch(setInviteJoinerDelay(value));
+    const numValue = parseInt(value);
+    if (
+      (numValue > MIN_SAFE_DELAY_VALUE && numValue <= MAX_SAFE_DELAY_VALUE) ||
+      value === ""
+    ) {
+      dispatch(setInviteJoinerDelay(value));
+    }
   };
 
   return (

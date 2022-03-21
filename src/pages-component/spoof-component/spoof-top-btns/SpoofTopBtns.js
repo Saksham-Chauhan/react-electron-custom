@@ -17,7 +17,6 @@ import {
   appendSpooferInList,
   setModalState,
 } from "../../../features/counterSlice";
-import { deleteSpooferFromList } from "../../../features/logic/spoof";
 
 function SpoofTopBtns({ tableList, search, handleSearching }) {
   const dispatch = useDispatch();

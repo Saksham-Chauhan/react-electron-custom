@@ -281,7 +281,9 @@ const DefaultTwitterScreen = ({
         <div className="twitter-page-card-scroll-flex">
           <div>
             <TwitterPageCardScroll
-              list={latestTweetList}
+              list={Object.keys(latestTweetList)
+                .map((key) => latestTweetList[key])
+                .reverse()}
               title="Latest Tweets"
               onClearTweets={() => handleDeleteAllTweets("LATEST")}
             />
@@ -289,7 +291,9 @@ const DefaultTwitterScreen = ({
           <div>
             <TwitterPageCardScroll
               isFeatureTweet={true}
-              list={featureTweetList}
+              list={Object.keys(featureTweetList)
+                .map((key) => featureTweetList[key])
+                .reverse()}
               twitterSetting={twitterSetting}
               title="Featured Tweets"
               onClearTweets={() => handleDeleteAllTweets("FEATURE")}

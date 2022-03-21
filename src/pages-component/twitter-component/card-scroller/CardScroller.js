@@ -26,8 +26,8 @@ function CardScroller({
         </div>
         <AppSpacer spacer={10} />
         <div className="scroll-card-content">
-          {Object.keys(list).map((data, index) => {
-            let tweet = { ...list[data] };
+          {list?.map((data, index) => {
+            let tweet = { ...data };
             if (isFeatureTweet) {
               let text = "";
               if (tweet.featured_type === "Binary") {

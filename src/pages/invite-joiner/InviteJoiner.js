@@ -87,14 +87,13 @@ class InviteJoiner extends React.Component {
                   let result = `Joined ${info.data.guild.name} server 🥳 `;
                   this.props.handleSendLog(result, msgID);
                   console.log("Joined the server", info.data.guild);
-                  if (webhookSetting?.inviteJoiner) {
-                    await inviteJoinerTest(
-                      webhookList[0],
-                      user.username,
-                      user.avatar,
-                      info.data.guild.name
-                    );
-                  }
+                  await inviteJoinerTest(
+                    webhookList[0],
+                    user.username,
+                    user.avatar,
+                    info.data.guild.name,
+                    webhookSetting?.inviteJoiner
+                  );
                 }
               } catch (err) {
                 console.log("Error in joining server", err.message);

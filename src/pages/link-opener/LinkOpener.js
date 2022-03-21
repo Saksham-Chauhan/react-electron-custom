@@ -14,13 +14,13 @@ import {
   fetchLOChannelList,
   fetchLOKeywordList,
   fetchLOSettingState,
+  fetchWebhookListState,
+  fetchLoggedUserDetails,
   fetchLOchromeUserState,
   fetchDiscordAccountList,
   fetchLinkOpenerLogState,
-  fetchSelectedMinitorTokenLinkOpener,
   fetchWebhookSettingState,
-  fetchWebhookListState,
-  fetchLoggedUserDetails,
+  fetchSelectedMinitorTokenLinkOpener,
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
@@ -90,14 +90,13 @@ class LinkOpener extends React.PureComponent {
               }
               console.log("GGG", content, msgID);
               this.props.handleSendLog(content, msgID);
-              if (webhookSetting?.linkOpener) {
-                await linkOpenerWebhook(
-                  content,
-                  user.username,
-                  user.avatar,
-                  webhookList[0]
-                );
-              }
+              await linkOpenerWebhook(
+                content,
+                user.username,
+                user.avatar,
+                webhookList[0],
+                webhookSetting?.linkOpener
+              );
             }
           }
         }
@@ -194,7 +193,6 @@ class LinkOpener extends React.PureComponent {
       settingOption,
       handleOpenModal,
       selectedMonitorToken,
-      webhookSetting,
     } = this.props;
     return (
       <div className="page-section">
