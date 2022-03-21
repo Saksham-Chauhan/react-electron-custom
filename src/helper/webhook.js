@@ -3,6 +3,7 @@ import axios from "axios";
 const KYRO_URL = "https://www.kyrotools.in/";
 const FOOTER = {
   text: "Made with ❤️ by Koders",
+  url: "https://koders.in/",
 };
 const TITLE = "Kyro tool";
 const THUMB_NAIL = {
