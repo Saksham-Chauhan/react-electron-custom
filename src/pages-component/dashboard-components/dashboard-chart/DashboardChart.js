@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +11,31 @@ import {
 import { Line } from "react-chartjs-2";
 import "./dashboardchart.css";
 import chartbg from "../../../assests/images/chartbg.svg";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addlastDate,
+  addlastWeekInvite,
+  addlastWeekLink,
+  addlastWeekSpoofs,
+  addlastWeekTweets,
+  fetchInvite,
+  fetchLastDate,
+  fetchLastWeekInvites,
+  fetchLastWeekLinks,
+  fetchLastWeekSpoof,
+  fetchLastWeekTweets,
+  fetchLink,
+  fetchSpoof,
+  fetchSpoofTableList,
+  fetchTweets,
+  updateTweetsArray,
+  updateSpoofArray,
+  updateLinkArray,
+  updateInviteArray,
+  fetchLinkOpenerLogState,
+  fetchLatestTweetList,
+  fetchInviteJoinerLogState,
+} from "../../../features/counterSlice";
 
 ChartJS.register(
   CategoryScale,
@@ -21,42 +46,6 @@ ChartJS.register(
   Legend
 );
 
-const labels = ["Mon", "Tus", "Wed", "Thr", "Fri", "Sat", "Sun"];
-const colors = ["#FB49C0", "#0D24EF", "#C17168", "#3EB7E5"];
-const data = {
-  fillOpacity: 0.3,
-  labels,
-  datasets: [
-    {
-      data: [1, 6, 4, 8, 5, 3, 20],
-      pointRadius: 0,
-      borderWidth: 3,
-    },
-    {
-      data: [0, 5, 3, 9, 4, 5, 8],
-      pointRadius: 0,
-      borderWidth: 3,
-    },
-    {
-      data: [0, 4, 5, 6, 5, 3, 7],
-      pointRadius: 0,
-      borderWidth: 3,
-    },
-    {
-      data: [1, 7, 3, 9, 7, 5, 8],
-      pointRadius: 0,
-      borderWidth: 3,
-    },
-  ],
-};
-
-const chartData = {
-  ...data,
-  datasets: data.datasets.map((dataset, i) => ({
-    ...dataset,
-    borderColor: colors[i],
-  })),
-};
 const options = {
   animations: {
     tension: {
@@ -90,7 +79,7 @@ const options = {
         color: "#161037",
       },
       ticks: {
-        stepSize: 3,
+        stepSize: 1,
         color: "#FFFFFF",
       },
     },
@@ -106,6 +95,134 @@ const options = {
 };
 
 const DashboardChart = () => {
+  let dispatch = useDispatch();
+  //GET STATE OF LINK OPNER,INVITE JOINER,TWITTER AND SPOOFER
+  const discord = useSelector(fetchLinkOpenerLogState);
+  const inviteJoinerobj = useSelector(fetchInviteJoinerLogState);
+  const twitterList = useSelector(fetchLatestTweetList);
+  const spoofList = useSelector(fetchSpoofTableList);
+  const lastDate = useSelector(fetchLastDate);
+
+  // // //GET THE LAST WEEK DATA
+  const lastWeekLink = useSelector(fetchLastWeekLinks);
+  const lastWeekInvites = useSelector(fetchLastWeekInvites);
+  const lastWeekTweets = useSelector(fetchLastWeekTweets);
+  const lastWeekSpoof = useSelector(fetchLastWeekSpoof);
+
+  // //PAGES DATA GETTING FROM REDUCERS
+  const linkOpnerData = Object.keys(discord).length;
+  const inviteJoinerData = Object.keys(inviteJoinerobj).length;
+  const twitterData = Object.keys(twitterList).length;
+  const spooferData = spoofList.length;
+
+  // //FOR CHART
+  let li = useSelector(fetchLink);
+  let inv = useSelector(fetchInvite);
+  let tw = useSelector(fetchTweets);
+  let sp = useSelector(fetchSpoof);
+
+  useEffect(() => {
+    //temp variables
+    let l = [...li];
+    let i = [...inv];
+    let t = [...tw];
+    let s = [...sp];
+    const setPagesData = () => {
+      if (linkOpnerData === 0) dispatch(addlastWeekLink(0));
+      if (inviteJoinerData === 0) dispatch(addlastWeekInvite(0));
+      if (twitterData === 0) dispatch(addlastWeekTweets(0));
+      if (spooferData === 0) dispatch(addlastWeekSpoofs(spooferData));
+
+      if (spooferData < lastWeekSpoof) dispatch(addlastWeekSpoofs(spooferData));
+
+      let date = new Date();
+      let day = date.getDay();
+      if (day > lastDate) {
+        dispatch(addlastWeekLink(linkOpnerData));
+        dispatch(addlastWeekInvite(inviteJoinerData));
+        dispatch(addlastWeekTweets(twitterData));
+        dispatch(addlastWeekSpoofs(spooferData));
+        dispatch(addlastDate(day));
+      }
+      if (day === 0) {
+        l = [0, 0, 0, 0, 0, 0, 0];
+        l[day - 1] = linkOpnerData - lastWeekLink;
+        dispatch(updateLinkArray(l));
+        i = [0, 0, 0, 0, 0, 0, 0];
+        i[day - 1] = inviteJoinerData - lastWeekInvites;
+        dispatch(updateInviteArray(i));
+        t = [0, 0, 0, 0, 0, 0, 0];
+        t[day - 1] = twitterData - lastWeekTweets;
+        dispatch(updateTweetsArray(t));
+        s = [0, 0, 0, 0, 0, 0, 0];
+        s[day - 1] = spooferData - lastWeekSpoof;
+        dispatch(updateSpoofArray(s));
+        dispatch(addlastDate(day - 1));
+      } else {
+        l[day - 1] = linkOpnerData - lastWeekLink;
+        dispatch(updateLinkArray(l));
+        i[day - 1] = inviteJoinerData - lastWeekInvites;
+        dispatch(updateInviteArray(i));
+        t[day - 1] = twitterData - lastWeekTweets;
+        dispatch(updateTweetsArray(t));
+        s[day - 1] = spooferData - lastWeekSpoof;
+        dispatch(updateSpoofArray(s));
+      }
+    };
+    setPagesData();
+  }, [
+    discord,
+    inviteJoinerobj,
+    twitterList,
+    spoofList,
+    dispatch,
+    inviteJoinerData,
+    lastDate,
+    lastWeekInvites,
+    lastWeekLink,
+    lastWeekSpoof,
+    lastWeekTweets,
+    linkOpnerData,
+    spooferData,
+    twitterData,
+  ]);
+  //CHART DATA
+  const labels = ["Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"];
+  const colors = ["#FB49C0", "#0D24EF", "#F5A623", "#3EB7E5"];
+  const data = {
+    fillOpacity: 0.3,
+    labels,
+    datasets: [
+      {
+        data: [...li],
+        pointRadius: 0,
+        borderWidth: 3,
+      },
+      {
+        data: [...inv],
+        pointRadius: 0,
+        borderWidth: 3,
+      },
+      {
+        data: [...tw],
+        pointRadius: 0,
+        borderWidth: 3,
+      },
+      {
+        data: [...sp],
+        pointRadius: 0,
+        borderWidth: 3,
+      },
+    ],
+  };
+
+  const chartData = {
+    ...data,
+    datasets: data.datasets.map((dataset, i) => ({
+      ...dataset,
+      borderColor: colors[i],
+    })),
+  };
   return (
     <div className="dashboardchart">
       <img src={chartbg} alt="" className="chartbg" />

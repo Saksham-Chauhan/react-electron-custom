@@ -13,7 +13,10 @@ import stop from "../../../assests/images/stop.svg";
 import searchIcon from "../../../assests/images/search.svg";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
-import { setModalState } from "../../../features/counterSlice";
+import {
+  appendSpooferInList,
+  setModalState,
+} from "../../../features/counterSlice";
 import { deleteSpooferFromList } from "../../../features/logic/spoof";
 
 function SpoofTopBtns({ tableList, search, handleSearching }) {
@@ -34,7 +37,7 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
           stopSpoofer(spoof);
         } else {
           deleteSpoofer(spoof);
-          deleteSpooferFromList(spoof);
+          dispatch(appendSpooferInList([]));
         }
       });
     } else toastWarning("Create some spoof");

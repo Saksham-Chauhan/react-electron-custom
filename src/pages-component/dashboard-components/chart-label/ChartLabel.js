@@ -14,15 +14,15 @@ const ChartLabel = () => {
       </div>
       <div>
         <img src={invite} alt="" className="dot" />
-        <span>Invite Joined</span>
+        <span>Invites Joined</span>
       </div>
       <div>
         <img src={tweets} alt="" className="dot" />
-        <span>Tweets Catched</span>
+        <span>Spoofs Opened</span>
       </div>
       <div>
         <img src={spoofs} alt="" className="dot" />
-        <span>Spoofs Open</span>
+        <span>Tweets Catched</span>
       </div>
     </div>
   );

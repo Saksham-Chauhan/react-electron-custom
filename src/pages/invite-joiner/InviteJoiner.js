@@ -7,6 +7,7 @@ import {
   fetchIJMonitorState,
   fetchInviteJoinerLogState,
   fetchIsInviteJoinerModalState,
+  fetchLoggedUserDetails,
   fetchSafeModeDelayState,
   fetchSelctedInviteProxyGroup,
   fetchSelectedClaimerGroupState,
@@ -49,6 +50,7 @@ class InviteJoiner extends React.Component {
 
   checkingMessage(content, channelID, msgID) {
     const { isStart } = this.state;
+    const { user } = this.props;
     if (isStart) {
       const {
         keywordList,
@@ -88,8 +90,8 @@ class InviteJoiner extends React.Component {
                   if (webhookSetting?.inviteJoiner) {
                     await inviteJoinerTest(
                       webhookList[0],
-                      "",
-                      "",
+                      user.username,
+                      user.avatar,
                       info.data.guild.name
                     );
                   }
@@ -251,6 +253,7 @@ const mapStateToProps = (state) => {
     selectedToken: fetchSelectedClaimerTokenInviteJoiner(state),
     webhookSetting: fetchWebhookSettingState(state),
     webhookList: fetchWebhookListState(state),
+    user: fetchLoggedUserDetails(state),
   };
 };
 

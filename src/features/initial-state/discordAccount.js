@@ -22,18 +22,5 @@ export const discordAccount = {
       ignoreTwitterLink: false,
       ignoreDiscordInviteLink: false,
     },
-    // inviteJoiner: {
-    //   inviteCode: "",
-    //   isReact: false,
-    //   reactSetting: {
-    //     channelId: "",
-    //     messageId: "",
-    //     emojiHexValue: "",
-    //   },
-    //   isAcceptRule: false,
-    //   acceptRule: {
-    //     acceptRuleValue: "",
-    //   },
-    // },
   },
 };

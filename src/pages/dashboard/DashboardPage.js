@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  DashboardChartLabel,
+  ChartLabel,
   DashboardButton,
   DashboardChart,
 } from "../../pages-component";
@@ -17,31 +17,39 @@ import spoof from "../../assests/activeDefault/spoof-default.svg";
 import proxy from "../../assests/activeDefault/proxy-default.svg";
 import settings from "../../assests/activeDefault/settings-default.svg";
 import accgen from "../../assests/activeDefault/accgen-default.svg";
-import oneclick from "../../assests/activeDefault/oneclick-default.svg";
+import oneclick from "../../assests/activeDefault/nft-default.svg";
 import invite from "../../assests/images/discord-dash.svg";
 import { useSelector } from "react-redux";
 import {
-  fetchClaimerDiscordAccountList,
-  fetchDiscordAccountList,
+  fetchInviteJoinerLogState,
+  fetchDashboardModalState,
+  fetchLinkOpenerLogState,
   fetchProxyGroupList,
   fetchSpoofTableList,
-  fetchTwitterKeywordList,
+  fetchLatestTweetList,
 } from "../../features/counterSlice";
+import { WelcomeScreen } from "../../modals";
 
 const DashboardPage = () => {
   //GET PROXY LIST
   const proxyList = useSelector(fetchProxyGroupList);
 
+  //GET MODAL STATE
+  const modalState = useSelector(fetchDashboardModalState);
+
   //GET STATE OF LINK OPNER
-  const linkOpnerList = useSelector(fetchDiscordAccountList);
+  let linkData = useSelector(fetchLinkOpenerLogState);
+  const linkOpnerList = Object.keys(linkData).length;
 
   //GET STATE OF INVITE JOINER
-  const inviteJoinerList = useSelector(fetchClaimerDiscordAccountList);
+  let inviteData = useSelector(fetchInviteJoinerLogState);
+  const inviteJoinerList = Object.keys(inviteData).length;
 
   //GET STATE OF TWITTER
-  const twitterList = useSelector(fetchTwitterKeywordList);
+  let tweetsData = useSelector(fetchLatestTweetList);
+  let twitterList = Object.keys(tweetsData).length;
 
-  //GET STATE OF TWITTER
+  //GET STATE OF SPOOFER
   const spoofList = useSelector(fetchSpoofTableList);
 
   //RETURN THE TOTAL PROXIES
@@ -52,38 +60,37 @@ const DashboardPage = () => {
     }
     return totalProxy;
   };
-
   //BUTTONS DATA
   const buttonsData = [
     {
       to: RoutePath.linkOpener,
       image: linkOpner,
       text: "Link Opener",
-      value: linkOpnerList.length,
+      value: linkOpnerList ? linkOpnerList : "0",
     },
     {
       to: RoutePath.inviteJoiner,
       image: invite,
       text: "Invite Joiner",
-      value: inviteJoinerList.length,
+      value: inviteJoinerList ? inviteJoinerList : "0",
     },
     {
       to: RoutePath.twitter,
       image: twitter,
       text: "Twitter Monitor",
-      value: twitterList.length ? twitterList.length : "0",
+      value: twitterList ? twitterList : "0",
     },
     {
       to: RoutePath.spoofer,
       image: spoof,
       text: "Spoofer",
-      value: spoofList.length ? twitterList.length : "0",
+      value: spoofList.length ? spoofList.length : "0",
     },
     {
       to: RoutePath.proxy,
       image: proxy,
       text: "Proxies",
-      value: getTotalProxy(),
+      value: getTotalProxy() ? getTotalProxy() : "0",
     },
     {
       to: RoutePath.setting,
@@ -100,13 +107,14 @@ const DashboardPage = () => {
     {
       to: RoutePath.oneclick,
       image: oneclick,
-      text: "One-Click",
+      text: "NFT Minter",
       value: "Coming Soon",
     },
   ];
 
   return (
     <div className="dashboard">
+      {!modalState && <WelcomeScreen />}
       <TopWrapper>
         <GroupStatusCard title="Dashboard" isHide={true} />
       </TopWrapper>
@@ -117,7 +125,7 @@ const DashboardPage = () => {
       </div>
       <div className="dashboard-chart">
         <DashboardChart />
-        <DashboardChartLabel />
+        <ChartLabel />
       </div>
     </div>
   );

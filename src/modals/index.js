@@ -6,3 +6,4 @@ export { default as AddSpoofModal } from "./add-spoof/AddSpoofer";
 export { default as EditProxySingleModal } from "./edit-proxy/EditProxy";
 export { default as ClaimerGroupModal } from "./claimer-group/ClaimerGroup";
 export { default as ComingSoon } from "./coming-soon/ComingSoon";
+export { default as WelcomeScreen } from "./welcome-dashboard/WelcomeScreen";

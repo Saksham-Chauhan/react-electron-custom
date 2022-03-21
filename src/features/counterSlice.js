@@ -6,6 +6,7 @@ import { twitterInitialState } from "./initial-state/twitter";
 import { spoofInitialState } from "./initial-state/spoof";
 import { settingInitialState } from "./initial-state/setting";
 import { initialUserState } from "./initial-state/user-initial-state";
+import { DashboardState } from "./initial-state/dashboard";
 import { inviteJoinerInitialState } from "./initial-state/invite-joiner";
 
 const initialState = {
@@ -17,6 +18,7 @@ const initialState = {
   ...spoofInitialState,
   ...settingInitialState,
   ...initialUserState,
+  ...DashboardState,
   ...inviteJoinerInitialState,
   modals: {
     proxyGroup: false,
@@ -27,6 +29,7 @@ const initialState = {
     spoofModal: false,
     editProxy: false,
     claimerGroup: false,
+    dashboardModal: false,
   },
 };
 
@@ -34,6 +37,33 @@ export const counterSlice = createSlice({
   name: STATE_KEY,
   initialState,
   reducers: {
+    updateLinkArray: (state, action) => {
+      state.link = [...action.payload];
+    },
+    updateInviteArray: (state, action) => {
+      state.invite = [...action.payload];
+    },
+    updateSpoofArray: (state, action) => {
+      state.twites = [...action.payload];
+    },
+    updateTweetsArray: (state, action) => {
+      state.spoof = [...action.payload];
+    },
+    addlastDate: (state, action) => {
+      state.date = action.payload;
+    },
+    addlastWeekLink: (state, action) => {
+      state.lastWeekLink = action.payload;
+    },
+    addlastWeekInvite: (state, action) => {
+      state.lastWeekInvite = action.payload;
+    },
+    addlastWeekTweets: (state, action) => {
+      state.lastWeekTweets = action.payload;
+    },
+    addlastWeekSpoofs: (state, action) => {
+      state.lastWeekSpoof = action.payload;
+    },
     appendProxyGroupInList: (state, action) => {
       state.proxyGroupList = action.payload;
     },
@@ -171,6 +201,16 @@ export const counterSlice = createSlice({
 
 export const {
   appendApInList,
+  updateTweetsArray,
+  updateSpoofArray,
+  updateLinkArray,
+  updateInviteArray,
+  addlastDate,
+  addlastWeekSpoofs,
+  addlastWeekTweets,
+  addlastWeekInvite,
+  addlastWeekLink,
+
   resetIJMonitor,
   setInviteProxyGroup,
   setInviteJoinerDelay,
@@ -249,6 +289,14 @@ export const fetchClaimerDiscordAccountList = (state) =>
   state[STATE_KEY].claimerAccountList;
 export const fetchSelectedClaimerTokenInviteJoiner = (state) =>
   state[STATE_KEY].selectedClaimerTokenIJ;
+export const fetchIJKeywordList = (state) =>
+  state[STATE_KEY].inviteJoiner.keyWordList;
+
+export const fetchAddJoinerModalState = (state) =>
+  state[STATE_KEY].modals.inviteJoinerAccount;
+
+export const fetchIJSettingState = (state) =>
+  state[STATE_KEY].setting.inviteJoiner;
 export const fetchIJChannelList = (state) =>
   state[STATE_KEY].inviteJoiner.channelList;
 export const fetchInviteJoinerSettingModalState = (state) =>
@@ -302,6 +350,20 @@ export const fetchWebhookListState = (state) => state[STATE_KEY].webhookList;
 // LOGIN
 export const fetchLoggedUserDetails = (state) => state[STATE_KEY].userDetails;
 
+//DASHBOARD
+export const fetchDashboardModalState = (state) =>
+  state[STATE_KEY].modals.dashboardModal;
+
+// FOR DASHBOARD CHART
+export const fetchLastWeekLinks = (state) => state[STATE_KEY].lastWeekLink;
+export const fetchLastWeekInvites = (state) => state[STATE_KEY].lastWeekInvite;
+export const fetchLastWeekTweets = (state) => state[STATE_KEY].lastWeekTweets;
+export const fetchLastWeekSpoof = (state) => state[STATE_KEY].lastWeekSpoof;
+export const fetchLastDate = (state) => state[STATE_KEY].date;
+export const fetchLink = (state) => state[STATE_KEY].link;
+export const fetchInvite = (state) => state[STATE_KEY].invite;
+export const fetchTweets = (state) => state[STATE_KEY].twites;
+export const fetchSpoof = (state) => state[STATE_KEY].spoof;
 // INVITE JOINER;
 export const fetchInviteJoinerListState = (state) =>
   state[STATE_KEY].inviteJoinerAccount;

@@ -195,8 +195,6 @@ class LinkOpener extends React.PureComponent {
       selectedMonitorToken,
       webhookSetting,
     } = this.props;
-
-    console.log(webhookSetting);
     return (
       <div className="page-section">
         <div className="left-container">

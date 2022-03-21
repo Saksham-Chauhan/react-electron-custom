@@ -2,8 +2,7 @@
   width: 30%;
   display: flex;
   padding-top: 8%;
-  align-items: end;
-  color: white;
+  color: var(--primary);
   flex-direction: column;
 }
 .chartlabel > div {
