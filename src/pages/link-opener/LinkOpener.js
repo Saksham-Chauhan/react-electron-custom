@@ -89,14 +89,13 @@ class LinkOpener extends React.PureComponent {
                 });
               }
               this.props.handleSendLog(content, msgID);
-              if (webhookSetting?.linkOpener) {
-                await linkOpenerWebhook(
-                  content,
-                  user.username,
-                  user.avatar,
-                  webhookList[0]
-                );
-              }
+              await linkOpenerWebhook(
+                content,
+                user.username,
+                user.avatar,
+                webhookList[0],
+                webhookSetting?.linkOpener
+              );
             }
           }
         }
