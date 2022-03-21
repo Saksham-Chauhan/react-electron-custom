@@ -120,61 +120,54 @@ const WelcomeScreen = () => {
         {!show ? (
           <>
             <div className="info">
-              <h1>Proxy</h1>
+              <h1>Proxy Group Tester</h1>
               <AppSpacer spacer={25} />
               <p>
-                What is Lorem Ipsum?
-                <br />
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.
-                <br /> <br /> Why do we use it? <br />
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-                The point of using Lorem Ipsum is that it has a more-or-less
-                normal distribution of letters, as opposed to using 'Content
-                here, content here', making it look like readable English. Many
-                desktop publishing packages and web page editors now use Lorem
-                Ipsum as their default model text, and a search for 'lorem
-                ipsum' will uncover many web sites still in their infancy.
-                Various versions have evolved over the years, sometimes by
-                accident, sometimes on purpose (injected humour and the like).
+                Proxy Group allows you to create separate groups for your proxies. You can create a Group by clicking ➕ on the top left, can Import and/or Export bulk proxies in a group directly. 
+                You have an option to test either all or your individual proxies for speed, and filter all the Bad proxies based on the response. 
+                <br /> <br /> <br/>
+              </p>
+              <h1>Link Opener</h1>
+              <AppSpacer spacer={25} />
+              <p>
+                Auto Link Opener allows you to monitor channels based on different keywords and directly open links based on different chrome profiles. 
+                You can directly Create Accounts by clicking ➕ on the top left, add Account name and your Discord Token. 
+                You have an option to export Logs as .txt file and/or clear Logs as well. 
+                <br /> <br /> 
+              </p>
+            </div>
+            <div className="info">
+              <h1>Invite Joiner</h1>
+              <AppSpacer spacer={25} />
+              <p>
+                Kyro Tools gives you an option for Mass Invite Joiner. You can directly Create Accounts by clicking ➕ on the top left, add Account name and your Discord Token.
+                The tool lets you select Claimer Group that you can create on the Settings page, use Proxies and set Delays to join links in a bulk without getting noticed or rate-limited. 
+                Direct Join lets you React and Accept rules to the added Invite Links based on the values entered by you.
+                <br /> <br /> <br/>
+              </p>
+              <h1>Spoofer</h1>
+              <AppSpacer spacer={25} />
+              <p>
+                Spoofer lets you create multiple browser instances for your tasks. You can directly enter the URL and select your Proxy group to create separate instances. 
+                Clicking on Toggle All would open separate windows for all the instances that you've created. 
+                <br /> <br /> 
               </p>
             </div>
             <div className="info">
               <h1>Twitter Monitor</h1>
               <AppSpacer spacer={25} />
               <p>
-                What is Lorem Ipsum?
-                <br />
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.
-                <br /> <br /> Why do we use it? <br />
-                It is a long established fact that a reader will be distracted
-                by the readable content of a page when looking at its layout.
-                The point of using Lorem Ipsum is that it has a more-or-less
-                normal distribution of letters, as opposed to using 'Content
-                here, content here', making it look like readable English. Many
-                desktop publishing packages and web page editors now use Lorem
-                Ipsum as their default model text, and a search for 'lorem
-                ipsum' will uncover many web sites still in their infancy.
-                Various versions have evolved over the years, sometimes by
-                accident, sometimes on purpose (injected humour and the like).
+                Kyro Tools offer you a Blazing fast Twitter Monitor with in-built Auto Link opener and Invite Joiner. You can monitor Latest and Featured Tweets with features like:
+                QR Solver, OCR Support, Arithmetic Solver, and many more. You can directly add and/or delete accounts that you want to monitor. 
+                <br /> <br /> <br/>
+              </p>
+              <h1>Settings</h1>
+              <AppSpacer spacer={25} />
+              <p>
+                Settings let you create create different Chrome Profiles that can be used for Auto Link opener. You can also create separate Claimer groups by entering multiple tokens, which can be modified as how you want. 
+                It lets you start and/or stop Background Animation. Enter a Webhook URL to test and select toggles for whichever webhooks you want to display. 
+                The user also has an option to Logout in this page. 
+                <br /> <br /> 
               </p>
             </div>
           </>
