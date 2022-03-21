@@ -14,13 +14,13 @@ import {
   fetchLOChannelList,
   fetchLOKeywordList,
   fetchLOSettingState,
+  fetchWebhookListState,
+  fetchLoggedUserDetails,
   fetchLOchromeUserState,
   fetchDiscordAccountList,
   fetchLinkOpenerLogState,
-  fetchSelectedMinitorTokenLinkOpener,
   fetchWebhookSettingState,
-  fetchWebhookListState,
-  fetchLoggedUserDetails,
+  fetchSelectedMinitorTokenLinkOpener,
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
@@ -193,7 +193,6 @@ class LinkOpener extends React.PureComponent {
       settingOption,
       handleOpenModal,
       selectedMonitorToken,
-      webhookSetting,
     } = this.props;
     return (
       <div className="page-section">

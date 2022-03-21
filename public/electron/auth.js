@@ -9,7 +9,6 @@ const guildId = "936538800027467816";
 const redirect_uri = "http://localhost/callback/*";
 let accessToken = null;
 
-
 function getAccessToken() {
   return accessToken;
 }
@@ -85,7 +84,10 @@ async function login() {
   res = await axios(options);
   const roles = [];
   for (const role of res.data) {
-    if (roles_id.includes(role.id)) {
+    if (
+      roles_id.includes(role.id) &&
+      role.name.toLowerCase().includes("beta")
+    ) {
       roles.push(role.name);
     }
   }
@@ -103,5 +105,6 @@ module.exports = {
   loadTokens,
   login,
   getCurrentUser,
-  logout,redirect_uri
+  logout,
+  redirect_uri,
 };

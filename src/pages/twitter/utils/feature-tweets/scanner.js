@@ -51,10 +51,10 @@ function mathSolver(tweetText) {
 
 async function ocrResolver(media) {
   let ocrArr = [];
-  for (const key in media) {
-    let mediaArr = media[key];
-    for (let i = 0; i < mediaArr.length; i++) {
-      try {
+  try {
+    for (const key in media) {
+      let mediaArr = media[key];
+      for (let i = 0; i < mediaArr.length; i++) {
         if (mediaArr[i].type === "photo") {
           const text = await ipcRenderer.invoke(
             "imageText",
@@ -64,21 +64,21 @@ async function ocrResolver(media) {
             ocrArr.push(text);
           }
         }
-      } catch (error) {
-        console.log("Error in reading OCR", error.message);
       }
     }
+    return ocrArr;
+  } catch (error) {
+    console.log("Error in reading OCR", error.message);
+    return ocrArr;
   }
-
-  return ocrArr;
 }
 
 async function qrResolver(media) {
   let qrArr = [];
-  for (const key in media) {
-    let mediaArr = media[key];
-    for (let i = 0; i < mediaArr.length; i++) {
-      try {
+  try {
+    for (const key in media) {
+      let mediaArr = media[key];
+      for (let i = 0; i < mediaArr.length; i++) {
         const image = await Jimp.read(mediaArr[i].media_url);
         const qr = new QrCode();
         qr.callback = (err, res) => {
@@ -87,15 +87,16 @@ async function qrResolver(media) {
           }
         };
         qr.decode(image.bitmap);
-      } catch (error) {
-        console.log("Error in reading QR code", error);
       }
     }
-  }
-  if (qrArr.length === 0) {
+    if (qrArr.length === 0) {
+      return null;
+    }
+    return qrArr;
+  } catch (err) {
+    console.error("error on Resolving twitter QR", err.message);
     return null;
   }
-  return qrArr;
 }
 
 // Checks Pastebin Links (helper)
