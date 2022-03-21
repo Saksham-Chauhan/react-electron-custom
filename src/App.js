@@ -94,11 +94,15 @@ function App() {
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
-        let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
-        await loggedUserWebhook(title, webhookList[0], globalSetting?.logOnOff);
         if (decode.roles.length > 0) {
+          let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
+          await loggedUserWebhook(
+            title,
+            webhookList[0],
+            globalSetting?.logOnOff
+          );
           dispatch(setUserDetails(decode));
-        } else toastWarning("Sorry, you don't have required role 🥲 😭");
+        } else toastWarning("Sorry, you don't have required role  😭");
       }
     });
     proxyTestResultListener((res) => {

@@ -88,14 +88,9 @@ function createWindow() {
         {
           label: "Discord",
           url: "https://discord.gg/vSSezmnv2H",
-          backgroundColor: "#5865F2",
         },
       ],
     });
-    richPresence.on("connected", () =>
-      console.log("Rich presence is connected")
-    );
-    richPresence.on("error", (err) => console.log("Rich presence error", err));
   } catch (err) {
     console.log("Error in Disocrd RPC Wrapper", err.message);
   }
