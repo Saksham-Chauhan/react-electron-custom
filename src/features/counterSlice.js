@@ -44,10 +44,10 @@ export const counterSlice = createSlice({
       state.invite = [...action.payload];
     },
     updateSpoofArray: (state, action) => {
-      state.twites = [...action.payload];
+      state.spoof = [...action.payload];
     },
     updateTweetsArray: (state, action) => {
-      state.spoof = [...action.payload];
+      state.twites = [...action.payload];
     },
     addlastDate: (state, action) => {
       state.date = action.payload;

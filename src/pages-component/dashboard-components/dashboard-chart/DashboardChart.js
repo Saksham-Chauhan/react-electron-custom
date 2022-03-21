@@ -131,13 +131,13 @@ const DashboardChart = () => {
       if (linkOpnerData === 0) dispatch(addlastWeekLink(0));
       if (inviteJoinerData === 0) dispatch(addlastWeekInvite(0));
       if (twitterData === 0) dispatch(addlastWeekTweets(0));
-      if (spooferData === 0) dispatch(addlastWeekSpoofs(spooferData));
+      if (spooferData === 0) dispatch(addlastWeekSpoofs(0));
 
       if (spooferData < lastWeekSpoof) dispatch(addlastWeekSpoofs(spooferData));
 
       let date = new Date();
-      let day = date.getDay();
-      if (day > lastDate) {
+      let day = date.getDay() - 1;
+      if (day > lastDate || (lastDate === 6 && day === 0)) {
         dispatch(addlastWeekLink(linkOpnerData));
         dispatch(addlastWeekInvite(inviteJoinerData));
         dispatch(addlastWeekTweets(twitterData));
@@ -146,26 +146,26 @@ const DashboardChart = () => {
       }
       if (day === 0) {
         l = [0, 0, 0, 0, 0, 0, 0];
-        l[day - 1] = linkOpnerData - lastWeekLink;
+        l[day] = linkOpnerData - lastWeekLink;
         dispatch(updateLinkArray(l));
         i = [0, 0, 0, 0, 0, 0, 0];
-        i[day - 1] = inviteJoinerData - lastWeekInvites;
+        i[day] = inviteJoinerData - lastWeekInvites;
         dispatch(updateInviteArray(i));
         t = [0, 0, 0, 0, 0, 0, 0];
-        t[day - 1] = twitterData - lastWeekTweets;
+        t[day] = twitterData - lastWeekTweets;
         dispatch(updateTweetsArray(t));
         s = [0, 0, 0, 0, 0, 0, 0];
-        s[day - 1] = spooferData - lastWeekSpoof;
+        s[day] = spooferData - lastWeekSpoof;
         dispatch(updateSpoofArray(s));
-        dispatch(addlastDate(day - 1));
+        dispatch(addlastDate(day));
       } else {
-        l[day - 1] = linkOpnerData - lastWeekLink;
+        l[day] = linkOpnerData - lastWeekLink;
         dispatch(updateLinkArray(l));
-        i[day - 1] = inviteJoinerData - lastWeekInvites;
+        i[day] = inviteJoinerData - lastWeekInvites;
         dispatch(updateInviteArray(i));
-        t[day - 1] = twitterData - lastWeekTweets;
+        t[day] = twitterData - lastWeekTweets;
         dispatch(updateTweetsArray(t));
-        s[day - 1] = spooferData - lastWeekSpoof;
+        s[day] = spooferData - lastWeekSpoof;
         dispatch(updateSpoofArray(s));
       }
     };
@@ -188,7 +188,7 @@ const DashboardChart = () => {
   ]);
   //CHART DATA
   const labels = ["Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"];
-  const colors = ["#FB49C0", "#0D24EF", "#F5A623", "#3EB7E5"];
+  const colors = ["#FB49C0", "#3EB7E5", "#0D24EF", "#F5A623"];
   const data = {
     fillOpacity: 0.3,
     labels,
