@@ -147,60 +147,56 @@ function InviteJoinerSettings() {
     if (result) {
       const claimerArr = selectedClaimerGroup["value"]?.split("\n");
       claimerArr.forEach(async (token) => {
-          const proxyArr = selectedProxyGroup["value"]?.split("\n");
-          for (let index = 0; index < proxyArr.length; index++) {
-            let proxySplit = proxyArr[index]?.split(":");
-            const proxy = {
-              host: proxySplit[0],
-              port: proxySplit[1],
-              auth: {
-                username: proxySplit[2],
-                password: proxySplit[3],
-              },
-            };
-            const inviteRespose = await discordServerInviteAPI(
-              setting.inviteCode,
-              token,
-              proxy
-            );
-            if (inviteRespose.status === 200) {
-              if (index > claimerArr.length) break;
-              toastSuccess(
-                `Joined the ${inviteRespose.data.guild.name} server`
-              );
-              if (setting.isReact) {
-            const response = await discordServerInviteReactAPI(
-            selectedProxyGroup,
-            setting.reactSetting.channelId,
-            setting.reactSetting.messageId,
-            setting.reactSetting.emojiHexValue,
-            token
-          );
-          if (response !== null) {
-            if (response.status === 201) {
-              toastSuccess("Reacted to the server");
-            }
-          }
-        }
-            }
-            
-            if (setting.isAcceptRule) {
-          const response = await discordServerAcceptRuleAPI(
-            setting.acceptRule.guildID,
-            token,
-            setting.acceptRule.acceptRuleValue,
+        const proxyArr = selectedProxyGroup["value"]?.split("\n");
+        for (let index = 0; index < proxyArr.length; index++) {
+          let proxySplit = proxyArr[index]?.split(":");
+          const proxy = {
+            host: proxySplit[0],
+            port: proxySplit[1],
+            auth: {
+              username: proxySplit[2],
+              password: proxySplit[3],
+            },
+          };
+          const inviteRespose = await discordServerInviteAPI(
             setting.inviteCode,
-            selectedProxyGroup
+            token,
+            proxy
           );
-          if (response !== null) {
-            if (response.status === 201) {
-              toastSuccess("Accept the rule");
+          if (inviteRespose.status === 200) {
+            if (index > claimerArr.length) break;
+            toastSuccess(`Joined the ${inviteRespose.data.guild.name} server`);
+            if (setting.isReact) {
+              const response = await discordServerInviteReactAPI(
+                selectedProxyGroup,
+                setting.reactSetting.channelId,
+                setting.reactSetting.messageId,
+                setting.reactSetting.emojiHexValue,
+                token
+              );
+              if (response !== null) {
+                if (response.status === 201) {
+                  toastSuccess("Reacted to the server");
+                }
+              }
+            }
+          }
+
+          if (setting.isAcceptRule) {
+            const response = await discordServerAcceptRuleAPI(
+              setting.acceptRule.guildID,
+              token,
+              setting.acceptRule.acceptRuleValue,
+              setting.inviteCode,
+              selectedProxyGroup
+            );
+            if (response !== null) {
+              if (response.status === 201) {
+                toastSuccess("Accept the rule");
+              }
             }
           }
         }
-          }
-        
-       
       });
       handleCloseModal();
     }

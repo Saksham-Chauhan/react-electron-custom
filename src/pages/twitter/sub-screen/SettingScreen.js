@@ -1,27 +1,29 @@
 import React, { useState } from "react";
 import "./styles.css";
-import { useDispatch, useSelector } from "react-redux";
-import back from "../../../assests/images/back.svg";
-import { twiiterApiSchema } from "../../../validation";
-import { AppInputField, AppSpacer } from "../../../component";
-import { TwitterPageTopSection } from "../../../pages-component";
+import {
+  setTwitterChromeUser,
+  setTwitterClaimerGroup,
+  fetchClaimerGroupList,
+  fetchChromeUserListState,
+  fetchTwitterChromeUserState,
+  fetchTwitterClaimerGroupState,
+} from "../../../features/counterSlice";
 import {
   addNewApiInList,
   removeApiFromList,
 } from "../../../features/logic/twitter";
-import { validationChecker } from "../../../hooks/validationChecker";
-import UseAnimations from 'react-useanimations';
-import trash2 from 'react-useanimations/lib/trash2';
 import { toastWarning } from "../../../toaster";
-import {
-  fetchChromeUserListState,
-  fetchClaimerGroupList,
-  fetchTwitterChromeUserState,
-  fetchTwitterClaimerGroupState,
-  setTwitterChromeUser,
-  setTwitterClaimerGroup,
-} from "../../../features/counterSlice";
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
+import back from "../../../assests/images/back.svg";
+import { twiiterApiSchema } from "../../../validation";
+import { useDispatch, useSelector } from "react-redux";
+import { AppInputField, AppSpacer } from "../../../component";
+import { TwitterPageTopSection } from "../../../pages-component";
+import { validationChecker } from "../../../hooks/validationChecker";
 import { getClaimerValue, makeClaimerSelectOption } from "../../../helper";
+import { useNavigate } from "react-router-dom";
+import { RoutePath } from "../../../constant";
 
 function SettingScreen({
   handleScreen,
@@ -35,6 +37,7 @@ function SettingScreen({
   const claimerList = useSelector(fetchClaimerGroupList);
   const selectedChrome = useSelector(fetchTwitterChromeUserState);
   const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
+  let navigate = useNavigate();
   const [twitterApi, setTwitterApi] = useState({
     apiName: "",
     apiKey: "",
@@ -80,6 +83,18 @@ function SettingScreen({
 
   const handleClaimerSelect = (data) => {
     dispatch(setTwitterClaimerGroup(data));
+  };
+
+  const handleChromeMenuOpen = () => {
+    if (chromeList.length === 0) {
+      navigate(RoutePath.setting, { replace: true });
+    }
+  };
+
+  const handleClaimerMenuOpen = () => {
+    if (claimerList.length === 0) {
+      navigate(RoutePath.setting, { replace: true });
+    }
   };
 
   return (
@@ -154,7 +169,13 @@ function SettingScreen({
               {apiList.map((api, index) => (
                 <div key={api["id"]} className="api-list-item">
                   <span>{api["apiName"]}</span>
-                  <UseAnimations onClick={() => handleApiDelete(api, index)} animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
+                  <UseAnimations
+                    onClick={() => handleApiDelete(api, index)}
+                    animation={trash2}
+                    strokeColor="#B60E0E"
+                    size={25}
+                    wrapperStyle={{ cursor: "pointer" }}
+                  ></UseAnimations>
                 </div>
               ))}
             </div>
@@ -167,9 +188,14 @@ function SettingScreen({
               hideLabel={true}
               isCustomLabel={true}
               onChange={handleClaimerSelect}
-              placeholderText="Enter Claimer Group"
+              placeholderText={
+                claimerList.length > 0
+                  ? "Enter Claimer Group"
+                  : "Add Claimer Group"
+              }
               selectOptions={makeClaimerSelectOption(claimerList)}
               value={getClaimerValue(claimerList, selectedClaimer)}
+              onMenuOpen={handleClaimerMenuOpen}
             />
           </div>
           <div>
@@ -181,7 +207,12 @@ function SettingScreen({
               isCustomLabel={true}
               selectOptions={chromeList}
               onChange={handleUserSelect}
-              placeholderText="Select Chrome Profile"
+              onMenuOpen={handleChromeMenuOpen}
+              placeholderText={
+                chromeList.length > 0
+                  ? "Select Chrome Profile"
+                  : "Add Chrome profile"
+              }
               value={chromeList.filter((d) => d["id"] === selectedChrome["id"])}
             />
           </div>

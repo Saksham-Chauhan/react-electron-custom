@@ -21,9 +21,11 @@ import edit from "react-useanimations/lib/edit";
 import { useDispatch, useSelector } from "react-redux";
 import { discordTokenRegExp } from "../../../constant/regex";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
-
+import { RoutePath } from "../../../constant";
+import { useNavigate } from "react-router-dom";
 function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const chromeList = useSelector(fetchChromeUserListState);
   const selectedChrome = useSelector(fetchLOchromeUserState);
   const keywordList = useSelector(fetchLOKeywordList);
@@ -93,6 +95,12 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
     dispatch(setLOchromeUser(user));
   };
 
+  const handleChromeMenuOpen = () => {
+    if (chromeList.length === 0) {
+      navigate(RoutePath.setting, { replace: true });
+    }
+  };
+
   return (
     <div>
       <AppSpacer spacer={30} />
@@ -133,9 +141,12 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
           hideLabel={true}
           isCustomLabel={true}
           onChange={handleSelectedChrome}
+          onMenuOpen={handleChromeMenuOpen}
           isSelect={true}
           selectOptions={chromeList}
-          placeholderText="Select Chrome Profile"
+          placeholderText={
+            chromeList.length > 0 ? "Select Chrome Profile" : "Add Chrome user"
+          }
           value={chromeList.filter((d) => d["id"] === selectedChrome?.id)}
         />
       </div>

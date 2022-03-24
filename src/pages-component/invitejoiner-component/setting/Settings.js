@@ -24,6 +24,8 @@ import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import edit from "react-useanimations/lib/edit";
 import { deleteAccountFromList } from "../../../features/logic/discord-account";
+import { useNavigate } from "react-router-dom";
+import { RoutePath } from "../../../constant";
 
 const MIN_SAFE_DELAY_VALUE = 0;
 const MAX_SAFE_DELAY_VALUE = 10 * 1000;
@@ -37,6 +39,7 @@ function Settings({
   selectedClaimerGroup,
 }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const claimerList = useSelector(fetchClaimerGroupList);
   const proxyGroupList = useSelector(fetchProxyGroupList);
   const selectedProxyGroup = useSelector(fetchSelctedInviteProxyGroup);
@@ -148,6 +151,17 @@ function Settings({
     }
   };
 
+  const handleClaimerMenuOpen = () => {
+    if (claimerList.length === 0) {
+      navigate(RoutePath.setting, { replace: true });
+    }
+  };
+
+  const handleProxyMenuOpen = () => {
+    if (proxyGroupList.length === 0) {
+      navigate(RoutePath.proxy, { replace: true });
+    }
+  };
   return (
     <div>
       <AppSpacer spacer={30} />
@@ -192,10 +206,13 @@ function Settings({
             fieldTitle="Claimer Token"
             isCustomLabel={true}
             hideLabel={true}
-            placeholderText="Select Token"
+            placeholderText={
+              claimerList.length > 0 ? "Select Token" : "Add Claimer group"
+            }
             selectOptions={makeClaimerSelectOption(claimerList)}
             isSelect={true}
             onChange={handleClaimer}
+            onMenuOpen={handleClaimerMenuOpen}
             value={getClaimerValue(claimerList, selectedClaimerGroup)}
           />
         </div>
@@ -204,11 +221,16 @@ function Settings({
             fieldTitle="Proxy Group"
             isCustomLabel={true}
             hideLabel={true}
-            placeholderText="Select Proxy Group"
+            placeholderText={
+              proxyGroupList.length > 0
+                ? "Select Proxy Group"
+                : "Add Proxy group"
+            }
             isSelect={true}
             selectOptions={makeProxyOptions()}
             onChange={handleSelectProxyGroup}
             value={getProxyGroupValue()}
+            onMenuOpen={handleProxyMenuOpen}
           />
         </div>
         <div className="linkopener">
