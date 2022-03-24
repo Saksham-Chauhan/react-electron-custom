@@ -141,12 +141,12 @@ function InviteJoinerSettings() {
     });
   };
 
+  // TODO => Prettify this code
   const handleSubmit = () => {
     const result = checkValidation();
     if (result) {
       const claimerArr = selectedClaimerGroup["value"]?.split("\n");
       claimerArr.forEach(async (token) => {
-        if (!setting.isReact && !setting.isAcceptRule) {
           const proxyArr = selectedProxyGroup["value"]?.split("\n");
           for (let index = 0; index < proxyArr.length; index++) {
             let proxySplit = proxyArr[index]?.split(":");
@@ -158,8 +158,6 @@ function InviteJoinerSettings() {
                 password: proxySplit[3],
               },
             };
-            // if proxy is more than claimer group length then exit for loop
-
             const inviteRespose = await discordServerInviteAPI(
               setting.inviteCode,
               token,
@@ -170,11 +168,8 @@ function InviteJoinerSettings() {
               toastSuccess(
                 `Joined the ${inviteRespose.data.guild.name} server`
               );
-            }
-          }
-        }
-        if (setting.isReact) {
-          const response = await discordServerInviteReactAPI(
+              if (setting.isReact) {
+            const response = await discordServerInviteReactAPI(
             selectedProxyGroup,
             setting.reactSetting.channelId,
             setting.reactSetting.messageId,
@@ -187,7 +182,9 @@ function InviteJoinerSettings() {
             }
           }
         }
-        if (setting.isAcceptRule) {
+            }
+            
+            if (setting.isAcceptRule) {
           const response = await discordServerAcceptRuleAPI(
             setting.acceptRule.guildID,
             token,
@@ -201,8 +198,11 @@ function InviteJoinerSettings() {
             }
           }
         }
+          }
+        
+       
       });
-      // handleCloseModal();
+      handleCloseModal();
     }
   };
 

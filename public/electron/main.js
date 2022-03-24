@@ -206,14 +206,6 @@ app.on("ready", () => {
   global.mainWin = mainWindow;
 });
 
-// AUTO UPDATER
-
-// for update to work we have to add publish key in package.json file
-// so that updater can use that value detect update available or not
-
-// Channel need to Add Listener in React App
-// update:anerror update:showModal update:downloading update:not-avail update:progress update:reset
-
 const updateCheck = () => {
   autoUpdater.autoDownload = false;
 

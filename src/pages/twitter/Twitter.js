@@ -35,9 +35,7 @@ import { appendNewTweetInList } from "../../features/logic/twitter";
 import { discordServerInviteAPI } from "../../api";
 
 const open = window.require("open");
-
-// FIXME:: decrease the time gap to ms instead of sec
-const TWEET_FETCH_TIME = 1000;
+const TWEET_FETCH_TIME = 100;
 
 function Twitter() {
   const dispatch = useDispatch();
