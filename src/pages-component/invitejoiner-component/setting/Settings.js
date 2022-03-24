@@ -37,6 +37,7 @@ function Settings({
   selectedToken,
   isMonitorStart,
   selectedClaimerGroup,
+  selectedMonitorToken,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -78,7 +79,12 @@ function Settings({
     if (accountList.length > 0) {
       if (Object.keys(selectedToken).length > 0) {
         const result = isValueInUse(accountList, "discordToken", selectedToken);
-        if (!result && !isMonitorStart) {
+        const loResult = isValueInUse(
+          accountList,
+          "discordToken",
+          selectedMonitorToken
+        );
+        if (!result && !loResult && !isMonitorStart) {
           dispatch(setEditStorage(selectedToken));
           dispatch(setModalState("discordAccount"));
         } else toastWarning("Token in use!!");
@@ -92,9 +98,16 @@ function Settings({
   const handleDeleteAccount = () => {
     if (accountList.length > 0) {
       if (Object.keys(selectedToken).length > 0) {
-        const result = isValueInUse(accountList, "discordToken", selectedToken);
+        const result = isValueInUse(
+          accountList,
+          "discordToken",
+          selectedToken,
+          selectedMonitorToken
+        );
+        console.log(result);
         if (!result && !isMonitorStart) {
-          dispatch(deleteAccountFromList(selectedToken));
+          console.log(selectedToken);
+          // dispatch(deleteAccountFromList(selectedToken));
         } else toastWarning("Token in use!!");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");

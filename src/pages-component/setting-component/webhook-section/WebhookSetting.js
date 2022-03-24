@@ -50,8 +50,8 @@ function WebhookSetting({ userDetails }) {
     if (webhoookRegExp.test(webhook)) {
       const webhookResponse = await webhookTest(
         webhook,
-        userDetails.username,
-        userDetails.avatar
+        userDetails?.username,
+        userDetails?.avatar
       );
 
       if (webhookResponse.status === 204) {

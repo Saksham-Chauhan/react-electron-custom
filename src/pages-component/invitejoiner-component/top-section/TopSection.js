@@ -6,7 +6,7 @@ function TopSection({ logList, selectedToken }) {
     <TopWrapper>
       <GroupStatusCard
         subText={`${Object.keys(logList).length} invite joined`}
-        title={selectedToken["accountName"] || "Account 1"}
+        title={selectedToken["accountName"] || ""}
       />
     </TopWrapper>
   );
