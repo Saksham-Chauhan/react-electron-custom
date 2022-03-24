@@ -12,6 +12,7 @@ import {
   fetchSelctedInviteProxyGroup,
   fetchSelectedClaimerGroupState,
   fetchSelectedClaimerTokenInviteJoiner,
+  fetchSelectedMinitorTokenLinkOpener,
   fetchWebhookListState,
   fetchWebhookSettingState,
   setModalState,
@@ -30,6 +31,7 @@ import { checkDiscordInvite } from "../link-opener/utils";
 import { discordServerInviteAPI } from "../../api";
 import { toastInfo, toastWarning } from "../../toaster";
 import { inviteJoinerTest } from "../../helper/webhook";
+import { NoAccountAlertModal } from "../../modals";
 
 const { Client } = window.require("discord.js-selfbot");
 
@@ -191,6 +193,7 @@ class InviteJoiner extends React.Component {
       ijMonitorState,
       handleOpenModal,
       selectedClaimerGroup,
+      selectedMonitorToken,
     } = this.props;
 
     return (
@@ -201,6 +204,13 @@ class InviteJoiner extends React.Component {
           />
         </div>
         <div className="right-container invite-joiner">
+          {accountList.length === 0 && (
+            <NoAccountAlertModal
+              buttonPress={handleOpenModal}
+              buttonText="Create Account"
+              modalTitle="No Account"
+            />
+          )}
           <InviteJoinerTopSection {...{ logList, selectedToken }} />
           <div className="page-padding-section">
             <div className="linkopener-flex-wrapper">
@@ -213,6 +223,7 @@ class InviteJoiner extends React.Component {
                     selectedToken,
                     isMonitorStart,
                     selectedClaimerGroup,
+                    selectedMonitorToken,
                   }}
                 />
                 <div className="flex-keyword-channel invite-joiner">
@@ -253,6 +264,7 @@ const mapStateToProps = (state) => {
     webhookSetting: fetchWebhookSettingState(state),
     webhookList: fetchWebhookListState(state),
     user: fetchLoggedUserDetails(state),
+    selectedMonitorToken: fetchSelectedMinitorTokenLinkOpener(state),
   };
 };
 

@@ -8,6 +8,7 @@ import {
   fetchChromeUserListState,
   fetchLOChannelList,
   fetchLOKeywordList,
+  fetchSelectedClaimerTokenInviteJoiner,
 } from "../../../features/counterSlice";
 import { isValueInUse } from "../../../helper";
 import { toastWarning } from "../../../toaster";
@@ -23,6 +24,7 @@ import { discordTokenRegExp } from "../../../constant/regex";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
 import { RoutePath } from "../../../constant";
 import { useNavigate } from "react-router-dom";
+
 function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,6 +32,8 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const selectedChrome = useSelector(fetchLOchromeUserState);
   const keywordList = useSelector(fetchLOKeywordList);
   const channelList = useSelector(fetchLOChannelList);
+  const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
+
   /**
    * function handle modal state
    **/
@@ -81,12 +85,17 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
       if (Object.keys(selectedMonitorToken).length > 0) {
         const result = isValueInUse(
           accountList,
-          "discordToken",
+          "id",
+          selectedToken,
           selectedMonitorToken
         );
-        if (!result && !settingOption?.linkOpenerState) {
-          dispatch(deleteAccountFromList(selectedMonitorToken));
-        } else toastWarning("Token in use!!");
+        if (!settingOption?.linkOpenerState) {
+          console.log("OUT", selectedToken, result, settingOption);
+        }
+
+        // if (!result && !settingOption?.linkOpenerState) {
+        //   // dispatch(deleteAccountFromList(selectedMonitorToken));
+        // } else toastWarning("Token in use!!");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
   };
@@ -121,7 +130,7 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
             strokeColor="#ffff"
             size={20}
             wrapperStyle={{ cursor: "pointer" }}
-          ></UseAnimations>
+          />
           <span>Edit Account</span>
         </div>
         <div onClick={handleDeleteAccount} className="linkopener-acc btn">
@@ -130,7 +139,7 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
             strokeColor="#B60E0E"
             size={20}
             wrapperStyle={{ cursor: "pointer", paddingBottom: "1px" }}
-          ></UseAnimations>
+          />
           <span>Delete Account</span>
         </div>
       </div>

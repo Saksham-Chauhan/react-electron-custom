@@ -30,6 +30,7 @@ import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
 import { toastInfo } from "../../toaster";
 import { linkOpenerWebhook } from "../../helper/webhook";
+import { NoAccountAlertModal } from "../../modals";
 
 const { Client } = window.require("discord.js-selfbot");
 const open = window.require("open");
@@ -195,6 +196,13 @@ class LinkOpener extends React.PureComponent {
     } = this.props;
     return (
       <div className="page-section">
+        {accountList.length === 0 && (
+          <NoAccountAlertModal
+            buttonPress={handleOpenModal}
+            buttonText="Create Account"
+            modalTitle="No Account"
+          />
+        )}
         <div className="left-container">
           <LinkOpenerLeftSection
             {...{

@@ -10,7 +10,7 @@ function TopSection({ logList }) {
     <TopWrapper>
       <GroupStatusCard
         subText={`${Object.keys(logList).length} Links opened`}
-        title={selectedMonitorToken["accountName"] || "Account 1"}
+        title={selectedMonitorToken["accountName"] || ""}
       />
     </TopWrapper>
   );
