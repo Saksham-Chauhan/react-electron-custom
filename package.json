@@ -99,7 +99,7 @@
     "win": {
       "artifactName": "${productName}-${version}.${ext}",
       "target": "nsis",
-      "icon": "public/electron/img/icon.ico"
+      "icon": "public/images/icon.ico"
     },
     "dmg": {
       "title": "Kyro",
