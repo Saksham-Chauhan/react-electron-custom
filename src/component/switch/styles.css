@@ -10,7 +10,7 @@
   border-radius: 60px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.5s ease-in-out;
-  background: #706A6A;
+  background: #706a6a;
 }
 .app-switch-container > input:checked {
   background: var(--start);
@@ -26,6 +26,7 @@
   background: var(--app-bg);
   border-radius: 60px;
   transition: all 0.5s ease-in-out;
+  cursor: pointer;
 }
 .app-switch-container > input:checked::before {
   transform: translateX(130%) translateY(-50%);

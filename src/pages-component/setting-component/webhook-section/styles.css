@@ -26,7 +26,8 @@
   border: none;
   border-radius: 7.30556px;
   padding: 0px 1em;
-  color: var(--primary);
+  color: #dadada;
+  /* color: var(--primary); */
   font-size: 14px;
 }
 .webhook-input-section > .webhook-test {

@@ -47,7 +47,11 @@ function Settings({
   };
 
   const handleClaimer = (data) => {
-    dispatch(setSelectedClaimerGroup(data));
+    if (Object.keys(selectedClaimerGroup).length > 0) {
+      if (Object.keys(selectedProxyGroup).length > 0) {
+        dispatch(setSelectedClaimerGroup(data));
+      } else toastWarning("Select proxy group");
+    } else toastWarning("Select claimer group");
   };
 
   const handleIJmonitor = () => {

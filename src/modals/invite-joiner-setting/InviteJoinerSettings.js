@@ -17,8 +17,10 @@ import { toastWarning, toastSuccess } from "../../toaster";
 import { channelRegexExp } from "../../constant/regex";
 import {
   discordServerAcceptRuleAPI,
+  discordServerInviteAPI,
   discordServerInviteReactAPI,
 } from "../../api";
+
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
   const selectedProxyGroup = useSelector(fetchSelctedInviteProxyGroup);
@@ -144,6 +146,33 @@ function InviteJoinerSettings() {
     if (result) {
       const claimerArr = selectedClaimerGroup["value"]?.split("\n");
       claimerArr.forEach(async (token) => {
+        if (!setting.isReact && !setting.isAcceptRule) {
+          const proxyArr = selectedProxyGroup["value"]?.split("\n");
+          for (let index = 0; index < proxyArr.length; index++) {
+            let proxySplit = proxyArr[index]?.split(":");
+            const proxy = {
+              host: proxySplit[0],
+              port: proxySplit[1],
+              auth: {
+                username: proxySplit[2],
+                password: proxySplit[3],
+              },
+            };
+            // if proxy is more than claimer group length then exit for loop
+
+            const inviteRespose = await discordServerInviteAPI(
+              setting.inviteCode,
+              token,
+              proxy
+            );
+            if (inviteRespose.status === 200) {
+              if (index > claimerArr.length) break;
+              toastSuccess(
+                `Joined the ${inviteRespose.data.guild.name} server`
+              );
+            }
+          }
+        }
         if (setting.isReact) {
           const response = await discordServerInviteReactAPI(
             selectedProxyGroup,
@@ -169,14 +198,11 @@ function InviteJoinerSettings() {
           if (response !== null) {
             if (response.status === 201) {
               toastSuccess("Accept the rule");
-              // dispatch(
-              //   addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
-              // ),
             }
           }
         }
       });
-      handleCloseModal();
+      // handleCloseModal();
     }
   };
 

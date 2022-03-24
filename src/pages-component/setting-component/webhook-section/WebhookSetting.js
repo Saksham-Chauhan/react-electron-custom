@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppSpacer, AppToggler } from "../../../component";
 import { webhoookRegExp } from "../../../constant/regex";
@@ -17,6 +17,12 @@ function WebhookSetting({ userDetails }) {
   const [webhook, setWebhook] = useState("");
   const option = useSelector(fetchWebhookSettingState);
   const webhokkList = useSelector(fetchWebhookListState);
+
+  useEffect(() => {
+    if (webhokkList.length > 0) {
+      setWebhook(webhokkList[0]);
+    }
+  }, [webhokkList]);
 
   const handleToggle = (e) => {
     const { checked, id } = e.target;
