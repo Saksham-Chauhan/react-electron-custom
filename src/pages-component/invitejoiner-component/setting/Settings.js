@@ -12,12 +12,17 @@ import {
   fetchSafeModeDelayState,
   setSelectedClaimerGroup,
   fetchSelctedInviteProxyGroup,
+  fetchLOSettingState,
+  fetchIJMonitorState,
+  fetchSelectedMinitorTokenLinkOpener,
+  fetchSelectedClaimerTokenInviteJoiner,
 } from "../../../features/counterSlice";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
 import {
   isValueInUse,
   getClaimerValue,
   makeClaimerSelectOption,
+  makeProxyOptions,
 } from "../../../helper";
 import { toastWarning } from "../../../toaster";
 import UseAnimations from "react-useanimations";
@@ -25,19 +30,17 @@ import trash2 from "react-useanimations/lib/trash2";
 import edit from "react-useanimations/lib/edit";
 import { deleteAccountFromList } from "../../../features/logic/discord-account";
 import { useNavigate } from "react-router-dom";
-import { RoutePath } from "../../../constant";
-
-const MIN_SAFE_DELAY_VALUE = 0;
-const MAX_SAFE_DELAY_VALUE = 10 * 1000;
+import {
+  MAX_SAFE_DELAY_VALUE,
+  MIN_SAFE_DELAY_VALUE,
+  RoutePath,
+} from "../../../constant";
 
 function Settings({
   ijMonitorState,
   accountList,
   keywordList,
-  selectedToken,
-  isMonitorStart,
   selectedClaimerGroup,
-  selectedMonitorToken,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,17 +48,17 @@ function Settings({
   const proxyGroupList = useSelector(fetchProxyGroupList);
   const selectedProxyGroup = useSelector(fetchSelctedInviteProxyGroup);
   const safeDelayModeValue = useSelector(fetchSafeModeDelayState);
+  const loMonitor = useSelector(fetchLOSettingState);
+  const isMonitorStart = useSelector(fetchIJMonitorState);
+  const selectedMonitorToken = useSelector(fetchSelectedMinitorTokenLinkOpener);
+  const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
 
   const handleOpenModal = () => {
     dispatch(setModalState("inviteJoinerSetting"));
   };
 
   const handleClaimer = (data) => {
-    if (Object.keys(selectedClaimerGroup).length > 0) {
-      if (Object.keys(selectedProxyGroup).length > 0) {
-        dispatch(setSelectedClaimerGroup(data));
-      } else toastWarning("Select proxy group");
-    } else toastWarning("Select claimer group");
+    dispatch(setSelectedClaimerGroup(data));
   };
 
   const handleIJmonitor = () => {
@@ -78,16 +81,18 @@ function Settings({
   const handleEditAccount = () => {
     if (accountList.length > 0) {
       if (Object.keys(selectedToken).length > 0) {
-        const result = isValueInUse(accountList, "discordToken", selectedToken);
-        const loResult = isValueInUse(
-          accountList,
-          "discordToken",
-          selectedMonitorToken
-        );
-        if (!result && !loResult && !isMonitorStart) {
-          dispatch(setEditStorage(selectedToken));
-          dispatch(setModalState("discordAccount"));
-        } else toastWarning("Token in use!!");
+        const result = isValueInUse(accountList, "id", selectedToken);
+        if (!isMonitorStart && result) {
+          if (selectedMonitorToken["id"] !== selectedToken["id"]) {
+            dispatch(setEditStorage(selectedToken));
+            dispatch(setModalState("discordAccount"));
+          } else if (loMonitor?.linkOpenerState) {
+            toastWarning("Account is use by link opener");
+          } else {
+            dispatch(setEditStorage(selectedToken));
+            dispatch(setModalState("discordAccount"));
+          }
+        } else toastWarning("Monitor is start or token is in use!!");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
   };
@@ -98,35 +103,16 @@ function Settings({
   const handleDeleteAccount = () => {
     if (accountList.length > 0) {
       if (Object.keys(selectedToken).length > 0) {
-        const result = isValueInUse(
-          accountList,
-          "discordToken",
-          selectedToken,
-          selectedMonitorToken
-        );
-        console.log(result);
-        if (!result && !isMonitorStart) {
-          console.log(selectedToken);
-          // dispatch(deleteAccountFromList(selectedToken));
-        } else toastWarning("Token in use!!");
+        const result = isValueInUse(accountList, "id", selectedToken);
+        if (!isMonitorStart && result) {
+          if (selectedMonitorToken["id"] !== selectedToken["id"]) {
+            dispatch(deleteAccountFromList(selectedToken));
+          } else if (loMonitor?.linkOpenerState) {
+            toastWarning("Account is use by link opener");
+          } else dispatch(deleteAccountFromList(selectedToken));
+        } else toastWarning("Monitor is start or token is in use!!!");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
-  };
-
-  /**
-   * function make option for select
-   */
-  const makeProxyOptions = () => {
-    if (proxyGroupList.length > 0) {
-      const result = proxyGroupList.map((group) => {
-        let obj = {};
-        obj["label"] = group["groupName"];
-        obj["value"] = group["proxies"];
-        obj["id"] = group["id"];
-        return obj;
-      });
-      return result;
-    } else return [];
   };
 
   const handleSelectProxyGroup = (group) => {
@@ -175,6 +161,7 @@ function Settings({
       navigate(RoutePath.proxy, { replace: true });
     }
   };
+
   return (
     <div>
       <AppSpacer spacer={30} />
@@ -185,7 +172,7 @@ function Settings({
             checked={ijMonitorState}
             id="invite-joiner-monitor-toggle"
           />
-          <span>Stop Auto Invite Joiner</span>
+          <span>{isMonitorStart ? "Stop" : "Start"} Auto Invite Joiner</span>
         </div>
         <div
           onClick={handleOpenModal}
@@ -252,8 +239,8 @@ function Settings({
             isCustomLabel={true}
             hideLabel={true}
             type="number"
-            min={0}
-            max={10 * 1000}
+            min={MIN_SAFE_DELAY_VALUE}
+            max={MAX_SAFE_DELAY_VALUE}
             placeholderText="Enter Delay"
             onChange={handleDelayChange}
             value={safeDelayModeValue === 0 ? "" : safeDelayModeValue}

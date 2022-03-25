@@ -26,6 +26,7 @@ function ClaimerGroup() {
     name: "",
     claimerList: [],
     claimerToken: "",
+    createdAt: new Date().toUTCString(),
   });
 
   useEffect(() => {

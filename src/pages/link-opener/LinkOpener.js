@@ -21,6 +21,7 @@ import {
   fetchLinkOpenerLogState,
   fetchWebhookSettingState,
   fetchSelectedMinitorTokenLinkOpener,
+  setSelectedMonitorTokenLO,
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
@@ -89,7 +90,8 @@ class LinkOpener extends React.PureComponent {
                   },
                 });
               }
-              this.props.handleSendLog(content, msgID);
+              const date = new Date().toUTCString();
+              this.props.handleSendLog(content, msgID, date);
               await linkOpenerWebhook(
                 content,
                 user.username,
@@ -105,7 +107,7 @@ class LinkOpener extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { settingOption } = this.props;
+    const { settingOption, accountList } = this.props;
     try {
       this.monitor.on("ready", () => {
         console.log("Link opener is Ready..");
@@ -126,6 +128,9 @@ class LinkOpener extends React.PureComponent {
     } catch (error) {
       console.log("Error in Link Opener", error.message);
     }
+    if (accountList.length === 0) {
+      this.props.resetToken();
+    }
   }
   componentDidUpdate(prevProps) {
     const {
@@ -136,6 +141,7 @@ class LinkOpener extends React.PureComponent {
       selectedChrome,
       webhookSetting,
       webhookList,
+      accountList,
     } = this.props;
     if (
       selectedMonitorToken !== prevProps.selectedMonitorToken ||
@@ -180,6 +186,11 @@ class LinkOpener extends React.PureComponent {
         this.setState({ webhookSetting: webhookSetting });
       } else if (prevProps.webhookList !== webhookList) {
         this.setState({ webhookList: webhookList });
+      } else if (
+        prevProps.accountList.length !== accountList.length &&
+        accountList.length === 0
+      ) {
+        this.props.resetToken();
       }
     }
   }
@@ -249,10 +260,16 @@ class LinkOpener extends React.PureComponent {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleOpenModal: () => dispatch(setModalState("discordAccount")),
-    handleSendLog: (content, msgID) =>
+    handleSendLog: (content, msgID, date) =>
       dispatch(
-        addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
+        addLogInList({
+          key: "LO",
+          log: makeLogText(content),
+          id: msgID,
+          createdAt: date,
+        })
       ),
+    resetToken: () => dispatch(setSelectedMonitorTokenLO({})),
   };
 };
 
