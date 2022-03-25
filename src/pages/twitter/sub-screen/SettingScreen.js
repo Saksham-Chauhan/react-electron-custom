@@ -190,8 +190,8 @@ function SettingScreen({
               onChange={handleClaimerSelect}
               placeholderText={
                 claimerList.length > 0
-                  ? "Enter Claimer Group"
-                  : "Add Claimer Group"
+                  ? "Enter Token Group"
+                  : "Add Token Group"
               }
               selectOptions={makeClaimerSelectOption(claimerList)}
               value={getClaimerValue(claimerList, selectedClaimer)}
@@ -199,7 +199,7 @@ function SettingScreen({
             />
           </div>
           <div>
-            <h3>Chrome Users</h3>
+            <h3>Chrome User</h3>
             <AppInputField
               fieldTitle=""
               isSelect={true}
@@ -210,8 +210,8 @@ function SettingScreen({
               onMenuOpen={handleChromeMenuOpen}
               placeholderText={
                 chromeList.length > 0
-                  ? "Select Chrome Profile"
-                  : "Add Chrome profile"
+                  ? "Select Chrome User"
+                  : "Add Chrome User"
               }
               value={chromeList.filter((d) => d["id"] === selectedChrome["id"])}
             />

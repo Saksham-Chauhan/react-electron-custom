@@ -22,7 +22,11 @@ function ProxyGroup() {
   const dispatch = useDispatch();
   const editState = useSelector(fetchEditStorageState);
   const addProxy = useSelector(fetchIsAddnewProxyModalState);
-  const [proxy, setProxy] = useState({ groupName: "", proxies: "" });
+  const [proxy, setProxy] = useState({
+    groupName: "",
+    proxies: "",
+    createdAt: new Date().toUTCString(),
+  });
 
   useEffect(() => {
     if (Object.keys(editState).length > 0) {

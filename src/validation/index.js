@@ -21,6 +21,7 @@ export const oneClickAddGmailSchema = joi.object({
   status: joi.optional(),
   score: joi.optional(),
   id: joi.optional(),
+  createdAt: joi.optional(),
 });
 
 export const genNewAcccountSchema = joi.object({
@@ -34,6 +35,7 @@ export const genNewAcccountSchema = joi.object({
   mobile: joi.optional(),
   profile: joi.string().required().label("Select profile"),
   id: joi.optional(),
+  createdAt: joi.optional(),
 });
 
 export const addProxyGroupSchema = joi.object({
@@ -42,6 +44,7 @@ export const addProxyGroupSchema = joi.object({
   groupName: joi.string().required().label("Enter group name"),
   proxies: joi.optional(),
   type: joi.optional(),
+  createdAt: joi.optional(),
 });
 
 export const spooferSchema = joi.object({
@@ -53,27 +56,30 @@ export const spooferSchema = joi.object({
   status: joi.optional(),
   proxyValue: joi.optional(),
   isDisableImage: joi.optional(),
+  createdAt: joi.optional(),
 });
 
 export const discordAccountSchema = joi.object({
-  accountName: joi.string().required().label("Enter Account name"),
+  accountName: joi.string().required().label("Enter Account Name"),
   discordToken: joi.optional(),
   id: joi.optional(),
+  createdAt: joi.optional(),
 });
 
 export const twiiterApiSchema = joi.object({
   apiName: joi.string().required().label("Enter API Name"),
-  apiKey: joi.string().required().label("Enter API key"),
-  apiSecret: joi.string().required().label("Enter API secret"),
-  accessToken: joi.string().required().label("Enter Access token"),
-  accessSecret: joi.string().required().label("Enter Access secret"),
+  apiKey: joi.string().required().label("Enter API Key"),
+  apiSecret: joi.string().required().label("Enter API Secret"),
+  accessToken: joi.string().required().label("Enter Access Token"),
+  accessSecret: joi.string().required().label("Enter Access Secret"),
 });
 
 export const claimerGroupSchema = joi.object({
   name: joi.string().required().label("Enter Name"),
-  claimerToken: joi.string().required().label("Enter Claimer Token"),
+  claimerToken: joi.string().required().label("email:username:password:token"),
   claimerList: joi.array(),
   id: joi.optional(),
+  createdAt: joi.optional(),
 });
 
 export const inviteJoinerdirectJoineSchema = joi.object({
@@ -81,7 +87,7 @@ export const inviteJoinerdirectJoineSchema = joi.object({
     .string()
     .required()
     .pattern(new RegExp("/.+[a-z|A-Z|0-9]/"))
-    .label("Enter valid inviteCode"),
+    .label("Enter valid Invite Code"),
   isReact: false,
   reactSetting: {
     channelId: "",
@@ -92,4 +98,5 @@ export const inviteJoinerdirectJoineSchema = joi.object({
   acceptRule: {
     acceptRuleValue: "",
   },
+  createdAt: joi.optional(),
 });

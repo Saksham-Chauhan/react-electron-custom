@@ -33,8 +33,8 @@ import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { appendNewTweetInList } from "../../features/logic/twitter";
 import { discordServerInviteAPI } from "../../api";
+import { openChromeBrowser } from "../../helper";
 
-const open = window.require("open");
 const TWEET_FETCH_TIME = 100;
 
 function Twitter() {
@@ -117,14 +117,11 @@ function Twitter() {
                         }
                       } else {
                         if (twitterSetting?.startAutoLinkOpener) {
-                          await open(url, {
-                            app: {
-                              name: open.apps.chrome,
-                              arguments: [
-                                `--profile-directory=${selectedChrome["value"]}`,
-                              ],
-                            },
-                          });
+                          if (Object.keys(selectedChrome).length > 0) {
+                            await openChromeBrowser(url, selectedChrome);
+                          } else {
+                            await openChromeBrowser(url, null);
+                          }
                         }
                       }
                     }
@@ -180,7 +177,7 @@ function Twitter() {
             prevState["monitorStartDate"] = new Date().toUTCString();
           }
           dispatch(setTwitterSetting(prevState));
-        } else toastWarning("Enter some twitter handlers");
+        } else toastWarning("Enter some Twitter handlers");
       } else {
         toastWarning("Add some API keys");
       }
@@ -189,7 +186,7 @@ function Twitter() {
         if (selectedChrome !== undefined && selectedChrome !== null) {
           if (Object.keys(selectedClaimer).length > 0) {
             dispatch(setTwitterSetting(prevState));
-          } else toastWarning("Select Claimer group");
+          } else toastWarning("Select Token Group");
         }
       } else dispatch(setTwitterSetting(prevState));
     }

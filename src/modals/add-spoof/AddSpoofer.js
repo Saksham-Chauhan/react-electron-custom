@@ -32,6 +32,7 @@ function AddSpoofer() {
     proxyValue: "",
     disableImages: "",
     isDisableImage: false,
+    createdAt: new Date().toUTCString(),
   });
 
   /**
@@ -105,7 +106,7 @@ function AddSpoofer() {
         }
         handleCloseModal();
       }
-    } else toastWarning("Enter valid URL");
+    } else toastWarning("Enter Valid URL");
   };
 
   return (

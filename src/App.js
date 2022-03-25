@@ -9,7 +9,6 @@ import {
   fetchWebhookListState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
-  fetchAddGmailModalState,
   fetchWebhookSettingState,
   fetchEditProxyModalState,
   fetchProxyGroupModalState,
@@ -17,7 +16,6 @@ import {
   fetchInviteJoinerSettingModalState,
 } from "./features/counterSlice";
 import {
-  AddGmailModal,
   AddSpoofModal,
   ProxyGroupModal,
   ClaimerGroupModal,
@@ -66,7 +64,6 @@ function App() {
   const dispatch = useDispatch();
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
-  const addGmailModalState = useSelector(fetchAddGmailModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const proxyEditModalState = useSelector(fetchEditProxyModalState);
@@ -96,11 +93,13 @@ function App() {
         const decode = decodeUser(user);
         if (decode.roles.length > 0) {
           let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
-          await loggedUserWebhook(
-            title,
-            webhookList[0],
-            globalSetting?.logOnOff
-          );
+          if (webhookList.length === 0) {
+            await loggedUserWebhook(
+              title,
+              webhookList[0],
+              globalSetting?.logOnOff
+            );
+          }
           dispatch(setUserDetails(decode));
         } else toastWarning("Sorry, you don't have required role  😭");
       }
@@ -110,22 +109,22 @@ function App() {
     });
     updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
-  }, [dispatch, globalSetting, webhookList]);
+  }, [dispatch, globalSetting.logOnOff, webhookList]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length !== 0)
+  if (Object.keys(logggedUserDetails).length === 0) {
     return (
       <React.Fragment>
         <Login />
         <ToastContainer />
       </React.Fragment>
     );
+  }
 
   return (
     <div className="app">
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {addGmailModalState && <AddGmailModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {proxyEditModalState && <EditProxySingleModal />}

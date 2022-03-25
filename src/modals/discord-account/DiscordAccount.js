@@ -18,7 +18,11 @@ import { toastWarning } from "../../toaster";
 function DiscordAccount() {
   const dispatch = useDispatch();
   const editState = useSelector(fetchEditStorageState);
-  const [account, setAccount] = useState({ accountName: "", discordToken: "" });
+  const [account, setAccount] = useState({
+    accountName: "",
+    discordToken: "",
+    createdAt: new Date().toUTCString(),
+  });
 
   useEffect(() => {
     if (Object.keys(editState).length === 3) {

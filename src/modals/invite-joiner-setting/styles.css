@@ -47,3 +47,22 @@
     opacity: 1;
   }
 }
+
+/* emoji css */
+.emoji-picker-wrapper {
+  position: relative;
+}
+.emoji-tray-picker {
+  position: absolute;
+  top: -100%;
+  left: 110%;
+  width: 400px;
+}
+
+.direct-join-column-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.direct-join-column {
+  width: 32%;
+}

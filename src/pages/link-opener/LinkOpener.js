@@ -21,10 +21,11 @@ import {
   fetchLinkOpenerLogState,
   fetchWebhookSettingState,
   fetchSelectedMinitorTokenLinkOpener,
+  setSelectedMonitorTokenLO,
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
-import { makeLogText, makeStrOfArr } from "../../helper";
+import { makeLogText, makeStrOfArr, openChromeBrowser } from "../../helper";
 import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
@@ -33,7 +34,6 @@ import { linkOpenerWebhook } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
 
 const { Client } = window.require("discord.js-selfbot");
-const open = window.require("open");
 
 class LinkOpener extends React.PureComponent {
   monitor = new Client();
@@ -73,23 +73,13 @@ class LinkOpener extends React.PureComponent {
               }
               if (selectedChrome !== null) {
                 if (Object.keys(selectedChrome).length > 0) {
-                  await open(content, {
-                    app: {
-                      name: open.apps.chrome,
-                      arguments: [
-                        `--profile-directory=${selectedChrome["value"]}`,
-                      ],
-                    },
-                  });
+                  await openChromeBrowser(content, selectedChrome);
                 }
               } else {
-                await open(content, {
-                  app: {
-                    name: open.apps.chrome,
-                  },
-                });
+                await openChromeBrowser(content, null);
               }
-              this.props.handleSendLog(content, msgID);
+              const date = new Date().toUTCString();
+              this.props.handleSendLog(content, msgID, date);
               await linkOpenerWebhook(
                 content,
                 user.username,
@@ -105,7 +95,7 @@ class LinkOpener extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { settingOption } = this.props;
+    const { settingOption, accountList } = this.props;
     try {
       this.monitor.on("ready", () => {
         console.log("Link opener is Ready..");
@@ -126,6 +116,9 @@ class LinkOpener extends React.PureComponent {
     } catch (error) {
       console.log("Error in Link Opener", error.message);
     }
+    if (accountList.length === 0) {
+      this.props.resetToken();
+    }
   }
   componentDidUpdate(prevProps) {
     const {
@@ -136,6 +129,7 @@ class LinkOpener extends React.PureComponent {
       selectedChrome,
       webhookSetting,
       webhookList,
+      accountList,
     } = this.props;
     if (
       selectedMonitorToken !== prevProps.selectedMonitorToken ||
@@ -180,6 +174,11 @@ class LinkOpener extends React.PureComponent {
         this.setState({ webhookSetting: webhookSetting });
       } else if (prevProps.webhookList !== webhookList) {
         this.setState({ webhookList: webhookList });
+      } else if (
+        prevProps.accountList.length !== accountList.length &&
+        accountList.length === 0
+      ) {
+        this.props.resetToken();
       }
     }
   }
@@ -249,10 +248,16 @@ class LinkOpener extends React.PureComponent {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleOpenModal: () => dispatch(setModalState("discordAccount")),
-    handleSendLog: (content, msgID) =>
+    handleSendLog: (content, msgID, date) =>
       dispatch(
-        addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
+        addLogInList({
+          key: "LO",
+          log: makeLogText(content),
+          id: msgID,
+          createdAt: date,
+        })
       ),
+    resetToken: () => dispatch(setSelectedMonitorTokenLO({})),
   };
 };
 
