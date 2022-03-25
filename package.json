@@ -101,14 +101,20 @@
       "target": "nsis",
       "icon": "public/images/icon.ico"
     },
-    "dmg": {
-      "title": "Kyro Tools",
-      "background": "public/images/mac_background.png",
-      "icon": "public/images/installer.icns"
+    "pkg":{
+      "installLocation": "/Applications",
+      "allowAnywhere": true,
+      "allowCurrentUserHome": true,
+      "allowRootDirectory": true,
+      "license": "./public/assets/license.txt",
+      "welcome": "./public/assets/welcome.txt",
+      "conclusion": "./public/assets/conclusion.txt",
+      "isVersionChecked": true,
+      "isRelocatable": false
     },
     "mac": {
       "artifactName": "${productName}-${version}.${ext}",
-      "target": "dmg",
+      "target": "pkg",
       "icon": "public/images/icon.icns"
     },
     "nsis": {
