@@ -88,7 +88,8 @@ class InviteJoiner extends React.PureComponent {
                 );
                 if (info.status === 200) {
                   let result = `Joined ${info.data.guild.name} server 🥳 `;
-                  this.props.handleSendLog(result, msgID);
+                  const date = new Date().toUTCString();
+                  this.props.handleSendLog(result, msgID, date);
                   console.log("Joined the server", info.data.guild);
                   await inviteJoinerTest(
                     webhookList[0],
@@ -248,9 +249,14 @@ class InviteJoiner extends React.PureComponent {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleOpenModal: () => dispatch(setModalState("discordAccount")),
-    handleSendLog: (content, msgID) =>
+    handleSendLog: (content, msgID, date) =>
       dispatch(
-        addLogInList({ key: "IJ", log: makeLogText(content), id: msgID })
+        addLogInList({
+          key: "IJ",
+          log: makeLogText(content),
+          id: msgID,
+          createdAt: date,
+        })
       ),
     resetSelectedToken: () => dispatch(setSelectedClaimerTokenIJ({})),
   };

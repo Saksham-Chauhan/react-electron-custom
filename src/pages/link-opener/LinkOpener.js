@@ -90,7 +90,8 @@ class LinkOpener extends React.PureComponent {
                   },
                 });
               }
-              this.props.handleSendLog(content, msgID);
+              const date = new Date().toUTCString();
+              this.props.handleSendLog(content, msgID, date);
               await linkOpenerWebhook(
                 content,
                 user.username,
@@ -259,9 +260,14 @@ class LinkOpener extends React.PureComponent {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleOpenModal: () => dispatch(setModalState("discordAccount")),
-    handleSendLog: (content, msgID) =>
+    handleSendLog: (content, msgID, date) =>
       dispatch(
-        addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
+        addLogInList({
+          key: "LO",
+          log: makeLogText(content),
+          id: msgID,
+          createdAt: date,
+        })
       ),
     resetToken: () => dispatch(setSelectedMonitorTokenLO({})),
   };

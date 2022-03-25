@@ -32,6 +32,7 @@ function AddSpoofer() {
     proxyValue: "",
     disableImages: "",
     isDisableImage: false,
+    createdAt: new Date().toUTCString(),
   });
 
   /**
