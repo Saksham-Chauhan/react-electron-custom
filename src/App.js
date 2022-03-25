@@ -107,7 +107,7 @@ function App() {
     });
     updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
-  }, [dispatch, globalSetting, webhookList]);
+  }, [dispatch, webhookList, globalSetting.logOnOff, logggedUserDetails]);
 
   // check is user log in or not
   if (Object.keys(logggedUserDetails).length !== 0)

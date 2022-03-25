@@ -137,7 +137,6 @@ function createWindow() {
   mainWindow.once("ready-to-show", () => {
     splash.destroy();
     mainWindow.show();
-    global;
   });
 }
 
