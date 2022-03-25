@@ -1,4 +1,3 @@
-export { default as AddGmailModal } from "./addGmail/AddGmail";
 export { default as ComingSoon } from "./coming-soon/ComingSoon";
 export { default as AddSpoofModal } from "./add-spoof/AddSpoofer";
 export { default as ProxyGroupModal } from "./proxy-group/ProxyGroup";

@@ -82,3 +82,19 @@ export const getClaimerValue = (list, obj) => {
 export const handleExportLogs = (logs, type) => downloadLogs(logs, type);
 
 export const tweetTimeToEpoch = (str) => {};
+
+/**
+ * function make option for select
+ */
+export const makeProxyOptions = (proxyGroupList = []) => {
+  if (proxyGroupList.length > 0) {
+    const result = proxyGroupList.map((group) => {
+      let obj = {};
+      obj["label"] = group["groupName"];
+      obj["value"] = group["proxies"];
+      obj["id"] = group["id"];
+      return obj;
+    });
+    return result;
+  } else return [];
+};

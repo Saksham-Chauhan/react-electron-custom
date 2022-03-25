@@ -4,8 +4,10 @@ import {
   appendWebhookInList,
   fetchChromeUserListState,
   fetchClaimerGroupList,
+  fetchSelectedClaimerGroupState,
   fetchWebhookListState,
   fetchWebhookSettingState,
+  setSelectedClaimerGroup,
   setWebhookSetting,
 } from "../counterSlice";
 import { generateId } from "../../helper";
@@ -31,9 +33,13 @@ export const editClaimerGroupFromList = (group) => (dispatch, getState) => {
 
 export const deleteClaimerGroupFromList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
+  const ijSelectedClaimer = fetchSelectedClaimerGroupState(getState());
   let tempList = [...currentList];
   let obj = { ...group };
   let afterEdit = tempList.filter((d) => d["id"] !== obj["id"]);
+  if (ijSelectedClaimer["id"] === obj["id"]) {
+    dispatch(setSelectedClaimerGroup({}));
+  }
   dispatch(appendClaimerGroupInList(afterEdit));
 };
 

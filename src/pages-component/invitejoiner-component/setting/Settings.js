@@ -14,12 +14,15 @@ import {
   fetchSelctedInviteProxyGroup,
   fetchLOSettingState,
   fetchIJMonitorState,
+  fetchSelectedMinitorTokenLinkOpener,
+  fetchSelectedClaimerTokenInviteJoiner,
 } from "../../../features/counterSlice";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
 import {
   isValueInUse,
   getClaimerValue,
   makeClaimerSelectOption,
+  makeProxyOptions,
 } from "../../../helper";
 import { toastWarning } from "../../../toaster";
 import UseAnimations from "react-useanimations";
@@ -27,18 +30,17 @@ import trash2 from "react-useanimations/lib/trash2";
 import edit from "react-useanimations/lib/edit";
 import { deleteAccountFromList } from "../../../features/logic/discord-account";
 import { useNavigate } from "react-router-dom";
-import { RoutePath } from "../../../constant";
-
-const MIN_SAFE_DELAY_VALUE = 0;
-const MAX_SAFE_DELAY_VALUE = 10 * 1000;
+import {
+  MAX_SAFE_DELAY_VALUE,
+  MIN_SAFE_DELAY_VALUE,
+  RoutePath,
+} from "../../../constant";
 
 function Settings({
   ijMonitorState,
   accountList,
   keywordList,
-  selectedToken,
   selectedClaimerGroup,
-  selectedMonitorToken,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -48,6 +50,8 @@ function Settings({
   const safeDelayModeValue = useSelector(fetchSafeModeDelayState);
   const loMonitor = useSelector(fetchLOSettingState);
   const isMonitorStart = useSelector(fetchIJMonitorState);
+  const selectedMonitorToken = useSelector(fetchSelectedMinitorTokenLinkOpener);
+  const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
 
   const handleOpenModal = () => {
     dispatch(setModalState("inviteJoinerSetting"));
@@ -111,22 +115,6 @@ function Settings({
     } else toastWarning("Create some account");
   };
 
-  /**
-   * function make option for select
-   */
-  const makeProxyOptions = () => {
-    if (proxyGroupList.length > 0) {
-      const result = proxyGroupList.map((group) => {
-        let obj = {};
-        obj["label"] = group["groupName"];
-        obj["value"] = group["proxies"];
-        obj["id"] = group["id"];
-        return obj;
-      });
-      return result;
-    } else return [];
-  };
-
   const handleSelectProxyGroup = (group) => {
     if (Object.keys(group).length > 0) {
       dispatch(setInviteProxyGroup(group));
@@ -173,6 +161,7 @@ function Settings({
       navigate(RoutePath.proxy, { replace: true });
     }
   };
+
   return (
     <div>
       <AppSpacer spacer={30} />
@@ -250,8 +239,8 @@ function Settings({
             isCustomLabel={true}
             hideLabel={true}
             type="number"
-            min={0}
-            max={10 * 1000}
+            min={MIN_SAFE_DELAY_VALUE}
+            max={MAX_SAFE_DELAY_VALUE}
             placeholderText="Enter Delay"
             onChange={handleDelayChange}
             value={safeDelayModeValue === 0 ? "" : safeDelayModeValue}

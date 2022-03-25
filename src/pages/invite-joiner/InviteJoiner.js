@@ -36,7 +36,7 @@ import { NoAccountAlertModal } from "../../modals";
 
 const { Client } = window.require("discord.js-selfbot");
 
-class InviteJoiner extends React.Component {
+class InviteJoiner extends React.PureComponent {
   monitor = new Client();
   token = "";
   constructor(props) {
@@ -202,7 +202,6 @@ class InviteJoiner extends React.Component {
       ijMonitorState,
       handleOpenModal,
       selectedClaimerGroup,
-      selectedMonitorToken,
     } = this.props;
 
     return (
@@ -229,9 +228,7 @@ class InviteJoiner extends React.Component {
                     ijMonitorState,
                     accountList,
                     keywordList,
-                    selectedToken,
                     selectedClaimerGroup,
-                    selectedMonitorToken,
                   }}
                 />
                 <div className="flex-keyword-channel invite-joiner">

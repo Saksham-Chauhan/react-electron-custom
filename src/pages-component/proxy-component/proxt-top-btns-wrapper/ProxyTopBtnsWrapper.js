@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import test from "../../../assests/images/chemistry.svg";
 import add from "../../../assests/images/plus.svg";
 import searchIcon from "../../../assests/images/search.svg";
@@ -15,6 +15,7 @@ import { toastWarning } from "../../../toaster";
 import { handleExportLogs } from "../../../helper";
 import { proxyTester } from "../../../helper/electron-bridge";
 import {
+  fetchSelctedInviteProxyGroup,
   openAddNewProxyModal,
   setEditStorage,
   setModalState,
@@ -25,10 +26,13 @@ import edit from "react-useanimations/lib/edit";
 
 function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
   const dispatch = useDispatch();
+  const inviteJoinerProxy = useSelector(fetchSelctedInviteProxyGroup);
 
   const handleDeleteGroup = () => {
     if (Object.keys(tempData).length > 0) {
-      dispatch(deleteProxyGroup());
+      if (inviteJoinerProxy["id"] !== tempData["id"]) {
+        dispatch(deleteProxyGroup());
+      } else toastWarning("Proxy group is used by invite joiner");
     } else toastWarning("Select proxy group");
   };
 

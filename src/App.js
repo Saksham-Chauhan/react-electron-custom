@@ -9,7 +9,6 @@ import {
   fetchWebhookListState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
-  fetchAddGmailModalState,
   fetchWebhookSettingState,
   fetchEditProxyModalState,
   fetchProxyGroupModalState,
@@ -17,7 +16,6 @@ import {
   fetchInviteJoinerSettingModalState,
 } from "./features/counterSlice";
 import {
-  AddGmailModal,
   AddSpoofModal,
   ProxyGroupModal,
   ClaimerGroupModal,
@@ -66,7 +64,6 @@ function App() {
   const dispatch = useDispatch();
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
-  const addGmailModalState = useSelector(fetchAddGmailModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const proxyEditModalState = useSelector(fetchEditProxyModalState);
@@ -125,7 +122,6 @@ function App() {
     <div className="app">
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {addGmailModalState && <AddGmailModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {proxyEditModalState && <EditProxySingleModal />}
