@@ -154,7 +154,7 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
           isSelect={true}
           selectOptions={chromeList}
           placeholderText={
-            chromeList.length > 0 ? "Select Chrome Profile" : "Add Chrome user"
+            chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
           }
           value={chromeList.filter((d) => d["id"] === selectedChrome?.id)}
         />

@@ -176,7 +176,7 @@ const WelcomeScreen = () => {
                 Kyro Tools gives you an option for Mass Invite Joiner. You can
                 directly Create Accounts by clicking ➕ on the top left, add
                 Account name and your Discord Token. The tool lets you select
-                Claimer Group that you can create on the Settings page, use
+                Token Group that you can create on the Settings page, use
                 Proxies and set Delays to join links in a bulk without getting
                 noticed or rate-limited. Direct Join lets you React and Accept
                 rules to the added Invite Links based on the values entered by
@@ -209,7 +209,7 @@ const WelcomeScreen = () => {
               <p>
                 Settings let you create create different Chrome Profiles that
                 can be used for Auto Link opener. You can also create separate
-                Claimer groups by entering multiple tokens, which can be
+                Token groups by entering multiple tokens, which can be
                 modified as how you want. It lets you start and/or stop
                 Background Animation. Enter a Webhook URL to test and select
                 toggles for whichever webhooks you want to display. The user

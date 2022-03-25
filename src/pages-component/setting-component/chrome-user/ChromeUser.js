@@ -39,9 +39,9 @@ function ChromeUser() {
           onChange: handleChange,
         }}
         onDelete={handleDelete}
-        title="Chrome Users"
+        title="Chrome User"
         list={chromeList}
-        placeHolder="Enter Chrome User Name"
+        placeHolder="Enter Chrome User (e.g. Guest)"
       />
     </div>
   );
