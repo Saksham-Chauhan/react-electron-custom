@@ -2,13 +2,10 @@ import { v4 as uuid } from "uuid";
 
 export const makeStrOfArr = (arrOfObj) => arrOfObj.map((data) => data["value"]);
 
-export const isValueInUse = (arrOfObj, key, firstValue, secondValue) => {
+export const isValueInUse = (arrOfObj, key, firstValue) => {
   let valid = false;
   for (let i = 0; i < arrOfObj.length; i++) {
-    if (
-      arrOfObj[i][key] === firstValue[key] ||
-      arrOfObj[i][key] === secondValue[key]
-    ) {
+    if (arrOfObj[i][key] === firstValue[key]) {
       valid = true;
       break;
     }
