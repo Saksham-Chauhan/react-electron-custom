@@ -276,8 +276,10 @@ function InviteJoinerSettings() {
       </div>
       <AppSpacer spacer={30} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="Invite Code" />
+        <LabelWithToolTip labelText="Invite Code" toolTopText="Invite Codes"/>
+        {/* toolTopText="Add multiple codes separated by comma" */}
         <AppInputField
+          fieldTitle="Invite Code"
           onChange={handleInviteChange}
           placeholderText="Enter Invite Code"
           hideLabel={true}
@@ -328,7 +330,7 @@ function InviteJoinerSettings() {
       </div>
       <AppSpacer spacer={20} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="React" />
+        <LabelWithToolTip labelText="React" toolTopText="Turn on the Toggle for using Reaction Adder"/>
         <AppSpacer spacer={5} />
         <div className="joiner-custom-toggle">
           <AppToggler
@@ -383,7 +385,7 @@ function InviteJoinerSettings() {
       </div>
       <AppSpacer spacer={20} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="Accept Rules" />
+        <LabelWithToolTip labelText="Accept Rules" toolTopText="Accept Format"/>
         <AppSpacer spacer={5} />
         <div className="joiner-custom-toggle">
           <AppToggler
