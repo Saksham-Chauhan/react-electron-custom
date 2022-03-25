@@ -137,6 +137,7 @@ function createWindow() {
   mainWindow.once("ready-to-show", () => {
     splash.destroy();
     mainWindow.show();
+    global;
   });
 }
 
@@ -160,7 +161,14 @@ app.on("window-all-closed", () => {
 });
 
 ipcMain.on("close", () => {
-  mainWindow.close();
+  try {
+    let tempMainWindow = mainWindow || global.mainWin;
+    if (tempMainWindow) {
+      tempMainWindow.close();
+    }
+  } catch (error) {
+    console.log("Something went wroung on minizing app", error);
+  }
 });
 
 ipcMain.handle("get-app-version", () => {
@@ -168,7 +176,14 @@ ipcMain.handle("get-app-version", () => {
 });
 
 ipcMain.on("minimize", () => {
-  mainWindow.minimize();
+  try {
+    let tempMainWindow = mainWindow || global.mainWin;
+    if (tempMainWindow) {
+      tempMainWindow.minimize();
+    }
+  } catch (error) {
+    console.log("Something went wroung on minizing app", error);
+  }
 });
 
 ipcMain.on("maximize", () => {
