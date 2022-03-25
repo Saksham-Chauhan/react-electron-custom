@@ -193,23 +193,22 @@ function InviteJoinerSettings() {
   };
 
   const handleSubmit = () => {
-    console.log(setting);
-    // const result = checkValidation();
-    // if (result) {
-    //   const claimerArr = selectedClaimerGroup["value"]?.split("\n");
-    //   claimerArr.forEach(async (token) => {
-    //     const response = await directDiscordJoinAPI(
-    //       setting.proxyGroup,
-    //       setting.inviteCode,
-    //       token,
-    //       setting
-    //     );
-    //     if (response === null) {
-    //       toastWarning("Something went wrong 🥲");
-    //     }
-    //   });
-    //   handleCloseModal();
-    // }
+    const result = checkValidation();
+    if (result) {
+      const claimerArr = selectedClaimerGroup["value"]?.split("\n");
+      claimerArr.forEach(async (token) => {
+        const response = await directDiscordJoinAPI(
+          setting.proxyGroup,
+          setting.inviteCode,
+          token,
+          setting
+        );
+        if (response === null) {
+          toastWarning("Something went wrong 🥲");
+        }
+      });
+      handleCloseModal();
+    }
   };
 
   const handleClaimerMenuOpen = () => {
