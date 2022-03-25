@@ -122,7 +122,8 @@
       "installerIcon": "public/images/installer.ico",
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": true,
-      "oneClick": "false"
+      "oneClick": "false",
+      "license": "./public/assets/license.txt"
     }
   }
 }
