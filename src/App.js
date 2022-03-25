@@ -107,16 +107,17 @@ function App() {
     });
     updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
-  }, [dispatch, webhookList, globalSetting.logOnOff, logggedUserDetails]);
+  }, [dispatch, globalSetting.logOnOff, webhookList]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length !== 0)
+  if (Object.keys(logggedUserDetails).length === 0) {
     return (
       <React.Fragment>
         <Login />
         <ToastContainer />
       </React.Fragment>
     );
+  }
 
   return (
     <div className="app">

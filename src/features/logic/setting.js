@@ -1,14 +1,16 @@
 import {
-  appendChromeUserInList,
-  appendClaimerGroupInList,
-  appendWebhookInList,
-  fetchChromeUserListState,
-  fetchClaimerGroupList,
-  fetchSelectedClaimerGroupState,
-  fetchWebhookListState,
-  fetchWebhookSettingState,
-  setSelectedClaimerGroup,
   setWebhookSetting,
+  appendWebhookInList,
+  fetchClaimerGroupList,
+  fetchWebhookListState,
+  setTwitterClaimerGroup,
+  appendChromeUserInList,
+  setSelectedClaimerGroup,
+  fetchWebhookSettingState,
+  appendClaimerGroupInList,
+  fetchChromeUserListState,
+  fetchTwitterClaimerGroupState,
+  fetchSelectedClaimerGroupState,
 } from "../counterSlice";
 import { generateId } from "../../helper";
 
@@ -34,11 +36,15 @@ export const editClaimerGroupFromList = (group) => (dispatch, getState) => {
 export const deleteClaimerGroupFromList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
   const ijSelectedClaimer = fetchSelectedClaimerGroupState(getState());
+  const twitterSelectedChrome = fetchTwitterClaimerGroupState(getState());
   let tempList = [...currentList];
   let obj = { ...group };
   let afterEdit = tempList.filter((d) => d["id"] !== obj["id"]);
   if (ijSelectedClaimer["id"] === obj["id"]) {
     dispatch(setSelectedClaimerGroup({}));
+  }
+  if (twitterSelectedChrome["id"] === obj["id"]) {
+    dispatch(setTwitterClaimerGroup({}));
   }
   dispatch(appendClaimerGroupInList(afterEdit));
 };

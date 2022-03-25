@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+const open = window.require("open");
 
 export const makeStrOfArr = (arrOfObj) => arrOfObj.map((data) => data["value"]);
 
@@ -97,4 +98,22 @@ export const makeProxyOptions = (proxyGroupList = []) => {
     });
     return result;
   } else return [];
+};
+
+export const openChromeBrowser = async (url, chromeUser) => {
+  if (chromeUser) {
+    await open(url, {
+      app: {
+        name: open.apps.chrome,
+        arguments: [`--profile-directory=${chromeUser["value"]}`],
+      },
+    });
+  } else {
+    await open(url, {
+      app: {
+        name: open.apps.chrome,
+        arguments: [`--profile-directory=Default`],
+      },
+    });
+  }
 };

@@ -25,7 +25,7 @@ import {
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
-import { makeLogText, makeStrOfArr } from "../../helper";
+import { makeLogText, makeStrOfArr, openChromeBrowser } from "../../helper";
 import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
@@ -34,7 +34,6 @@ import { linkOpenerWebhook } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
 
 const { Client } = window.require("discord.js-selfbot");
-const open = window.require("open");
 
 class LinkOpener extends React.PureComponent {
   monitor = new Client();
@@ -74,21 +73,10 @@ class LinkOpener extends React.PureComponent {
               }
               if (selectedChrome !== null) {
                 if (Object.keys(selectedChrome).length > 0) {
-                  await open(content, {
-                    app: {
-                      name: open.apps.chrome,
-                      arguments: [
-                        `--profile-directory=${selectedChrome["value"]}`,
-                      ],
-                    },
-                  });
+                  await openChromeBrowser(content, selectedChrome);
                 }
               } else {
-                await open(content, {
-                  app: {
-                    name: open.apps.chrome,
-                  },
-                });
+                await openChromeBrowser(content, null);
               }
               const date = new Date().toUTCString();
               this.props.handleSendLog(content, msgID, date);
