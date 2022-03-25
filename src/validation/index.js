@@ -60,7 +60,7 @@ export const spooferSchema = joi.object({
 });
 
 export const discordAccountSchema = joi.object({
-  accountName: joi.string().required().label("Enter Account name"),
+  accountName: joi.string().required().label("Enter Account Name"),
   discordToken: joi.optional(),
   id: joi.optional(),
   createdAt: joi.optional(),
@@ -68,15 +68,15 @@ export const discordAccountSchema = joi.object({
 
 export const twiiterApiSchema = joi.object({
   apiName: joi.string().required().label("Enter API Name"),
-  apiKey: joi.string().required().label("Enter API key"),
-  apiSecret: joi.string().required().label("Enter API secret"),
-  accessToken: joi.string().required().label("Enter Access token"),
-  accessSecret: joi.string().required().label("Enter Access secret"),
+  apiKey: joi.string().required().label("Enter API Key"),
+  apiSecret: joi.string().required().label("Enter API Secret"),
+  accessToken: joi.string().required().label("Enter Access Token"),
+  accessSecret: joi.string().required().label("Enter Access Secret"),
 });
 
 export const claimerGroupSchema = joi.object({
   name: joi.string().required().label("Enter Name"),
-  claimerToken: joi.string().required().label("Enter Claimer Token"),
+  claimerToken: joi.string().required().label("email:username:password:token"),
   claimerList: joi.array(),
   id: joi.optional(),
   createdAt: joi.optional(),
@@ -87,7 +87,7 @@ export const inviteJoinerdirectJoineSchema = joi.object({
     .string()
     .required()
     .pattern(new RegExp("/.+[a-z|A-Z|0-9]/"))
-    .label("Enter valid inviteCode"),
+    .label("Enter valid Invite Code"),
   isReact: false,
   reactSetting: {
     channelId: "",

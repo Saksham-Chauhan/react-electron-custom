@@ -68,11 +68,11 @@ function Settings({
           if (Object.keys(selectedClaimerGroup).length > 0) {
             if (Object.keys(selectedProxyGroup).length > 0) {
               dispatch(toggleIJMonitor());
-            } else toastWarning("Select proxy group");
-          } else toastWarning("Select claimer group");
+            } else toastWarning("Select Proxy Group");
+          } else toastWarning("Select Token Group");
         } else toastWarning("Enter some channel to monitor");
-      } else toastWarning("Select Invite joiner account");
-    } else toastWarning("Create some Invite joiner account");
+      } else toastWarning("Select Invite Joiner account");
+    } else toastWarning("Create some Invite Joiner account");
   };
 
   /**
@@ -93,7 +93,7 @@ function Settings({
             dispatch(setModalState("discordAccount"));
           }
         } else toastWarning("Monitor is start or token is in use!!");
-      } else toastWarning("Select Monitor token");
+      } else toastWarning("Select Monitor Token");
     } else toastWarning("Create some account");
   };
 
@@ -111,7 +111,7 @@ function Settings({
             toastWarning("Account is use by link opener");
           } else dispatch(deleteAccountFromList(selectedToken));
         } else toastWarning("Monitor is start or token is in use!!!");
-      } else toastWarning("Select Monitor token");
+      } else toastWarning("Select Monitor Token");
     } else toastWarning("Create some account");
   };
 
@@ -172,7 +172,7 @@ function Settings({
             checked={ijMonitorState}
             id="invite-joiner-monitor-toggle"
           />
-          <span>{isMonitorStart ? "Stop" : "Start"} Auto Invite Joiner</span>
+          <span>{isMonitorStart ? "Stop" : "Start"}Invite Joiner</span>
         </div>
         <div
           onClick={handleOpenModal}
@@ -203,11 +203,11 @@ function Settings({
       <div className="claimer-token-setting-section">
         <div className="half-section">
           <AppInputField
-            fieldTitle="Claimer Token"
+            fieldTitle="Token Group"
             isCustomLabel={true}
             hideLabel={true}
             placeholderText={
-              claimerList.length > 0 ? "Select Token" : "Add Claimer group"
+              claimerList.length > 0 ? "Select Token Group" : "Add Token Group"
             }
             selectOptions={makeClaimerSelectOption(claimerList)}
             isSelect={true}

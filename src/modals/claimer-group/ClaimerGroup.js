@@ -84,7 +84,7 @@ function ClaimerGroup() {
     <ModalWrapper>
       <div className="modal-tilte">
         <h2>
-          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Claimer Group
+          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Token Group
         </h2>
       </div>
       <AppSpacer spacer={30} />
@@ -102,7 +102,7 @@ function ClaimerGroup() {
         isMulti={true}
         onChange={handleChange}
         value={claimer.claimerToken}
-        placeholderText="Separated By Next line"
+        placeholderText="email:username:password:token"
       />
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">

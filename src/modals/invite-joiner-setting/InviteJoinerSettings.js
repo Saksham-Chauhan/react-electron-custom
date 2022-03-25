@@ -288,9 +288,9 @@ function InviteJoinerSettings() {
       <div className="direct-join-column-wrapper">
         <div className="direct-join-column">
           <AppInputField
-            fieldTitle="Claimer Token"
+            fieldTitle="Token Group"
             placeholderText={
-              claimerList.length > 0 ? "Select Token" : "Add Claimer group"
+              claimerList.length > 0 ? "Select Token Group" : "Add Token Group"
             }
             selectOptions={makeClaimerSelectOption(claimerList)}
             isSelect={true}

@@ -106,7 +106,7 @@ function AddSpoofer() {
         }
         handleCloseModal();
       }
-    } else toastWarning("Enter valid URL");
+    } else toastWarning("Enter Valid URL");
   };
 
   return (
