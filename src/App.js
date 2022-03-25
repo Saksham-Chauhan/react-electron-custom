@@ -93,11 +93,13 @@ function App() {
         const decode = decodeUser(user);
         if (decode.roles.length > 0) {
           let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
-          await loggedUserWebhook(
-            title,
-            webhookList[0],
-            globalSetting?.logOnOff
-          );
+          if (webhookList.length === 0) {
+            await loggedUserWebhook(
+              title,
+              webhookList[0],
+              globalSetting?.logOnOff
+            );
+          }
           dispatch(setUserDetails(decode));
         } else toastWarning("Sorry, you don't have required role  😭");
       }
