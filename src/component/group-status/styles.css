@@ -1,0 +1,23 @@
+.group-status > h1 {
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 32px;
+  color: var(--primary);
+}
+.group-status-stats {
+  display: flex;
+  align-items: center;
+}
+.group-status-stats > span:first-of-type {
+  height: 6px;
+  width: 6px;
+  background: var(--start);
+  border-radius: 100%;
+}
+.group-status-stats > span:last-of-type {
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 21px;
+  color: var(--primary);
+  margin-left: 10px;
+}

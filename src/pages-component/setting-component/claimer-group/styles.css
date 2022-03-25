@@ -1,0 +1,53 @@
+.claimer-group-outer {
+  height: 100%;
+}
+.claimer-flex {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+.claimer-flex > h3 {
+  font-weight: 500;
+  font-size: 17.5333px;
+  line-height: 26px;
+  color: var(--primary);
+}
+.claimer-add-btn {
+  height: 40px;
+  padding: 0.5em 0.7em;
+  border-radius: 4px;
+  background: var(--sidebar-bg);
+  position: absolute;
+  right: 0;
+  top: -5px;
+}
+.claimer-group-list-scroll-list {
+  background: var(--sidebar-bg);
+  padding: 1em;
+  height: calc(100% - 40px);
+  border-radius: 7px;
+}
+.claimer-group-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.claimer-group-list-item > span {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12.3236px;
+  line-height: 17px;
+  color: var(--primary);
+}
+.claimer-group-item-action {
+  display: flex;
+  align-items: center;
+}
+.claimer-group-item-action > img {
+  height: 16px;
+  cursor: pointer;
+  padding-right: 2px;
+}
+.claimer-group-item-action > img:last-of-type {
+  margin-left: 0.5em;
+}

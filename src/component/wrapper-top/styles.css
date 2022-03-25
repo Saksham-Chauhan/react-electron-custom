@@ -1,0 +1,8 @@
+.wrapper {
+  height: 68px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 0.5px solid #131b3c;
+  padding: 0px 1em;
+}
