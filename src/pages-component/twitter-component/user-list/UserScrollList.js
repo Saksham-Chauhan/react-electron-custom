@@ -36,8 +36,8 @@ function UserScrollList({ userList }) {
           value: user,
           onChange: handleUserChange,
         }}
-        title="Users"
-        placeHolder="Enter Username"
+        title="Twitter Username"
+        placeHolder="Enter Twitter Username"
         onDelete={handleDeleteUser}
       />
     </div>

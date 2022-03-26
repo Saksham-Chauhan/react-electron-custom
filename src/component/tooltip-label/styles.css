@@ -11,6 +11,7 @@
 }
 .custom-tooltip {
   background: var(--sidebar-bg);
+  pointer-events: auto !important;
 }
 #custom-tooltip-text {
   color: var(--primary);
