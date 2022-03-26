@@ -81,7 +81,6 @@ export const counterSlice = createSlice({
       state.discordAccountList = action.payload;
     },
     setSelectedMonitorTokenLO: (state, action) => {
-      console.log(action);
       state.selectedMonitorTokenLO = action.payload;
     },
     appendLogList: (state, action) => {
