@@ -6,7 +6,6 @@ import {
   setUserDetails,
   resetIJMonitor,
   fetchSpoofModalState,
-  fetchWebhookListState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
   fetchWebhookSettingState,
@@ -14,6 +13,7 @@ import {
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchInviteJoinerSettingModalState,
+  fetchUserLoggedInState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
@@ -62,6 +62,7 @@ import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
 
 function App() {
   const dispatch = useDispatch();
+  const isUserLoggeIn = useSelector(fetchUserLoggedInState);
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
@@ -71,7 +72,6 @@ function App() {
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
-  const webhookList = useSelector(fetchWebhookListState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
 
   const animClass = !globalSetting.bgAnimation
@@ -88,18 +88,17 @@ function App() {
         dispatch(updateSpooferStatus(data));
       }
     });
+
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
         if (decode.roles.length > 0) {
           let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
-          if (webhookList.length === 0) {
-            await loggedUserWebhook(
-              title,
-              webhookList[0],
-              globalSetting?.logOnOff
-            );
-          }
+          await loggedUserWebhook(
+            title,
+            globalSetting?.webhookList[0],
+            globalSetting?.logOnOff
+          );
           dispatch(setUserDetails(decode));
         } else toastWarning("Sorry, you don't have required role  😭");
       }
@@ -109,7 +108,7 @@ function App() {
     });
     updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
-  }, [dispatch, globalSetting.logOnOff, webhookList]);
+  }, [dispatch, globalSetting.logOnOff]);
 
   // check is user log in or not
   if (Object.keys(logggedUserDetails).length === 0) {

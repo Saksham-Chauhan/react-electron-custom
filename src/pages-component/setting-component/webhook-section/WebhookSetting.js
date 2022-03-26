@@ -9,24 +9,24 @@ import {
 } from "../../../features/counterSlice";
 import { toggleSettingSwitch } from "../../../features/logic/setting";
 import { webhookTest } from "../../../helper/webhook";
-import { toastWarning } from "../../../toaster";
+import { toastSuccess, toastWarning } from "../../../toaster";
 import "./styles.css";
 
 function WebhookSetting({ userDetails }) {
   const dispatch = useDispatch();
   const [webhook, setWebhook] = useState("");
   const option = useSelector(fetchWebhookSettingState);
-  const webhokkList = useSelector(fetchWebhookListState);
+  const webhookList = useSelector(fetchWebhookListState);
 
   useEffect(() => {
-    if (webhokkList.length > 0) {
-      setWebhook(webhokkList[0]);
+    if (webhookList?.length > 0) {
+      setWebhook(webhookList[0]);
     }
-  }, [webhokkList]);
+  }, [webhookList]);
 
   const handleToggle = (e) => {
     const { checked, id } = e.target;
-    if (webhokkList.length > 0) {
+    if (webhookList?.length > 0) {
       if (id === "link-opener") {
         dispatch(toggleSettingSwitch({ key: "LO", checked }));
       } else if (id === "invite-joiner") {
@@ -44,6 +44,7 @@ function WebhookSetting({ userDetails }) {
   const handleChange = (e) => {
     const { value } = e.target;
     setWebhook(value);
+    dispatch(appendWebhookInList(value));
   };
 
   const handleWebhook = async () => {
@@ -53,10 +54,8 @@ function WebhookSetting({ userDetails }) {
         userDetails?.username,
         userDetails?.avatar
       );
-
       if (webhookResponse.status === 204) {
-        dispatch(appendWebhookInList(webhook));
-        setWebhook("");
+        toastSuccess("Webhook tested successfully 🥳");
       }
     } else toastWarning("Enter valid Discord webhook");
   };
