@@ -1,1 +1,29 @@
-Welcome to Kyro Tools!
+First Ever Custom NFT Whitelist Toolbox with features such as:
+
+-    Link opener that allows you to select different Chrome profiles
+-    Mass Invite Joiner
+-    Emoji Reactor
+-    Rules Acceptor
+-    Proxy Tester
+-    Spoof browser
+-    Blazing fast twitter monitor
+-    Advance twitter monitor - OCR, QR and 17 more featured tweet separator
+
+Coming Soon:
+-  NFT Minter 
+-  XP Farmer 
+-  Avatar Changer 
+-  Password Changer 
+-  Username Changer 
+and many more
+
+Join us for the latest updates:
+https://twitter.com/ToolsKyro
+
+
+
+
+
+
+
+
