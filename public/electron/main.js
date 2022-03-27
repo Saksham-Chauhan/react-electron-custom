@@ -97,6 +97,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1402,
     height: 800,
+    minWidth: 1402,
+    minHeight: 800,
     resizable: true,
     frame: false,
     show: false,
@@ -106,7 +108,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: !isDev ? false : true,
+      devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
