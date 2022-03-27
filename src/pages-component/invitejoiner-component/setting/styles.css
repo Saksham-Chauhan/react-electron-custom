@@ -17,6 +17,9 @@
 .claimer-token-setting-section > .half-section {
   width: 35%;
 }
+.claimer-token-setting-section > .half-section.delay {
+  width: 20%;
+}
 .claimer-token-setting-section > .linkopener-urlappender-btn {
   margin-top: 30px;
 }

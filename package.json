@@ -102,7 +102,7 @@
       "target": "nsis",
       "icon": "public/images/icon.ico"
     },
-    "pkg":{
+    "pkg": {
       "installLocation": "/Applications",
       "allowAnywhere": true,
       "allowCurrentUserHome": true,

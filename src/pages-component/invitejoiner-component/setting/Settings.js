@@ -233,7 +233,7 @@ function Settings({
             onMenuOpen={handleProxyMenuOpen}
           />
         </div>
-        <div className="linkopener">
+        <div className="half-section delay">
           <AppInputField
             fieldTitle="Delay"
             isCustomLabel={true}

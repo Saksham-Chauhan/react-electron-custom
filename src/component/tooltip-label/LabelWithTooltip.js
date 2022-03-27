@@ -2,20 +2,31 @@ import React from "react";
 import "./styles.css";
 import ReactTooltip from "react-tooltip";
 import help from "../../assests/images/help.svg";
-function LabelWithTooltip({ toolTopText = "I'm Tooltip", labelText }) {
+function LabelWithTooltip({
+  toolTopText = "I'm Tooltip",
+  labelText,
+  isCustomToolTip = false,
+  children,
+  ...props
+}) {
   return (
     <div className="label-with-tooltip">
       <label>{labelText}</label>
       <img data-tip data-for={labelText} src={help} alt="help-icon" />
       <ReactTooltip
-        className="custom-tooltip"
-        id={labelText}
+        {...props}
         place="top"
-        backgroundColor="var(--sidebar-bg)"
         type="light"
+        id={labelText}
         effect="solid"
+        className="custom-tooltip"
+        backgroundColor="var(--sidebar-bg)"
       >
-        <p id="custom-tooltip-text">{toolTopText}</p>
+        {isCustomToolTip ? (
+          children
+        ) : (
+          <p id="custom-tooltip-text">{toolTopText}</p>
+        )}
       </ReactTooltip>
     </div>
   );

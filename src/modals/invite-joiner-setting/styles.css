@@ -66,3 +66,9 @@
 .direct-join-column {
   width: 32%;
 }
+.joiner-custom-input > label {
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 13.525px;
+  line-height: 26px;
+}
