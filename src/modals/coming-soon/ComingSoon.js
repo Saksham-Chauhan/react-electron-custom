@@ -4,11 +4,12 @@ import UseAnimations from "react-useanimations";
 import lock from "react-useanimations/lib/lock";
 import "./styles.css";
 
-function ComingSoon() {
+function ComingSoon({ modalTitle = "" }) {
   return (
     <div className="coming-soon-modal-wrapper">
       <div className="coming-soon-modal-inner">
         <div className="coming-soon-modal-title">
+          <h1>{modalTitle}</h1>
           <h2>Coming Soon</h2>
         </div>
         <AppSpacer spacer={30} />

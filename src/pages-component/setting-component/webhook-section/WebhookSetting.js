@@ -26,19 +26,21 @@ function WebhookSetting({ userDetails }) {
 
   const handleToggle = (e) => {
     const { checked, id } = e.target;
-    if (webhookList?.length > 0) {
-      if (id === "link-opener") {
-        dispatch(toggleSettingSwitch({ key: "LO", checked }));
-      } else if (id === "invite-joiner") {
-        dispatch(toggleSettingSwitch({ key: "IJ", checked }));
-      } else if (id === "twitter-monitor") {
-        dispatch(toggleSettingSwitch({ key: "TWITTER", checked }));
-      } else if (id === "log-on/off") {
-        dispatch(toggleSettingSwitch({ key: "LOG", checked }));
-      } else {
-        dispatch(toggleSettingSwitch({ key: "ANIMATION", checked }));
-      }
-    } else toastWarning("Enter some webhook");
+    if (id !== "background-animation") {
+      if (webhookList.length > 0 && webhookList[0].length > 0) {
+        if (id === "link-opener") {
+          dispatch(toggleSettingSwitch({ key: "LO", checked }));
+        } else if (id === "invite-joiner") {
+          dispatch(toggleSettingSwitch({ key: "IJ", checked }));
+        } else if (id === "twitter-monitor") {
+          dispatch(toggleSettingSwitch({ key: "TWITTER", checked }));
+        } else if (id === "log-on/off") {
+          dispatch(toggleSettingSwitch({ key: "LOG", checked }));
+        }
+      } else toastWarning("Enter webhook!!");
+    } else {
+      dispatch(toggleSettingSwitch({ key: "ANIMATION", checked }));
+    }
   };
 
   const handleChange = (e) => {

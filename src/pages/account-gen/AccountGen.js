@@ -4,7 +4,7 @@ import "./styles.css";
 function AccountGen() {
   return (
     <div className="account-gen-page">
-      <ComingSoon />
+      <ComingSoon modalTitle="Account Gen" />
     </div>
   );
 }
