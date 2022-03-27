@@ -172,7 +172,7 @@ function Settings({
             checked={ijMonitorState}
             id="invite-joiner-monitor-toggle"
           />
-          <span>{isMonitorStart ? "Stop" : "Start"}Invite Joiner</span>
+          <span>{isMonitorStart ? "Stop" : "Start"} Invite Joiner</span>
         </div>
         <div
           onClick={handleOpenModal}

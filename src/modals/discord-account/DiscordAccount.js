@@ -26,7 +26,6 @@ function DiscordAccount() {
 
   useEffect(() => {
     if (Object.keys(editState).length > 3) {
-      console.log(editState);
       setAccount((pre) => {
         return { ...editState };
       });

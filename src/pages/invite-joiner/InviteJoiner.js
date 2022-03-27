@@ -216,7 +216,7 @@ class InviteJoiner extends React.PureComponent {
           {accountList.length === 0 && (
             <NoAccountAlertModal
               buttonPress={handleOpenModal}
-              buttonText="Create Account"
+              buttonText="Create Discord Account"
               modalTitle="No Account"
             />
           )}
