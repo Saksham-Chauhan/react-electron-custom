@@ -47,3 +47,28 @@
     opacity: 1;
   }
 }
+
+/* emoji css */
+.emoji-picker-wrapper {
+  position: relative;
+}
+.emoji-tray-picker {
+  position: absolute;
+  top: -100%;
+  left: 110%;
+  width: 400px;
+}
+
+.direct-join-column-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.direct-join-column {
+  width: 32%;
+}
+.joiner-custom-input > label {
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 13.525px;
+  line-height: 26px;
+}

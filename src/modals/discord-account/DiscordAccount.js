@@ -18,10 +18,15 @@ import { toastWarning } from "../../toaster";
 function DiscordAccount() {
   const dispatch = useDispatch();
   const editState = useSelector(fetchEditStorageState);
-  const [account, setAccount] = useState({ accountName: "", discordToken: "" });
+  const [account, setAccount] = useState({
+    accountName: "",
+    discordToken: "",
+    createdAt: new Date().toUTCString(),
+  });
 
   useEffect(() => {
-    if (Object.keys(editState).length === 3) {
+    if (Object.keys(editState).length > 3) {
+      console.log(editState);
       setAccount((pre) => {
         return { ...editState };
       });
@@ -60,7 +65,7 @@ function DiscordAccount() {
     <ModalWrapper>
       <div className="modal-tilte">
         <h2>
-          {Object.keys(editState).length === 3 ? "Edit" : "Create"}
+          {Object.keys(editState).length > 3 ? "Edit" : "Create"}
           {"\t"}Account
         </h2>
       </div>
@@ -86,7 +91,7 @@ function DiscordAccount() {
           <span>Cancel</span>
         </div>
         <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>{Object.keys(editState).length === 3 ? "Save" : "Create"}</span>
+          <span>{Object.keys(editState).length > 3 ? "Save" : "Create"}</span>
         </div>
       </div>
     </ModalWrapper>

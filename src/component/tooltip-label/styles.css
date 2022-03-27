@@ -11,7 +11,19 @@
 }
 .custom-tooltip {
   background: var(--sidebar-bg);
+  pointer-events: auto !important;
 }
 #custom-tooltip-text {
   color: var(--primary);
+}
+.custom-tooltip-text {
+  font-weight: 500;
+  font-size: 13.149px;
+  line-height: 20px;
+  color: var(--primary);
+  margin-right: 5px;
+}
+.custom-tooltip-text.link {
+  color: blue;
+  cursor: pointer;
 }

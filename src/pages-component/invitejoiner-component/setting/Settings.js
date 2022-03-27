@@ -12,35 +12,46 @@ import {
   fetchSafeModeDelayState,
   setSelectedClaimerGroup,
   fetchSelctedInviteProxyGroup,
+  fetchLOSettingState,
+  fetchIJMonitorState,
+  fetchSelectedMinitorTokenLinkOpener,
+  fetchSelectedClaimerTokenInviteJoiner,
 } from "../../../features/counterSlice";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
 import {
   isValueInUse,
   getClaimerValue,
   makeClaimerSelectOption,
+  makeProxyOptions,
 } from "../../../helper";
 import { toastWarning } from "../../../toaster";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import edit from "react-useanimations/lib/edit";
 import { deleteAccountFromList } from "../../../features/logic/discord-account";
-
-const MIN_SAFE_DELAY_VALUE = 0;
-const MAX_SAFE_DELAY_VALUE = 10 * 1000;
+import { useNavigate } from "react-router-dom";
+import {
+  MAX_SAFE_DELAY_VALUE,
+  MIN_SAFE_DELAY_VALUE,
+  RoutePath,
+} from "../../../constant";
 
 function Settings({
   ijMonitorState,
   accountList,
   keywordList,
-  selectedToken,
-  isMonitorStart,
   selectedClaimerGroup,
 }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const claimerList = useSelector(fetchClaimerGroupList);
   const proxyGroupList = useSelector(fetchProxyGroupList);
   const selectedProxyGroup = useSelector(fetchSelctedInviteProxyGroup);
   const safeDelayModeValue = useSelector(fetchSafeModeDelayState);
+  const loMonitor = useSelector(fetchLOSettingState);
+  const isMonitorStart = useSelector(fetchIJMonitorState);
+  const selectedMonitorToken = useSelector(fetchSelectedMinitorTokenLinkOpener);
+  const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
 
   const handleOpenModal = () => {
     dispatch(setModalState("inviteJoinerSetting"));
@@ -57,11 +68,11 @@ function Settings({
           if (Object.keys(selectedClaimerGroup).length > 0) {
             if (Object.keys(selectedProxyGroup).length > 0) {
               dispatch(toggleIJMonitor());
-            } else toastWarning("Select proxy group");
-          } else toastWarning("Select claimer group");
+            } else toastWarning("Select Proxy Group");
+          } else toastWarning("Select Token Group");
         } else toastWarning("Enter some channel to monitor");
-      } else toastWarning("Select Invite joiner account");
-    } else toastWarning("Create some Invite joiner account");
+      } else toastWarning("Select Invite Joiner account");
+    } else toastWarning("Create some Invite Joiner account");
   };
 
   /**
@@ -70,12 +81,19 @@ function Settings({
   const handleEditAccount = () => {
     if (accountList.length > 0) {
       if (Object.keys(selectedToken).length > 0) {
-        const result = isValueInUse(accountList, "discordToken", selectedToken);
-        if (!result && !isMonitorStart) {
-          dispatch(setEditStorage(selectedToken));
-          dispatch(setModalState("discordAccount"));
-        } else toastWarning("Token in use!!");
-      } else toastWarning("Select Monitor token");
+        const result = isValueInUse(accountList, "id", selectedToken);
+        if (!isMonitorStart && result) {
+          if (selectedMonitorToken["id"] !== selectedToken["id"]) {
+            dispatch(setEditStorage(selectedToken));
+            dispatch(setModalState("discordAccount"));
+          } else if (loMonitor?.linkOpenerState) {
+            toastWarning("Account is use by link opener");
+          } else {
+            dispatch(setEditStorage(selectedToken));
+            dispatch(setModalState("discordAccount"));
+          }
+        } else toastWarning("Monitor is start or token is in use!!");
+      } else toastWarning("Select Monitor Token");
     } else toastWarning("Create some account");
   };
 
@@ -85,28 +103,16 @@ function Settings({
   const handleDeleteAccount = () => {
     if (accountList.length > 0) {
       if (Object.keys(selectedToken).length > 0) {
-        const result = isValueInUse(accountList, "discordToken", selectedToken);
-        if (!result && !isMonitorStart) {
-          dispatch(deleteAccountFromList(selectedToken));
-        } else toastWarning("Token in use!!");
-      } else toastWarning("Select Monitor token");
+        const result = isValueInUse(accountList, "id", selectedToken);
+        if (!isMonitorStart && result) {
+          if (selectedMonitorToken["id"] !== selectedToken["id"]) {
+            dispatch(deleteAccountFromList(selectedToken));
+          } else if (loMonitor?.linkOpenerState) {
+            toastWarning("Account is use by link opener");
+          } else dispatch(deleteAccountFromList(selectedToken));
+        } else toastWarning("Monitor is start or token is in use!!!");
+      } else toastWarning("Select Monitor Token");
     } else toastWarning("Create some account");
-  };
-
-  /**
-   * function make option for select
-   */
-  const makeProxyOptions = () => {
-    if (proxyGroupList.length > 0) {
-      const result = proxyGroupList.map((group) => {
-        let obj = {};
-        obj["label"] = group["groupName"];
-        obj["value"] = group["proxies"];
-        obj["id"] = group["id"];
-        return obj;
-      });
-      return result;
-    } else return [];
   };
 
   const handleSelectProxyGroup = (group) => {
@@ -144,6 +150,18 @@ function Settings({
     }
   };
 
+  const handleClaimerMenuOpen = () => {
+    if (claimerList.length === 0) {
+      navigate(RoutePath.setting, { replace: true });
+    }
+  };
+
+  const handleProxyMenuOpen = () => {
+    if (proxyGroupList.length === 0) {
+      navigate(RoutePath.proxy, { replace: true });
+    }
+  };
+
   return (
     <div>
       <AppSpacer spacer={30} />
@@ -154,7 +172,7 @@ function Settings({
             checked={ijMonitorState}
             id="invite-joiner-monitor-toggle"
           />
-          <span>Stop Auto Invite Joiner</span>
+          <span>{isMonitorStart ? "Stop" : "Start"}Invite Joiner</span>
         </div>
         <div
           onClick={handleOpenModal}
@@ -185,13 +203,16 @@ function Settings({
       <div className="claimer-token-setting-section">
         <div className="half-section">
           <AppInputField
-            fieldTitle="Claimer Token"
+            fieldTitle="Token Group"
             isCustomLabel={true}
             hideLabel={true}
-            placeholderText="Select Token"
+            placeholderText={
+              claimerList.length > 0 ? "Select Token Group" : "Add Token Group"
+            }
             selectOptions={makeClaimerSelectOption(claimerList)}
             isSelect={true}
             onChange={handleClaimer}
+            onMenuOpen={handleClaimerMenuOpen}
             value={getClaimerValue(claimerList, selectedClaimerGroup)}
           />
         </div>
@@ -200,21 +221,26 @@ function Settings({
             fieldTitle="Proxy Group"
             isCustomLabel={true}
             hideLabel={true}
-            placeholderText="Select Proxy Group"
+            placeholderText={
+              proxyGroupList.length > 0
+                ? "Select Proxy Group"
+                : "Add Proxy group"
+            }
             isSelect={true}
             selectOptions={makeProxyOptions()}
             onChange={handleSelectProxyGroup}
             value={getProxyGroupValue()}
+            onMenuOpen={handleProxyMenuOpen}
           />
         </div>
-        <div className="linkopener">
+        <div className="half-section delay">
           <AppInputField
             fieldTitle="Delay"
             isCustomLabel={true}
             hideLabel={true}
             type="number"
-            min={0}
-            max={10 * 1000}
+            min={MIN_SAFE_DELAY_VALUE}
+            max={MAX_SAFE_DELAY_VALUE}
             placeholderText="Enter Delay"
             onChange={handleDelayChange}
             value={safeDelayModeValue === 0 ? "" : safeDelayModeValue}

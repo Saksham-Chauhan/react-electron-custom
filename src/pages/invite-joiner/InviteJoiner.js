@@ -2,38 +2,41 @@ import React from "react";
 import { connect } from "react-redux";
 import { discordTokenRegExp } from "../../constant/regex";
 import {
-  fetchDiscordAccountList,
+  setModalState,
   fetchIJChannelList,
   fetchIJMonitorState,
-  fetchInviteJoinerLogState,
-  fetchIsInviteJoinerModalState,
-  fetchLoggedUserDetails,
-  fetchSafeModeDelayState,
-  fetchSelctedInviteProxyGroup,
-  fetchSelectedClaimerGroupState,
-  fetchSelectedClaimerTokenInviteJoiner,
   fetchWebhookListState,
+  fetchLoggedUserDetails,
+  fetchDiscordAccountList,
+  fetchSafeModeDelayState,
   fetchWebhookSettingState,
-  setModalState,
+  fetchInviteJoinerLogState,
+  fetchSelctedInviteProxyGroup,
+  fetchIsInviteJoinerModalState,
+  fetchSelectedClaimerGroupState,
+  fetchSelectedMinitorTokenLinkOpener,
+  fetchSelectedClaimerTokenInviteJoiner,
+  setSelectedClaimerTokenIJ,
 } from "../../features/counterSlice";
 import { addLogInList } from "../../features/logic/discord-account";
 import { makeLogText, makeStrOfArr } from "../../helper";
 import {
-  InviteJoinerKeywordSection,
-  InviteJoinerLeftSection,
-  InviteJoinerLogSection,
-  InviteJoinerSettingSection,
   InviteJoinerTopSection,
+  InviteJoinerLogSection,
+  InviteJoinerLeftSection,
+  InviteJoinerKeywordSection,
+  InviteJoinerSettingSection,
 } from "../../pages-component";
 import helper from "../twitter/utils/feature-tweets/helper";
 import { checkDiscordInvite } from "../link-opener/utils";
 import { discordServerInviteAPI } from "../../api";
 import { toastInfo, toastWarning } from "../../toaster";
 import { inviteJoinerTest } from "../../helper/webhook";
+import { NoAccountAlertModal } from "../../modals";
 
 const { Client } = window.require("discord.js-selfbot");
 
-class InviteJoiner extends React.Component {
+class InviteJoiner extends React.PureComponent {
   monitor = new Client();
   token = "";
   constructor(props) {
@@ -85,7 +88,8 @@ class InviteJoiner extends React.Component {
                 );
                 if (info.status === 200) {
                   let result = `Joined ${info.data.guild.name} server 🥳 `;
-                  this.props.handleSendLog(result, msgID);
+                  const date = new Date().toUTCString();
+                  this.props.handleSendLog(result, msgID, date);
                   console.log("Joined the server", info.data.guild);
                   await inviteJoinerTest(
                     webhookList[0],
@@ -107,7 +111,7 @@ class InviteJoiner extends React.Component {
   }
 
   componentDidMount() {
-    const { ijMonitorState } = this.props;
+    const { ijMonitorState, accountList } = this.props;
     try {
       this.monitor.on("ready", () => {
         console.log("Invite joiner is Ready..");
@@ -125,6 +129,9 @@ class InviteJoiner extends React.Component {
     } catch (error) {
       console.log("Error in Link Opener", error.message);
     }
+    if (accountList.length === 0) {
+      this.props.resetSelectedToken();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -136,6 +143,7 @@ class InviteJoiner extends React.Component {
       selectedProxyGroup,
       webhookSetting,
       webhookList,
+      accountList,
     } = this.props;
     if (
       prevProps.ijMonitorState !== ijMonitorState ||
@@ -171,6 +179,11 @@ class InviteJoiner extends React.Component {
       this.setState({ webhookSetting: webhookSetting });
     } else if (prevProps.webhookList !== webhookList) {
       this.setState({ webhookList: webhookList });
+    } else if (
+      prevProps.accountList.length !== accountList.length &&
+      accountList.length === 0
+    ) {
+      this.props.resetSelectedToken();
     }
   }
 
@@ -187,7 +200,6 @@ class InviteJoiner extends React.Component {
       keywordList,
       accountList,
       selectedToken,
-      isMonitorStart,
       ijMonitorState,
       handleOpenModal,
       selectedClaimerGroup,
@@ -201,6 +213,13 @@ class InviteJoiner extends React.Component {
           />
         </div>
         <div className="right-container invite-joiner">
+          {accountList.length === 0 && (
+            <NoAccountAlertModal
+              buttonPress={handleOpenModal}
+              buttonText="Create Account"
+              modalTitle="No Account"
+            />
+          )}
           <InviteJoinerTopSection {...{ logList, selectedToken }} />
           <div className="page-padding-section">
             <div className="linkopener-flex-wrapper">
@@ -210,8 +229,6 @@ class InviteJoiner extends React.Component {
                     ijMonitorState,
                     accountList,
                     keywordList,
-                    selectedToken,
-                    isMonitorStart,
                     selectedClaimerGroup,
                   }}
                 />
@@ -232,27 +249,34 @@ class InviteJoiner extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleOpenModal: () => dispatch(setModalState("discordAccount")),
-    handleSendLog: (content, msgID) =>
+    handleSendLog: (content, msgID, date) =>
       dispatch(
-        addLogInList({ key: "IJ", log: makeLogText(content), id: msgID })
+        addLogInList({
+          key: "IJ",
+          log: makeLogText(content),
+          id: msgID,
+          createdAt: date,
+        })
       ),
+    resetSelectedToken: () => dispatch(setSelectedClaimerTokenIJ({})),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
+    user: fetchLoggedUserDetails(state),
     keywordList: fetchIJChannelList(state),
     logList: fetchInviteJoinerLogState(state),
+    webhookList: fetchWebhookListState(state),
     ijMonitorState: fetchIJMonitorState(state),
     accountList: fetchDiscordAccountList(state),
     safeDelayIJtime: fetchSafeModeDelayState(state),
+    webhookSetting: fetchWebhookSettingState(state),
     isMonitorStart: fetchIsInviteJoinerModalState(state),
     selectedProxyGroup: fetchSelctedInviteProxyGroup(state),
-    selectedClaimerGroup: fetchSelectedClaimerGroupState(state),
     selectedToken: fetchSelectedClaimerTokenInviteJoiner(state),
-    webhookSetting: fetchWebhookSettingState(state),
-    webhookList: fetchWebhookListState(state),
-    user: fetchLoggedUserDetails(state),
+    selectedClaimerGroup: fetchSelectedClaimerGroupState(state),
+    selectedMonitorToken: fetchSelectedMinitorTokenLinkOpener(state),
   };
 };
 

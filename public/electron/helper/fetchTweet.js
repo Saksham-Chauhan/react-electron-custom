@@ -1,11 +1,10 @@
 const axios = require("axios");
-// const T = require("twit");
 const util = require("util");
 const { getBearerToken } = require("twit/lib/helpers");
 const bearers = new Map();
 const getbearerToken = util.promisify(getBearerToken);
 
-module.exports = async function fetchTweets(cKey, cSecret, account) {
+async function fetchTweets(cKey, cSecret, account) {
   if (!bearers.has(cKey)) {
     bearers.set(
       cKey,
@@ -29,4 +28,6 @@ module.exports = async function fetchTweets(cKey, cSecret, account) {
     }
   );
   return res.data[0];
-};
+}
+
+module.exports = { fetchTweets };

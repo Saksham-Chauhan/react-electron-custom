@@ -6,10 +6,8 @@ import {
   setUserDetails,
   resetIJMonitor,
   fetchSpoofModalState,
-  fetchWebhookListState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
-  fetchAddGmailModalState,
   fetchWebhookSettingState,
   fetchEditProxyModalState,
   fetchProxyGroupModalState,
@@ -17,7 +15,6 @@ import {
   fetchInviteJoinerSettingModalState,
 } from "./features/counterSlice";
 import {
-  AddGmailModal,
   AddSpoofModal,
   ProxyGroupModal,
   ClaimerGroupModal,
@@ -53,7 +50,7 @@ import {
 import { RoutePath } from "./constant";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { loggedUserWebhook } from "./helper/webhook";
 import { toastInfo, toastWarning } from "./toaster";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,9 +61,9 @@ import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
-  const addGmailModalState = useSelector(fetchAddGmailModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const proxyEditModalState = useSelector(fetchEditProxyModalState);
@@ -74,7 +71,6 @@ function App() {
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
-  const webhookList = useSelector(fetchWebhookListState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
 
   const animClass = !globalSetting.bgAnimation
@@ -91,6 +87,7 @@ function App() {
         dispatch(updateSpooferStatus(data));
       }
     });
+
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
@@ -98,7 +95,7 @@ function App() {
           let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
           await loggedUserWebhook(
             title,
-            webhookList[0],
+            globalSetting?.webhookList[0],
             globalSetting?.logOnOff
           );
           dispatch(setUserDetails(decode));
@@ -110,22 +107,23 @@ function App() {
     });
     updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
-  }, [dispatch, globalSetting, webhookList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, globalSetting.logOnOff]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length === 0)
+  if (Object.keys(logggedUserDetails).length === 0) {
     return (
       <React.Fragment>
         <Login />
         <ToastContainer />
       </React.Fragment>
     );
+  }
 
   return (
     <div className="app">
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {addGmailModalState && <AddGmailModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {proxyEditModalState && <EditProxySingleModal />}
@@ -139,7 +137,7 @@ function App() {
           <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
             <DragBar />
-            <AppController />
+            <AppController {...{ location }} />
             <Routes>
               <Route path={RoutePath.accountGen} element={<AccountGenPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />

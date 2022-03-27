@@ -9,34 +9,69 @@ import {
   LabelWithToolTip,
 } from "../../component";
 import {
+  fetchClaimerGroupList,
+  fetchProxyGroupList,
+  fetchSafeModeDelayState,
   fetchSelctedInviteProxyGroup,
   fetchSelectedClaimerGroupState,
   setModalState,
 } from "../../features/counterSlice";
-import { toastWarning, toastSuccess } from "../../toaster";
+import { toastWarning } from "../../toaster";
 import { channelRegexExp } from "../../constant/regex";
+import { directDiscordJoinAPI } from "../../api";
+import { Picker } from "emoji-mart";
+import "emoji-mart/css/emoji-mart.css";
 import {
-  discordServerAcceptRuleAPI,
-  discordServerInviteReactAPI,
-} from "../../api";
+  getClaimerValue,
+  makeClaimerSelectOption,
+  makeProxyOptions,
+} from "../../helper";
+import { useNavigate } from "react-router-dom";
+import {
+  MAX_SAFE_DELAY_VALUE,
+  MIN_SAFE_DELAY_VALUE,
+  RoutePath,
+} from "../../constant";
+
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const selectedProxyGroup = useSelector(fetchSelctedInviteProxyGroup);
   const selectedClaimerGroup = useSelector(fetchSelectedClaimerGroupState);
+  const claimerList = useSelector(fetchClaimerGroupList);
+  const proxyGroupList = useSelector(fetchProxyGroupList);
+  const safeDelayModeValue = useSelector(fetchSafeModeDelayState);
+  const [isEmoji, setIsEmoji] = useState(false);
   const [setting, setSetting] = useState({
     inviteCode: "",
     isReact: false,
     reactSetting: {
       channelId: "",
       messageId: "",
-      emojiHexValue: "",
+      emojiValue: "",
     },
     isAcceptRule: false,
     acceptRule: {
       acceptRuleValue: "",
       guildID: "",
     },
+    proxyGroup: {},
+    claimerGroup: {},
+    safeDelay: 0,
   });
+
+  React.useEffect(() => {
+    if (selectedClaimerGroup || selectedClaimerGroup || safeDelayModeValue) {
+      setSetting((pre) => {
+        return {
+          ...pre,
+          claimerGroup: selectedClaimerGroup,
+          proxyGroup: selectedProxyGroup,
+          safeDelay: safeDelayModeValue,
+        };
+      });
+    }
+  }, [selectedClaimerGroup, selectedProxyGroup, safeDelayModeValue]);
 
   const checkValidation = () => {
     let valid;
@@ -139,66 +174,161 @@ function InviteJoinerSettings() {
     });
   };
 
+  const handleEmojiState = () => {
+    setIsEmoji(!isEmoji);
+  };
+
+  const addEmoji = (e) => {
+    let sym = e.unified.split("-");
+    let codesArray = [];
+    sym.forEach((el) => codesArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codesArray);
+    setSetting((pre) => {
+      return {
+        ...pre,
+        reactSetting: { ...pre.reactSetting, emojiValue: emoji },
+      };
+    });
+    handleEmojiState();
+  };
+
   const handleSubmit = () => {
     const result = checkValidation();
     if (result) {
       const claimerArr = selectedClaimerGroup["value"]?.split("\n");
       claimerArr.forEach(async (token) => {
-        if (setting.isReact) {
-          const response = await discordServerInviteReactAPI(
-            selectedProxyGroup,
-            setting.reactSetting.channelId,
-            setting.reactSetting.messageId,
-            setting.reactSetting.emojiHexValue,
-            token
-          );
-          if (response !== null) {
-            if (response.status === 201) {
-              toastSuccess("Reacted to the server");
-            }
-          }
-        }
-        if (setting.isAcceptRule) {
-          const response = await discordServerAcceptRuleAPI(
-            setting.acceptRule.guildID,
-            token,
-            setting.acceptRule.acceptRuleValue,
-            setting.inviteCode,
-            selectedProxyGroup
-          );
-          if (response !== null) {
-            if (response.status === 201) {
-              toastSuccess("Accept the rule");
-              // dispatch(
-              //   addLogInList({ key: "LO", log: makeLogText(content), id: msgID })
-              // ),
-            }
-          }
+        const response = await directDiscordJoinAPI(
+          setting.proxyGroup,
+          setting.inviteCode,
+          token,
+          setting
+        );
+        if (response === null) {
+          toastWarning("Something went wrong 🥲");
         }
       });
       handleCloseModal();
     }
   };
 
+  const handleClaimerMenuOpen = () => {
+    if (claimerList.length === 0) {
+      navigate(RoutePath.setting, { replace: true });
+    }
+  };
+
+  const handleClaimer = (data) => {
+    setSetting((pre) => {
+      return { ...pre, claimerGroup: data };
+    });
+  };
+
+  const handleSelectProxyGroup = (group) => {
+    if (Object.keys(group).length > 0) {
+      setSetting((pre) => {
+        return { ...pre, proxyGroup: group };
+      });
+    }
+  };
+
+  const getProxyGroupValue = () => {
+    if (Object.keys(selectedProxyGroup).length > 0) {
+      const result = proxyGroupList.filter(
+        (group) => group["id"] === selectedProxyGroup["id"]
+      );
+      if (result.length > 0) {
+        return [
+          {
+            label: result[0]["groupName"],
+            value: result[0]["proxies"],
+            id: result[0]["id"],
+          },
+        ];
+      }
+    }
+
+    return [];
+  };
+
+  const handleProxyMenuOpen = () => {
+    if (proxyGroupList.length === 0) {
+      navigate(RoutePath.proxy, { replace: true });
+    }
+  };
+
+  const handleDelayChange = (e) => {
+    const { value } = e.target;
+    const numValue = parseInt(value);
+    if (
+      (numValue > MIN_SAFE_DELAY_VALUE && numValue <= MAX_SAFE_DELAY_VALUE) ||
+      value === ""
+    ) {
+      setSetting((pre) => {
+        return { ...pre, safeDelay: numValue };
+      });
+    }
+  };
+
   return (
-    <ModalWrapper>
+    <ModalWrapper style={{ width: "52%" }}>
       <div className="modal-tilte">
         <h2>Invite Joiner</h2>
       </div>
       <AppSpacer spacer={30} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="Invite Code" />
         <AppInputField
+          fieldTitle="Invite Code"
           onChange={handleInviteChange}
           placeholderText="Enter Invite Code"
-          hideLabel={true}
           value={setting.inviteCode}
           onCopy={handleInviteChange}
         />
       </div>
-      <AppSpacer spacer={20} />
+      <AppSpacer spacer={10} />
+      <div className="direct-join-column-wrapper">
+        <div className="direct-join-column">
+          <AppInputField
+            fieldTitle="Token Group"
+            placeholderText={
+              claimerList.length > 0 ? "Select Token Group" : "Add Token Group"
+            }
+            selectOptions={makeClaimerSelectOption(claimerList)}
+            isSelect={true}
+            onChange={handleClaimer}
+            onMenuOpen={handleClaimerMenuOpen}
+            value={getClaimerValue(claimerList, setting.claimerGroup)}
+          />
+        </div>
+        <div className="direct-join-column">
+          <AppInputField
+            fieldTitle="Proxy Group"
+            placeholderText={
+              proxyGroupList.length > 0
+                ? "Select Proxy Group"
+                : "Add Proxy group"
+            }
+            isSelect={true}
+            selectOptions={makeProxyOptions()}
+            onChange={handleSelectProxyGroup}
+            value={getProxyGroupValue()}
+            onMenuOpen={handleProxyMenuOpen}
+          />
+        </div>
+        <div className="direct-join-column">
+          <AppInputField
+            fieldTitle="Delay"
+            type="number"
+            min={MIN_SAFE_DELAY_VALUE}
+            max={MAX_SAFE_DELAY_VALUE}
+            placeholderText="Enter Delay"
+            onChange={handleDelayChange}
+            value={setting.safeDelay === 0 ? "" : setting.safeDelay}
+          />
+        </div>
+      </div>
+      <AppSpacer spacer={10} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="React" />
+        <label>React</label>
         <AppSpacer spacer={5} />
         <div className="joiner-custom-toggle">
           <AppToggler
@@ -232,22 +362,44 @@ function InviteJoinerSettings() {
                 placeholderText="Enter Message ID"
               />
             </div>
-            <div>
+            <div className="emoji-picker-wrapper">
               <AppInputField
                 fieldTitle="Emoji"
                 placeholderText="Enter Emoji"
                 onChange={handleReactChange}
                 onCopy={handleReactChange}
-                name="emojiHexValue"
-                value={setting.reactSetting.emojiHexValue}
+                onClick={handleEmojiState}
+                name="emojiValue"
+                value={setting.reactSetting.emojiValue}
               />
+              {isEmoji && (
+                <div className="emoji-tray-picker">
+                  <Picker onSelect={addEmoji} />
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
-      <AppSpacer spacer={20} />
+      <AppSpacer spacer={10} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="Accept Rules" />
+        <LabelWithToolTip
+          delayHide={3000}
+          isCustomToolTip={true}
+          labelText="Accept Rules"
+        >
+          <p className="custom-tooltip-text">Accept Format</p>
+          <p
+            className="custom-tooltip-text link"
+            onClick={() =>
+              window.open(
+                "https://guide.kyrotools.in/#/ExampleForReactOnDirectInvite"
+              )
+            }
+          >
+            Fore more
+          </p>
+        </LabelWithToolTip>
         <AppSpacer spacer={5} />
         <div className="joiner-custom-toggle">
           <AppToggler
@@ -271,7 +423,7 @@ function InviteJoinerSettings() {
             <AppSpacer spacer={10} />
             <AppInputField
               isMulti={true}
-              multiHeight="100px"
+              multiHeight="80px"
               fieldTitle="Accept Format"
               onCopy={handleAcceptRuleChange}
               onChange={handleAcceptRuleChange}

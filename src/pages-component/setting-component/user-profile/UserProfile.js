@@ -6,6 +6,7 @@ import { discordJoinedAtRegex } from "../../../constant/regex";
 import {
   fetchWebhookListState,
   fetchWebhookSettingState,
+  resetUserLoggedState,
   setUserDetails,
 } from "../../../features/counterSlice";
 import { MONTHS } from "../../../helper";
@@ -19,29 +20,32 @@ function UserProfile({ userDetails }) {
 
   const makeDate = (str = "") => {
     let date = str.match(discordJoinedAtRegex);
-    let trimDate = date[0];
-    let splitDate = trimDate.split("-");
-    let month = MONTHS[Number(splitDate[1] - 1 || "0")];
-    return `${month} ${splitDate[0]}`;
+    if (date !== undefined && date !== null) {
+      let trimDate = date[0];
+      let splitDate = trimDate?.split("-");
+      let month = MONTHS[Number(splitDate[1] - 1 || "0")];
+      return `${month} ${splitDate[0]}`;
+    }
   };
 
   const handleLogout = async () => {
-    let title = `${userDetails.username}#${userDetails.discriminator} Logged out 🥲 `;
+    let title = `${userDetails?.username}#${userDetails?.discriminator} Logged out 🥲 `;
     await loggedUserWebhook(title, webhookList[0], option?.logOnOff);
     dispatch(setUserDetails({}));
+    dispatch(resetUserLoggedState());
   };
 
   return (
     <div className="flex-right-align">
       <div className="user-profile-section">
         <div className="discord-avatar">
-          <img src={userDetails.avatar || user} alt="" />
+          <img src={userDetails?.avatar || user} alt="" />
         </div>
         <div className="user-profile-details">
           <h3>
-            {userDetails.username}#{userDetails.discriminator}
+            {userDetails?.username}#{userDetails?.discriminator}
           </h3>
-          <p>User since {makeDate(userDetails.joined_at)}</p>
+          <p>User since {makeDate(userDetails?.joined_at)}</p>
         </div>
         <div onClick={handleLogout} className="user-logout-btn btn">
           <img src={logout} alt="" />

@@ -8,6 +8,8 @@ import {
   fetchChromeUserListState,
   fetchLOChannelList,
   fetchLOKeywordList,
+  fetchSelectedClaimerTokenInviteJoiner,
+  fetchIJMonitorState,
 } from "../../../features/counterSlice";
 import { isValueInUse } from "../../../helper";
 import { toastWarning } from "../../../toaster";
@@ -21,13 +23,19 @@ import edit from "react-useanimations/lib/edit";
 import { useDispatch, useSelector } from "react-redux";
 import { discordTokenRegExp } from "../../../constant/regex";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
+import { RoutePath } from "../../../constant";
+import { useNavigate } from "react-router-dom";
 
 function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const chromeList = useSelector(fetchChromeUserListState);
   const selectedChrome = useSelector(fetchLOchromeUserState);
   const keywordList = useSelector(fetchLOKeywordList);
   const channelList = useSelector(fetchLOChannelList);
+  const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
+  const ijMonitor = useSelector(fetchIJMonitorState);
+
   /**
    * function handle modal state
    **/
@@ -58,15 +66,18 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const handleEditAccount = () => {
     if (accountList.length > 0) {
       if (Object.keys(selectedMonitorToken).length > 0) {
-        const result = isValueInUse(
-          accountList,
-          "discordToken",
-          selectedMonitorToken
-        );
-        if (!result && !settingOption?.linkOpenerState) {
-          dispatch(setEditStorage(selectedMonitorToken));
-          handleOpenModal();
-        } else toastWarning("Token in use!!");
+        const result = isValueInUse(accountList, "id", selectedMonitorToken);
+        if (!settingOption?.linkOpenerState && result) {
+          if (selectedMonitorToken["id"] !== selectedToken["id"]) {
+            dispatch(setEditStorage(selectedMonitorToken));
+            handleOpenModal();
+          } else if (ijMonitor) {
+            toastWarning("Account is use by invite joiner");
+          } else {
+            dispatch(setEditStorage(selectedMonitorToken));
+            handleOpenModal();
+          }
+        } else toastWarning("Monitor is start or token is in use!!!");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
   };
@@ -77,20 +88,26 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const handleDeleteAccount = () => {
     if (accountList.length > 0) {
       if (Object.keys(selectedMonitorToken).length > 0) {
-        const result = isValueInUse(
-          accountList,
-          "discordToken",
-          selectedMonitorToken
-        );
-        if (!result && !settingOption?.linkOpenerState) {
-          dispatch(deleteAccountFromList(selectedMonitorToken));
-        } else toastWarning("Token in use!!");
+        const result = isValueInUse(accountList, "id", selectedMonitorToken);
+        if (!settingOption?.linkOpenerState && result) {
+          if (selectedMonitorToken["id"] !== selectedToken["id"]) {
+            dispatch(deleteAccountFromList(selectedMonitorToken));
+          } else if (ijMonitor) {
+            toastWarning("Account is use by invite joiner");
+          } else dispatch(deleteAccountFromList(selectedMonitorToken));
+        } else toastWarning("Monitor is start or token is in use!!!");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
   };
 
   const handleSelectedChrome = (user) => {
     dispatch(setLOchromeUser(user));
+  };
+
+  const handleChromeMenuOpen = () => {
+    if (chromeList.length === 0) {
+      navigate(RoutePath.setting, { replace: true });
+    }
   };
 
   return (
@@ -113,7 +130,7 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
             strokeColor="#ffff"
             size={20}
             wrapperStyle={{ cursor: "pointer" }}
-          ></UseAnimations>
+          />
           <span>Edit Account</span>
         </div>
         <div onClick={handleDeleteAccount} className="linkopener-acc btn">
@@ -122,7 +139,7 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
             strokeColor="#B60E0E"
             size={20}
             wrapperStyle={{ cursor: "pointer", paddingBottom: "1px" }}
-          ></UseAnimations>
+          />
           <span>Delete Account</span>
         </div>
       </div>
@@ -133,9 +150,12 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
           hideLabel={true}
           isCustomLabel={true}
           onChange={handleSelectedChrome}
+          onMenuOpen={handleChromeMenuOpen}
           isSelect={true}
           selectOptions={chromeList}
-          placeholderText="Select Chrome Profile"
+          placeholderText={
+            chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
+          }
           value={chromeList.filter((d) => d["id"] === selectedChrome?.id)}
         />
       </div>

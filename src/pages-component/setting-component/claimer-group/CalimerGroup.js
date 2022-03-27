@@ -33,7 +33,7 @@ function CalimerGroup() {
   return (
     <div className="claimer-group-outer">
       <div className="claimer-flex">
-        <h3>Claimer Group</h3>
+        <h3>Token Group</h3>
         <div onClick={handleOpenModal} className="claimer-add-btn btn">
           <img src={plus} alt="" />
         </div>

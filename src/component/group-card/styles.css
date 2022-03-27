@@ -24,6 +24,8 @@
   font-size: 14px;
   line-height: 21px;
   color: var(--primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .group-card-content > p {
   font-size: 12px;

@@ -5,7 +5,7 @@ const auth = require("./auth");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
 const NetworkSpeed = require("network-speed");
-const fetchTweets = require("./helper/fetchTweet");
+const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
@@ -160,7 +160,14 @@ app.on("window-all-closed", () => {
 });
 
 ipcMain.on("close", () => {
-  mainWindow.close();
+  try {
+    let tempMainWindow = mainWindow || global.mainWin;
+    if (tempMainWindow) {
+      tempMainWindow.close();
+    }
+  } catch (error) {
+    console.log("Something went wroung on minizing app", error);
+  }
 });
 
 ipcMain.handle("get-app-version", () => {
@@ -168,7 +175,14 @@ ipcMain.handle("get-app-version", () => {
 });
 
 ipcMain.on("minimize", () => {
-  mainWindow.minimize();
+  try {
+    let tempMainWindow = mainWindow || global.mainWin;
+    if (tempMainWindow) {
+      tempMainWindow.minimize();
+    }
+  } catch (error) {
+    console.log("Something went wroung on minizing app", error);
+  }
 });
 
 ipcMain.on("maximize", () => {
@@ -205,14 +219,6 @@ app.on("ready", () => {
   createWindow();
   global.mainWin = mainWindow;
 });
-
-// AUTO UPDATER
-
-// for update to work we have to add publish key in package.json file
-// so that updater can use that value detect update available or not
-
-// Channel need to Add Listener in React App
-// update:anerror update:showModal update:downloading update:not-avail update:progress update:reset
 
 const updateCheck = () => {
   autoUpdater.autoDownload = false;

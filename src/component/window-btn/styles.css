@@ -12,6 +12,13 @@
   height: 12px;
   display: block;
 }
+.window-button.help {
+  margin-right: 0.5em;
+}
+.window-button.help > svg:first-of-type {
+  visibility: unset;
+  cursor: pointer;
+}
 .window-button {
   height: 12px;
   width: 12px;

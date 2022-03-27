@@ -32,6 +32,7 @@ function AddSpoofer() {
     proxyValue: "",
     disableImages: "",
     isDisableImage: false,
+    createdAt: new Date().toUTCString(),
   });
 
   /**
@@ -105,7 +106,7 @@ function AddSpoofer() {
         }
         handleCloseModal();
       }
-    } else toastWarning("Enter valid URL");
+    } else toastWarning("Enter Valid URL");
   };
 
   return (
@@ -114,7 +115,7 @@ function AddSpoofer() {
         <h2>Create Spoofer</h2>
       </div>
       <AppSpacer spacer={30} />
-      <LabelWithToolTip labelText="URL" />
+      <LabelWithToolTip labelText="URL" toolTopText="Enter Url" />
       <AppInputField
         name="url"
         placeholderText="Enter URL"
@@ -125,7 +126,10 @@ function AddSpoofer() {
       <AppSpacer spacer={10} />
       <div className="spoof-modal-middle-section">
         <div>
-          <LabelWithToolTip labelText="Proxy" />
+          <LabelWithToolTip
+            labelText="Proxy"
+            toolTopText="Select proxy group"
+          />
           <AppInputField
             selectOptions={makeProxyOptions()}
             isSelect={true}
@@ -153,7 +157,10 @@ function AddSpoofer() {
         </div>
       </div>
       <AppSpacer spacer={10} />
-      <LabelWithToolTip labelText="Disable Images" />
+      <LabelWithToolTip
+        labelText="Disable Images"
+        toolTopText="Disable image on loading browser"
+      />
       <AppSpacer spacer={5} />
       <div className="joiner-custom-toggle">
         <AppToggler
