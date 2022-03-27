@@ -5,7 +5,7 @@ import "./styles.css";
 const oneClickPage = () => {
   return (
     <div className="miniting-page">
-      <ComingSoon />
+      <ComingSoon modalTitle="NFT Minter" />
     </div>
   );
 };
