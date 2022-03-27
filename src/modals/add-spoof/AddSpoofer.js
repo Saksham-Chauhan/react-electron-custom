@@ -19,9 +19,12 @@ import decrement from "../../assests/images/decrement.svg";
 import increment from "../../assests/images/increment.svg";
 import { validationChecker } from "../../hooks/validationChecker";
 import { addNewSpooferInList } from "../../features/logic/spoof";
+import { useNavigate } from "react-router-dom";
+import { RoutePath } from "../../constant";
 
 function AddSpoofer() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const proxyGroupList = useSelector(fetchProxyGroupList);
   const [spoof, setSpoof] = useState({
     id: "",
@@ -109,13 +112,23 @@ function AddSpoofer() {
     } else toastWarning("Enter Valid URL");
   };
 
+  const handleProxyMenuOpen = () => {
+    if (proxyGroupList.length === 0) {
+      navigate(RoutePath.proxy, { replace: true });
+      handleCloseModal();
+    }
+  };
+
   return (
     <ModalWrapper>
       <div className="modal-tilte">
         <h2>Create Spoofer</h2>
       </div>
       <AppSpacer spacer={30} />
-      <LabelWithToolTip labelText="URL" toolTopText="Enter Url" />
+      <LabelWithToolTip
+        labelText="URL"
+        toolTopText="Enter URL you want to open"
+      />
       <AppInputField
         name="url"
         placeholderText="Enter URL"
@@ -135,6 +148,12 @@ function AddSpoofer() {
             isSelect={true}
             hideLabel={true}
             onChange={handleProxySelect}
+            placeholderText={
+              proxyGroupList.length > 0
+                ? "Select Proxy Group"
+                : "Add Proxy Group"
+            }
+            onMenuOpen={handleProxyMenuOpen}
           />
         </div>
         <div className="spoofer-counter">
@@ -144,11 +163,11 @@ function AddSpoofer() {
               <img src={decrement} alt="" />
             </div>
             <input
-              value={spoof.quantity}
-              onChange={handleChange}
-              name="quantity"
               min={1}
               type="number"
+              name="quantity"
+              value={spoof.quantity}
+              onChange={handleChange}
             />
             <div onClick={incrementEvent}>
               <img src={increment} alt="" />
@@ -159,7 +178,7 @@ function AddSpoofer() {
       <AppSpacer spacer={10} />
       <LabelWithToolTip
         labelText="Disable Images"
-        toolTopText="Disable image on loading browser"
+        toolTopText="Disable all image on loading browser"
       />
       <AppSpacer spacer={5} />
       <div className="joiner-custom-toggle">

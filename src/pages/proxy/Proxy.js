@@ -14,6 +14,7 @@ import {
   fetchTempStorageState,
 } from "../../features/counterSlice";
 import { searchingFunction } from "../../hooks/searchFunction";
+import { NoAccountAlertModal } from "../../modals";
 import {
   ProxyTableContainer,
   ProxyTopBtnsWrapper,
@@ -59,6 +60,14 @@ function Proxy() {
 
   return (
     <div className="page-section">
+      {proxyGroupList.length === 0 && (
+        <NoAccountAlertModal
+          buttonText="Create Proxy Group"
+          modalTitle="No Proxy Group"
+          buttonPress={handleOpenModal}
+        />
+      )}
+
       <div className="left-container">
         <TopWrapper>
           <GroupTitle onClick={handleOpenModal} />

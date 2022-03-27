@@ -17,9 +17,9 @@
   background: var(--app-bg);
   transform: translate(-50%, -50%);
   border-radius: 10px;
+  border: 1px solid #00c6b9;
 }
 .no-account-modal-btn {
-  width: 130px;
   height: 31px;
   display: flex;
   align-items: center;

@@ -214,6 +214,7 @@ function InviteJoinerSettings() {
   const handleClaimerMenuOpen = () => {
     if (claimerList.length === 0) {
       navigate(RoutePath.setting, { replace: true });
+      handleCloseModal();
     }
   };
 
@@ -253,6 +254,7 @@ function InviteJoinerSettings() {
   const handleProxyMenuOpen = () => {
     if (proxyGroupList.length === 0) {
       navigate(RoutePath.proxy, { replace: true });
+      handleCloseModal();
     }
   };
 
@@ -384,7 +386,7 @@ function InviteJoinerSettings() {
       <AppSpacer spacer={10} />
       <div className="joiner-custom-input">
         <LabelWithToolTip
-          delayHide={3000}
+          delayHide={1500}
           isCustomToolTip={true}
           labelText="Accept Rules"
         >
@@ -397,7 +399,7 @@ function InviteJoinerSettings() {
               )
             }
           >
-            Fore more
+            For more
           </p>
         </LabelWithToolTip>
         <AppSpacer spacer={5} />
