@@ -276,15 +276,15 @@ function InviteJoinerSettings() {
       </div>
       <AppSpacer spacer={30} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="Invite Code" />
         <AppInputField
+          fieldTitle="Invite Code"
           onChange={handleInviteChange}
           placeholderText="Enter Invite Code"
-          hideLabel={true}
           value={setting.inviteCode}
           onCopy={handleInviteChange}
         />
       </div>
+      <AppSpacer spacer={10} />
       <div className="direct-join-column-wrapper">
         <div className="direct-join-column">
           <AppInputField
@@ -326,9 +326,9 @@ function InviteJoinerSettings() {
           />
         </div>
       </div>
-      <AppSpacer spacer={20} />
+      <AppSpacer spacer={10} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="React" />
+        <label>React</label>
         <AppSpacer spacer={5} />
         <div className="joiner-custom-toggle">
           <AppToggler
@@ -381,9 +381,25 @@ function InviteJoinerSettings() {
           </div>
         )}
       </div>
-      <AppSpacer spacer={20} />
+      <AppSpacer spacer={10} />
       <div className="joiner-custom-input">
-        <LabelWithToolTip labelText="Accept Rules" />
+        <LabelWithToolTip
+          delayHide={3000}
+          isCustomToolTip={true}
+          labelText="Accept Rules"
+        >
+          <p className="custom-tooltip-text">Accept Format</p>
+          <p
+            className="custom-tooltip-text link"
+            onClick={() =>
+              window.open(
+                "https://guide.kyrotools.in/#/ExampleForReactOnDirectInvite"
+              )
+            }
+          >
+            Fore more
+          </p>
+        </LabelWithToolTip>
         <AppSpacer spacer={5} />
         <div className="joiner-custom-toggle">
           <AppToggler
@@ -407,7 +423,7 @@ function InviteJoinerSettings() {
             <AppSpacer spacer={10} />
             <AppInputField
               isMulti={true}
-              multiHeight="100px"
+              multiHeight="80px"
               fieldTitle="Accept Format"
               onCopy={handleAcceptRuleChange}
               onChange={handleAcceptRuleChange}

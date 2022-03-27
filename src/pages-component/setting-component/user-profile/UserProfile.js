@@ -6,6 +6,7 @@ import { discordJoinedAtRegex } from "../../../constant/regex";
 import {
   fetchWebhookListState,
   fetchWebhookSettingState,
+  resetUserLoggedState,
   setUserDetails,
 } from "../../../features/counterSlice";
 import { MONTHS } from "../../../helper";
@@ -31,6 +32,7 @@ function UserProfile({ userDetails }) {
     let title = `${userDetails?.username}#${userDetails?.discriminator} Logged out 🥲 `;
     await loggedUserWebhook(title, webhookList[0], option?.logOnOff);
     dispatch(setUserDetails({}));
+    dispatch(resetUserLoggedState());
   };
 
   return (

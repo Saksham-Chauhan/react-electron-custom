@@ -6,7 +6,6 @@ import {
   setUserDetails,
   resetIJMonitor,
   fetchSpoofModalState,
-  fetchWebhookListState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
   fetchWebhookSettingState,
@@ -51,7 +50,7 @@ import {
 import { RoutePath } from "./constant";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { loggedUserWebhook } from "./helper/webhook";
 import { toastInfo, toastWarning } from "./toaster";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,6 +61,7 @@ import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
@@ -71,7 +71,6 @@ function App() {
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
-  const webhookList = useSelector(fetchWebhookListState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
 
   const animClass = !globalSetting.bgAnimation
@@ -88,18 +87,17 @@ function App() {
         dispatch(updateSpooferStatus(data));
       }
     });
+
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
         if (decode.roles.length > 0) {
           let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
-          if (webhookList.length === 0) {
-            await loggedUserWebhook(
-              title,
-              webhookList[0],
-              globalSetting?.logOnOff
-            );
-          }
+          await loggedUserWebhook(
+            title,
+            globalSetting?.webhookList[0],
+            globalSetting?.logOnOff
+          );
           dispatch(setUserDetails(decode));
         } else toastWarning("Sorry, you don't have required role  😭");
       }
@@ -109,7 +107,8 @@ function App() {
     });
     updateNotAvailable(() => toastInfo("Update not available"));
     errorToaster((err) => toastWarning(err));
-  }, [dispatch, globalSetting.logOnOff, webhookList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, globalSetting.logOnOff]);
 
   // check is user log in or not
   if (Object.keys(logggedUserDetails).length === 0) {
@@ -138,7 +137,7 @@ function App() {
           <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
             <DragBar />
-            <AppController />
+            <AppController {...{ location }} />
             <Routes>
               <Route path={RoutePath.accountGen} element={<AccountGenPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />

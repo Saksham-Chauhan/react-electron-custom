@@ -81,7 +81,6 @@ export const counterSlice = createSlice({
       state.discordAccountList = action.payload;
     },
     setSelectedMonitorTokenLO: (state, action) => {
-      console.log(action);
       state.selectedMonitorTokenLO = action.payload;
     },
     appendLogList: (state, action) => {
@@ -166,13 +165,17 @@ export const counterSlice = createSlice({
       state.webhookSetting = action.payload;
     },
     appendWebhookInList: (state, action) => {
-      state.webhookList = [action.payload];
+      state.webhookSetting.webhookList = [action.payload];
     },
     openAddNewProxyModal: (state, action) => {
       state.addProxyStorage = action.payload;
     },
     setUserDetails: (state, action) => {
+      state.isUserLoggedIn = !state.isUserLoggedIn;
       state.userDetails = action.payload;
+    },
+    resetUserLoggedState: (state, action) => {
+      state.isUserLoggedIn = false;
     },
     appendInviteJoinerAccount: (state, action) => {
       state.inviteJoinerAccount = action.payload;
@@ -210,7 +213,7 @@ export const {
   addlastWeekTweets,
   addlastWeekInvite,
   addlastWeekLink,
-
+  resetUserLoggedState,
   resetIJMonitor,
   setInviteProxyGroup,
   setInviteJoinerDelay,
@@ -345,10 +348,13 @@ export const fetchChromeUserListState = (state) =>
   state[STATE_KEY].chromeUserList;
 export const fetchWebhookSettingState = (state) =>
   state[STATE_KEY].webhookSetting;
-export const fetchWebhookListState = (state) => state[STATE_KEY].webhookList;
+export const fetchWebhookListState = (state) =>
+  state[STATE_KEY].webhookSetting.webhookList;
 
 // LOGIN
 export const fetchLoggedUserDetails = (state) => state[STATE_KEY].userDetails;
+export const fetchUserLoggedInState = (state) =>
+  state[STATE_KEY].isUserLoggedIn;
 
 //DASHBOARD
 export const fetchDashboardModalState = (state) =>
@@ -364,6 +370,7 @@ export const fetchLink = (state) => state[STATE_KEY].link;
 export const fetchInvite = (state) => state[STATE_KEY].invite;
 export const fetchTweets = (state) => state[STATE_KEY].twites;
 export const fetchSpoof = (state) => state[STATE_KEY].spoof;
+
 // INVITE JOINER;
 export const fetchInviteJoinerListState = (state) =>
   state[STATE_KEY].inviteJoinerAccount;
