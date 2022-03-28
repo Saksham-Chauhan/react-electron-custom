@@ -1,5 +1,6 @@
 import React from "react";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
+import "./style.css";
 
 function ServerLeaver() {
   return (
@@ -13,12 +14,21 @@ function ServerLeaver() {
           />
         </div>
       </div>
+      <AppSpacer spacer={20} />
       <div className="servre-leaver-toggler">
         <span>Server ID[s]</span>
-        <span>All</span>
+        <span className="all">All</span>
         <AppToggler />
       </div>
-      <AppInputField hideLabel={true} isMulti={true} multiHeight="100px" />
+      <AppInputField
+        hideLabel={true}
+        isMulti={true}
+        multiHeight="100px"
+        placeholderText="Eg. 
+        936538800027467123
+        936534767688678923
+        936538800027467344"
+      />
     </React.Fragment>
   );
 }

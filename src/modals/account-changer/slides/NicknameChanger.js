@@ -1,5 +1,7 @@
 import React from "react";
 import { AppSpacer, LabelWithToolTip, AppInputField } from "../../../component";
+import refresh from "../../../assests/images/refresh.svg";
+import "./style.css";
 
 function NicknameChanger() {
   return (
@@ -19,8 +21,22 @@ function NicknameChanger() {
           />
         </div>
       </div>
-      <LabelWithToolTip labelText="Nicknames" />
-      <AppInputField hideLabel={true} isMulti={true} multiHeight="100px" />
+      <AppSpacer spacer={20} />
+      <div className="nickname-row">
+        <LabelWithToolTip labelText="Nicknames" />
+        <div className="group-title btn refresh">
+          <img src={refresh} alt="ref" />
+        </div>
+      </div>
+      <AppInputField
+        hideLabel={true}
+        isMulti={true}
+        multiHeight="100px"
+        placeholderText="Eg. 
+      jack123
+      jack234
+      jack344"
+      />
     </React.Fragment>
   );
 }

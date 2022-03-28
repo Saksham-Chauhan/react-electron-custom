@@ -17,7 +17,7 @@ function PasswordChnager() {
           <AppInputField
             hideLabel={true}
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Leave Blank For Randomize"
           />
         </div>
       </div>

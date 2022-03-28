@@ -155,3 +155,9 @@ export const readProxyFromFile = (proxyArr) => (dispatch, getState) => {
   dispatch(setTempStorage(tempSelectedObj));
   dispatch(appendProxyGroupInList(afterUpdateList));
 };
+export const setStatusInProxy = (proxyArr) => (dispatch, getState) => {
+  const currentList = fetchProxyGroupList(getState());
+  const currentSelectedGroup = fetchTempStorageState(getState());
+  let tempGroupList = [...currentList];
+  let tempSelectedObj = { ...currentSelectedGroup };
+};

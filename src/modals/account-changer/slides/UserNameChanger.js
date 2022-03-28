@@ -1,25 +1,31 @@
 import React from "react";
-import {
-  AppInputField,
-  AppSidebar,
-  AppSpacer,
-  LabelWithToolTip,
-} from "../../../component";
+import { AppInputField, AppSpacer, LabelWithToolTip } from "../../../component";
 
-function UserNameChanger() {
+function UserNameChanger(props) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
       <div className="modal-flex-field-wrapper">
         <div className="half-flex-field">
-          <AppInputField fieldTitle="Proxy Group" placeholderText="" />
+          <AppInputField
+            fieldTitle="Delay (Optional)"
+            placeholderText="Enter Delay (in ms)"
+            name="delayInUser"
+            onChange={props.onChange}
+          />
         </div>
         <div className="half-flex-field">
           <LabelWithToolTip
             labelText="Username (Optional)"
             parentStyle={{ style: { marginBottom: "10px" } }}
           />
-          <AppInputField hideLabel={true} fieldTitle="" placeholderText="" />
+          <AppInputField
+            hideLabel={true}
+            fieldTitle=""
+            placeholderText="Enter Username"
+            name="username"
+            onChange={props.onChange}
+          />
         </div>
       </div>
     </React.Fragment>

@@ -7,10 +7,16 @@ function ActivityChanger() {
       <AppSpacer spacer={10} />
       <div className="modal-flex-field-wrapper">
         <div className="half-flex-field">
-          <AppInputField fieldTitle="Delay (Optional)" placeholderText="" />
+          <AppInputField
+            fieldTitle="Delay (Optional)"
+            placeholderText="Delay (Optional)"
+          />
         </div>
         <div className="half-flex-field">
-          <AppInputField fieldTitle="Activity Details" placeholderText="" />
+          <AppInputField
+            fieldTitle="Activity Details"
+            placeholderText="Eg. Playing Kyro Tools"
+          />
         </div>
       </div>
     </React.Fragment>
