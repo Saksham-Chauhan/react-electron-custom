@@ -16,7 +16,6 @@ import massInviter from "../../../assests/images/mass-inviter.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAccChangerListState,
-  setModalState,
   setSelctedAccChangerCard,
 } from "../../../features/counterSlice";
 
@@ -28,19 +27,14 @@ function LeftSection({ selectedCard }) {
     dispatch(setSelctedAccChangerCard(card));
   };
 
-  const handleModalState = () => {
-    dispatch(setModalState("accountChangerModal"));
-  };
-
   return (
     <>
       <TopWrapper>
-        <GroupTitle onClick={handleModalState} title="Acc Changer" />
+        <GroupTitle hideBtn={true} title="Acc Changer" />
       </TopWrapper>
       <AppSpacer spacer={20} />
       <div className="group-card-scroll">
         {accountList.map((option) => {
-          console.log(option["changerType"]);
           return (
             <GroupCard
               onClick={() => handleSelectedCard(option)}

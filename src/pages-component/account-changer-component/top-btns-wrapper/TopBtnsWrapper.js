@@ -1,13 +1,22 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import UseAnimations from "react-useanimations";
 import add from "../../../assests/images/plus.svg";
 import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import searchIcon from "../../../assests/images/search.svg";
-import UseAnimations from "react-useanimations";
+import { setModalState } from "../../../features/counterSlice";
+
 function TopBtnsWrapper() {
-  const handleAdd = () => {};
+  const dispatch = useDispatch();
+
+  const handleAdd = () => {
+    dispatch(setModalState("accountChangerModal"));
+  };
   const handleDelete = () => {};
+
   const handlePlay = () => {};
+
   return (
     <div className="page-top-btns-wrapper">
       <div className="page-left-container">

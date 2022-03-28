@@ -13,6 +13,7 @@ import {
   PasswordChnagerSlide,
   ServerLeaverSlide,
   TokenCheckerSlide,
+  MassInviteSlide,
 } from "./slides";
 import NicknameChanger from "./slides/NicknameChanger";
 
@@ -59,7 +60,8 @@ function AccountChanger() {
       </div>
       <AppSpacer spacer={10} />
       {/* dynamic slide start */}
-      {GetDynamicSlideRnder(selectedCard["changerType"])}
+
+      {getDynamicSlideRnder(selectedCard["changerType"])}
       {/* dynamic slide render end */}
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
@@ -76,24 +78,24 @@ function AccountChanger() {
 
 export default AccountChanger;
 
-const GetDynamicSlideRnder = (type) => {
+const getDynamicSlideRnder = (type) => {
   switch (type) {
     case "avatarChanger":
-      return AvatarChangerSlide;
+      return <AvatarChangerSlide />;
     case "serverLeaver":
-      return ServerLeaverSlide;
+      return <ServerLeaverSlide />;
     case "usernameChanger":
-      return UserNameChangerSlide;
+      return <UserNameChangerSlide />;
     case "activityChanger":
-      return ActivityChangerSlide;
+      return <ActivityChangerSlide />;
     case "nicknameChanger":
-      return NicknameChanger;
+      return <NicknameChanger />;
     case "passwordChanger":
-      return PasswordChnagerSlide;
+      return <PasswordChnagerSlide />;
     case "tokenChecker":
-      return TokenCheckerSlide;
-    // case "massInviter":
-    //   return
+      return <TokenCheckerSlide />;
+    case "massInviter":
+      return <MassInviteSlide />;
     default:
       return UserNameChangerSlide;
   }
