@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toastSuccess, toastWarning } from "../toaster";
 
-const BASE_URL = "https://discord.com/api/v9/";
+export const BASE_URL = "https://discord.com/api/v9/";
 
 export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
   await axios({
