@@ -22,20 +22,15 @@ import invite from "../../assests/images/discord-dash.svg";
 import { useSelector } from "react-redux";
 import {
   fetchInviteJoinerLogState,
-  fetchDashboardModalState,
   fetchLinkOpenerLogState,
   fetchProxyGroupList,
   fetchSpoofTableList,
   fetchLatestTweetList,
 } from "../../features/counterSlice";
-import { WelcomeScreen } from "../../modals";
 
 const DashboardPage = () => {
   //GET PROXY LIST
   const proxyList = useSelector(fetchProxyGroupList);
-
-  //GET MODAL STATE
-  const modalState = useSelector(fetchDashboardModalState);
 
   //GET STATE OF LINK OPNER
   let linkData = useSelector(fetchLinkOpenerLogState);
@@ -114,7 +109,6 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard">
-      {!modalState && <WelcomeScreen />}
       <TopWrapper>
         <GroupStatusCard title="Dashboard" isHide={true} />
       </TopWrapper>

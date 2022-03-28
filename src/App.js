@@ -13,9 +13,11 @@ import {
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchInviteJoinerSettingModalState,
+  fetchDashboardModalState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
+  OnboardingModal,
   ProxyGroupModal,
   ClaimerGroupModal,
   DiscordAccountModal,
@@ -50,11 +52,11 @@ import {
 import { RoutePath } from "./constant";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { loggedUserWebhook } from "./helper/webhook";
 import { toastInfo, toastWarning } from "./toaster";
+import { loggedUserWebhook } from "./helper/webhook";
 import { useDispatch, useSelector } from "react-redux";
 import { proxyStatusUpdater } from "./features/logic/proxy";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
 import { closelinkOpenerMonitor } from "./features/logic/discord-account";
 import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
@@ -68,6 +70,8 @@ function App() {
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
+  const onBoardingModalState = useSelector(fetchDashboardModalState);
+
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
@@ -113,7 +117,7 @@ function App() {
   }, [dispatch, globalSetting.logOnOff]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length === 0) {
+  if (Object.keys(logggedUserDetails).length !== 0) {
     return (
       <React.Fragment>
         <Login />
@@ -126,6 +130,7 @@ function App() {
     <div className="app">
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
+      {!onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {proxyEditModalState && <EditProxySingleModal />}
