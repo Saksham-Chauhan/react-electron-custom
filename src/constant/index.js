@@ -14,6 +14,7 @@ export const RoutePath = {
   spoofer: "/spoofer",
   twitter: "/twitter",
   setting: "/settings",
+  accountChanger: "/accountchanger",
 };
 const KYRO_DOCS_URL = "https://guide.kyrotools.in/#/";
 

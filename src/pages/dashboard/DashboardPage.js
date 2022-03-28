@@ -28,7 +28,7 @@ import {
   fetchSpoofTableList,
   fetchLatestTweetList,
 } from "../../features/counterSlice";
-import { WelcomeScreen } from "../../modals";
+import { WelcomeScreenModal } from "../../modals";
 
 const DashboardPage = () => {
   //GET PROXY LIST
@@ -114,7 +114,7 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard">
-      {!modalState && <WelcomeScreen />}
+      {!modalState && <WelcomeScreenModal />}
       <TopWrapper>
         <GroupStatusCard title="Dashboard" isHide={true} />
       </TopWrapper>

@@ -33,6 +33,7 @@ import {
   AccountGenPage,
   LinkOpenerPage,
   InviteJoinerPage,
+  AccountChangerPage,
 } from "./pages";
 
 import {
@@ -113,7 +114,7 @@ function App() {
   }, [dispatch, globalSetting.logOnOff]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length === 0) {
+  if (Object.keys(logggedUserDetails).length !== 0) {
     return (
       <React.Fragment>
         <Login />
@@ -141,6 +142,10 @@ function App() {
             <DragBar />
             <AppController {...{ location }} />
             <Routes>
+              <Route
+                path={RoutePath.accountChanger}
+                element={<AccountChangerPage />}
+              />
               <Route path={RoutePath.accountGen} element={<AccountGenPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
