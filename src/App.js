@@ -105,7 +105,9 @@ function App() {
     proxyTestResultListener((res) => {
       dispatch(proxyStatusUpdater(res));
     });
-    updateNotAvailable(() => toastInfo("Update not available"));
+    updateNotAvailable(() =>
+      toastInfo("Update not available or You are already to update 😍 🤩")
+    );
     errorToaster((err) => toastWarning(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
