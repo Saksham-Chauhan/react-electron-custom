@@ -7,7 +7,7 @@ import { setModalState } from "../../../features/counterSlice";
 import { makeProxyOptions } from "../../../helper";
 
 const api = [];
-function AvatarChanger() {
+function AvatarChanger({ ...props }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleApiMenuOpen = () => {

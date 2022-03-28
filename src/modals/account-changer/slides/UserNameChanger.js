@@ -1,7 +1,7 @@
 import React from "react";
 import { AppInputField, AppSpacer, LabelWithToolTip } from "../../../component";
 
-function UserNameChanger(props) {
+function UserNameChanger({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -10,8 +10,8 @@ function UserNameChanger(props) {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
-            name="delayInUser"
-            onChange={props.onChange}
+            name="delay"
+            {...props}
           />
         </div>
         <div className="half-flex-field">
@@ -24,7 +24,7 @@ function UserNameChanger(props) {
             fieldTitle=""
             placeholderText="Enter Username"
             name="username"
-            onChange={props.onChange}
+            {...props}
           />
         </div>
       </div>

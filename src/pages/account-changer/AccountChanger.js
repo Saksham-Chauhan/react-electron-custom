@@ -23,7 +23,7 @@ const AccountChanger = () => {
         <div className="acc-changer-padding">
           <AccountChangerTopBtnsWrapper />
           <AppSpacer spacer={20} />
-          <AccountChangerTableSection />
+          <AccountChangerTableSection {...{ selectedCard }} />
         </div>
       </div>
     </div>

@@ -92,40 +92,15 @@ function AccountChanger() {
     }
   };
 
+  const handleChange = (e) => {
+    const { value, name } = e.target;
+    setAccountChanger((pre) => {
+      return { ...pre, [name]: value };
+    });
+  };
+
   const handleSubmit = () => {};
 
-  const onChange = (e) => {
-    setAccountChanger((pre) => {
-      return {
-        ...pre,
-        [e.target.name]: e.target.value,
-      };
-    });
-    console.log(accountChanger);
-  };
-
-  const getDynamicSlideRnder = (type) => {
-    switch (type) {
-      case "avatarChanger":
-        return <AvatarChangerSlide onChange={onChange} />;
-      case "serverLeaver":
-        return <ServerLeaverSlide onChange={onChange} />;
-      case "usernameChanger":
-        return <UserNameChangerSlide onChange={onChange} />;
-      case "activityChanger":
-        return <ActivityChangerSlide onChange={onChange} />;
-      case "nicknameChanger":
-        return <NicknameChanger onChange={onChange} />;
-      case "passwordChanger":
-        return <PasswordChnagerSlide onChange={onChange} />;
-      case "tokenChecker":
-        return <TokenCheckerSlide onChange={onChange} />;
-      case "massInviter":
-        return <MassInviteSlide onChange={onChange} />;
-      default:
-        return UserNameChangerSlide;
-    }
-  };
   return (
     <ModalWrapper>
       <div className="modal-tilte">
@@ -178,10 +153,7 @@ function AccountChanger() {
         </div>
       </div>
       <AppSpacer spacer={10} />
-      {/* dynamic slide start */}
-
-      {getDynamicSlideRnder(selectedCard["changerType"])}
-      {/* dynamic slide render end */}
+      {getDynamicSlideRnder(selectedCard["changerType"], handleChange)}
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
         <div onClick={handleCloseModal} className="modal-cancel-btn btn">
@@ -196,3 +168,26 @@ function AccountChanger() {
 }
 
 export default AccountChanger;
+
+const getDynamicSlideRnder = (type, props) => {
+  switch (type) {
+    case "avatarChanger":
+      return <AvatarChangerSlide onChange={props} />;
+    case "serverLeaver":
+      return <ServerLeaverSlide onChange={props} />;
+    case "usernameChanger":
+      return <UserNameChangerSlide onChange={props} />;
+    case "activityChanger":
+      return <ActivityChangerSlide onChange={props} />;
+    case "nicknameChanger":
+      return <NicknameChanger onChange={props} />;
+    case "passwordChanger":
+      return <PasswordChnagerSlide onChange={props} />;
+    case "tokenChecker":
+      return <TokenCheckerSlide onChange={props} />;
+    case "massInviter":
+      return <MassInviteSlide onChange={props} />;
+    default:
+      return <UserNameChangerSlide onChange={props} />;
+  }
+};

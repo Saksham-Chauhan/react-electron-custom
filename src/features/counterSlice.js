@@ -204,6 +204,9 @@ export const counterSlice = createSlice({
     setSelctedAccChangerCard: (state, action) => {
       state.selectedAccChangerType = action.payload;
     },
+    setAccountChangerList: (state, action) => {
+      state.accountOptionList = action.payload;
+    },
   },
 });
 
@@ -255,6 +258,7 @@ export const {
   appendClaimerDiscordAccount,
   appendInviteJoinerAccount,
   setSelctedAccChangerCard,
+  setAccountChangerList,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

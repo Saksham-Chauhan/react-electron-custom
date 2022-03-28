@@ -3,7 +3,10 @@ import "./styles.css";
 import TableRow from "../proxy-table-row/ProxyTableRow";
 import { AppSpacer } from "../../../component";
 import { useDispatch } from "react-redux";
-import { deleteProxyRow } from "../../../features/logic/proxy";
+import {
+  deleteProxyRow,
+  setStatusInSingleRow,
+} from "../../../features/logic/proxy";
 import { proxyTester } from "../../../helper/electron-bridge";
 import { setEditStorage, setModalState } from "../../../features/counterSlice";
 
@@ -20,6 +23,7 @@ function ProxyTable({ list }) {
   };
 
   const handleTestProxy = (proxy) => {
+    dispatch(setStatusInSingleRow(proxy));
     proxyTester(proxy);
   };
 
