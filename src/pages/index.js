@@ -8,3 +8,4 @@ export { default as LinkOpenerPage } from "./link-opener/LinkOpener";
 export { default as DashboardPage } from "./dashboard/DashboardPage";
 export { default as AccountGenPage } from "./account-gen/AccountGen";
 export { default as InviteJoinerPage } from "./invite-joiner/InviteJoiner";
+export { default as AccountChangerPage } from "./account-changer/AccountChanger";

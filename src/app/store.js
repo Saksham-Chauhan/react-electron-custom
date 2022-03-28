@@ -15,6 +15,7 @@ const persistConfig = {
     "spoofModal",
     "editProxy",
     "claimerGroup",
+    "accountChangerModal",
   ],
 };
 

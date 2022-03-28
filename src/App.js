@@ -14,6 +14,7 @@ import {
   fetchClaimerGroupModalState,
   fetchInviteJoinerSettingModalState,
   fetchDashboardModalState,
+  fetchAccountChangerModalState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
@@ -23,6 +24,7 @@ import {
   DiscordAccountModal,
   EditProxySingleModal,
   InviteJoinerSettingModal,
+  AccountChangerModal,
 } from "./modals";
 import {
   Login,
@@ -35,6 +37,7 @@ import {
   AccountGenPage,
   LinkOpenerPage,
   InviteJoinerPage,
+  AccountChangerPage,
 } from "./pages";
 
 import {
@@ -71,7 +74,7 @@ function App() {
   const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
   const onBoardingModalState = useSelector(fetchDashboardModalState);
-
+  const accountChangerModalState = useSelector(fetchAccountChangerModalState);
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
@@ -128,6 +131,7 @@ function App() {
 
   return (
     <div className="app">
+      {accountChangerModalState && <AccountChangerModal />}
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
       {!onBoardingModalState && <OnboardingModal />}
@@ -146,6 +150,10 @@ function App() {
             <DragBar />
             <AppController {...{ location }} />
             <Routes>
+              <Route
+                path={RoutePath.accountChanger}
+                element={<AccountChangerPage />}
+              />
               <Route path={RoutePath.accountGen} element={<AccountGenPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />

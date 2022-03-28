@@ -7,3 +7,4 @@ export { default as OnboardingModal } from "./welcome-dashboard/WelcomeScreen";
 export { default as DiscordAccountModal } from "./discord-account/DiscordAccount";
 export { default as InviteJoinerSettingModal } from "./invite-joiner-setting/InviteJoinerSettings";
 export { default as NoAccountAlertModal } from "./account-alert/NoAccountAlert";
+export { default as AccountChangerModal } from "./account-changer/AccountChanger";
