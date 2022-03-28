@@ -38,10 +38,12 @@
   height: 70vh;
   overflow-y: scroll;
 }
-.table-body-scroll::-webkit-scrollbar {
+.table-body-scroll::-webkit-scrollbar,
+.acc-changer-table-scroller::-webkit-scrollbar {
   width: 5px;
 }
-.table-body-scroll::-webkit-scrollbar-thumb {
+.table-body-scroll::-webkit-scrollbar-thumb,
+.acc-changer-table-scroller::-webkit-scrollbar-thumb {
   background: var(--scrollbar-bg);
   border-radius: 10px;
 }

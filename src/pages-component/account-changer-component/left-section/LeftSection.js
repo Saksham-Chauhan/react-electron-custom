@@ -57,50 +57,6 @@ function LeftSection({ selectedCard }) {
 
 export default LeftSection;
 
-const AccountChangerOptionList = [
-  {
-    cardIcon: usernameChanger,
-    cardTitle: "Username Changer",
-    changerType: "usernameChanger",
-    list: [],
-  },
-  {
-    cardIcon: avatarChanger,
-    cardTitle: "Avatar Changer",
-    changerType: "avatarChanger",
-  },
-  {
-    changerType: "activityChanger",
-    cardIcon: activityChanger,
-    cardTitle: "Activity Changer",
-  },
-  {
-    changerType: "serverLeaver",
-    cardIcon: serverLeaver,
-    cardTitle: "Server Leaver",
-  },
-  {
-    changerType: "tokenChecker",
-    cardIcon: tokenChecker,
-    cardTitle: "Token checker",
-  },
-  {
-    changerType: "nicknameChanger",
-    cardIcon: nicknameChanger,
-    cardTitle: "Nickname  Changer",
-  },
-  {
-    changerType: "passwordChanger",
-    cardIcon: passwordChanger,
-    cardTitle: "Password Changer",
-  },
-  {
-    changerType: "massInviter",
-    cardIcon: massInviter,
-    cardTitle: "Mass Joiner",
-  },
-];
-
 const getIcon = (type) => {
   switch (type) {
     case "avatarChanger":
