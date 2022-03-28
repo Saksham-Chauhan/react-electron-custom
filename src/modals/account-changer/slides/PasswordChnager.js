@@ -1,7 +1,7 @@
 import React from "react";
 import { AppInputField, AppSpacer, LabelWithToolTip } from "../../../component";
 
-function PasswordChnager() {
+function PasswordChnager({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -10,13 +10,16 @@ function PasswordChnager() {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
+            {...props}
+            name="delayInPassword"
           />
         </div>
         <div className="half-flex-field">
           <LabelWithToolTip labelText="Common Password (Optional)" />
           <AppInputField
+            {...props}
+            name="commonPassword"
             hideLabel={true}
-            fieldTitle="Delay (Optional)"
             placeholderText="Leave Blank For Randomize"
           />
         </div>

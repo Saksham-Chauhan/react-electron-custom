@@ -1,7 +1,7 @@
 import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
 
-function TokenChecker(props) {
+function TokenChecker({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -11,7 +11,7 @@ function TokenChecker(props) {
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
             name="delayInToken"
-            onChange={props.onChange}
+            {...props}
           />
         </div>
       </div>

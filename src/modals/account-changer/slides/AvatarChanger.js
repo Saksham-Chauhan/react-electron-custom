@@ -1,28 +1,12 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { AppInputField, AppSpacer } from "../../../component";
-import { RoutePath } from "../../../constant";
-import { setModalState } from "../../../features/counterSlice";
-import { makeProxyOptions } from "../../../helper";
 
-const api = [];
-function AvatarChanger({ ...props }) {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const handleApiMenuOpen = () => {
-    if (api.length === 0) {
-      navigate(RoutePath.accountChanger, { replace: true });
-      handleCloseModal();
-    }
-  };
-  const handleCloseModal = () => {
-    dispatch(setModalState("accountChangerModal"));
-  };
-  const handleSelectProxyGroup = (group) => {
-    if (Object.keys(group).length > 0) {
-    }
-  };
+const api = [
+  { label: "Default API", value: "defaultAPI" },
+  { label: "Custom API", value: "customAPI" },
+];
+
+function AvatarChanger({ handleSelectAPI, ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -31,17 +15,19 @@ function AvatarChanger({ ...props }) {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
+            name="delayInAvatar"
+            type="number"
+            min={0}
+            {...props}
           />
         </div>
         <div className="half-flex-field">
           <AppInputField
             fieldTitle="API"
             placeholderText="Select API"
-            onMenuOpen={handleApiMenuOpen}
-            value={api}
-            selectOptions={makeProxyOptions(api)}
-            onChange={handleSelectProxyGroup}
+            selectOptions={api}
             isSelect={true}
+            onChange={handleSelectAPI}
           />
         </div>
       </div>

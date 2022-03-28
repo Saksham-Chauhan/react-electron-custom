@@ -3,21 +3,25 @@ import { AppSpacer, LabelWithToolTip, AppInputField } from "../../../component";
 import refresh from "../../../assests/images/refresh.svg";
 import "./style.css";
 
-function NicknameChanger() {
+function NicknameChanger({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
       <div className="modal-flex-field-wrapper">
         <div className="half-flex-field">
           <AppInputField
+            name="delayInNickname"
+            {...props}
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
           />
         </div>
         <div className="half-flex-field">
           <AppInputField
+            {...props}
             fieldTitle="Server ID[s]"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Eg. 936538800027467123"
+            name="serverID"
           />
         </div>
       </div>
@@ -31,6 +35,8 @@ function NicknameChanger() {
       <AppInputField
         hideLabel={true}
         isMulti={true}
+        {...props}
+        name="nicknameGenerate"
         multiHeight="100px"
         placeholderText="Eg. 
       jack123
