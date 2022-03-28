@@ -10,6 +10,7 @@ import {
   deleteProxyGroup,
   readProxyFromFile,
   removeBadProxy,
+  setStatusInProxy,
 } from "../../../features/logic/proxy";
 import { toastWarning } from "../../../toaster";
 import { handleExportLogs } from "../../../helper";
@@ -45,6 +46,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
 
   const handleTestproxy = () => {
     if (Object.keys(tempData).length > 0) {
+      dispatch(setStatusInProxy());
       tempData["proxyList"].forEach((proxy) => {
         proxyTester(proxy);
       });
