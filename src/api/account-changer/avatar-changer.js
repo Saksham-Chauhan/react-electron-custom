@@ -17,9 +17,7 @@ async function changeAvatar(token, image, proxy) {
     });
     return res;
   } catch (error) {
-    throw new Error(
-      "Something went wrong on changing User avatar" + error.message
-    );
+    return error;
   }
 }
 

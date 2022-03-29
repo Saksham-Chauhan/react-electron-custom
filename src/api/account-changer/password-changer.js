@@ -17,9 +17,7 @@ async function changePassword(token, current_pass, new_pass, proxy) {
     });
     return res;
   } catch (error) {
-    throw new Error(
-      "Something went wrong on changing password" + error.message
-    );
+    return error;
   }
 }
 

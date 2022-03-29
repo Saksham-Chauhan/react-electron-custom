@@ -64,7 +64,7 @@ export const updateStatusOfTableRow = (obj, status) => (dispatch, getState) => {
   tempSelectedObj["list"] = [...tempSelectedObj["list"]].map((row) => {
     if (row["id"] === obj["id"]) {
       let data = { ...row };
-      row["status"] = status;
+      data["status"] = status;
       return data;
     }
     return row;

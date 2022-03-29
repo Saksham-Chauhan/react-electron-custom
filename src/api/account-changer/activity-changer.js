@@ -18,9 +18,7 @@ async function changeActivity(token, message, proxy) {
     });
     return res;
   } catch (error) {
-    throw new Error(
-      "Something went wrong on changing activity" + error.message
-    );
+    return error;
   }
 }
 export default changeActivity;
