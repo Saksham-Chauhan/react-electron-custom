@@ -77,9 +77,11 @@ class InviteJoiner extends React.PureComponent {
                 password: proxySplit[3],
               },
             };
+            console.log(selectedClaimerGroup, webhookList);
             let tokenArray = selectedClaimerGroup["value"]?.split("\n");
             tokenArray.forEach(async (token) => {
               await this.sleep();
+
               try {
                 const info = await discordServerInviteAPI(
                   inviteCode,

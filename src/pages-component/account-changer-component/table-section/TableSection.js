@@ -9,6 +9,7 @@ import usernameChangerAPI from "../../../api/account-changer/username-changer";
 import activityChangerAPI from "../../../api/account-changer/activity-changer";
 import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
+import tokenCheckerAPI from "../../../api/account-changer/password-changer";
 
 function TableSection({ selectedCard }) {
   const dispatch = useDispatch();
@@ -87,6 +88,7 @@ const apiCallToDiscord = (type, token, proxy) => {
       return;
     }
     case "tokenChecker": {
+      tokenCheckerAPI();
       return;
     }
     case "massInviter": {
