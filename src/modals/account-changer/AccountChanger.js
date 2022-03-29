@@ -9,6 +9,7 @@ import {
   fetchSelectedAccChangerCard,
   setModalState,
 } from "../../features/counterSlice";
+import { addDataInTableList } from "../../features/logic/acc-changer";
 import {
   getClaimerValue,
   makeClaimerSelectOption,
@@ -34,6 +35,8 @@ function AccountChanger() {
   const [accountChanger, setAccountChanger] = useState({
     proxyGroup: {},
     claimerGroup: {},
+    status: "idle",
+    createdAt: new Date().toUTCString(),
   });
 
   const handleClaimerMenuOpen = () => {
@@ -99,7 +102,10 @@ function AccountChanger() {
     });
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    dispatch(addDataInTableList(accountChanger));
+    handleCloseModal();
+  };
 
   return (
     <ModalWrapper>

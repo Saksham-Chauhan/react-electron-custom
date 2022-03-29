@@ -10,8 +10,8 @@ function TokenChecker(props) {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
-            name="delayInToken"
-            onChange={props.onChange}
+            name="delayInTokenCheck"
+            {...props}
           />
         </div>
       </div>

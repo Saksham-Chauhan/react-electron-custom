@@ -2,7 +2,7 @@ import React from "react";
 import { AppInputField, AppSpacer, AppToggler } from "../../../component";
 import "./style.css";
 
-function ServerLeaver() {
+function ServerLeaver(props) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -11,6 +11,8 @@ function ServerLeaver() {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
+            name="delayInLeaver"
+            {...props}
           />
         </div>
       </div>
@@ -28,6 +30,8 @@ function ServerLeaver() {
         936538800027467123
         936534767688678923
         936538800027467344"
+        name="serverId"
+        {...props}
       />
     </React.Fragment>
   );

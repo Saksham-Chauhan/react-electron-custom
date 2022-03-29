@@ -10,7 +10,7 @@ function UserNameChanger({ ...props }) {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
-            name="delay"
+            name="delayInUser"
             {...props}
           />
         </div>
