@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../index";
 
-async function changePassword(token, current_pass, new_pass) {
+async function changePassword(token, current_pass, new_pass, proxy) {
   try {
     const json = JSON.stringify({
       password: current_pass,
@@ -12,6 +12,7 @@ async function changePassword(token, current_pass, new_pass) {
       headers: {
         "Content-Type": "application/json",
         Authorization: token,
+        proxy: proxy,
       },
     });
     return res;
