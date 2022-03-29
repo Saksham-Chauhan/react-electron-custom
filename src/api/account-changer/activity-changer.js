@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../index";
 
-async function changeActivity(token, message) {
+async function changeActivity(token, message, proxy) {
   try {
     const json = JSON.stringify({
       custom_status: {
@@ -14,6 +14,7 @@ async function changeActivity(token, message) {
         "Content-Type": "application/json",
         Authorization: token,
       },
+      proxy: proxy,
     });
     return res;
   } catch (error) {

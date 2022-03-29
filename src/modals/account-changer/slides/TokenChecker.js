@@ -8,10 +8,10 @@ function TokenChecker({ ...props }) {
       <div className="modal-flex-field-wrapper">
         <div className="half-flex-field">
           <AppInputField
+            {...props}
+            name="delayInToken"
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
-            name="delayInToken"
-            {...props}
           />
         </div>
       </div>

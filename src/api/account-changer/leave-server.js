@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../index";
 
-async function leaveServer(token, guildid) {
+async function leaveServer(token, guildid, proxy) {
   try {
     const json = JSON.stringify({ lurking: false });
 
@@ -12,6 +12,7 @@ async function leaveServer(token, guildid) {
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
+          proxy: proxy,
         },
       }
     );
@@ -20,3 +21,5 @@ async function leaveServer(token, guildid) {
     throw new Error("Something went wrong on leaving server" + error.message);
   }
 }
+
+export default leaveServer;
