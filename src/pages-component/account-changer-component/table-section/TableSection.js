@@ -16,9 +16,7 @@ import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import { generateRandomAvatar } from "../../../api";
 import { toastWarning } from "../../../toaster";
-import { sleep } from "../../../helper";
-import randomNamne from "node-random-name";
-var generator = require("generate-password");
+import { generateRandomPassword, sleep } from "../../../helper";
 function TableSection({ selectedCard }) {
   const dispatch = useDispatch();
 
@@ -172,10 +170,12 @@ export const apiCallToDiscord = async ({
   } else if (type === "passwordChanger") {
     let pass = newPass;
     if (!pass.length > 0) {
-      pass = generator.generateMultiple(1, {
-        length: 10,
-        uppercase: true,
-        symbols: true,
+      pass = generateRandomPassword({
+        lower: true,
+        upper: true,
+        num: true,
+        sym: true,
+        length: 18,
       });
     }
     const response = await passwordChangerAPI(token, currentPass, pass, proxy);
