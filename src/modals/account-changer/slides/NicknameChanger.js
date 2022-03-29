@@ -21,7 +21,7 @@ function NicknameChanger({ ...props }) {
             {...props}
             fieldTitle="Server ID[s]"
             placeholderText="Eg. 936538800027467123"
-            name="serverID"
+            name="serverIDs"
           />
         </div>
       </div>

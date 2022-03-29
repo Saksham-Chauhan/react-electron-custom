@@ -2,6 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../index";
 
 async function changeAvatar(token, image, proxy) {
+  console.log(token, image, proxy);
   try {
     const json = JSON.stringify({
       avatar: image,
@@ -11,8 +12,8 @@ async function changeAvatar(token, image, proxy) {
       headers: {
         "Content-Type": "application/json",
         Authorization: token,
-        proxy: proxy,
       },
+      proxy: proxy,
     });
     return res;
   } catch (error) {

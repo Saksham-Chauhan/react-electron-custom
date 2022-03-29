@@ -7,8 +7,8 @@ async function checkToken(token, proxy) {
       headers: {
         "Content-Type": "application/json",
         Authorization: token,
-        proxy: proxy,
       },
+      proxy: proxy,
     });
     return res;
   } catch (error) {
