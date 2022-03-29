@@ -2,6 +2,7 @@ import React from "react";
 import play from "../../../assests/images/play.svg";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
+import stop from "../../../assests/images/stop.svg";
 
 function TableRow({ onDelete, obj, index, onPlay }) {
   return (
@@ -11,7 +12,11 @@ function TableRow({ onDelete, obj, index, onPlay }) {
       <div style={{ color: getColor(obj.status) }}>{obj.status}</div>
       <div>
         <div className="acc-changer-table-row-action-column">
-          <img src={play} alt="" onClick={() => onPlay(obj)} />
+          <img
+            src={obj.status === "Running" ? stop : play}
+            alt=""
+            onClick={() => onPlay(obj)}
+          />
           <UseAnimations
             wrapperStyle={{ cursor: "pointer" }}
             animation={trash2}
