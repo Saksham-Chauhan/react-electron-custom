@@ -80,13 +80,23 @@ class LinkOpener extends React.PureComponent {
               }
               const date = new Date().toUTCString();
               this.props.handleSendLog(content, msgID, date);
-              await linkOpenerWebhook(
-                content,
-                user.username,
-                user.avatar,
-                webhookList[0],
-                webhookSetting?.linkOpener
-              );
+              if (!!webhookList[0]) {
+                await linkOpenerWebhook(
+                  content,
+                  user.username,
+                  user.avatar,
+                  webhookList[0],
+                  webhookSetting?.linkOpener
+                );
+              } else {
+                await linkOpenerWebhook(
+                  content,
+                  user.username,
+                  user.avatar,
+                  "",
+                  false
+                );
+              }
             }
           }
         }

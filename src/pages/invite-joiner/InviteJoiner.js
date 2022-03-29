@@ -51,7 +51,7 @@ class InviteJoiner extends React.PureComponent {
     };
   }
 
-  checkingMessage(content, channelID, msgID) {
+  async checkingMessage(content, channelID, msgID) {
     const { isStart } = this.state;
     const { user } = this.props;
     if (isStart) {
@@ -66,20 +66,20 @@ class InviteJoiner extends React.PureComponent {
         let isInviteLink = checkDiscordInvite(content);
         let inviteCode = helper.isDiscordInvite(content);
         if (inviteCode && isInviteLink) {
-          const proxyArr = selectedProxyGroup["value"]?.split("\n");
-          for (let index = 0; index < proxyArr.length; index++) {
-            let proxySplit = proxyArr[index]?.split(":");
-            const proxy = {
-              host: proxySplit[0],
-              port: proxySplit[1],
-              auth: {
-                username: proxySplit[2],
-                password: proxySplit[3],
-              },
-            };
-            console.log(selectedClaimerGroup, webhookList);
-            let tokenArray = selectedClaimerGroup["value"]?.split("\n");
-            tokenArray.forEach(async (token) => {
+          let tokenArray = selectedClaimerGroup["value"]?.split("\n");
+          for (let i = 0; i < tokenArray.length; i++) {
+            const token = tokenArray[i];
+            const proxyArr = selectedProxyGroup["value"]?.split("\n");
+            for (let index = 0; index < proxyArr.length; index++) {
+              let proxySplit = proxyArr[index]?.split(":");
+              const proxy = {
+                host: proxySplit[0],
+                port: proxySplit[1],
+                auth: {
+                  username: proxySplit[2],
+                  password: proxySplit[3],
+                },
+              };
               await this.sleep();
 
               try {
@@ -92,20 +92,31 @@ class InviteJoiner extends React.PureComponent {
                   let result = `Joined ${info.data.guild.name} server 🥳 `;
                   const date = new Date().toUTCString();
                   this.props.handleSendLog(result, msgID, date);
-                  console.log("Joined the server", info.data.guild);
-                  await inviteJoinerTest(
-                    webhookList[0],
-                    user.username,
-                    user.avatar,
-                    info.data.guild.name,
-                    webhookSetting?.inviteJoiner
-                  );
+                  console.log("Joined the server", info.data.guild.name, index);
+                  if (!!webhookList[0]) {
+                    await inviteJoinerTest(
+                      webhookList[0],
+                      user.username,
+                      user.avatar,
+                      info.data.guild.name,
+                      webhookSetting?.inviteJoiner
+                    );
+                  } else {
+                    await inviteJoinerTest(
+                      "",
+                      user.username,
+                      user.avatar,
+                      info.data.guild.name,
+                      false
+                    );
+                  }
+                  break;
                 }
               } catch (err) {
                 console.log("Error in joining server", err.message);
                 toastWarning(`Error in joininig server ${err.message}`);
               }
-            });
+            }
           }
         }
       }

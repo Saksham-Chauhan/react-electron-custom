@@ -10,6 +10,7 @@ import activityChangerAPI from "../../../api/account-changer/activity-changer";
 import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
 import tokenCheckerAPI from "../../../api/account-changer/token-checker";
+import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import { generateRandomAvatar } from "../../../api";
 
 function TableSection({ selectedCard }) {
@@ -93,6 +94,7 @@ const apiCallToDiscord = async ({
   currentPass,
   newPass,
   username,
+  invideCodes,
 }) => {
   if (type === "avatarChanger") {
     const randomImage = await generateRandomAvatar();
@@ -151,5 +153,13 @@ const apiCallToDiscord = async ({
       if (response.status === 200) return response;
     } else return null;
   } else if (type === "massInviter") {
+    const inviteCodeList = invideCodes?.split("\n");
+    for (let i = 0; i < inviteCodeList.length; i++) {
+      let code = inviteCodeList[i];
+      const response = await massInviteJoinerAPI(code, token, proxy);
+      if (response !== null) {
+        if (response.status === 200) return response;
+      } else return null;
+    }
   }
 };
