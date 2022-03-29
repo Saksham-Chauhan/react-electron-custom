@@ -12,7 +12,7 @@ async function checkToken(token, proxy) {
     });
     return res;
   } catch (error) {
-    throw new Error("Something went wrong on checking token " + error.message);
+    return error;
   }
 }
 export default checkToken;

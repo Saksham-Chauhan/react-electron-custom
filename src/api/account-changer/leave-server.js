@@ -18,7 +18,7 @@ async function leaveServer(token, guildid, proxy) {
     );
     return res;
   } catch (error) {
-    throw new Error("Something went wrong on leaving server" + error.message);
+    return error;
   }
 }
 

@@ -2,7 +2,10 @@ import React from "react";
 import "./styles.css";
 import TableRow from "../table-row/TableRow";
 import { useDispatch } from "react-redux";
-import { deleteDataFromTableList } from "../../../features/logic/acc-changer";
+import {
+  deleteDataFromTableList,
+  updateStatusOfTableRow,
+} from "../../../features/logic/acc-changer";
 import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
 import serverLeaverAPI from "../../../api/account-changer/leave-server";
 import usernameChangerAPI from "../../../api/account-changer/username-changer";
@@ -12,6 +15,7 @@ import passwordChangerAPI from "../../../api/account-changer/password-changer";
 import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import { generateRandomAvatar } from "../../../api";
+import { toastWarning } from "../../../toaster";
 
 function TableSection({ selectedCard }) {
   const dispatch = useDispatch();
@@ -38,18 +42,25 @@ function TableSection({ selectedCard }) {
             password: proxySplit[3],
           },
         };
+        dispatch(updateStatusOfTableRow(obj, "running"));
         const apiResponse = await apiCallToDiscord({
           type,
-          token: token,
+          token: tokenArr[3],
           proxy,
-          username: obj?.username,
+          username: obj.username,
+          password: tokenArr[2],
           guildId: obj.serverIDs,
           activityDetail: obj.activityDetails,
           nickName: obj.nicknameGenerate,
-          currentPass: "sadfgdsjkfgi" || tokenArr[2],
+          currentPass: tokenArr[2],
           newPass: obj.commonPassword,
+          invideCodes: obj.inviteCodes,
         });
-        console.log(apiResponse);
+        if (apiResponse.status === 200) {
+          dispatch(updateStatusOfTableRow(obj, "Completed"));
+        } else {
+          dispatch(updateStatusOfTableRow(obj, "Stopped"));
+        }
       }
     }
   };
@@ -98,42 +109,56 @@ const apiCallToDiscord = async ({
     const randomImage = await generateRandomAvatar();
     const response = await avatarChangeAPI(token, randomImage, proxy);
     console.log(token, proxy, randomImage);
-    if (response !== null) {
-      if (response.status === 200) return response;
-    } else return null;
+    if (response.status === 200) {
+      return response;
+    } else {
+      toastWarning(response.response.data.message);
+      return response;
+    }
   } else if (type === "serverLeaver") {
     let serverIdArray = guildId.split("\n");
     for (let i = 0; i < serverIdArray.length; i++) {
       const response = await serverLeaverAPI(token, serverIdArray[i], proxy);
-      if (response !== null) {
-        if (response.status === 200) return response;
-      } else return null;
+      if (response.status === 200) {
+        return response;
+      } else {
+        toastWarning(response.response.data.message);
+        return response;
+      }
     }
   } else if (type === "usernameChanger") {
     const response = await usernameChangerAPI(token, password, proxy, username);
-    if (response !== null) {
-      if (response.status === 200) return response;
-    } else return null;
+    if (response.status === 200) {
+      return response;
+    } else {
+      toastWarning(response.response.data.message);
+      return response;
+    }
   } else if (type === "activityChanger") {
     const response = await activityChangerAPI(token, activityDetail, proxy);
-    if (response !== null) {
-      if (response.status === 200) return response;
-    } else return null;
+    if (response.status === 200) {
+      return response;
+    } else {
+      toastWarning(response.response.data.message);
+      return response;
+    }
   } else if (type === "nicknameChanger") {
     let serverIdArray = guildId.split("\n");
     let name = nickName.split("\n");
     console.log(serverIdArray, name);
     for (let i = 0; i < serverIdArray.length; i++) {
-      console.log(token, serverIdArray[i], name[i], proxy);
       const response = await nicknameChangerAPI(
         token,
         serverIdArray[i],
         name[i],
         proxy
       );
-      if (response !== null) {
-        if (response.status === 200) return response;
-      } else return null;
+      if (response.status === 200) {
+        return response;
+      } else {
+        toastWarning(response.response.data.message);
+        return response;
+      }
     }
   } else if (type === "passwordChanger") {
     const response = await passwordChangerAPI(
@@ -142,22 +167,31 @@ const apiCallToDiscord = async ({
       newPass,
       proxy
     );
-    if (response !== null) {
-      if (response.status === 200) return response;
-    } else return null;
+    if (response.status === 200) {
+      return response;
+    } else {
+      toastWarning(response.response.data.message);
+      return response;
+    }
   } else if (type === "tokenChecker") {
     const response = await tokenCheckerAPI(token, proxy);
-    if (response !== null) {
-      if (response.status === 200) return response;
-    } else return null;
+    if (response.status === 200) {
+      return response;
+    } else {
+      toastWarning(response.response.data.message);
+      return response;
+    }
   } else if (type === "massInviter") {
     const inviteCodeList = invideCodes?.split("\n");
     for (let i = 0; i < inviteCodeList.length; i++) {
       let code = inviteCodeList[i];
       const response = await massInviteJoinerAPI(code, token, proxy);
-      if (response !== null) {
-        if (response.status === 200) return response;
-      } else return null;
+      if (response.status === 200) {
+        return response;
+      } else {
+        toastWarning(response.response.data.message);
+        return response;
+      }
     }
   }
 };

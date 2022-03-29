@@ -2,6 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../index";
 
 async function changeUsername(token, password, proxy, username) {
+  console.log(token, password, proxy, username);
   try {
     const json = JSON.stringify({
       username: username,
@@ -16,9 +17,7 @@ async function changeUsername(token, password, proxy, username) {
     });
     return res;
   } catch (error) {
-    throw new Error(
-      "Something went wrong on changing username" + error.message
-    );
+    return error;
   }
 }
 export default changeUsername;
