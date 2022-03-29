@@ -9,6 +9,9 @@ import usernameChangerAPI from "../../../api/account-changer/username-changer";
 import activityChangerAPI from "../../../api/account-changer/activity-changer";
 import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
+import tokenCheckerAPI from "../../../api/account-changer/token-checker";
+import { generateRandomAvatar } from "../../../api";
+import { current } from "@reduxjs/toolkit";
 
 function TableSection({ selectedCard }) {
   const dispatch = useDispatch();
@@ -16,13 +19,14 @@ function TableSection({ selectedCard }) {
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
   };
-
+  // email:username:password:token
   const handlePlay = async (obj) => {
     const type = selectedCard["chnagerType"];
     const { proxyGroup, claimerGroup } = obj;
     const tokenArray = claimerGroup["value"]?.split("\n");
     for (let index = 0; index < tokenArray.length; index++) {
       const token = tokenArray[index];
+      const tokenArr = token?.split(":");
       const proxyArray = [...proxyGroup["value"].split("\n")];
       for (let j = 0; j < proxyArray.length; j++) {
         let proxySplit = proxyArray[j]?.split(":");
@@ -34,7 +38,7 @@ function TableSection({ selectedCard }) {
             password: proxySplit[3],
           },
         };
-        const apiResponse = await apiCallToDiscord(type, token, proxy);
+        const apiResponse = await apiCallToDiscord({ type, token, proxy });
       }
     }
   };
@@ -66,33 +70,58 @@ function TableSection({ selectedCard }) {
 
 export default TableSection;
 
-const apiCallToDiscord = (type, token, proxy) => {
-  switch (type) {
-    case "avatarChanger": {
-      // return avatarChangeAPI(token,);
-    }
-    case "serverLeaver": {
-      return;
-    }
-    case "usernameChanger": {
-      return;
-    }
-    case "activityChanger": {
-      return;
-    }
-    case "nicknameChanger": {
-      return;
-    }
-    case "passwordChanger": {
-      return;
-    }
-    case "tokenChecker": {
-      return;
-    }
-    case "massInviter": {
-      return;
-    }
-    default:
-      return;
+const apiCallToDiscord = async ({
+  type,
+  token,
+  proxy,
+  guildId,
+  password,
+  activityDetail,
+  nickName,
+  currentPass,
+  newPass,
+}) => {
+  if (type === "avatarChanger") {
+    const randomImage = await generateRandomAvatar();
+    const response = await avatarChangeAPI(token, randomImage, proxy);
+    if (response !== null) {
+      if (response.status === 200) return response;
+    } else return null;
+  } else if (type === "serverLeaver") {
+    const response = await serverLeaverAPI(token, guildId, proxy);
+    if (response !== null) {
+      if (response.status === 200) return response;
+    } else return null;
+  } else if (type === "usernameChanger") {
+    const response = await usernameChangerAPI(token, password);
+    if (response !== null) {
+      if (response.status === 200) return response;
+    } else return null;
+  } else if (type === "activityChanger") {
+    const response = await activityChangerAPI(token, activityDetail, proxy);
+    if (response !== null) {
+      if (response.status === 200) return response;
+    } else return null;
+  } else if (type === "nicknameChanger") {
+    const response = await nicknameChangerAPI(token, guildId, nickName, proxy);
+    if (response !== null) {
+      if (response.status === 200) return response;
+    } else return null;
+  } else if (type === "passwordChanger") {
+    const response = await passwordChangerAPI(
+      token,
+      currentPass,
+      newPass,
+      proxy
+    );
+    if (response !== null) {
+      if (response.status === 200) return response;
+    } else return null;
+  } else if (type === "tokenChecker") {
+    const response = await tokenCheckerAPI(token, proxy);
+    if (response !== null) {
+      if (response.status === 200) return response;
+    } else return null;
+  } else if (type === "massInviter") {
   }
 };

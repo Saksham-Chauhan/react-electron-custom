@@ -169,3 +169,25 @@ export const directDiscordJoinAPI = async (
     return null;
   }
 };
+
+export const generateRandomAvatar = async () => {
+  const arrayBuffer = await fetch("https://picsum.photos/50/50").then(function (
+    response
+  ) {
+    return response.arrayBuffer();
+  });
+  const str = arrayBufferToString(arrayBuffer, "base64");
+  return "data:image/jpeg;base64," + str;
+};
+
+function arrayBufferToString(buffer, encoding) {
+  if (encoding == null) encoding = "utf8";
+  var uint8 = new Uint8Array(buffer);
+  if (encoding === "base64") {
+    str = String.fromCharCode.apply(null, uint8);
+    return btoa(str);
+  }
+  var decoder = new TextDecoder(encoding);
+  var str = decoder.decode(uint8);
+  return str;
+}
