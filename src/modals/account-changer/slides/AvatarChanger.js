@@ -23,7 +23,7 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
-            name="delayInAvatar"
+            name="delay"
             type="number"
             min={0}
             {...props}

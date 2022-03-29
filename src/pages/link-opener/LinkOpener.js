@@ -29,7 +29,7 @@ import { makeLogText, makeStrOfArr, openChromeBrowser } from "../../helper";
 import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
-import { toastInfo } from "../../toaster";
+import { toastInfo, toastWarning } from "../../toaster";
 import { linkOpenerWebhook } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
 
@@ -161,7 +161,9 @@ class LinkOpener extends React.PureComponent {
         this.setState({ webhookList: webhookList });
         if (settingOption?.linkOpenerState) {
           if (discordTokenRegExp.test(discordToken)) {
-            this.monitor.login(discordToken);
+            this.monitor.login(discordToken).catch((e) => {
+              toastWarning(e.message);
+            });
           }
         } else {
           console.log("Destroying monitor...");

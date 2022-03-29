@@ -165,7 +165,9 @@ class InviteJoiner extends React.PureComponent {
       if (ijMonitorState) {
         console.log("Starting monitor...");
         if (discordTokenRegExp.test(selectedToken["discordToken"])) {
-          this.monitor.login(selectedToken["discordToken"]);
+          this.monitor.login(selectedToken["discordToken"]).catch((e) => {
+            toastWarning(e.message);
+          });
         }
         this.setState({ keywordList: keywordList });
         this.setState({ selectedClaimerGroup: selectedClaimerGroup });

@@ -8,7 +8,7 @@ function TableRow({ onDelete, obj, index, onPlay }) {
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
       <div>{obj.claimerGroup.label}</div>
-      <div>{obj.status}</div>
+      <div style={{ color: getColor(obj.status) }}>{obj.status}</div>
       <div>
         <div className="acc-changer-table-row-action-column">
           <img src={play} alt="" onClick={() => onPlay(obj)} />
@@ -26,3 +26,16 @@ function TableRow({ onDelete, obj, index, onPlay }) {
 }
 
 export default TableRow;
+
+const getColor = (status) => {
+  switch (status) {
+    case "running":
+      return "var(--status)";
+    case "completed":
+      return "#1186db";
+    case "stopped":
+      return "var(--delete)";
+    default:
+      return "var(--primary)";
+  }
+};

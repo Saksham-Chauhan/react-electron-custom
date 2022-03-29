@@ -9,7 +9,7 @@ function ServerLeaver({ ...props }) {
       <div className="modal-flex-field-wrapper">
         <div className="half-flex-field">
           <AppInputField
-            name="delayInServerLeaver"
+            name="delay"
             {...props}
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"

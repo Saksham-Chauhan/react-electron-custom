@@ -14,15 +14,13 @@ import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import { generateRandomAvatar } from "../../../api";
 
 function TableSection({ selectedCard }) {
-  console.log(selectedCard);
   const dispatch = useDispatch();
 
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
   };
-  // email:username:password:token
+
   const handlePlay = async (obj) => {
-    console.log(obj, selectedCard);
     const type = selectedCard["changerType"];
     const { proxyGroup, claimerGroup } = obj;
     const tokenArray = claimerGroup["value"]?.split("\n");

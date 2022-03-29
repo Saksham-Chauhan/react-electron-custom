@@ -10,7 +10,7 @@ function MassInviteJoiner({ ...props }) {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
-            name="delayInMassInviter"
+            name="delay"
             min={0}
             {...props}
             type="number"

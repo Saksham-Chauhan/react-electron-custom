@@ -10,7 +10,7 @@ function NicknameChanger({ ...props }) {
       <div className="modal-flex-field-wrapper">
         <div className="half-flex-field">
           <AppInputField
-            name="delayInNickname"
+            name="delay"
             {...props}
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"

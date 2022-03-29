@@ -10,7 +10,7 @@ function ActivityChanger({ ...props }) {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Delay (Optional)"
-            name="delatInActivity"
+            name="delay"
             type="number"
             min={0}
             {...props}
