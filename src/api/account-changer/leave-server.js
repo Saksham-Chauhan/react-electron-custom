@@ -12,8 +12,8 @@ async function leaveServer(token, guildid, proxy) {
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
-          proxy: proxy,
         },
+        proxy: proxy,
       }
     );
     return res;

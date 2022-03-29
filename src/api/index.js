@@ -181,6 +181,7 @@ export const generateRandomAvatar = async () => {
 };
 
 function arrayBufferToString(buffer, encoding) {
+  let str;
   if (encoding == null) encoding = "utf8";
   var uint8 = new Uint8Array(buffer);
   if (encoding === "base64") {
@@ -188,6 +189,6 @@ function arrayBufferToString(buffer, encoding) {
     return btoa(str);
   }
   var decoder = new TextDecoder(encoding);
-  var str = decoder.decode(uint8);
+  str = decoder.decode(uint8);
   return str;
 }

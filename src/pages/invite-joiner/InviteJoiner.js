@@ -81,6 +81,7 @@ class InviteJoiner extends React.PureComponent {
                 },
               };
               await this.sleep();
+
               try {
                 const info = await discordServerInviteAPI(
                   inviteCode,

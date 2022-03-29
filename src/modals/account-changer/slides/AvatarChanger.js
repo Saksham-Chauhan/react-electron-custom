@@ -2,8 +2,16 @@ import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
 
 const api = [
-  { label: "Default API", value: "defaultAPI" },
-  { label: "Custom API", value: "customAPI" },
+  {
+    label: "Default API",
+    value: "https://picsum.photos/v2/list",
+    key: "defaultApi",
+  },
+  {
+    label: "Custom API",
+    value: "https://picsum.photos/v2/list",
+    key: "customApi",
+  },
 ];
 
 function AvatarChanger({ handleSelectAPI, ...props }) {
