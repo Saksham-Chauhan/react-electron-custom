@@ -96,7 +96,7 @@ function Twitter() {
                             try {
                               const info = await discordServerInviteAPI(
                                 inviteCode,
-                                token
+                                token?.split(":")[3]
                               );
                               if (info.status === 200) {
                                 console.log(

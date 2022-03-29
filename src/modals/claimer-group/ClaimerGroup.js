@@ -14,7 +14,12 @@ import {
   editClaimerGroupFromList,
 } from "../../features/logic/setting";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
-import { discordTokenRegExp } from "../../constant/regex";
+import {
+  discordTokenRegExp,
+  emailRegex,
+  passwordRegex,
+  usernameRegex,
+} from "../../constant/regex";
 import { toastWarning } from "../../toaster";
 
 function ClaimerGroup() {
@@ -50,14 +55,26 @@ function ClaimerGroup() {
   const handleCloseModal = () => {
     dispatch(setModalState("claimerGroup"));
   };
-
+  // email:username:password:token
   const handleSubmit = () => {
     let valid = [];
     let obj = { ...claimer };
     const result = validationChecker(claimerGroupSchema, obj);
     obj.claimerToken.split("\n").forEach((t) => {
-      if (discordTokenRegExp.test(t)) {
-        valid.push(t);
+      let str = t?.split(":");
+      if (str.length === 4) {
+        let email = str[0];
+        let user = str[1];
+        let pass = str[2];
+        let token = str[3];
+        if (
+          emailRegex.test(email) &&
+          passwordRegex.test(pass) &&
+          usernameRegex.test(user) &&
+          discordTokenRegExp.test(token)
+        ) {
+          valid.push(t);
+        }
       }
     });
     obj["claimerToken"] = valid.map((v) => v).join("\n");

@@ -68,7 +68,7 @@ class InviteJoiner extends React.PureComponent {
         if (inviteCode && isInviteLink) {
           let tokenArray = selectedClaimerGroup["value"]?.split("\n");
           for (let i = 0; i < tokenArray.length; i++) {
-            const token = tokenArray[i];
+            const token = tokenArray[i].split(":")[3];
             const proxyArr = selectedProxyGroup["value"]?.split("\n");
             for (let index = 0; index < proxyArr.length; index++) {
               let proxySplit = proxyArr[index]?.split(":");

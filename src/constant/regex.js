@@ -20,3 +20,9 @@ export const discordInvideCode =
 export const discordJoinedAtRegex = /\d{4}-\d{2}/;
 
 export const inviteJoinerEmojiRegex = /[0-9a-fA-F]/;
+
+export const emailRegex =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+export const passwordRegex = /[a-zA-Z0-9._-]+/;
+
+export const usernameRegex = /[a-zA-Z0-9._-]+/;
