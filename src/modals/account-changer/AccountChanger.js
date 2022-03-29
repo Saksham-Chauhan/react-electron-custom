@@ -107,6 +107,12 @@ function AccountChanger() {
     handleCloseModal();
   };
 
+  const handleSelectAPI = (obj) => {
+    setAccountChanger((pre) => {
+      return { ...pre, [obj.key]: obj.value };
+    });
+  };
+
   return (
     <ModalWrapper>
       <div className="modal-tilte">
@@ -159,7 +165,11 @@ function AccountChanger() {
         </div>
       </div>
       <AppSpacer spacer={10} />
-      {getDynamicSlideRnder(selectedCard["changerType"], handleChange)}
+      {getDynamicSlideRnder(
+        selectedCard["changerType"],
+        handleChange,
+        handleSelectAPI
+      )}
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
         <div onClick={handleCloseModal} className="modal-cancel-btn btn">
@@ -175,25 +185,30 @@ function AccountChanger() {
 
 export default AccountChanger;
 
-const getDynamicSlideRnder = (type, props) => {
+const getDynamicSlideRnder = (type, handleChange, handleSelect) => {
   switch (type) {
     case "avatarChanger":
-      return <AvatarChangerSlide onChange={props} />;
+      return (
+        <AvatarChangerSlide
+          onChange={handleChange}
+          handleSelectAPI={handleSelect}
+        />
+      );
     case "serverLeaver":
-      return <ServerLeaverSlide onChange={props} />;
+      return <ServerLeaverSlide onChange={handleChange} />;
     case "usernameChanger":
-      return <UserNameChangerSlide onChange={props} />;
+      return <UserNameChangerSlide onChange={handleChange} />;
     case "activityChanger":
-      return <ActivityChangerSlide onChange={props} />;
+      return <ActivityChangerSlide onChange={handleChange} />;
     case "nicknameChanger":
-      return <NicknameChanger onChange={props} />;
+      return <NicknameChanger onChange={handleChange} />;
     case "passwordChanger":
-      return <PasswordChnagerSlide onChange={props} />;
+      return <PasswordChnagerSlide onChange={handleChange} />;
     case "tokenChecker":
-      return <TokenCheckerSlide onChange={props} />;
+      return <TokenCheckerSlide onChange={handleChange} />;
     case "massInviter":
-      return <MassInviteSlide onChange={props} />;
+      return <MassInviteSlide onChange={handleChange} />;
     default:
-      return <UserNameChangerSlide onChange={props} />;
+      return <UserNameChangerSlide onChange={handleChange} />;
   }
 };
