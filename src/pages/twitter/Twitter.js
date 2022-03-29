@@ -112,6 +112,9 @@ function Twitter() {
                                 "Error in joining server",
                                 err.message
                               );
+                              toastWarning(
+                                `Error in joininig server ${err.message}`
+                              );
                             }
                           });
                         }

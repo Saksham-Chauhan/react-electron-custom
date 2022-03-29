@@ -11,7 +11,7 @@ import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
 import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import { generateRandomAvatar } from "../../../api";
-import { current } from "@reduxjs/toolkit";
+import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 
 function TableSection({ selectedCard }) {
   const dispatch = useDispatch();
@@ -80,6 +80,7 @@ const apiCallToDiscord = async ({
   nickName,
   currentPass,
   newPass,
+  invideCodes,
 }) => {
   if (type === "avatarChanger") {
     const randomImage = await generateRandomAvatar();
@@ -123,5 +124,13 @@ const apiCallToDiscord = async ({
       if (response.status === 200) return response;
     } else return null;
   } else if (type === "massInviter") {
+    const inviteCodeList = invideCodes?.split("\n");
+    for (let i = 0; i < inviteCodeList.length; i++) {
+      let code = inviteCodeList[i];
+      const response = await massInviteJoinerAPI(code, token, proxy);
+      if (response !== null) {
+        if (response.status === 200) return response;
+      } else return null;
+    }
   }
 };
