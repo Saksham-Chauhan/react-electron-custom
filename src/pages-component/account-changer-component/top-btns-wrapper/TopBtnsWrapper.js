@@ -6,9 +6,13 @@ import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import searchIcon from "../../../assests/images/search.svg";
 import { setModalState } from "../../../features/counterSlice";
-import { deleteAllTableRow } from "../../../features/logic/acc-changer";
+import {
+  deleteAllTableRow,
+  updateStatusOfTableRow,
+} from "../../../features/logic/acc-changer";
+import { apiCallToDiscord } from "../table-section/TableSection";
 
-function TopBtnsWrapper({ search, handleSearching }) {
+function TopBtnsWrapper({ search, handleSearching, selectedCard }) {
   const dispatch = useDispatch();
 
   const handleAdd = () => {
@@ -19,7 +23,54 @@ function TopBtnsWrapper({ search, handleSearching }) {
     dispatch(deleteAllTableRow());
   };
 
-  const handlePlayAll = () => {};
+  const handleSinglePlay = async (obj) => {
+    const type = selectedCard["changerType"];
+    const { proxyGroup, claimerGroup } = obj;
+    const tokenArray = claimerGroup["value"]?.split("\n");
+    for (let index = 0; index < tokenArray.length; index++) {
+      const token = tokenArray[index];
+      const tokenArr = token?.split(":");
+      const proxyArray = proxyGroup["value"].split("\n");
+      for (let j = 0; j < proxyArray.length; j++) {
+        let proxySplit = proxyArray[j]?.split(":");
+        const proxy = {
+          host: proxySplit[0],
+          port: proxySplit[1],
+          auth: {
+            username: proxySplit[2],
+            password: proxySplit[3],
+          },
+        };
+        dispatch(updateStatusOfTableRow(obj, "Running"));
+        const apiResponse = await apiCallToDiscord({
+          type,
+          token: tokenArr[3],
+          proxy,
+          username: obj.username,
+          password: tokenArr[2],
+          guildId: obj.serverIDs,
+          activityDetail: obj.activityDetails,
+          nickName: obj.nicknameGenerate,
+          currentPass: tokenArr[2],
+          newPass: obj.commonPassword,
+          invideCodes: obj.inviteCodes,
+        });
+        if (apiResponse.status === 200) {
+          dispatch(updateStatusOfTableRow(obj, "Completed"));
+        } else {
+          dispatch(updateStatusOfTableRow(obj, "Stopped"));
+        }
+      }
+    }
+  };
+
+  const handlePlayAll = () => {
+    if (selectedCard["list"]?.length > 0) {
+      selectedCard["list"]?.forEach(async (data) => {
+        await handleSinglePlay(data);
+      });
+    }
+  };
 
   return (
     <div className="page-top-btns-wrapper">

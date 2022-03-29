@@ -92,7 +92,7 @@ function TableSection({ selectedCard }) {
 
 export default TableSection;
 
-const apiCallToDiscord = async ({
+export const apiCallToDiscord = async ({
   type,
   token,
   proxy,
