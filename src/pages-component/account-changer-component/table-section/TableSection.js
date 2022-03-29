@@ -42,7 +42,7 @@ function TableSection({ selectedCard }) {
             password: proxySplit[3],
           },
         };
-        dispatch(updateStatusOfTableRow(obj, "running"));
+        dispatch(updateStatusOfTableRow(obj, "Running"));
         const apiResponse = await apiCallToDiscord({
           type,
           token: tokenArr[3],

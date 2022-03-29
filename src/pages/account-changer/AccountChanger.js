@@ -17,7 +17,7 @@ const AccountChanger = () => {
   const [tempList, setTempList] = useState([]);
 
   useEffect(() => {
-    if (selectedCard["list"].length > 0) {
+    if (selectedCard["list"]?.length > 0) {
       setTempList([...selectedCard["list"]]);
     } else setTempList([]);
   }, [selectedCard]);

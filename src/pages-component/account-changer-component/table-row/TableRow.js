@@ -29,11 +29,11 @@ export default TableRow;
 
 const getColor = (status) => {
   switch (status) {
-    case "running":
+    case "Running":
       return "var(--status)";
-    case "completed":
+    case "Completed":
       return "#1186db";
-    case "stopped":
+    case "Stopped":
       return "var(--delete)";
     default:
       return "var(--primary)";
