@@ -17,6 +17,7 @@
   color: var(--primary);
   background: var(--table-row);
   width: 99.5%;
+  border-radius: 5px;
 }
 .acc-chnager-page-table-header > div:nth-child(1) {
   width: 10%;
@@ -37,6 +38,7 @@
 .acc-changer-table-row-action-column > img:first-of-type {
   margin-right: 1em;
   height: 15px;
+  cursor: pointer;
 }
 .acc-changer-table-scroller {
   height: 70vh;
