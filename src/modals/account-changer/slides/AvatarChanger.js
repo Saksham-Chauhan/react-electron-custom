@@ -5,12 +5,12 @@ const api = [
   {
     label: "Default API",
     value: "https://picsum.photos/v2/list",
-    key: "defaultApi",
+    key: "defaultAPI",
   },
   {
     label: "Custom API",
     value: "https://picsum.photos/v2/list",
-    key: "customApi",
+    key: "customAPI",
   },
 ];
 

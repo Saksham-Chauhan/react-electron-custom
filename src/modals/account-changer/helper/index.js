@@ -1,6 +1,6 @@
 import { toastWarning } from "../../../toaster";
 
-const activityChangerValidation = (obj) => {
+export const activityChangerValidation = (obj) => {
   if (obj.activityDetails.length > 0) {
     return true;
   } else {
@@ -9,8 +9,8 @@ const activityChangerValidation = (obj) => {
   }
 };
 
-const avatarChangerValidation = (obj) => {};
-const massInviteJoinerValidation = (obj) => {
+export const avatarChangerValidation = (obj) => {};
+export const massInviteJoinerValidation = (obj) => {
   if (obj.inviteCodes.length > 0) {
     return true;
   } else {
@@ -18,7 +18,7 @@ const massInviteJoinerValidation = (obj) => {
     return false;
   }
 };
-const nicknameChangerValidation = (obj) => {
+export const nicknameChangerValidation = (obj) => {
   if (obj.serverIDs.length > 0) {
     return true;
   } else {
@@ -27,7 +27,7 @@ const nicknameChangerValidation = (obj) => {
   }
 };
 
-const userNameChangerValidation = (obj) => {
+export const userNameChangerValidation = (obj) => {
   if (obj.username.length > 0) {
     return true;
   } else {
@@ -36,7 +36,7 @@ const userNameChangerValidation = (obj) => {
   }
 };
 
-const basicAccChangerValidation = (obj) => {
+export const basicAccChangerValidation = (obj) => {
   let valid = false;
   if (Object.keys(obj.proxyGroup).length > 0) {
     valid = true;
@@ -50,4 +50,5 @@ const basicAccChangerValidation = (obj) => {
     valid = false;
     toastWarning("Select Token group");
   }
+  return valid;
 };

@@ -11,6 +11,7 @@ import {
   updateStatusOfTableRow,
 } from "../../../features/logic/acc-changer";
 import { apiCallToDiscord } from "../table-section/TableSection";
+import { sleep } from "../../../helper";
 
 function TopBtnsWrapper({ search, handleSearching, selectedCard }) {
   const dispatch = useDispatch();
@@ -60,6 +61,7 @@ function TopBtnsWrapper({ search, handleSearching, selectedCard }) {
         } else {
           dispatch(updateStatusOfTableRow(obj, "Stopped"));
         }
+        await sleep(Number(obj.delay) || 3000);
       }
     }
   };

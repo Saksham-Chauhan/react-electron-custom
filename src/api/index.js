@@ -170,10 +170,10 @@ export const directDiscordJoinAPI = async (
   }
 };
 
-export const generateRandomAvatar = async () => {
-  const arrayBuffer = await fetch("https://picsum.photos/50/50").then(function (
-    response
-  ) {
+export const generateRandomAvatar = async (
+  api = "https://picsum.photos/50/50"
+) => {
+  const arrayBuffer = await fetch(api).then(function (response) {
     return response.arrayBuffer();
   });
   const str = arrayBufferToString(arrayBuffer, "base64");

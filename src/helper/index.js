@@ -117,3 +117,9 @@ export const openChromeBrowser = async (url, chromeUser) => {
     });
   }
 };
+
+export const sleep = (time) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+};

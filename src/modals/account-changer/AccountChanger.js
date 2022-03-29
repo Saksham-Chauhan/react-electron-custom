@@ -16,6 +16,14 @@ import {
   makeProxyOptions,
 } from "../../helper";
 import {
+  activityChangerValidation,
+  avatarChangerValidation,
+  basicAccChangerValidation,
+  massInviteJoinerValidation,
+  nicknameChangerValidation,
+  userNameChangerValidation,
+} from "./helper";
+import {
   UserNameChangerSlide,
   ActivityChangerSlide,
   AvatarChangerSlide,
@@ -103,13 +111,40 @@ function AccountChanger() {
   };
 
   const handleSubmit = () => {
-    dispatch(addDataInTableList(accountChanger));
-    handleCloseModal();
+    const validation = basicAccChangerValidation(accountChanger);
+    const type = selectedCard["changerType"];
+    if (validation) {
+      console.log("first");
+      let valid;
+      if (type === "avatarChanger") {
+        valid = avatarChangerValidation(accountChanger);
+      } else if (type === "serverLeaver") {
+        valid = true;
+      } else if (type === "usernameChanger") {
+        console.log("sfgsajy");
+        valid = true;
+      } else if (type === "activityChanger") {
+        valid = activityChangerValidation(accountChanger);
+      } else if (type === "nicknameChanger") {
+        valid = nicknameChangerValidation(accountChanger);
+      } else if (type === "passwordChanger") {
+        valid = true;
+      } else if (type === "tokenChecker") {
+        valid = true;
+      } else if (type === "massInviter") {
+        valid = massInviteJoinerValidation(accountChanger);
+      }
+      console.log("first", valid);
+      if (valid) {
+        dispatch(addDataInTableList(accountChanger));
+        handleCloseModal();
+      }
+    }
   };
 
   const handleSelectAPI = (obj) => {
     setAccountChanger((pre) => {
-      return { ...pre, [obj.key]: obj.value };
+      return { ...pre, url: obj.key };
     });
   };
 

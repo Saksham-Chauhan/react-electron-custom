@@ -16,7 +16,9 @@ import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import { generateRandomAvatar } from "../../../api";
 import { toastWarning } from "../../../toaster";
-
+import { sleep } from "../../../helper";
+import randomNamne from "node-random-name";
+var generator = require("generate-password");
 function TableSection({ selectedCard }) {
   const dispatch = useDispatch();
 
@@ -55,12 +57,14 @@ function TableSection({ selectedCard }) {
           currentPass: tokenArr[2],
           newPass: obj.commonPassword,
           invideCodes: obj.inviteCodes,
+          avatarAPI: obj.url,
         });
         if (apiResponse.status === 200) {
           dispatch(updateStatusOfTableRow(obj, "Completed"));
         } else {
           dispatch(updateStatusOfTableRow(obj, "Stopped"));
         }
+        await sleep(Number(obj.delay) || 3000);
       }
     }
   };
@@ -104,11 +108,17 @@ export const apiCallToDiscord = async ({
   newPass,
   username,
   invideCodes,
+  avatarAPI,
 }) => {
   if (type === "avatarChanger") {
-    const randomImage = await generateRandomAvatar();
-    const response = await avatarChangeAPI(token, randomImage, proxy);
-    console.log(token, proxy, randomImage);
+    let response;
+    let randomImage;
+    if (avatarAPI === "customAPI") {
+      randomImage = await generateRandomAvatar(avatarAPI);
+    } else {
+      randomImage = await generateRandomAvatar();
+    }
+    response = await avatarChangeAPI(token, randomImage, proxy);
     if (response.status === 200) {
       return response;
     } else {
@@ -145,7 +155,6 @@ export const apiCallToDiscord = async ({
   } else if (type === "nicknameChanger") {
     let serverIdArray = guildId.split("\n");
     let name = nickName.split("\n");
-    console.log(serverIdArray, name);
     for (let i = 0; i < serverIdArray.length; i++) {
       const response = await nicknameChangerAPI(
         token,
@@ -161,12 +170,15 @@ export const apiCallToDiscord = async ({
       }
     }
   } else if (type === "passwordChanger") {
-    const response = await passwordChangerAPI(
-      token,
-      currentPass,
-      newPass,
-      proxy
-    );
+    let pass = newPass;
+    if (!pass.length > 0) {
+      pass = generator.generateMultiple(1, {
+        length: 10,
+        uppercase: true,
+        symbols: true,
+      });
+    }
+    const response = await passwordChangerAPI(token, currentPass, pass, proxy);
     if (response.status === 200) {
       return response;
     } else {
@@ -186,6 +198,7 @@ export const apiCallToDiscord = async ({
     for (let i = 0; i < inviteCodeList.length; i++) {
       let code = inviteCodeList[i];
       const response = await massInviteJoinerAPI(code, token, proxy);
+
       if (response.status === 200) {
         return response;
       } else {
