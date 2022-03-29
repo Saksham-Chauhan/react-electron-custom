@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
@@ -21,7 +21,6 @@ import {
   basicAccChangerValidation,
   massInviteJoinerValidation,
   nicknameChangerValidation,
-  userNameChangerValidation,
 } from "./helper";
 import {
   UserNameChangerSlide,
@@ -33,7 +32,7 @@ import {
   MassInviteSlide,
 } from "./slides";
 import NicknameChanger from "./slides/NicknameChanger";
-
+import randomNamne from "node-random-name";
 function AccountChanger() {
   const navigate = useNavigate();
   const selectedCard = useSelector(fetchSelectedAccChangerCard);
@@ -84,6 +83,15 @@ function AccountChanger() {
   };
 
   const handleClaimer = (data) => {
+    let arr = [];
+    if (selectedCard["changerType"] === "nicknameChanger") {
+      data["value"]?.split("\n").forEach((grp) => {
+        arr.push(randomNamne());
+      });
+      setAccountChanger((pre) => {
+        return { ...pre, nicknameGenerate: arr.join("\n") };
+      });
+    }
     setAccountChanger((pre) => {
       return {
         ...pre,
@@ -110,11 +118,20 @@ function AccountChanger() {
     });
   };
 
+  const handleRefreshName = () => {
+    let arr = [];
+    accountChanger.claimerGroup["value"]?.split("\n").forEach((grp) => {
+      arr.push(randomNamne());
+    });
+    setAccountChanger((pre) => {
+      return { ...pre, nicknameGenerate: arr.join("\n") };
+    });
+  };
+
   const handleSubmit = () => {
     const validation = basicAccChangerValidation(accountChanger);
     const type = selectedCard["changerType"];
     if (validation) {
-      console.log("first");
       let valid;
       if (type === "avatarChanger") {
         valid = avatarChangerValidation(accountChanger);
@@ -134,7 +151,6 @@ function AccountChanger() {
       } else if (type === "massInviter") {
         valid = massInviteJoinerValidation(accountChanger);
       }
-      console.log("first", valid);
       if (valid) {
         dispatch(addDataInTableList(accountChanger));
         handleCloseModal();
@@ -203,7 +219,9 @@ function AccountChanger() {
       {getDynamicSlideRnder(
         selectedCard["changerType"],
         handleChange,
-        handleSelectAPI
+        handleSelectAPI,
+        accountChanger,
+        handleRefreshName
       )}
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
@@ -220,7 +238,13 @@ function AccountChanger() {
 
 export default AccountChanger;
 
-const getDynamicSlideRnder = (type, handleChange, handleSelect) => {
+const getDynamicSlideRnder = (
+  type,
+  handleChange,
+  handleSelect,
+  state,
+  handleRefreshName
+) => {
   switch (type) {
     case "avatarChanger":
       return (
@@ -236,7 +260,13 @@ const getDynamicSlideRnder = (type, handleChange, handleSelect) => {
     case "activityChanger":
       return <ActivityChangerSlide onChange={handleChange} />;
     case "nicknameChanger":
-      return <NicknameChanger onChange={handleChange} />;
+      return (
+        <NicknameChanger
+          onRefresh={handleRefreshName}
+          state={state}
+          onChange={handleChange}
+        />
+      );
     case "passwordChanger":
       return <PasswordChnagerSlide onChange={handleChange} />;
     case "tokenChecker":

@@ -3,7 +3,7 @@ import { AppSpacer, LabelWithToolTip, AppInputField } from "../../../component";
 import refresh from "../../../assests/images/refresh.svg";
 import "./style.css";
 
-function NicknameChanger({ ...props }) {
+function NicknameChanger({ state, onRefresh, ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -28,7 +28,7 @@ function NicknameChanger({ ...props }) {
       <AppSpacer spacer={20} />
       <div className="nickname-row">
         <LabelWithToolTip labelText="Nicknames" />
-        <div className="group-title btn refresh">
+        <div onClick={onRefresh} className="group-title btn refresh">
           <img src={refresh} alt="ref" />
         </div>
       </div>
@@ -36,6 +36,7 @@ function NicknameChanger({ ...props }) {
         hideLabel={true}
         isMulti={true}
         {...props}
+        value={state["nicknameGenerate"]}
         name="nicknameGenerate"
         multiHeight="100px"
         placeholderText="Eg. 
