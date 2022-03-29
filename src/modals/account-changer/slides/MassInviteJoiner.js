@@ -1,7 +1,7 @@
 import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
 
-function MassInviteJoiner() {
+function MassInviteJoiner({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -10,11 +10,17 @@ function MassInviteJoiner() {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
+            name="delayInMassInviter"
+            min={0}
+            {...props}
+            type="number"
           />
         </div>
       </div>
       <AppInputField
         isMulti={true}
+        name="inviteCodes"
+        {...props}
         fieldTitle="Invite Codes[s]"
         placeholderText="Eg. 
       aJHGBDFDH

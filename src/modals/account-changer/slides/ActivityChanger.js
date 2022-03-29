@@ -1,7 +1,7 @@
 import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
 
-function ActivityChanger() {
+function ActivityChanger({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -10,12 +10,18 @@ function ActivityChanger() {
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Delay (Optional)"
+            name="delatInActivity"
+            type="number"
+            min={0}
+            {...props}
           />
         </div>
         <div className="half-flex-field">
           <AppInputField
             fieldTitle="Activity Details"
             placeholderText="Eg. Playing Kyro Tools"
+            name="activityDetails"
+            {...props}
           />
         </div>
       </div>
