@@ -9,15 +9,15 @@ function TableRow({ onDelete, obj, index, onPlay, onDownload, type }) {
   return (
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
-      <div>{obj.claimerGroup.label}</div>
-      <div style={{ color: getColor(obj.status) }}>{obj.status}</div>
+      <div>{obj?.claimerGroup?.label}</div>
+      <div style={{ color: getColor(obj?.status) }}>{obj?.status}</div>
       <div>
         <div className="acc-changer-table-row-action-column">
-          {obj.status === "Completed" && type === "passwordChanger" ? (
+          {obj?.status === "Completed" && type === "passwordChanger" ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
           ) : (
             <img
-              src={obj.status === "Running" ? stop : play}
+              src={obj?.status === "Running" ? stop : play}
               alt=""
               onClick={() => onPlay(obj)}
             />
