@@ -6,7 +6,7 @@ function TopSection({ selectedCard }) {
     <TopWrapper>
       <GroupStatusCard
         subText={`${
-          selectedCard["list"].filter((obj) => STATUS.includes(obj["status"]))
+          selectedCard["list"]?.filter((obj) => STATUS.includes(obj["status"]))
             .length
         } Running Task`}
         title={selectedCard["cardTitle"]}
