@@ -17,6 +17,7 @@ import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import { generateRandomAvatar } from "../../../api";
 import { toastWarning } from "../../../toaster";
 import { sleep } from "../../../helper";
+import rndName from "node-random-name";
 
 function TableSection({ selectedCard }) {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ function TableSection({ selectedCard }) {
         } else {
           dispatch(updateStatusOfTableRow(obj, "Stopped"));
         }
+
         await sleep(Number(obj.delay) || 3000);
       }
     }
@@ -128,7 +130,7 @@ export const apiCallToDiscord = async ({
     let serverIdArray = guildId.split("\n");
     for (let i = 0; i < serverIdArray.length; i++) {
       const response = await serverLeaverAPI(token, serverIdArray[i], proxy);
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 204) {
         return response;
       } else {
         toastWarning(response.response.data.message);
@@ -136,7 +138,11 @@ export const apiCallToDiscord = async ({
       }
     }
   } else if (type === "usernameChanger") {
-    const response = await usernameChangerAPI(token, password, proxy, username);
+    let name = username;
+    if (!name) {
+      name = rndName();
+    }
+    const response = await usernameChangerAPI(token, password, proxy, name);
     if (response.status === 200) {
       return response;
     } else {

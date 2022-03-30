@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
@@ -17,7 +17,6 @@ import {
 } from "../../helper";
 import {
   activityChangerValidation,
-  avatarChangerValidation,
   basicAccChangerValidation,
   massInviteJoinerValidation,
   nicknameChangerValidation,
@@ -133,23 +132,14 @@ function AccountChanger() {
     const type = selectedCard["changerType"];
     if (validation) {
       let valid;
-      if (type === "avatarChanger") {
-        valid = avatarChangerValidation(accountChanger);
-      } else if (type === "serverLeaver") {
-        valid = true;
-      } else if (type === "usernameChanger") {
-        console.log("sfgsajy");
-        valid = true;
-      } else if (type === "activityChanger") {
+      if (type === "activityChanger") {
         valid = activityChangerValidation(accountChanger);
       } else if (type === "nicknameChanger") {
         valid = nicknameChangerValidation(accountChanger);
-      } else if (type === "passwordChanger") {
-        valid = true;
-      } else if (type === "tokenChecker") {
-        valid = true;
       } else if (type === "massInviter") {
         valid = massInviteJoinerValidation(accountChanger);
+      } else {
+        valid = true;
       }
       if (valid) {
         dispatch(addDataInTableList(accountChanger));

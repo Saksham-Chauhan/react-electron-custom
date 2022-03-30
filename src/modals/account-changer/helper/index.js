@@ -9,7 +9,6 @@ export const activityChangerValidation = (obj) => {
   }
 };
 
-export const avatarChangerValidation = (obj) => {};
 export const massInviteJoinerValidation = (obj) => {
   if (obj.inviteCodes.length > 0) {
     return true;

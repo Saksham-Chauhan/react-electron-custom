@@ -25,6 +25,7 @@
     "lodash": "^4.17.21",
     "network-speed": "^2.1.1",
     "node-random-name": "^1.0.1",
+    "objects2csv": "^1.1.0",
     "open": "^8.4.0",
     "ping": "^0.4.1",
     "qrcode-reader": "^1.0.4",
