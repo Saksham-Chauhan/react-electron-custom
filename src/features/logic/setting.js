@@ -18,7 +18,7 @@ export const addGroupInClaimerList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
   let obj = { ...group };
   obj["id"] = generateId();
-  let combiner = [...currentList, obj];
+  let combiner = [obj, ...currentList];
   dispatch(appendClaimerGroupInList(combiner));
 };
 
@@ -55,7 +55,7 @@ export const addChromeUserInList = (user) => (dispatch, getState) => {
   obj["value"] = user;
   obj["label"] = user;
   obj["id"] = generateId();
-  let combiner = [...currentList, obj];
+  let combiner = [obj, ...currentList];
   dispatch(appendChromeUserInList(combiner));
 };
 
@@ -89,6 +89,6 @@ export const addWebhookInList = (webhook) => (dispatch, getState) => {
   let obj = {};
   obj["webhook"] = webhook;
   obj["id"] = generateId();
-  let combiner = [...currentList, obj];
+  let combiner = [obj, ...currentList];
   dispatch(appendWebhookInList(combiner));
 };

@@ -9,6 +9,7 @@
 
 # production
 /build
+/export
 
 # misc
 .env

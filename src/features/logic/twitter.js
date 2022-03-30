@@ -21,7 +21,7 @@ export const addTwitterKeywordInList = (data) => (dispatch, getState) => {
     obj["id"] = generateId();
     obj["value"] = word;
     obj["label"] = word;
-    let combiner = [...tempCurrentList, obj];
+    let combiner = [obj, ...tempCurrentList];
     dispatch(
       appendDataInTwitterList({ key: "twitterUserNameList", data: combiner })
     );
@@ -32,7 +32,7 @@ export const addTwitterKeywordInList = (data) => (dispatch, getState) => {
     obj["id"] = generateId();
     obj["value"] = word;
     obj["label"] = word;
-    let combiner = [...tempCurrentList, obj];
+    let combiner = [obj, ...tempCurrentList];
     dispatch(
       appendDataInTwitterList({ key: "twitterKeywordList", data: combiner })
     );
@@ -77,7 +77,7 @@ export const addNewApiInList = (apiObj) => (dispatch, getState) => {
   const currentApiList = fetchAPIlistState(getState());
   let obj = { ...apiObj };
   obj["id"] = generateId();
-  let combiner = [...currentApiList, obj];
+  let combiner = [obj, ...currentApiList];
   dispatch(appendApInList(combiner));
 };
 

@@ -71,6 +71,12 @@ const iconData = [
     defaultIcon: defaultTwitter,
   },
   {
+    to: RoutePath.accountChanger,
+    activeIcon: activeProfile,
+    activeClass: "profile",
+    defaultIcon: defaultprofile,
+  },
+  {
     to: RoutePath.oneclick,
     activeIcon: activeNft,
     activeClass: "oneclick",
@@ -89,12 +95,6 @@ const iconData = [
     activeIcon: activeSettings,
     activeClass: "setting",
     defaultIcon: defaultSettings,
-  },
-  {
-    to: RoutePath.accountChanger,
-    activeIcon: activeProfile,
-    activeClass: "profile",
-    defaultIcon: defaultprofile,
   },
 ];
 

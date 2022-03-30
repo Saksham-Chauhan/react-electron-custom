@@ -46,7 +46,7 @@ const AccountChanger = () => {
             {...{ search, handleSearching, selectedCard }}
           />
           <AppSpacer spacer={20} />
-          <AccountChangerTableSection {...{ selectedCard }} />
+          <AccountChangerTableSection {...{ selectedCard }} list={tempList} />
         </div>
       </div>
     </div>

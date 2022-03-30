@@ -63,18 +63,7 @@ function ClaimerGroup() {
     obj.claimerToken.split("\n").forEach((t) => {
       let str = t?.split(":");
       if (str.length === 4) {
-        let email = str[0];
-        let user = str[1];
-        let pass = str[2];
-        let token = str[3];
-        if (
-          emailRegex.test(email) &&
-          passwordRegex.test(pass) &&
-          usernameRegex.test(user) &&
-          discordTokenRegExp.test(token)
-        ) {
-          valid.push(t);
-        }
+        valid.push(t);
       }
     });
     obj["claimerToken"] = valid.map((v) => v).join("\n");

@@ -21,7 +21,7 @@ import { generateRandomPassword, sleep } from "../../../helper";
 import rndName from "node-random-name";
 import { readArrayOfJson } from "../../../helper/electron-bridge";
 
-function TableSection({ selectedCard }) {
+function TableSection({ list, selectedCard }) {
   const dispatch = useDispatch();
 
   const handleDelete = (obj) => {
@@ -62,6 +62,7 @@ function TableSection({ selectedCard }) {
           avatarAPI: obj.url,
         });
         if (apiResponse !== null) {
+          console.log(apiResponse);
           if (apiResponse.status === 200) {
             let tempObj = { ...obj };
             let arr = [];
@@ -78,6 +79,7 @@ function TableSection({ selectedCard }) {
               }
               tempObj["newPass"] = arr.join("\n");
               tempObj["username"] = user.join("\n");
+              tempObj["status"] = "Completed";
               dispatch(updatePasswordChangerStatus(tempObj));
             } else {
               dispatch(updateStatusOfTableRow(tempObj, "Completed"));
@@ -121,7 +123,7 @@ function TableSection({ selectedCard }) {
         </div>
       </div>
       <div className="acc-changer-table-scroller">
-        {selectedCard?.list?.map((obj, index) => (
+        {list?.map((obj, index) => (
           <TableRow
             index={index + 1}
             onDelete={handleDelete}

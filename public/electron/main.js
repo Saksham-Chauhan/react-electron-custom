@@ -484,7 +484,6 @@ ipcMain.on("read-array", async (_, array) => {
   const folderPath = path.join(__dirname, "../../export");
   var files = fs.readdirSync(folderPath);
   for (let i = 0; i < files.length; i++) {
-    console.log("Deleted file", files[i]);
     fs.rmSync(`${folderPath}/${files[i]}`);
   }
   const fileName = +new Date();
@@ -493,7 +492,7 @@ ipcMain.on("read-array", async (_, array) => {
   await csv.toDisk(filePath);
   fs.readFile(filePath, async (err, data) => {
     if (!err) {
-      const url = `data:application/csv;base64,${new Buffer.from(data).toString(
+      const url = `data:text/csv;base64,${new Buffer.from(data).toString(
         "base64"
       )}`;
       await downloadCsvFileDialog(`${fileName}.csv`, url);
@@ -511,16 +510,8 @@ const downloadCsvFileDialog = async (fileName, url) => {
   };
   const dialogResult = await dialog.showMessageBox(mainWindow, options);
   if (dialogResult.response === 0) {
-    const downloadResponse = await download(mainWindow, url);
-    const options = {
-      buttons: ["Ok"],
-      defaultId: 0,
-      title: "Kyro",
-      message: `You file is downloaded successfully `,
-      detail: `File download location -> ${downloadResponse.getSavePath()}`,
-    };
-    const dialogResult = await dialog.showMessageBox(mainWindow, options);
-    if (dialogResult.response === 0) {
-    }
+    await download(mainWindow, url, {
+      saveAs: true,
+    });
   }
 };

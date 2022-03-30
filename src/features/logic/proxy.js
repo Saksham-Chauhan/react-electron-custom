@@ -9,7 +9,7 @@ import {
 
 export const addProxyGroupInList = (group) => (dispatch, getState) => {
   const currentList = fetchProxyGroupList(getState());
-  let combiner = [...currentList, group];
+  let combiner = [group, ...currentList];
   dispatch(appendProxyGroupInList(combiner));
 };
 

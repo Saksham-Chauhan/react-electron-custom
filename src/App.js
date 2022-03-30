@@ -120,7 +120,7 @@ function App() {
   }, [dispatch, globalSetting.logOnOff]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length === 0) {
+  if (Object.keys(logggedUserDetails).length !== 0) {
     return (
       <React.Fragment>
         <Login />

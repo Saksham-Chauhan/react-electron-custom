@@ -13,7 +13,7 @@ export const addDataInTableList = (obj) => (dispatch, getState) => {
   let tempOptionList = [...currentOptionList];
   let tempObj = { ...obj };
   tempObj["id"] = generateId();
-  tempSelectedObj["list"] = [...tempSelectedObj["list"], tempObj];
+  tempSelectedObj["list"] = [tempObj, ...tempSelectedObj["list"]];
   let afterUpdate = tempOptionList.map((acc) => {
     if (acc["changerType"] === tempSelectedObj["changerType"]) {
       return tempSelectedObj;
