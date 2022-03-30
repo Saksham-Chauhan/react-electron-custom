@@ -77,3 +77,21 @@ export const updateStatusOfTableRow = (obj, status) => (dispatch, getState) => {
   dispatch(setSelctedAccChangerCard(tempSelectedObj));
   dispatch(setAccountChangerList(afterUpdate));
 };
+
+export const updatePasswordChangerStatus = (obj) => (dispatch, getState) => {
+  const currentSelectedAccChangerType = fetchSelectedAccChangerCard(getState());
+  const currentOptionList = fetchAccChangerListState(getState());
+  let tempSelectedObj = { ...currentSelectedAccChangerType };
+  let tempOptionList = [...currentOptionList];
+  tempSelectedObj["list"] = [...tempSelectedObj["list"]].map((row) => {
+    if (row["id"] === obj["id"]) return obj;
+    return row;
+  });
+  let afterUpdate = tempOptionList.map((acc) => {
+    if (acc["changerType"] === tempSelectedObj["changerType"])
+      return tempSelectedObj;
+    return acc;
+  });
+  dispatch(setSelctedAccChangerCard(tempSelectedObj));
+  dispatch(setAccountChangerList(afterUpdate));
+};

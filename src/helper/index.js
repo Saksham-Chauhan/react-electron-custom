@@ -167,8 +167,3 @@ export const arrayBufferToString = (buffer, encoding) => {
   str = decoder.decode(uint8);
   return str;
 };
-
-export const downloadToCsv = (arrayOfJson) => {
-  console.log(arrayOfJson);
-  // const csv = new ObjectsToCsv(response);
-};

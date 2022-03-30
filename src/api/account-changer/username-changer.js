@@ -2,7 +2,6 @@ import axios from "axios";
 import { BASE_URL } from "../index";
 
 async function changeUsername(token, password, proxy, username) {
-  console.log(token, password, proxy, username);
   try {
     const json = JSON.stringify({
       username: username,

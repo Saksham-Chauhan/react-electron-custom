@@ -82,7 +82,7 @@ function Twitter() {
                 );
                 if (ft.featured_type) {
                   dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
-                  console.log(ft);
+                  // console.log(ft);
                   if (
                     ft.urlsExtracted?.length > 0 &&
                     !(ft["tweet_id"] in latestTweetList)

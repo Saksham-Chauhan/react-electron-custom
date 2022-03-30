@@ -4,6 +4,7 @@ import TableRow from "../table-row/TableRow";
 import { useDispatch } from "react-redux";
 import {
   deleteDataFromTableList,
+  updatePasswordChangerStatus,
   updateStatusOfTableRow,
 } from "../../../features/logic/acc-changer";
 import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
@@ -18,6 +19,7 @@ import { generateRandomAvatar } from "../../../api";
 import { toastWarning } from "../../../toaster";
 import { generateRandomPassword, sleep } from "../../../helper";
 import rndName from "node-random-name";
+import { readArrayOfJson } from "../../../helper/electron-bridge";
 
 function TableSection({ selectedCard }) {
   const dispatch = useDispatch();
@@ -62,13 +64,25 @@ function TableSection({ selectedCard }) {
         if (apiResponse !== null) {
           if (apiResponse.status === 200) {
             let tempObj = { ...obj };
+            let arr = [];
+            let user = [];
+
             if (type === "passwordChanger") {
-              tempObj["newPass"] = JSON.parse(apiResponse.config.data)[
-                "new_password"
-              ];
+              let newPass = JSON.parse(apiResponse.config.data)["new_password"];
+              let tempuser = apiResponse.data.username;
+              arr.push(newPass);
+              user.push(tempuser);
+              if (index > 0) {
+                arr = [...tempObj["newPass"].split("\n"), ...arr];
+                user = [...tempObj["username"].split("\n"), ...user];
+              }
+              tempObj["newPass"] = arr.join("\n");
+              tempObj["username"] = user.join("\n");
+              dispatch(updatePasswordChangerStatus(tempObj));
+            } else {
+              dispatch(updateStatusOfTableRow(tempObj, "Completed"));
             }
-            console.log(tempObj);
-            dispatch(updateStatusOfTableRow(tempObj, "Completed"));
+            break;
           }
         } else {
           dispatch(updateStatusOfTableRow(obj, "Stopped"));
@@ -76,6 +90,23 @@ function TableSection({ selectedCard }) {
 
         await sleep(Number(obj.delay) || 3000);
       }
+    }
+  };
+
+  const handleDownload = (obj) => {
+    let arrOfObj = [];
+    const type = selectedCard["changerType"];
+    if (type === "passwordChanger") {
+      const { username, newPass } = obj;
+      let userNameArr = username.split("\n");
+      let passArr = newPass.split("\n");
+      for (let i = 0; i < userNameArr.length; i++) {
+        let obj = {};
+        obj["newPassword"] = passArr[i];
+        obj["userName"] = userNameArr[i];
+        arrOfObj.push(obj);
+      }
+      readArrayOfJson(arrOfObj);
     }
   };
 
@@ -95,8 +126,10 @@ function TableSection({ selectedCard }) {
             index={index + 1}
             onDelete={handleDelete}
             onPlay={handlePlay}
+            onDownload={handleDownload}
             {...{ obj }}
             key={obj.id}
+            type={selectedCard["changerType"]}
           />
         ))}
       </div>
@@ -196,7 +229,6 @@ export const apiCallToDiscord = async ({
     }
     const response = await passwordChangerAPI(token, currentPass, pass, proxy);
     if (response.status === 200) {
-      console.log(response, "and ", pass);
       return response;
     } else {
       toastWarning(response.response.data.message);

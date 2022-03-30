@@ -13,6 +13,8 @@ const richPresence = require("discord-rich-presence")("938338403106320434");
 const testNetworkSpeed = new NetworkSpeed();
 const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
+const fs = require("fs");
+const { download } = require("electron-dl");
 
 let win = null;
 let mainWindow = null;
@@ -478,19 +480,47 @@ ipcMain.handle("get-speed", async () => {
   return { download, upload };
 });
 
-ipcMain.on("read-array", (_, array) => {
+ipcMain.on("read-array", async (_, array) => {
+  const folderPath = path.join(__dirname, "../../export");
+  var files = fs.readdirSync(folderPath);
+  for (let i = 0; i < files.length; i++) {
+    console.log("Deleted file", files[i]);
+    fs.rmSync(`${folderPath}/${files[i]}`);
+  }
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
-  await csv.toDisk(`./export/${fileName}.csv`);
-  fs.readFile(`./export/${fileName}.csv`, (err, data) => {
-    if (err) res.status(500).send(err);
-    console.log("read data",data)
-    // res
-    //   .contentType("application/csv")
-    //   .send(
-    //     `data:application/csv;base64,${new Buffer.from(data).toString(
-    //       "base64"
-    //     )}`
-    //   );
-  })
+  const filePath = `${folderPath}/${fileName}.csv`;
+  await csv.toDisk(filePath);
+  fs.readFile(filePath, async (err, data) => {
+    if (!err) {
+      const url = `data:application/csv;base64,${new Buffer.from(data).toString(
+        "base64"
+      )}`;
+      await downloadCsvFileDialog(`${fileName}.csv`, url);
+    }
+  });
 });
+
+const downloadCsvFileDialog = async (fileName, url) => {
+  const options = {
+    buttons: ["Yes", "No"],
+    defaultId: 0,
+    title: "Kyro",
+    message: `Do you want to download ${fileName}`,
+    detail: "New generated password csv along with username",
+  };
+  const dialogResult = await dialog.showMessageBox(mainWindow, options);
+  if (dialogResult.response === 0) {
+    const downloadResponse = await download(mainWindow, url);
+    const options = {
+      buttons: ["Ok"],
+      defaultId: 0,
+      title: "Kyro",
+      message: `You file is downloaded successfully `,
+      detail: `File download location -> ${downloadResponse.getSavePath()}`,
+    };
+    const dialogResult = await dialog.showMessageBox(mainWindow, options);
+    if (dialogResult.response === 0) {
+    }
+  }
+};
