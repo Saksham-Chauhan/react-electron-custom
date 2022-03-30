@@ -14,12 +14,6 @@ import {
   editClaimerGroupFromList,
 } from "../../features/logic/setting";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
-import {
-  discordTokenRegExp,
-  emailRegex,
-  passwordRegex,
-  usernameRegex,
-} from "../../constant/regex";
 import { toastWarning } from "../../toaster";
 
 function ClaimerGroup() {
