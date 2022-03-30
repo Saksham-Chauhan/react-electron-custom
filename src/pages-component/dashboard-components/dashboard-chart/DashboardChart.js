@@ -102,7 +102,6 @@ const DashboardChart = () => {
   const twitterList = useSelector(fetchLatestTweetList);
   const spoofList = useSelector(fetchSpoofTableList);
   const lastDate = useSelector(fetchLastDate);
-  console.log(discord, inviteJoinerobj, twitterList);
 
   // // //GET THE LAST WEEK DATA
   const lastWeekLink = useSelector(fetchLastWeekLinks);
@@ -136,10 +135,9 @@ const DashboardChart = () => {
 
       if (spooferData < lastWeekSpoof) dispatch(addlastWeekSpoofs(spooferData));
 
-      // let date = new Date();
-      // let day = date.getDay() - 1;
-      let day = 0;
-      console.log(day);
+      let date = new Date();
+      let day = date.getDay() - 1;
+      // let day = 0;
       if (day > lastDate || (lastDate === 6 && day === 0)) {
         dispatch(addlastWeekLink(linkOpnerData));
         dispatch(addlastWeekInvite(inviteJoinerData));

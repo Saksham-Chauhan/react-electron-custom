@@ -16,7 +16,7 @@ import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import { generateRandomAvatar } from "../../../api";
 import { toastWarning } from "../../../toaster";
-import { sleep } from "../../../helper";
+import { generateRandomPassword, sleep } from "../../../helper";
 import rndName from "node-random-name";
 
 function TableSection({ selectedCard }) {
@@ -59,8 +59,17 @@ function TableSection({ selectedCard }) {
           invideCodes: obj.inviteCodes,
           avatarAPI: obj.url,
         });
-        if (apiResponse.status === 200) {
-          dispatch(updateStatusOfTableRow(obj, "Completed"));
+        if (apiResponse !== null) {
+          if (apiResponse.status === 200) {
+            let tempObj = { ...obj };
+            if (type === "passwordChanger") {
+              tempObj["newPass"] = JSON.parse(apiResponse.config.data)[
+                "new_password"
+              ];
+            }
+            console.log(tempObj);
+            dispatch(updateStatusOfTableRow(tempObj, "Completed"));
+          }
         } else {
           dispatch(updateStatusOfTableRow(obj, "Stopped"));
         }
@@ -124,7 +133,7 @@ export const apiCallToDiscord = async ({
       return response;
     } else {
       toastWarning(response.response.data.message);
-      return response;
+      return null;
     }
   } else if (type === "serverLeaver") {
     let serverIdArray = guildId.split("\n");
@@ -134,7 +143,7 @@ export const apiCallToDiscord = async ({
         return response;
       } else {
         toastWarning(response.response.data.message);
-        return response;
+        return null;
       }
     }
   } else if (type === "usernameChanger") {
@@ -147,7 +156,7 @@ export const apiCallToDiscord = async ({
       return response;
     } else {
       toastWarning(response.response.data.message);
-      return response;
+      return null;
     }
   } else if (type === "activityChanger") {
     const response = await activityChangerAPI(token, activityDetail, proxy);
@@ -155,7 +164,7 @@ export const apiCallToDiscord = async ({
       return response;
     } else {
       toastWarning(response.response.data.message);
-      return response;
+      return null;
     }
   } else if (type === "nicknameChanger") {
     let serverIdArray = guildId.split("\n");
@@ -171,19 +180,27 @@ export const apiCallToDiscord = async ({
         return response;
       } else {
         toastWarning(response.response.data.message);
-        return response;
+        return null;
       }
     }
   } else if (type === "passwordChanger") {
     let pass = newPass;
-    if (!pass.length > 0) {
+    if (!pass) {
+      pass = generateRandomPassword({
+        lower: true,
+        upper: true,
+        num: true,
+        sym: true,
+        length: 18,
+      });
     }
     const response = await passwordChangerAPI(token, currentPass, pass, proxy);
     if (response.status === 200) {
+      console.log(response, "and ", pass);
       return response;
     } else {
       toastWarning(response.response.data.message);
-      return response;
+      return null;
     }
   } else if (type === "tokenChecker") {
     const response = await tokenCheckerAPI(token, proxy);
@@ -191,7 +208,7 @@ export const apiCallToDiscord = async ({
       return response;
     } else {
       toastWarning(response.response.data.message);
-      return response;
+      return null;
     }
   } else if (type === "massInviter") {
     const inviteCodeList = invideCodes?.split("\n");
@@ -203,7 +220,7 @@ export const apiCallToDiscord = async ({
         return response;
       } else {
         toastWarning(response.response.data.message);
-        return response;
+        return null;
       }
     }
   }
