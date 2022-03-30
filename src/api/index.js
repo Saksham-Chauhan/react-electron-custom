@@ -1,4 +1,5 @@
 import axios from "axios";
+import { arrayBufferToString } from "../helper";
 import { toastSuccess, toastWarning } from "../toaster";
 
 export const BASE_URL = "https://discord.com/api/v9/";
@@ -179,16 +180,3 @@ export const generateRandomAvatar = async (
   const str = arrayBufferToString(arrayBuffer, "base64");
   return "data:image/jpeg;base64," + str;
 };
-
-function arrayBufferToString(buffer, encoding) {
-  let str;
-  if (encoding == null) encoding = "utf8";
-  var uint8 = new Uint8Array(buffer);
-  if (encoding === "base64") {
-    str = String.fromCharCode.apply(null, uint8);
-    return btoa(str);
-  }
-  var decoder = new TextDecoder(encoding);
-  str = decoder.decode(uint8);
-  return str;
-}

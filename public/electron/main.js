@@ -12,6 +12,7 @@ const spooferManager = require("./script/manager/spoof-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const testNetworkSpeed = new NetworkSpeed();
 const _ = require("lodash");
+const ObjectsToCsv = require("objects-to-csv");
 
 let win = null;
 let mainWindow = null;
@@ -475,4 +476,21 @@ ipcMain.handle("get-speed", async () => {
   const download = await getNetworkDownloadSpeed();
   const upload = await getNetworkUploadSpeed();
   return { download, upload };
+});
+
+ipcMain.on("read-array", (_, array) => {
+  const fileName = +new Date();
+  const csv = new ObjectsToCsv(array);
+  await csv.toDisk(`./export/${fileName}.csv`);
+  fs.readFile(`./export/${fileName}.csv`, (err, data) => {
+    if (err) res.status(500).send(err);
+    console.log("read data",data)
+    // res
+    //   .contentType("application/csv")
+    //   .send(
+    //     `data:application/csv;base64,${new Buffer.from(data).toString(
+    //       "base64"
+    //     )}`
+    //   );
+  })
 });

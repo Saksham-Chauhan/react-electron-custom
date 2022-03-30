@@ -14,6 +14,8 @@ const checkForUpdates = () => {
   ipcRenderer.send("checkForUpdates");
 };
 
+const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
+
 const updateNotAvailable = (callback) =>
   ipcRenderer.on("update:not-avail", () => callback());
 
@@ -76,4 +78,5 @@ module.exports = {
   authUser,
   logoutUser,
   auth,
+  readArrayOfJson,
 };
