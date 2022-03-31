@@ -481,6 +481,7 @@ ipcMain.handle("get-speed", async () => {
 });
 
 ipcMain.on("read-array", async (_, array) => {
+  console.log("triged 1");
   const folderPath = path.join(__dirname, "../../export");
   var files = fs.readdirSync(folderPath);
   for (let i = 0; i < files.length; i++) {
@@ -491,6 +492,7 @@ ipcMain.on("read-array", async (_, array) => {
   const filePath = `${folderPath}/${fileName}.csv`;
   await csv.toDisk(filePath);
   fs.readFile(filePath, async (err, data) => {
+    console.log("triged 2");
     if (!err) {
       const url = `data:text/csv;base64,${new Buffer.from(data).toString(
         "base64"
@@ -501,6 +503,7 @@ ipcMain.on("read-array", async (_, array) => {
 });
 
 const downloadCsvFileDialog = async (fileName, url) => {
+  console.log("triged 3");
   const options = {
     buttons: ["Yes", "No"],
     defaultId: 0,
@@ -510,6 +513,7 @@ const downloadCsvFileDialog = async (fileName, url) => {
   };
   const dialogResult = await dialog.showMessageBox(mainWindow, options);
   if (dialogResult.response === 0) {
+    console.log("triged 4");
     await download(mainWindow, url, {
       saveAs: true,
     });
