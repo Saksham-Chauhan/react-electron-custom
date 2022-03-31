@@ -227,7 +227,7 @@ function Settings({
                 : "Add Proxy group"
             }
             isSelect={true}
-            selectOptions={makeProxyOptions()}
+            selectOptions={makeProxyOptions(proxyGroupList)}
             onChange={handleSelectProxyGroup}
             value={getProxyGroupValue()}
             onMenuOpen={handleProxyMenuOpen}

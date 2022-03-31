@@ -13,14 +13,18 @@ import {
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchInviteJoinerSettingModalState,
+  fetchDashboardModalState,
+  fetchAccountChangerModalState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
+  OnboardingModal,
   ProxyGroupModal,
   ClaimerGroupModal,
   DiscordAccountModal,
   EditProxySingleModal,
   InviteJoinerSettingModal,
+  AccountChangerModal,
 } from "./modals";
 import {
   Login,
@@ -33,6 +37,7 @@ import {
   AccountGenPage,
   LinkOpenerPage,
   InviteJoinerPage,
+  AccountChangerPage,
 } from "./pages";
 
 import {
@@ -40,6 +45,7 @@ import {
   decodeUser,
   errorToaster,
   spooferToaster,
+  debuggerChannnel,
   updateNotAvailable,
   proxyTestResultListener,
 } from "./helper/electron-bridge";
@@ -50,11 +56,11 @@ import {
 import { RoutePath } from "./constant";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { loggedUserWebhook } from "./helper/webhook";
 import { toastInfo, toastWarning } from "./toaster";
+import { loggedUserWebhook } from "./helper/webhook";
 import { useDispatch, useSelector } from "react-redux";
 import { proxyStatusUpdater } from "./features/logic/proxy";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
 import { closelinkOpenerMonitor } from "./features/logic/discord-account";
 import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
@@ -68,6 +74,8 @@ function App() {
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
+  const onBoardingModalState = useSelector(fetchDashboardModalState);
+  const accountChangerModalState = useSelector(fetchAccountChangerModalState);
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
@@ -105,8 +113,14 @@ function App() {
     proxyTestResultListener((res) => {
       dispatch(proxyStatusUpdater(res));
     });
-    updateNotAvailable(() => toastInfo("Update not available"));
+    updateNotAvailable(() =>
+      toastInfo("Update not available or You are already to update 😍 🤩")
+    );
     errorToaster((err) => toastWarning(err));
+
+    if (process.env.NODE_ENV === "development") {
+      debuggerChannnel()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
 
@@ -122,8 +136,10 @@ function App() {
 
   return (
     <div className="app">
+      {accountChangerModalState && <AccountChangerModal />}
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
+      {!onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {proxyEditModalState && <EditProxySingleModal />}
@@ -139,6 +155,10 @@ function App() {
             <DragBar />
             <AppController {...{ location }} />
             <Routes>
+              <Route
+                path={RoutePath.accountChanger}
+                element={<AccountChangerPage />}
+              />
               <Route path={RoutePath.accountGen} element={<AccountGenPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />

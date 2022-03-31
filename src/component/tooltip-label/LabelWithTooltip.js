@@ -6,11 +6,12 @@ function LabelWithTooltip({
   toolTopText = "I'm Tooltip",
   labelText,
   isCustomToolTip = false,
+  parentStyle,
   children,
   ...props
 }) {
   return (
-    <div className="label-with-tooltip">
+    <div {...parentStyle} className="label-with-tooltip">
       <label>{labelText}</label>
       <img data-tip data-for={labelText} src={help} alt="help-icon" />
       <ReactTooltip

@@ -10,6 +10,7 @@ import {
   deleteProxyGroup,
   readProxyFromFile,
   removeBadProxy,
+  setStatusInProxy,
 } from "../../../features/logic/proxy";
 import { toastWarning } from "../../../toaster";
 import { handleExportLogs } from "../../../helper";
@@ -45,6 +46,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
 
   const handleTestproxy = () => {
     if (Object.keys(tempData).length > 0) {
+      dispatch(setStatusInProxy());
       tempData["proxyList"].forEach((proxy) => {
         proxyTester(proxy);
       });
@@ -105,18 +107,10 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
           <img src={test} alt="" />
         </div>
         <div onClick={handleEditGroup} className="icon-btn-wrapper btn">
-          <UseAnimations
-            animation={edit}
-            strokeColor="#fff"
-            size={25}
-          ></UseAnimations>
+          <UseAnimations animation={edit} strokeColor="#fff" size={25} />
         </div>
         <div onClick={handleDeleteGroup} className="icon-btn-wrapper btn">
-          <UseAnimations
-            animation={trash2}
-            strokeColor="#B60E0E"
-            size={25}
-          ></UseAnimations>
+          <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
         </div>
       </div>
       <div className="page-right-container">

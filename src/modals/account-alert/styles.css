@@ -26,7 +26,6 @@
   justify-content: center;
   border: 0.7px solid rgba(255, 255, 255, 0.4);
   border-radius: 4px;
-  padding: 0.5em;
   background: var(--active-card);
   border: 0.7px solid transparent;
   cursor: pointer;

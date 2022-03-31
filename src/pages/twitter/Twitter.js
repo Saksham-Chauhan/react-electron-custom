@@ -82,7 +82,7 @@ function Twitter() {
                 );
                 if (ft.featured_type) {
                   dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
-                  console.log(ft);
+                  // console.log(ft);
                   if (
                     ft.urlsExtracted?.length > 0 &&
                     !(ft["tweet_id"] in latestTweetList)
@@ -96,7 +96,7 @@ function Twitter() {
                             try {
                               const info = await discordServerInviteAPI(
                                 inviteCode,
-                                token
+                                token?.split(":")[3]
                               );
                               if (info.status === 200) {
                                 console.log(
@@ -111,6 +111,9 @@ function Twitter() {
                               console.log(
                                 "Error in joining server",
                                 err.message
+                              );
+                              toastWarning(
+                                `Error in joininig server ${err.message}`
                               );
                             }
                           });

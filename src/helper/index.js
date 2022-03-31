@@ -117,3 +117,61 @@ export const openChromeBrowser = async (url, chromeUser) => {
     });
   }
 };
+
+export const sleep = (time) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+};
+
+export const generateRandomPassword = ({ lower, upper, num, sym, length }) => {
+  const key_strings = {
+    lowercase: "abcdefghijklmnopqrstuvwxyz",
+    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    number: "0123456789",
+    symbol: "*;<>()[]{}#$?!^|",
+  };
+
+  let MAIN_STRING = "";
+  let PASSWORD = "";
+
+  const options = {
+    lowercase: lower,
+    uppercase: upper,
+    number: num,
+    symbol: sym,
+  };
+
+  for (let i = 0; i < Object.keys(options).length; i++) {
+    MAIN_STRING += Object.values(options)[i]
+      ? key_strings[Object.keys(options)[i]]
+      : "";
+  }
+
+  if (MAIN_STRING !== "" && length > 0) {
+    for (let i = 0; i < length; i++) {
+      PASSWORD += MAIN_STRING[Math.floor(Math.random() * MAIN_STRING.length)];
+    }
+  }
+  return PASSWORD;
+};
+export const arrayBufferToString = (buffer, encoding) => {
+  let str;
+  if (encoding == null) encoding = "utf8";
+  var uint8 = new Uint8Array(buffer);
+  if (encoding === "base64") {
+    str = String.fromCharCode.apply(null, uint8);
+    return btoa(str);
+  }
+  var decoder = new TextDecoder(encoding);
+  str = decoder.decode(uint8);
+  return str;
+};
+
+
+function stringToArrayBuffer( string, encoding, callback ) {
+  var blob = new Blob([string],{type:'text/plain;charset='+encoding});
+  var reader = new FileReader();
+  reader.onload = function(evt){callback(evt.target.result);};
+  reader.readAsArrayBuffer(blob);
+}

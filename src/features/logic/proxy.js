@@ -9,7 +9,7 @@ import {
 
 export const addProxyGroupInList = (group) => (dispatch, getState) => {
   const currentList = fetchProxyGroupList(getState());
-  let combiner = [...currentList, group];
+  let combiner = [group, ...currentList];
   dispatch(appendProxyGroupInList(combiner));
 };
 
@@ -148,6 +148,45 @@ export const readProxyFromFile = (proxyArr) => (dispatch, getState) => {
   tempSelectedObj["proxies"] = combiner
     .map((proxy) => proxy["proxy"])
     .join("\n");
+  let afterUpdateList = tempGroupList.map((d) => {
+    if (d["id"] === tempSelectedObj["id"]) return tempSelectedObj;
+    return d;
+  });
+  dispatch(setTempStorage(tempSelectedObj));
+  dispatch(appendProxyGroupInList(afterUpdateList));
+};
+
+export const setStatusInProxy = () => (dispatch, getState) => {
+  const currentList = fetchProxyGroupList(getState());
+  const currentSelectedGroup = fetchTempStorageState(getState());
+  let tempGroupList = [...currentList];
+  let tempSelectedObj = { ...currentSelectedGroup };
+  tempSelectedObj["proxyList"] = tempSelectedObj["proxyList"].map((data) => {
+    let obj = { ...data };
+    obj["status"] = "Testing..";
+    return obj;
+  });
+  let afterUpdateList = tempGroupList.map((d) => {
+    if (d["id"] === tempSelectedObj["id"]) return tempSelectedObj;
+    return d;
+  });
+  dispatch(setTempStorage(tempSelectedObj));
+  dispatch(appendProxyGroupInList(afterUpdateList));
+};
+
+export const setStatusInSingleRow = (updateRow) => (dispatch, getState) => {
+  const currentList = fetchProxyGroupList(getState());
+  const currentSelectedGroup = fetchTempStorageState(getState());
+  let tempGroupList = [...currentList];
+  let tempSelectedObj = { ...currentSelectedGroup };
+  tempSelectedObj["proxyList"] = tempSelectedObj["proxyList"].map((data) => {
+    if (data["id"] === updateRow["id"]) {
+      let obj = { ...updateRow };
+      obj["status"] = "Testing..";
+      return obj;
+    }
+    return data;
+  });
   let afterUpdateList = tempGroupList.map((d) => {
     if (d["id"] === tempSelectedObj["id"]) return tempSelectedObj;
     return d;

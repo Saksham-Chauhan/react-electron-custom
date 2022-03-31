@@ -10,12 +10,12 @@ const persistConfig = {
   blacklist: [
     "proxyGroup",
     "discordAccount",
-    "addGmail",
     "inviteJoinerAccount",
     "inviteJoinerSetting",
     "spoofModal",
     "editProxy",
     "claimerGroup",
+    "accountChangerModal",
   ],
 };
 

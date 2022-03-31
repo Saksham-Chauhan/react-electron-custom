@@ -20,7 +20,7 @@ export const selectStyles = {
   }),
   placeholder: (styles) => ({
     ...styles,
-    color: "rgba(255, 255, 255, 0.5)",
+    color: "var(--placeholder)",
     fontSize: "13px",
     fontFamily: "Poppins",
   }),

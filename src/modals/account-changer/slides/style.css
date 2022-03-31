@@ -1,0 +1,21 @@
+/* styling for server leaver  */
+.servre-leaver-toggler {
+  color: var(--primary);
+  display: flex;
+}
+.servre-leaver-toggler > .all {
+  margin-left: 2em;
+  margin-right: 1em;
+}
+/* styling for nick name changer  */
+.nickname-row {
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+.refresh {
+  margin-left: auto;
+  position: absolute;
+  right: 0;
+  top: -0.5em;
+}

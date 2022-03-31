@@ -137,6 +137,7 @@ const DashboardChart = () => {
 
       let date = new Date();
       let day = date.getDay() - 1;
+      // let day = 0;
       if (day > lastDate || (lastDate === 6 && day === 0)) {
         dispatch(addlastWeekLink(linkOpnerData));
         dispatch(addlastWeekInvite(inviteJoinerData));

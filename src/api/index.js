@@ -1,7 +1,8 @@
 import axios from "axios";
+import { arrayBufferToString } from "../helper";
 import { toastSuccess, toastWarning } from "../toaster";
 
-const BASE_URL = "https://discord.com/api/v9/";
+export const BASE_URL = "https://discord.com/api/v9/";
 
 export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
   await axios({
@@ -168,4 +169,14 @@ export const directDiscordJoinAPI = async (
   } catch (error) {
     return null;
   }
+};
+
+export const generateRandomAvatar = async (
+  api = "https://picsum.photos/50/50"
+) => {
+  const arrayBuffer = await fetch(api).then(function (response) {
+    return response.arrayBuffer();
+  });
+  const str = arrayBufferToString(arrayBuffer, "base64");
+  return "data:image/jpeg;base64," + str;
 };

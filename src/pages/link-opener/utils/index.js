@@ -111,8 +111,6 @@ export const handleWebhook = async (
   safeMode,
   delay = 300
 ) => {
-  //console.log("safeMode = ", safeMode);
-  console.log(delay);
   if (safeMode) {
     setTimeout(() => {
       webHookStart(webhook, user, data);

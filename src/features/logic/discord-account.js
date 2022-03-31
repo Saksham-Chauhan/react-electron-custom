@@ -25,7 +25,7 @@ export const addDiscordAccountInList = (account) => (dispatch, getState) => {
   let tempCurrentAccount = [...currentAccountList];
   let tempAccount = { ...account };
   tempAccount["id"] = generateId();
-  let combiner = [...tempCurrentAccount, tempAccount];
+  let combiner = [tempAccount, ...tempCurrentAccount];
   dispatch(appendDiscordAccount(combiner));
 };
 
@@ -70,7 +70,7 @@ export const addKeywordInList = (data) => (dispatch, getState) => {
     obj["id"] = generateId();
     obj["label"] = word;
     obj["value"] = word;
-    let combiner = [...tempCurrentList, obj];
+    let combiner = [obj, ...tempCurrentList];
     dispatch(appendKeywordInArrayList({ list: combiner, key: "linkOpener" }));
   }
 };
@@ -94,7 +94,7 @@ export const addChannelInList = (data) => (dispatch, getState) => {
     obj["id"] = generateId();
     obj["label"] = word;
     obj["value"] = word;
-    let combiner = [...tempCurrentList, obj];
+    let combiner = [obj, ...tempCurrentList];
     dispatch(appendChannelInArrayList({ list: combiner, key: "linkOpener" }));
   } else {
     const currentList = fetchIJChannelList(getState());
@@ -103,7 +103,7 @@ export const addChannelInList = (data) => (dispatch, getState) => {
     obj["id"] = generateId();
     obj["label"] = word;
     obj["value"] = word;
-    let combiner = [...tempCurrentList, obj];
+    let combiner = [obj, ...tempCurrentList];
     dispatch(appendChannelInArrayList({ list: combiner, key: "inviteJoiner" }));
   }
 };
@@ -128,7 +128,7 @@ export const addClaimerAccountInList = (account) => (dispatch, getState) => {
   let tempCurrentAccount = [...currentAccountList];
   let newAccount = { ...account };
   newAccount["id"] = generateId();
-  let combiner = [...tempCurrentAccount, newAccount];
+  let combiner = [newAccount, ...tempCurrentAccount];
   dispatch(appendClaimerDiscordAccount(combiner));
 };
 

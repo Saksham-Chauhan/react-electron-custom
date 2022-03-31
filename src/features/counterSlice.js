@@ -8,7 +8,7 @@ import { settingInitialState } from "./initial-state/setting";
 import { initialUserState } from "./initial-state/user-initial-state";
 import { DashboardState } from "./initial-state/dashboard";
 import { inviteJoinerInitialState } from "./initial-state/invite-joiner";
-
+import { AccChangerInitialState } from "./initial-state/acc-changer";
 const initialState = {
   tempStorage: {},
   editStorage: {},
@@ -20,6 +20,7 @@ const initialState = {
   ...initialUserState,
   ...DashboardState,
   ...inviteJoinerInitialState,
+  ...AccChangerInitialState,
   modals: {
     proxyGroup: false,
     discordAccount: false,
@@ -30,6 +31,7 @@ const initialState = {
     editProxy: false,
     claimerGroup: false,
     dashboardModal: false,
+    accountChangerModal: false,
   },
 };
 
@@ -199,6 +201,12 @@ export const counterSlice = createSlice({
     setSelectedClaimerGroup: (state, action) => {
       state.selectedInviteClaimerGroup = action.payload;
     },
+    setSelctedAccChangerCard: (state, action) => {
+      state.selectedAccChangerType = action.payload;
+    },
+    setAccountChangerList: (state, action) => {
+      state.accountOptionList = action.payload;
+    },
   },
 });
 
@@ -249,6 +257,8 @@ export const {
   setSelectedClaimerTokenIJ,
   appendClaimerDiscordAccount,
   appendInviteJoinerAccount,
+  setSelctedAccChangerCard,
+  setAccountChangerList,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -374,3 +384,11 @@ export const fetchSpoof = (state) => state[STATE_KEY].spoof;
 // INVITE JOINER;
 export const fetchInviteJoinerListState = (state) =>
   state[STATE_KEY].inviteJoinerAccount;
+
+// ACC CHNAGER
+export const fetchAccountChangerModalState = (state) =>
+  state[STATE_KEY].modals.accountChangerModal;
+export const fetchSelectedAccChangerCard = (state) =>
+  state[STATE_KEY].selectedAccChangerType;
+export const fetchAccChangerListState = (state) =>
+  state[STATE_KEY].accountOptionList;

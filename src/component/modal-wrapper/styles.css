@@ -7,7 +7,6 @@
   background: transparent;
   z-index: 10;
   backdrop-filter: blur(2.5px);
-
 }
 .modal-inner {
   position: absolute;
@@ -22,7 +21,6 @@
   background-repeat: no-repeat;
   background-position: 95% 30px;
   background-blend-mode: overlay;
-
 }
 
 /* modal title css */
@@ -60,4 +58,12 @@
 }
 .modal-cancel-btn.submit > span {
   color: var(--primary);
+}
+/* flex css */
+.modal-flex-field-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.half-flex-field {
+  width: 49%;
 }
