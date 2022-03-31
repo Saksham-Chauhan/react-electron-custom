@@ -13,12 +13,15 @@ const richPresence = require("discord-rich-presence")("938338403106320434");
 const testNetworkSpeed = new NetworkSpeed();
 const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
-const fs = require("fs");
 const { download } = require("electron-dl");
+var str2ab = require('string-to-arraybuffer')
 
 let win = null;
 let mainWindow = null;
 let splash = null;
+
+const DEBUGGER_CHANNEL = "debugger"
+
 
 // AUTH WINDOW CREATION
 function createAuthWindow() {
@@ -58,7 +61,7 @@ function createAuthWindow() {
         message: "Login Failed",
         detail: "You are not allowed to login",
       };
-      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+      dialog.showMessageBox(null, options, (response, checkboxChecked) => { });
     }
   });
   win.on("authenticated", () => {
@@ -116,6 +119,7 @@ function createWindow() {
     },
     titleBarStyle: "customButtonsOnHover",
   });
+
   if (isDev) {
     mainWindow.webContents.openDevTools();
   } else {
@@ -480,30 +484,33 @@ ipcMain.handle("get-speed", async () => {
   return { download, upload };
 });
 
-ipcMain.on("read-array", async (_, array) => {
-  console.log("triged 1");
-  const folderPath = path.join(__dirname, "../../export");
-  var files = fs.readdirSync(folderPath);
-  for (let i = 0; i < files.length; i++) {
-    fs.rmSync(`${folderPath}/${files[i]}`);
+
+const debugSendToRendrer = (log) => {
+  let win = mainWindow || global.mainWindow
+  if (win) {
+    win.webContents.send(DEBUGGER_CHANNEL, log)
   }
+}
+
+
+ipcMain.on("read-array", async (event, array) => {
+  debugSendToRendrer("Ready to read array", array)
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
-  const filePath = `${folderPath}/${fileName}.csv`;
-  await csv.toDisk(filePath);
-  fs.readFile(filePath, async (err, data) => {
-    console.log("triged 2");
-    if (!err) {
-      const url = `data:text/csv;base64,${new Buffer.from(data).toString(
-        "base64"
-      )}`;
-      await downloadCsvFileDialog(`${fileName}.csv`, url);
-    }
-  });
+  debugSendToRendrer(csv)
+  const data = await csv.toString()
+  debugSendToRendrer(data)
+  const str = str2ab(data);
+  debugSendToRendrer(str)
+  const url = `data:text/csv;base64,${new Buffer.from(str).toString(
+    "base64"
+  )}`;
+  debugSendToRendrer(url)
+  await downloadCsvFileDialog(`${fileName}.csv`, url);
+
 });
 
 const downloadCsvFileDialog = async (fileName, url) => {
-  console.log("triged 3");
   const options = {
     buttons: ["Yes", "No"],
     defaultId: 0,
@@ -513,7 +520,6 @@ const downloadCsvFileDialog = async (fileName, url) => {
   };
   const dialogResult = await dialog.showMessageBox(mainWindow, options);
   if (dialogResult.response === 0) {
-    console.log("triged 4");
     await download(mainWindow, url, {
       saveAs: true,
     });

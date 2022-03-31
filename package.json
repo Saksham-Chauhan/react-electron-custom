@@ -44,6 +44,7 @@
     "react-useanimations": "^2.0.8",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
+    "string-to-arraybuffer": "^1.0.2",
     "tesseract.js": "^2.1.5",
     "twit": "^2.2.11",
     "user-agents": "^1.0.943",

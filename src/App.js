@@ -45,6 +45,7 @@ import {
   decodeUser,
   errorToaster,
   spooferToaster,
+  debuggerChannnel,
   updateNotAvailable,
   proxyTestResultListener,
 } from "./helper/electron-bridge";
@@ -116,6 +117,10 @@ function App() {
       toastInfo("Update not available or You are already to update 😍 🤩")
     );
     errorToaster((err) => toastWarning(err));
+
+    if (process.env.NODE_ENV === "development") {
+      debuggerChannnel()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
 
