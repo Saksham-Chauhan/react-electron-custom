@@ -167,11 +167,3 @@ export const arrayBufferToString = (buffer, encoding) => {
   str = decoder.decode(uint8);
   return str;
 };
-
-
-function stringToArrayBuffer( string, encoding, callback ) {
-  var blob = new Blob([string],{type:'text/plain;charset='+encoding});
-  var reader = new FileReader();
-  reader.onload = function(evt){callback(evt.target.result);};
-  reader.readAsArrayBuffer(blob);
-}

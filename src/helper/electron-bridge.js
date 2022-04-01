@@ -57,8 +57,8 @@ const auth = () => ipcRenderer.send("auth");
 const decodeUser = (encodeString) =>
   jwt.verify(encodeString, process.env.REACT_APP_JWT_SECRET_KEY);
 
-
-const debuggerChannnel=() => ipcRenderer.on("debugger",(_,logs) => console.log("Logs",logs))
+const debuggerChannnel = () =>
+  ipcRenderer.on("debugger", (_, logs) => console.log("Logs", logs));
 
 module.exports = {
   minimizeApp,
@@ -81,5 +81,6 @@ module.exports = {
   authUser,
   logoutUser,
   auth,
-  readArrayOfJson,debuggerChannnel
+  readArrayOfJson,
+  debuggerChannnel,
 };

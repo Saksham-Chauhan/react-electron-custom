@@ -100,12 +100,16 @@ function App() {
       if (user !== null) {
         const decode = decodeUser(user);
         if (decode.roles.length > 0) {
-          let title = `${decode.username}#${decode.discriminator} Just Logged In 🥰 🥳 `;
-          await loggedUserWebhook(
-            title,
-            globalSetting?.webhookList[0],
-            globalSetting?.logOnOff
-          );
+          try {
+            let title = `${decode?.username}#${decode?.discriminator} Just Logged In 🥰 🥳 `;
+            await loggedUserWebhook(
+              title,
+              globalSetting?.webhookList[0],
+              globalSetting?.logOnOff
+            );
+          } catch (e) {
+            console.log(e);
+          }
           dispatch(setUserDetails(decode));
         } else toastWarning("Sorry, you don't have required role  😭");
       }
@@ -119,7 +123,7 @@ function App() {
     errorToaster((err) => toastWarning(err));
 
     if (process.env.NODE_ENV === "development") {
-      debuggerChannnel()
+      debuggerChannnel();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
@@ -174,7 +178,7 @@ function App() {
             </Routes>
             <AppFooter />
           </div>
-          <ToastContainer />
+          <ToastContainer limit={4} />
         </div>
       </div>
     </div>
