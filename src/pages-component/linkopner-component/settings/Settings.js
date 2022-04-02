@@ -151,12 +151,14 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
           isCustomLabel={true}
           onChange={handleSelectedChrome}
           onMenuOpen={handleChromeMenuOpen}
-          isSelect={true}
           selectOptions={chromeList}
           placeholderText={
             chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
           }
           value={chromeList.filter((d) => d["id"] === selectedChrome?.id)}
+          isSelect={chromeList.length > 0}
+          disabled={!chromeList.length > 0}
+          navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
         />
       </div>
       <AppSpacer spacer={35} />

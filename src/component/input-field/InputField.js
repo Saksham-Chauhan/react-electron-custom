@@ -21,7 +21,7 @@ function InputField({
   ...props
 }) {
   return (
-    <div className="input-field-container">
+    <div className="input-field-container" onClick={props.navigate}>
       {isCustomLabel && <label className="custom-label">{fieldTitle}</label>}
       {!hideLabel && <label>{fieldTitle}</label>}
       {!isSelect ? (

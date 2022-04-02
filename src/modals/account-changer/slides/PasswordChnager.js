@@ -15,7 +15,10 @@ function PasswordChnager({ ...props }) {
           />
         </div>
         <div className="half-flex-field">
-          <LabelWithToolTip labelText="Common Password (Optional)" />
+          <LabelWithToolTip
+            toolTopText="Enter password"
+            labelText="Common Password (Optional)"
+          />
           <AppInputField
             {...props}
             name="commonPassword"

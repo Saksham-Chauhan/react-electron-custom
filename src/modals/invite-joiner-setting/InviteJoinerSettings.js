@@ -273,175 +273,187 @@ function InviteJoinerSettings() {
 
   return (
     <ModalWrapper style={{ width: "52%" }}>
-      <div className="modal-tilte">
-        <h2>Invite Joiner</h2>
-      </div>
-      <AppSpacer spacer={30} />
-      <div className="joiner-custom-input">
-        <AppInputField
-          fieldTitle="Invite Code"
-          onChange={handleInviteChange}
-          placeholderText="Enter Invite Code"
-          value={setting.inviteCode}
-          onCopy={handleInviteChange}
-        />
-      </div>
-      <AppSpacer spacer={10} />
-      <div className="direct-join-column-wrapper">
-        <div className="direct-join-column">
-          <AppInputField
-            fieldTitle="Token Group"
-            placeholderText={
-              claimerList.length > 0 ? "Select Token Group" : "Add Token Group"
-            }
-            selectOptions={makeClaimerSelectOption(claimerList)}
-            isSelect={true}
-            onChange={handleClaimer}
-            onMenuOpen={handleClaimerMenuOpen}
-            value={getClaimerValue(claimerList, setting.claimerGroup)}
-          />
+      <div
+        onClick={(e) => {
+          e.preventDefault();
+          setIsEmoji(false);
+        }}
+      >
+        <div className="modal-tilte">
+          <h2>Invite Joiner</h2>
         </div>
-        <div className="direct-join-column">
+        <AppSpacer spacer={30} />
+        <div className="joiner-custom-input">
           <AppInputField
-            fieldTitle="Proxy Group"
-            placeholderText={
-              proxyGroupList.length > 0
-                ? "Select Proxy Group"
-                : "Add Proxy group"
-            }
-            isSelect={true}
-            selectOptions={makeProxyOptions()}
-            onChange={handleSelectProxyGroup}
-            value={getProxyGroupValue()}
-            onMenuOpen={handleProxyMenuOpen}
+            fieldTitle="Invite Code"
+            onChange={handleInviteChange}
+            placeholderText="Enter Invite Code"
+            value={setting.inviteCode}
+            onCopy={handleInviteChange}
           />
-        </div>
-        <div className="direct-join-column">
-          <AppInputField
-            fieldTitle="Delay"
-            type="number"
-            min={MIN_SAFE_DELAY_VALUE}
-            max={MAX_SAFE_DELAY_VALUE}
-            placeholderText="Enter Delay"
-            onChange={handleDelayChange}
-            value={setting.safeDelay === 0 ? "" : setting.safeDelay}
-          />
-        </div>
-      </div>
-      <AppSpacer spacer={10} />
-      <div className="joiner-custom-input">
-        <label>React</label>
-        <AppSpacer spacer={5} />
-        <div className="joiner-custom-toggle">
-          <AppToggler
-            id="invite-joiner-react-setting-mode"
-            checked={setting.isReact}
-            onChange={handleToggle}
-            name="isReact"
-          />
-          <label>Turn {!setting.isReact ? "ON" : "OFF"}</label>
         </div>
         <AppSpacer spacer={10} />
-        {setting.isReact && (
-          <div className={`react-joiner-setting-section `}>
-            <div>
-              <AppInputField
-                fieldTitle="Channel ID"
-                placeholderText="Enter Channel ID"
-                onChange={handleReactChange}
-                onCopy={handleReactChange}
-                name="channelId"
-                value={setting.reactSetting.channelId}
-              />
-            </div>
-            <div>
-              <AppInputField
-                fieldTitle="Message ID"
-                onChange={handleReactChange}
-                onCopy={handleReactChange}
-                name="messageId"
-                value={setting.reactSetting.messageId}
-                placeholderText="Enter Message ID"
-              />
-            </div>
-            <div className="emoji-picker-wrapper">
-              <AppInputField
-                fieldTitle="Emoji"
-                placeholderText="Enter Emoji"
-                onChange={handleReactChange}
-                onCopy={handleReactChange}
-                onClick={handleEmojiState}
-                name="emojiValue"
-                value={setting.reactSetting.emojiValue}
-              />
-              {isEmoji && (
-                <div className="emoji-tray-picker">
-                  <Picker onSelect={addEmoji} />
-                </div>
-              )}
-            </div>
+        <div className="direct-join-column-wrapper">
+          <div className="direct-join-column">
+            <AppInputField
+              fieldTitle="Token Group"
+              placeholderText={
+                claimerList.length > 0
+                  ? "Select Token Group"
+                  : "Add Token Group"
+              }
+              selectOptions={makeClaimerSelectOption(claimerList)}
+              isSelect={true}
+              onChange={handleClaimer}
+              onMenuOpen={handleClaimerMenuOpen}
+              value={getClaimerValue(claimerList, setting.claimerGroup)}
+            />
           </div>
-        )}
-      </div>
-      <AppSpacer spacer={10} />
-      <div className="joiner-custom-input">
-        <LabelWithToolTip
-          delayHide={1500}
-          isCustomToolTip={true}
-          labelText="Accept Rules"
-        >
-          <p className="custom-tooltip-text">Accept Format</p>
-          <p
-            className="custom-tooltip-text link"
-            onClick={() =>
-              window.open(
-                "https://guide.kyrotools.in/#/ExampleForReactOnDirectInvite"
-              )
-            }
+          <div className="direct-join-column">
+            <AppInputField
+              fieldTitle="Proxy Group"
+              placeholderText={
+                proxyGroupList.length > 0
+                  ? "Select Proxy Group"
+                  : "Add Proxy group"
+              }
+              isSelect={true}
+              selectOptions={makeProxyOptions()}
+              onChange={handleSelectProxyGroup}
+              value={getProxyGroupValue()}
+              onMenuOpen={handleProxyMenuOpen}
+            />
+          </div>
+          <div className="direct-join-column">
+            <AppInputField
+              fieldTitle="Delay"
+              type="number"
+              min={MIN_SAFE_DELAY_VALUE}
+              max={MAX_SAFE_DELAY_VALUE}
+              placeholderText="Enter Delay"
+              onChange={handleDelayChange}
+              value={setting.safeDelay === 0 ? "" : setting.safeDelay}
+            />
+          </div>
+        </div>
+        <AppSpacer spacer={10} />
+        <div className="joiner-custom-input">
+          <label>React</label>
+          <AppSpacer spacer={5} />
+          <div className="joiner-custom-toggle">
+            <AppToggler
+              id="invite-joiner-react-setting-mode"
+              checked={setting.isReact}
+              onChange={handleToggle}
+              name="isReact"
+            />
+            <label>Turn {!setting.isReact ? "ON" : "OFF"}</label>
+          </div>
+          <AppSpacer spacer={10} />
+          {setting.isReact && (
+            <div className={`react-joiner-setting-section `}>
+              <div>
+                <AppInputField
+                  fieldTitle="Channel ID"
+                  placeholderText="Enter Channel ID"
+                  onChange={handleReactChange}
+                  onCopy={handleReactChange}
+                  name="channelId"
+                  value={setting.reactSetting.channelId}
+                />
+              </div>
+              <div>
+                <AppInputField
+                  fieldTitle="Message ID"
+                  onChange={handleReactChange}
+                  onCopy={handleReactChange}
+                  name="messageId"
+                  value={setting.reactSetting.messageId}
+                  placeholderText="Enter Message ID"
+                />
+              </div>
+              <div className="emoji-picker-wrapper">
+                <AppInputField
+                  fieldTitle="Emoji"
+                  placeholderText="Enter Emoji"
+                  onChange={handleReactChange}
+                  onCopy={handleReactChange}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEmojiState();
+                  }}
+                  name="emojiValue"
+                  value={setting.reactSetting.emojiValue}
+                />
+                {isEmoji && (
+                  <div className="emoji-tray-picker">
+                    <Picker onSelect={addEmoji} />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+        <AppSpacer spacer={10} />
+        <div className="joiner-custom-input">
+          <LabelWithToolTip
+            delayHide={1500}
+            isCustomToolTip={true}
+            labelText="Accept Rules"
           >
-            For more
-          </p>
-        </LabelWithToolTip>
-        <AppSpacer spacer={5} />
-        <div className="joiner-custom-toggle">
-          <AppToggler
-            id="invite-joiner-accept-rule"
-            checked={setting.isAcceptRule}
-            onChange={handleToggle}
-            name="isAcceptRule"
-          />
-          <label>Turn {!setting.isAcceptRule ? "ON" : "OFF"}</label>
-        </div>
-        <AppSpacer spacer={10} />
-        {setting.isAcceptRule && (
-          <div className={`accept-joiner-setting-section `}>
-            <AppInputField
-              placeholderText="Enter guild ID"
-              fieldTitle="Guild ID"
-              value={setting.acceptRule.guildID}
-              onChange={handleGuildChange}
-              onCopy={handleGuildChange}
+            <p className="custom-tooltip-text">Accept Format</p>
+            <p
+              className="custom-tooltip-text link"
+              onClick={() =>
+                window.open(
+                  "https://guide.kyrotools.in/#/ExampleForReactOnDirectInvite"
+                )
+              }
+            >
+              For more
+            </p>
+          </LabelWithToolTip>
+          <AppSpacer spacer={5} />
+          <div className="joiner-custom-toggle">
+            <AppToggler
+              id="invite-joiner-accept-rule"
+              checked={setting.isAcceptRule}
+              onChange={handleToggle}
+              name="isAcceptRule"
             />
-            <AppSpacer spacer={10} />
-            <AppInputField
-              isMulti={true}
-              multiHeight="80px"
-              fieldTitle="Accept Format"
-              onCopy={handleAcceptRuleChange}
-              onChange={handleAcceptRuleChange}
-              placeholderText="Enter Accept Format"
-              value={setting.acceptRule.acceptRuleValue}
-            />
+            <label>Turn {!setting.isAcceptRule ? "ON" : "OFF"}</label>
           </div>
-        )}
-      </div>
-      <AppSpacer spacer={30} />
-      <div className="modal-control-btns">
-        <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-          <span>Cancel</span>
+          <AppSpacer spacer={10} />
+          {setting.isAcceptRule && (
+            <div className={`accept-joiner-setting-section `}>
+              <AppInputField
+                placeholderText="Enter guild ID"
+                fieldTitle="Guild ID"
+                value={setting.acceptRule.guildID}
+                onChange={handleGuildChange}
+                onCopy={handleGuildChange}
+              />
+              <AppSpacer spacer={10} />
+              <AppInputField
+                isMulti={true}
+                multiHeight="80px"
+                fieldTitle="Accept Format"
+                onCopy={handleAcceptRuleChange}
+                onChange={handleAcceptRuleChange}
+                placeholderText="Enter Accept Format"
+                value={setting.acceptRule.acceptRuleValue}
+              />
+            </div>
+          )}
         </div>
-        <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>Join</span>
+        <AppSpacer spacer={30} />
+        <div className="modal-control-btns">
+          <div onClick={handleCloseModal} className="modal-cancel-btn btn">
+            <span>Cancel</span>
+          </div>
+          <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
+            <span>Join</span>
+          </div>
         </div>
       </div>
     </ModalWrapper>

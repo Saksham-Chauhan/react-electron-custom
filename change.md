@@ -19,5 +19,12 @@
 # v0.8.0
 
 - Changed all universal webhook.
-- Toster limit set.
+- Toaster limit set.
 - Login and Logout issue fixed.
+
+# v0.8.0
+
+- Tool tip text changed.
+- Dashboard buttons order changed.
+- Fixed dropdown issue when list empty.
+- Toaster text changed in IJ page.

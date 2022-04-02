@@ -81,7 +81,6 @@ function AddSpoofer() {
       return { ...pre, proxyName: label, proxyValue: value };
     });
   };
-
   /**
    * function make option for select
    */
@@ -145,7 +144,6 @@ function AddSpoofer() {
           />
           <AppInputField
             selectOptions={makeProxyOptions()}
-            isSelect={true}
             hideLabel={true}
             onChange={handleProxySelect}
             placeholderText={
@@ -154,6 +152,11 @@ function AddSpoofer() {
                 : "Add Proxy Group"
             }
             onMenuOpen={handleProxyMenuOpen}
+            isSelect={proxyGroupList.length > 0 ? true : false}
+            disabled={proxyGroupList.length > 0 ? false : true}
+            navigate={
+              proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+            }
           />
         </div>
         <div className="spoofer-counter">

@@ -64,13 +64,11 @@ function Settings({
   const handleIJmonitor = () => {
     if (accountList.length > 0) {
       if (Object.keys(selectedToken).length > 0) {
-        if (keywordList.length > 0) {
-          if (Object.keys(selectedClaimerGroup).length > 0) {
-            if (Object.keys(selectedProxyGroup).length > 0) {
-              dispatch(toggleIJMonitor());
-            } else toastWarning("Select Proxy Group");
-          } else toastWarning("Select Token Group");
-        } else toastWarning("Enter some channel to monitor");
+        if (Object.keys(selectedClaimerGroup).length > 0) {
+          if (Object.keys(selectedProxyGroup).length > 0) {
+            dispatch(toggleIJMonitor());
+          } else toastWarning("Select Proxy Group");
+        } else toastWarning("Select Token Group");
       } else toastWarning("Select Invite Joiner account");
     } else toastWarning("Create some Invite Joiner account");
   };

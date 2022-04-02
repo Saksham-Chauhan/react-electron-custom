@@ -16,6 +16,7 @@ function UserNameChanger({ ...props }) {
         </div>
         <div className="half-flex-field">
           <LabelWithToolTip
+            toolTopText="Enter user name"
             labelText="Username (Optional)"
             parentStyle={{ style: { marginBottom: "10px" } }}
           />
