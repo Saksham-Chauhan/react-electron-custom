@@ -36,7 +36,7 @@ import { discordServerInviteAPI } from "../../api";
 
 const open = window.require("open");
 
-const TWEET_FETCH_TIME = 100;
+const TWEET_FETCH_TIME = 1000;
 
 function Twitter() {
   const dispatch = useDispatch();
@@ -81,16 +81,13 @@ function Twitter() {
                   webhookSetting,
                   latestTweetList
                 );
+
                 if (ft.featured_type) {
-                  console.log(ft["tweet_id"]);
                   dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
                   if (
                     ft.urlsExtracted?.length > 0 &&
                     !(ft["tweet_id"] in latestTweetList)
                   ) {
-                    for (let url of ft.urlsExtracted) {
-                      console.log("sDFs", url);
-                    }
                     for (let url of ft.urlsExtracted) {
                       let inviteCode = tweetHelper.isDiscordInvite(url);
                       if (inviteCode) {
