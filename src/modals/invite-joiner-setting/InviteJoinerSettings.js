@@ -133,7 +133,6 @@ function InviteJoinerSettings() {
   };
 
   const handleReactChange = (e) => {
-    e.preventDefault();
     const { value, name } = e.target;
     setSetting((pre) => {
       return { ...pre, reactSetting: { ...pre.reactSetting, [name]: value } };
@@ -142,13 +141,13 @@ function InviteJoinerSettings() {
 
   const handleToggle = (e) => {
     const { name, checked } = e.target;
+    console.log(name, checked);
     setSetting((pre) => {
       return { ...pre, [name]: checked };
     });
   };
 
   const handleInviteChange = (e) => {
-    e.preventDefault();
     const { value } = e.target;
     setSetting((pre) => {
       return { ...pre, inviteCode: value };
@@ -156,7 +155,6 @@ function InviteJoinerSettings() {
   };
 
   const handleAcceptRuleChange = (e) => {
-    e.preventDefault();
     const { value } = e.target;
     setSetting((pre) => {
       return {
@@ -193,22 +191,23 @@ function InviteJoinerSettings() {
   };
 
   const handleSubmit = () => {
-    const result = checkValidation();
-    if (result) {
-      const claimerArr = selectedClaimerGroup["value"]?.split("\n");
-      claimerArr.forEach(async (token) => {
-        const response = await directDiscordJoinAPI(
-          setting.proxyGroup,
-          setting.inviteCode,
-          token,
-          setting
-        );
-        if (response === null) {
-          toastWarning("Something went wrong 🥲");
-        }
-      });
-      handleCloseModal();
-    }
+    console.log(setting);
+    // const result = checkValidation();
+    // if (result) {
+    //   const claimerArr = selectedClaimerGroup["value"]?.split("\n");
+    //   claimerArr.forEach(async (token) => {
+    //     const response = await directDiscordJoinAPI(
+    //       setting.proxyGroup,
+    //       setting.inviteCode,
+    //       token,
+    //       setting
+    //     );
+    //     if (response === null) {
+    //       toastWarning("Something went wrong 🥲");
+    //     }
+    //   });
+    //   handleCloseModal();
+    // }
   };
 
   const handleClaimerMenuOpen = () => {
@@ -233,9 +232,9 @@ function InviteJoinerSettings() {
   };
 
   const getProxyGroupValue = () => {
-    if (Object.keys(selectedProxyGroup).length > 0) {
+    if (Object.keys(setting.proxyGroup).length > 0) {
       const result = proxyGroupList.filter(
-        (group) => group["id"] === selectedProxyGroup["id"]
+        (group) => group["id"] === setting.proxyGroup["id"]
       );
       if (result.length > 0) {
         return [
@@ -246,9 +245,7 @@ function InviteJoinerSettings() {
           },
         ];
       }
-    }
-
-    return [];
+    } else return [];
   };
 
   const handleProxyMenuOpen = () => {
@@ -318,7 +315,7 @@ function InviteJoinerSettings() {
                   : "Add Proxy group"
               }
               isSelect={true}
-              selectOptions={makeProxyOptions()}
+              selectOptions={makeProxyOptions(proxyGroupList)}
               onChange={handleSelectProxyGroup}
               value={getProxyGroupValue()}
               onMenuOpen={handleProxyMenuOpen}

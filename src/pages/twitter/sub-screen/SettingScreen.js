@@ -96,7 +96,6 @@ function SettingScreen({
       navigate(RoutePath.setting, { replace: true });
     }
   };
-  console.log(claimerList, selectedClaimer);
 
   return (
     <div>
