@@ -208,10 +208,12 @@ function Settings({
               claimerList.length > 0 ? "Select Token Group" : "Add Token Group"
             }
             selectOptions={makeClaimerSelectOption(claimerList)}
-            isSelect={true}
             onChange={handleClaimer}
             onMenuOpen={handleClaimerMenuOpen}
             value={getClaimerValue(claimerList, selectedClaimerGroup)}
+            isSelect={claimerList.length > 0 ? true : false}
+            disabled={claimerList.length > 0 ? false : true}
+            navigate={claimerList.length > 0 ? () => {} : handleClaimerMenuOpen}
           />
         </div>
         <div className="half-section">
@@ -224,11 +226,15 @@ function Settings({
                 ? "Select Proxy Group"
                 : "Add Proxy group"
             }
-            isSelect={true}
             selectOptions={makeProxyOptions(proxyGroupList)}
             onChange={handleSelectProxyGroup}
             value={getProxyGroupValue()}
             onMenuOpen={handleProxyMenuOpen}
+            isSelect={proxyGroupList.length > 0 ? true : false}
+            disabled={proxyGroupList.length > 0 ? false : true}
+            navigate={
+              proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+            }
           />
         </div>
         <div className="half-section delay">
