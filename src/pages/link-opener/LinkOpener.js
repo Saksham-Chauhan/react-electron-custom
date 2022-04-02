@@ -33,6 +33,7 @@ import { toastInfo, toastWarning } from "../../toaster";
 import { linkOpenerWebhook } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
 
+const open = window.require("open");
 const { Client } = window.require("discord.js-selfbot");
 
 class LinkOpener extends React.PureComponent {
@@ -71,16 +72,28 @@ class LinkOpener extends React.PureComponent {
               if (settingOption.playSound) {
                 this.playSound();
               }
-              if (selectedChrome !== null) {
-                if (Object.keys(selectedChrome).length > 0) {
-                  await openChromeBrowser(content, selectedChrome);
+              if (Object.keys(selectedChrome).length > 0) {
+                if (selectedChrome) {
+                  await open(content, {
+                    app: {
+                      name: open.apps.chrome,
+                      arguments: [
+                        `--profile-directory=${selectedChrome["value"]}`,
+                      ],
+                    },
+                  });
                 }
               } else {
-                await openChromeBrowser(content, null);
+                await open(content, {
+                  app: {
+                    name: open.apps.chrome,
+                    arguments: [`--profile-directory=Guest`],
+                  },
+                });
               }
               const date = new Date().toUTCString();
               this.props.handleSendLog(content, msgID, date);
-              if (!!webhookList[0]) {
+              if (webhookList.length > 0) {
                 await linkOpenerWebhook(
                   content,
                   user.username,
