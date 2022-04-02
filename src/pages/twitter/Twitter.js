@@ -33,7 +33,8 @@ import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { appendNewTweetInList } from "../../features/logic/twitter";
 import { discordServerInviteAPI } from "../../api";
-import { openChromeBrowser } from "../../helper";
+
+const open = window.require("open");
 
 const TWEET_FETCH_TIME = 100;
 
@@ -81,11 +82,15 @@ function Twitter() {
                   latestTweetList
                 );
                 if (ft.featured_type) {
+                  console.log(ft["tweet_id"]);
                   dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
                   if (
                     ft.urlsExtracted?.length > 0 &&
                     !(ft["tweet_id"] in latestTweetList)
                   ) {
+                    for (let url of ft.urlsExtracted) {
+                      console.log("sDFs", url);
+                    }
                     for (let url of ft.urlsExtracted) {
                       let inviteCode = tweetHelper.isDiscordInvite(url);
                       if (inviteCode) {
@@ -120,9 +125,23 @@ function Twitter() {
                       } else {
                         if (twitterSetting?.startAutoLinkOpener) {
                           if (Object.keys(selectedChrome).length > 0) {
-                            await openChromeBrowser(url, selectedChrome);
+                            if (selectedChrome) {
+                              await open(url, {
+                                app: {
+                                  name: open.apps.chrome,
+                                  arguments: [
+                                    `--profile-directory=${selectedChrome["value"]}`,
+                                  ],
+                                },
+                              });
+                            }
                           } else {
-                            await openChromeBrowser(url, null);
+                            await open(url, {
+                              app: {
+                                name: open.apps.chrome,
+                                arguments: [`--profile-directory=Guest`],
+                              },
+                            });
                           }
                         }
                       }

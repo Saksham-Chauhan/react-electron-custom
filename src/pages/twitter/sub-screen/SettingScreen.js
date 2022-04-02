@@ -96,6 +96,7 @@ function SettingScreen({
       navigate(RoutePath.setting, { replace: true });
     }
   };
+  console.log(claimerList, selectedClaimer);
 
   return (
     <div>
@@ -212,12 +213,14 @@ function SettingScreen({
               placeholderText={
                 chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
               }
-              value={chromeList.filter((d) => d["id"] === selectedChrome["id"])}
-              isSelect={claimerList.length > 0 ? true : false}
-              disabled={claimerList.length > 0 ? false : true}
-              navigate={
-                claimerList.length > 0 ? () => {} : handleChromeMenuOpen
+              value={
+                chromeList.length > 0
+                  ? chromeList.filter((d) => d["id"] === selectedChrome["id"])
+                  : ""
               }
+              isSelect={chromeList.length > 0}
+              disabled={chromeList.length > 0}
+              navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
             />
           </div>
         </div>
