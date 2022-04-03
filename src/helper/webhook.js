@@ -69,7 +69,7 @@ export const inviteJoinerTest = async (
         thumbnail: THUMB_NAIL,
         footer: FOOTER,
         author: {
-          name: `Link opened by ${userName}`,
+          name: `Invite joined by ${userName}`,
           icon_url: avatarProfile,
         },
       },
@@ -120,7 +120,7 @@ export const linkOpenerWebhook = async (
         color: 857138,
         thumbnail: THUMB_NAIL,
         author: {
-          name: `Invite joined by ${userName}`,
+          name: `Link open by ${userName}`,
           icon_url: avatarProfile,
         },
         footer: FOOTER,
