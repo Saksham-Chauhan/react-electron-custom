@@ -181,12 +181,16 @@ function AccountChanger() {
             }
             onMenuOpen={handleClaimerMenuOpen}
             selectOptions={makeClaimerSelectOption(claimerGroupList)}
-            isSelect={true}
             onChange={handleClaimer}
             value={getClaimerValue(
               claimerGroupList,
               accountChanger.claimerGroup
             )}
+            isSelect={claimerGroupList.length > 0 ? true : false}
+            disabled={claimerGroupList.length > 0 ? false : true}
+            navigate={
+              claimerGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+            }
           />
         </div>
         <div className="half-flex-field">
@@ -201,7 +205,11 @@ function AccountChanger() {
             value={getProxyGroupValue()}
             selectOptions={makeProxyOptions(proxyGroupList)}
             onChange={handleSelectProxyGroup}
-            isSelect={true}
+            isSelect={proxyGroupList.length > 0 ? true : false}
+            disabled={proxyGroupList.length > 0 ? false : true}
+            navigate={
+              proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+            }
           />
         </div>
       </div>
