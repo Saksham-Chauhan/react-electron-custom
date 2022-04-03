@@ -184,36 +184,42 @@ function SettingScreen({
             <h3>Claimer</h3>
             <AppInputField
               fieldTitle=""
-              isSelect={true}
               hideLabel={true}
               isCustomLabel={true}
               onChange={handleClaimerSelect}
               placeholderText={
-                claimerList.length > 0
-                  ? "Enter Token Group"
-                  : "Add Token Group"
+                claimerList.length > 0 ? "Enter Token Group" : "Add Token Group"
               }
               selectOptions={makeClaimerSelectOption(claimerList)}
               value={getClaimerValue(claimerList, selectedClaimer)}
               onMenuOpen={handleClaimerMenuOpen}
+              isSelect={claimerList.length > 0 ? true : false}
+              disabled={claimerList.length > 0 ? false : true}
+              navigate={
+                claimerList.length > 0 ? () => {} : handleClaimerMenuOpen
+              }
             />
           </div>
           <div>
             <h3>Chrome User</h3>
             <AppInputField
               fieldTitle=""
-              isSelect={true}
               hideLabel={true}
               isCustomLabel={true}
               selectOptions={chromeList}
               onChange={handleUserSelect}
               onMenuOpen={handleChromeMenuOpen}
               placeholderText={
-                chromeList.length > 0
-                  ? "Select Chrome User"
-                  : "Add Chrome User"
+                chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
               }
-              value={chromeList.filter((d) => d["id"] === selectedChrome["id"])}
+              value={
+                chromeList.length > 0
+                  ? chromeList.filter((d) => d["id"] === selectedChrome["id"])
+                  : ""
+              }
+              isSelect={chromeList.length > 0}
+              disabled={chromeList.length > 0}
+              navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
             />
           </div>
         </div>

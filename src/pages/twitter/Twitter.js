@@ -33,9 +33,10 @@ import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { appendNewTweetInList } from "../../features/logic/twitter";
 import { discordServerInviteAPI } from "../../api";
-import { openChromeBrowser } from "../../helper";
 
-const TWEET_FETCH_TIME = 100;
+const open = window.require("open");
+
+const TWEET_FETCH_TIME = 1000;
 
 function Twitter() {
   const dispatch = useDispatch();
@@ -80,9 +81,9 @@ function Twitter() {
                   webhookSetting,
                   latestTweetList
                 );
+
                 if (ft.featured_type) {
                   dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
-                  // console.log(ft);
                   if (
                     ft.urlsExtracted?.length > 0 &&
                     !(ft["tweet_id"] in latestTweetList)
@@ -121,9 +122,23 @@ function Twitter() {
                       } else {
                         if (twitterSetting?.startAutoLinkOpener) {
                           if (Object.keys(selectedChrome).length > 0) {
-                            await openChromeBrowser(url, selectedChrome);
+                            if (selectedChrome) {
+                              await open(url, {
+                                app: {
+                                  name: open.apps.chrome,
+                                  arguments: [
+                                    `--profile-directory=${selectedChrome["value"]}`,
+                                  ],
+                                },
+                              });
+                            }
                           } else {
-                            await openChromeBrowser(url, null);
+                            await open(url, {
+                              app: {
+                                name: open.apps.chrome,
+                                arguments: [`--profile-directory=Guest`],
+                              },
+                            });
                           }
                         }
                       }

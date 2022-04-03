@@ -68,15 +68,17 @@ export const makeClaimerSelectOption = (list) => {
 };
 
 export const getClaimerValue = (list, obj) => {
-  const result = list.filter((data) => data["id"] === obj["id"]);
-  if (result.length > 0) {
-    return [
-      {
-        value: result[0]["claimerToken"],
-        label: result[0]["name"],
-        id: result[0]["id"],
-      },
-    ];
+  if (Object.keys(obj).length > 0) {
+    const result = list.filter((data) => data["id"] === obj["id"]);
+    if (result.length > 0) {
+      return [
+        {
+          value: result[0]["claimerToken"],
+          label: result[0]["name"],
+          id: result[0]["id"],
+        },
+      ];
+    } else return [];
   } else return [];
 };
 
@@ -101,7 +103,9 @@ export const makeProxyOptions = (proxyGroupList = []) => {
 };
 
 export const openChromeBrowser = async (url, chromeUser) => {
+  console.log("first", url, chromeUser);
   if (chromeUser) {
+    console.log("if", url, chromeUser);
     await open(url, {
       app: {
         name: open.apps.chrome,
@@ -109,6 +113,7 @@ export const openChromeBrowser = async (url, chromeUser) => {
       },
     });
   } else {
+    console.log("else", url, chromeUser);
     await open(url, {
       app: {
         name: open.apps.chrome,

@@ -27,7 +27,10 @@ function NicknameChanger({ state, onRefresh, ...props }) {
       </div>
       <AppSpacer spacer={20} />
       <div className="nickname-row">
-        <LabelWithToolTip labelText="Nicknames" />
+        <LabelWithToolTip
+          toolTopText="Enter your server nick name"
+          labelText="Nicknames"
+        />
         <div onClick={onRefresh} className="group-title btn refresh">
           <img src={refresh} alt="ref" />
         </div>

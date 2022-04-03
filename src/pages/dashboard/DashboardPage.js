@@ -58,6 +58,12 @@ const DashboardPage = () => {
   //BUTTONS DATA
   const buttonsData = [
     {
+      to: RoutePath.proxy,
+      image: proxy,
+      text: "Proxies",
+      value: getTotalProxy() ? getTotalProxy() : "0",
+    },
+    {
       to: RoutePath.linkOpener,
       image: linkOpner,
       text: "Link Opener",
@@ -70,28 +76,22 @@ const DashboardPage = () => {
       value: inviteJoinerList ? inviteJoinerList : "0",
     },
     {
-      to: RoutePath.twitter,
-      image: twitter,
-      text: "Twitter Monitor",
-      value: twitterList ? twitterList : "0",
-    },
-    {
       to: RoutePath.spoofer,
       image: spoof,
       text: "Spoofer",
       value: spoofList.length ? spoofList.length : "0",
     },
     {
-      to: RoutePath.proxy,
-      image: proxy,
-      text: "Proxies",
-      value: getTotalProxy() ? getTotalProxy() : "0",
+      to: RoutePath.twitter,
+      image: twitter,
+      text: "Twitter Monitor",
+      value: twitterList ? twitterList : "0",
     },
     {
-      to: RoutePath.setting,
-      image: settings,
-      text: "Settings",
-      value: null,
+      to: RoutePath.oneclick,
+      image: oneclick,
+      text: "NFT Minter",
+      value: "Coming Soon",
     },
     {
       to: RoutePath.accountGen,
@@ -100,10 +100,10 @@ const DashboardPage = () => {
       value: "Coming Soon",
     },
     {
-      to: RoutePath.oneclick,
-      image: oneclick,
-      text: "NFT Minter",
-      value: "Coming Soon",
+      to: RoutePath.setting,
+      image: settings,
+      text: "Settings",
+      value: null,
     },
   ];
 

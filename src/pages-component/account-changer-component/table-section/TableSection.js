@@ -62,7 +62,6 @@ function TableSection({ list, selectedCard }) {
           avatarAPI: obj.url,
         });
         if (apiResponse !== null) {
-          console.log(apiResponse);
           if (apiResponse.status === 200) {
             let tempObj = { ...obj };
             let arr = [];

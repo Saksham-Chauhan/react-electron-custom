@@ -11,7 +11,7 @@ function LogSection({ logList }) {
   const handleExport = () => {
     if (logList.length > 0) {
       handleExportLogs(logList);
-    } else toastWarning("Nothing to import");
+    } else toastWarning("Nothing to export");
   };
 
   const handleClearLogs = () => {

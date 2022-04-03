@@ -14,14 +14,13 @@ const testNetworkSpeed = new NetworkSpeed();
 const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
-var str2ab = require('string-to-arraybuffer')
+var str2ab = require("string-to-arraybuffer");
 
 let win = null;
 let mainWindow = null;
 let splash = null;
 
-const DEBUGGER_CHANNEL = "debugger"
-
+const DEBUGGER_CHANNEL = "debugger";
 
 // AUTH WINDOW CREATION
 function createAuthWindow() {
@@ -61,7 +60,7 @@ function createAuthWindow() {
         message: "Login Failed",
         detail: "You are not allowed to login",
       };
-      dialog.showMessageBox(null, options, (response, checkboxChecked) => { });
+      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
     }
   });
   win.on("authenticated", () => {
@@ -484,30 +483,25 @@ ipcMain.handle("get-speed", async () => {
   return { download, upload };
 });
 
-
 const debugSendToRendrer = (log) => {
-  let win = mainWindow || global.mainWindow
+  let win = mainWindow || global.mainWindow;
   if (win) {
-    win.webContents.send(DEBUGGER_CHANNEL, log)
+    win.webContents.send(DEBUGGER_CHANNEL, log);
   }
-}
-
+};
 
 ipcMain.on("read-array", async (event, array) => {
-  debugSendToRendrer("Ready to read array", array)
+  debugSendToRendrer("Ready to read array", array);
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
-  debugSendToRendrer(csv)
-  const data = await csv.toString()
-  debugSendToRendrer(data)
+  debugSendToRendrer(csv);
+  const data = await csv.toString();
+  debugSendToRendrer(data);
   const str = str2ab(data);
-  debugSendToRendrer(str)
-  const url = `data:text/csv;base64,${new Buffer.from(str).toString(
-    "base64"
-  )}`;
-  debugSendToRendrer(url)
+  debugSendToRendrer(str);
+  const url = `data:text/csv;base64,${new Buffer.from(str).toString("base64")}`;
+  debugSendToRendrer(url);
   await downloadCsvFileDialog(`${fileName}.csv`, url);
-
 });
 
 const downloadCsvFileDialog = async (fileName, url) => {
