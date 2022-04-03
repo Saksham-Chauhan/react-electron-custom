@@ -48,13 +48,11 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
     if (accountList.length > 0) {
       if (Object.keys(selectedMonitorToken).length > 0) {
         if (channelList.length > 0) {
-          if (keywordList.length > 0) {
-            if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
-              dispatch(
-                linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked })
-              );
-            } else toastWarning("Select valid token");
-          } else toastWarning("Enter some keywords");
+          if (discordTokenRegExp.test(selectedMonitorToken["discordToken"])) {
+            dispatch(
+              linkOpenerSettingHandler({ key: "TOGGLER_STATE", checked })
+            );
+          } else toastWarning("Select valid token");
         } else toastWarning("Enter some channel id");
       } else toastWarning("Select Monitor token");
     } else toastWarning("Create some account");
