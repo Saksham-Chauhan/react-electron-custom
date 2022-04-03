@@ -22,9 +22,14 @@
 - Toaster limit set.
 - Login and Logout issue fixed.
 
-# v0.8.0
+# v0.8.1
 
 - Tool tip text changed.
 - Dashboard buttons order changed.
 - Fixed dropdown issue when list empty.
 - Toaster text changed in IJ page.
+
+# v0.8.2
+
+- fix twitter monitor link opener
+- fix link opener chrome profile
