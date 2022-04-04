@@ -195,7 +195,7 @@ function InviteJoinerSettings() {
         const response = await directDiscordJoinAPI(
           setting.proxyGroup,
           setting.inviteCode,
-          token,
+          token.split(":")[3],
           setting
         );
         if (response === null) {

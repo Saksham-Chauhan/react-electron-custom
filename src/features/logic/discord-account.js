@@ -93,7 +93,7 @@ export const addChannelInList = (data) => (dispatch, getState) => {
     let obj = {};
     obj["id"] = generateId();
     obj["label"] = word;
-    obj["value"] = word;
+    obj["value"] = obj["label"];
     let combiner = [obj, ...tempCurrentList];
     dispatch(appendChannelInArrayList({ list: combiner, key: "linkOpener" }));
   } else {
@@ -102,7 +102,7 @@ export const addChannelInList = (data) => (dispatch, getState) => {
     let obj = {};
     obj["id"] = generateId();
     obj["label"] = word;
-    obj["value"] = word;
+    obj["value"] = obj["label"];
     let combiner = [obj, ...tempCurrentList];
     dispatch(appendChannelInArrayList({ list: combiner, key: "inviteJoiner" }));
   }

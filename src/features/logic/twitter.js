@@ -20,7 +20,7 @@ export const addTwitterKeywordInList = (data) => (dispatch, getState) => {
     let obj = {};
     obj["id"] = generateId();
     obj["value"] = word;
-    obj["label"] = word;
+    obj["label"] = obj["value"];
     let combiner = [obj, ...tempCurrentList];
     dispatch(
       appendDataInTwitterList({ key: "twitterUserNameList", data: combiner })
@@ -31,7 +31,7 @@ export const addTwitterKeywordInList = (data) => (dispatch, getState) => {
     let obj = {};
     obj["id"] = generateId();
     obj["value"] = word;
-    obj["label"] = word;
+    obj["label"] = obj["value"];
     let combiner = [obj, ...tempCurrentList];
     dispatch(
       appendDataInTwitterList({ key: "twitterKeywordList", data: combiner })

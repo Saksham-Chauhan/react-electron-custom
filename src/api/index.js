@@ -10,7 +10,7 @@ export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
     headers: { Authorization: token },
     method: "post",
     data: JSON.stringify({}),
-    proxy: proxy,
+    proxy,
   });
 
 export const discordServerInviteReactAPI = async (
@@ -88,7 +88,7 @@ export const discordServerAcceptRuleAPI = async (
             "Content-Type": "application/json",
           },
           data: accept_rule,
-          proxy: proxy,
+          proxy,
         });
         if (acceptresponse.status === 201) {
           return acceptresponse;
@@ -100,10 +100,6 @@ export const discordServerAcceptRuleAPI = async (
     }
   }
 };
-
-// https://discord.com/api/v9/guilds/232740312194351106/requests/@me
-//{"version":"2021-01-21T16:21:06.817000+00:00","form_fields":[{"field_type":"TERMS","label":"Read and agree to the server rules","values":["Be respectful to others, do not use homophobic language, racial slurs, and avoid doxxing or leaking personal information.","Do not post explicitly sexual, gore or otherwise disturbing content and avoid sensitive topics, such as politics or religion.","Do not impersonate anyone and do not exclude anyone. Everyone is welcome.","Respect authority, and do not troll moderators on duty.","Read the <#232740312194351106> channel. Further you acknowledge the following use of your user-data: http://radka.dev/disclaimer"],"required":true,"response":true}]}
-// k8Z4EQgz
 
 export const directDiscordJoinAPI = async (
   proxyGroup,
@@ -123,6 +119,7 @@ export const directDiscordJoinAPI = async (
           password: proxySplit[3],
         },
       };
+      console.log(token, proxy);
       const inviteResponse = await discordServerInviteAPI(
         inviteCode,
         token,
@@ -134,7 +131,7 @@ export const directDiscordJoinAPI = async (
           const serverReactResponse = await axios({
             url: `${BASE_URL}channels/${settingObj.reactSetting.channelId}/messages/${settingObj.reactSetting.messageId}/reactions/${settingObj.reactSetting.emojiValue}/%40me`,
             method: "put",
-            proxy: proxy,
+            proxy,
             headers: {
               authorization: token,
               "Content-Type": "application/json",
@@ -153,7 +150,7 @@ export const directDiscordJoinAPI = async (
               "Content-Type": "application/json",
             },
             data: settingObj.acceptRule.acceptRuleValue,
-            proxy: proxy,
+            proxy,
           });
           if (
             acceptServerRulResponse !== null &&
