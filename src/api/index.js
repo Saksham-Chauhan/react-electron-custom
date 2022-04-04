@@ -89,8 +89,7 @@ export const discordServerAcceptRuleAPI = async (
         toastSuccess(
           `${inviteResponse.data.guild.name} server joined successfully`
         );
-        // TODO => This has to be removed in production
-        console.log("Successfully joined", inviteResponse.data);
+
         const acceptresponse = await axios({
           url: `${BASE_URL}guilds/${guildId}/requests/@me`,
           method: "put",
@@ -131,7 +130,6 @@ export const directDiscordJoinAPI = async (
           password: password,
         },
       };
-      console.log(token, proxy);
       const inviteResponse = await discordServerInviteAPI(
         inviteCode,
         token,
