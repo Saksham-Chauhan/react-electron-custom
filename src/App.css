@@ -75,3 +75,29 @@
   opacity: 0.6;
 }
 
+/* progress toaster */
+.notification {
+  display: flex;
+  align-items: center;
+}
+.notification-title {
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.01em;
+  margin-left: 1em;
+}
+.notification-title > span {
+  font-weight: 600;
+  margin-left: 0.5em;
+}
+.notification-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 2px;
+}
+.notification-image > img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 2px;
+}

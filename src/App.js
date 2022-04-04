@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import bot from "./assests/images/bot.svg";
 import chip from "./assests/images/chip.svg";
@@ -45,9 +45,10 @@ import {
   decodeUser,
   errorToaster,
   spooferToaster,
-  debuggerChannnel,
+  updateProgress,
   updateNotAvailable,
   proxyTestResultListener,
+  downloadingStart,
 } from "./helper/electron-bridge";
 import {
   updateSpooferStatus,
@@ -56,7 +57,7 @@ import {
 import { RoutePath } from "./constant";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { toastInfo, toastWarning } from "./toaster";
+import { progressToast, toastInfo, toastWarning } from "./toaster";
 import { loggedUserWebhook } from "./helper/webhook";
 import { useDispatch, useSelector } from "react-redux";
 import { proxyStatusUpdater } from "./features/logic/proxy";
@@ -120,11 +121,15 @@ function App() {
     updateNotAvailable(() =>
       toastInfo("Update not available or You are already to update 😍 🤩")
     );
+    downloadingStart(() => {
+      progressToast();
+    });
+    updateProgress((percent) => {
+      const progressDiv = document.querySelector(".progress-value");
+      progressDiv.innerHTML = percent;
+    });
     errorToaster((err) => toastWarning(err));
 
-    if (process.env.NODE_ENV === "development") {
-      debuggerChannnel();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
 
