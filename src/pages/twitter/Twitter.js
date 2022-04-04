@@ -100,19 +100,11 @@ function Twitter() {
                                 token?.split(":")[3]
                               );
                               if (info.status === 200) {
-                                console.log(
-                                  "Joined the server",
-                                  info.data.guild
-                                );
                                 toastSuccess(
                                   `Successfully Joined ${info.data.guild.name}`
                                 );
                               }
                             } catch (err) {
-                              console.log(
-                                "Error in joining server",
-                                err.message
-                              );
                               toastWarning(
                                 `Error in joininig server ${err.message}`
                               );
@@ -150,7 +142,6 @@ function Twitter() {
           }
         });
       } catch (error) {
-        console.log("Error in fetching tweets", error);
         // FIXME: need to test api rotation functionality
         dispatch(incrementApiRotater());
       }

@@ -25,7 +25,7 @@ function Footer() {
         });
         timer = setTimeout(fetchSpeed, FETCH_NETWORK_SPEED_GAP);
       } catch (error) {
-        console.log("Error in getting Network Spped", error.message);
+        // console.log("Error in getting Network Spped", error.message);
       }
     };
     fetchSpeed();

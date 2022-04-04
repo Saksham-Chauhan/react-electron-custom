@@ -1,5 +1,3 @@
-// TODO => Check if this can be passed directly = Proxy destructing
-// TODO => Handle edge case for proxy less than claimer number
 import axios from "axios";
 import { arrayBufferToString } from "../helper";
 import { toastSuccess, toastWarning } from "../toaster";
@@ -50,11 +48,9 @@ export const discordServerInviteReactAPI = async (
         },
       });
       if (response.status === 204) {
-        console.log("Successfully reacted in server");
         return response;
       }
     } catch (error) {
-      console.log("Something went wrong while reacting");
       return null;
     }
   }
@@ -69,16 +65,7 @@ export const discordServerAcceptRuleAPI = async (
 ) => {
   const proxyArr = proxyString["value"]?.split("\n");
   for (let index = 0; index < proxyArr.length; index++) {
-    let proxySplit = proxyArr[index].split(":");
-    const [host, port, username, password] = proxySplit;
-    const proxy = {
-      host: host,
-      port: port,
-      auth: {
-        username: username,
-        password: password,
-      },
-    };
+    const proxy = getProxy(proxyArr, index);
     try {
       const inviteResponse = await discordServerInviteAPI(
         inviteCode,
@@ -89,8 +76,6 @@ export const discordServerAcceptRuleAPI = async (
         toastSuccess(
           `${inviteResponse.data.guild.name} server joined successfully`
         );
-        // TODO => This has to be removed in production
-        console.log("Successfully joined", inviteResponse.data);
         const acceptresponse = await axios({
           url: `${BASE_URL}guilds/${guildId}/requests/@me`,
           method: "put",
@@ -106,7 +91,6 @@ export const discordServerAcceptRuleAPI = async (
         }
       }
     } catch (error) {
-      console.log("Error on accept srever rule", error.message);
       return null;
     }
   }
@@ -121,17 +105,7 @@ export const directDiscordJoinAPI = async (
   try {
     const proxyArr = proxyGroup["value"]?.split("\n");
     for (let index = 0; index < proxyArr.length; index++) {
-      let proxySplit = proxyArr[index]?.split(":");
-      const [host, port, username, password] = proxySplit;
-      const proxy = {
-        host: host,
-        port: port,
-        auth: {
-          username: username,
-          password: password,
-        },
-      };
-      console.log(token, proxy);
+      const proxy = getProxy(proxyArr, index);
       const inviteResponse = await discordServerInviteAPI(
         inviteCode,
         token,
