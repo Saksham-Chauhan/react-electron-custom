@@ -153,7 +153,7 @@ function SettingScreen({
                     strokeColor="#B60E0E"
                     size={25}
                     wrapperStyle={{ cursor: "pointer" }}
-                  ></UseAnimations>
+                  />
                 </div>
               ))}
             </div>
@@ -166,7 +166,9 @@ function SettingScreen({
               isCustomLabel={true}
               onChange={handleClaimerSelect}
               placeholderText={
-                claimerList.length > 0 ? "Enter Token Group" : "Add Token Group"
+                claimerList.length > 0
+                  ? "Select Token Group"
+                  : "Add Token Group"
               }
               selectOptions={makeClaimerSelectOption(claimerList)}
               value={getClaimerValue(claimerList, selectedClaimer)}

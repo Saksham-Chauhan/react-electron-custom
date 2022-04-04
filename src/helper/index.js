@@ -90,15 +90,19 @@ export const tweetTimeToEpoch = (str) => {};
  * function make option for select
  */
 export const makeProxyOptions = (proxyGroupList = []) => {
+  let arr = [];
   if (proxyGroupList.length > 0) {
-    const result = proxyGroupList.map((group) => {
-      let obj = {};
-      obj["label"] = group["groupName"];
-      obj["value"] = group["proxies"];
-      obj["id"] = group["id"];
-      return obj;
-    });
-    return result;
+    for (let i = 0; i < proxyGroupList.length; i++) {
+      let group = proxyGroupList[i];
+      if (group["proxyList"].length > 0) {
+        let obj = {};
+        obj["label"] = group["groupName"];
+        obj["value"] = group["proxies"];
+        obj["id"] = group["id"];
+        arr.push(obj);
+      }
+    }
+    return arr;
   } else return [];
 };
 

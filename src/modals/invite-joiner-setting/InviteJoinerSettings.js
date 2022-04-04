@@ -97,9 +97,7 @@ function InviteJoinerSettings() {
         toastWarning("Enter valid Message Id");
         return valid;
       }
-      if (
-        /\p{Extended_Pictographic}/u.test(setting.reactSetting.emojiHexValue)
-      ) {
+      if (/\p{Extended_Pictographic}/u.test(setting.reactSetting.emojiValue)) {
         valid = true;
       } else {
         valid = false;
