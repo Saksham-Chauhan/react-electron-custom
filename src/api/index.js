@@ -1,8 +1,25 @@
+// TODO => Check if this can be passed directly = Proxy destructing
+// TODO => Handle edge case for proxy less than claimer number
 import axios from "axios";
 import { arrayBufferToString } from "../helper";
 import { toastSuccess, toastWarning } from "../toaster";
 
 export const BASE_URL = "https://discord.com/api/v9/";
+export const IMAGE_API = "https://picsum.photos/50/50";
+
+const getProxy = (proxyArr, index) => {
+  let proxySplit = proxyArr[index]?.split(":");
+  const [host, port, username, password] = proxySplit;
+  const proxy = {
+    host: host,
+    port: port,
+    auth: {
+      username: username,
+      password: password,
+    },
+  };
+  return proxy;
+};
 
 export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
   await axios({
@@ -15,58 +32,51 @@ export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
 
 export const discordServerInviteReactAPI = async (
   proxyString,
-  channel_id,
-  message_id,
+  channelId,
+  messageId,
   emoji,
   token
 ) => {
   const proxyArr = proxyString["value"]?.split("\n");
   for (let index = 0; index < proxyArr.length; index++) {
-    let proxySplit = proxyArr[index]?.split(":");
     try {
       const response = await axios({
-        url: `${BASE_URL}channels/${channel_id}/messages/${message_id}/reactions/${emoji}/%40me`,
+        url: `${BASE_URL}channels/${channelId}/messages/${messageId}/reactions/${emoji}/%40me`,
         method: "put",
-        proxy: {
-          host: proxySplit[0],
-          port: proxySplit[1],
-          auth: {
-            username: proxySplit[2],
-            password: proxySplit[3],
-          },
-        },
+        proxy: getProxy(proxyArr, index),
         headers: {
           authorization: token,
           "Content-Type": "application/json",
         },
       });
       if (response.status === 204) {
-        console.log("Reacted in server");
+        console.log("Successfully reacted in server");
         return response;
       }
     } catch (error) {
-      console.log("Error in reacting server invite");
+      console.log("Something went wrong while reacting");
       return null;
     }
   }
 };
 
 export const discordServerAcceptRuleAPI = async (
-  guild_id,
+  guildId,
   token,
-  accept_rule,
+  acceptRules,
   inviteCode,
   proxyString
 ) => {
   const proxyArr = proxyString["value"]?.split("\n");
   for (let index = 0; index < proxyArr.length; index++) {
     let proxySplit = proxyArr[index].split(":");
+    const [host, port, username, password] = proxySplit;
     const proxy = {
-      host: proxySplit[0],
-      port: proxySplit[1],
+      host: host,
+      port: port,
       auth: {
-        username: proxySplit[2],
-        password: proxySplit[3],
+        username: username,
+        password: password,
       },
     };
     try {
@@ -79,16 +89,17 @@ export const discordServerAcceptRuleAPI = async (
         toastSuccess(
           `${inviteResponse.data.guild.name} server joined successfully`
         );
-        console.log("Server  joined", inviteResponse.data);
+        // TODO => This has to be removed in production
+        console.log("Successfully joined", inviteResponse.data);
         const acceptresponse = await axios({
-          url: `${BASE_URL}guilds/${guild_id}/requests/@me`,
+          url: `${BASE_URL}guilds/${guildId}/requests/@me`,
           method: "put",
           headers: {
             Authorization: token,
             "Content-Type": "application/json",
           },
-          data: accept_rule,
-          proxy,
+          data: acceptRules,
+          proxy: proxy,
         });
         if (acceptresponse.status === 201) {
           return acceptresponse;
@@ -111,12 +122,13 @@ export const directDiscordJoinAPI = async (
     const proxyArr = proxyGroup["value"]?.split("\n");
     for (let index = 0; index < proxyArr.length; index++) {
       let proxySplit = proxyArr[index]?.split(":");
+      const [host, port, username, password] = proxySplit;
       const proxy = {
-        host: proxySplit[0],
-        port: proxySplit[1],
+        host: host,
+        port: port,
         auth: {
-          username: proxySplit[2],
-          password: proxySplit[3],
+          username: username,
+          password: password,
         },
       };
       console.log(token, proxy);
@@ -138,7 +150,7 @@ export const directDiscordJoinAPI = async (
             },
           });
           if (serverReactResponse.status === 201) {
-            toastSuccess("Reacted to the server");
+            toastSuccess("Reaction added successfully");
           }
         }
         if (settingObj.isAcceptRule) {
@@ -156,11 +168,11 @@ export const directDiscordJoinAPI = async (
             acceptServerRulResponse !== null &&
             acceptServerRulResponse === 201
           ) {
-            toastSuccess("Accept the server rule 🥳");
+            toastSuccess("Rules accepted successfully");
           }
         }
       } else {
-        toastWarning("Error in joining server");
+        toastWarning("Something went wrong while accepting rules");
       }
     }
   } catch (error) {
@@ -168,9 +180,7 @@ export const directDiscordJoinAPI = async (
   }
 };
 
-export const generateRandomAvatar = async (
-  api = "https://picsum.photos/50/50"
-) => {
+export const generateRandomAvatar = async (api = IMAGE_API) => {
   const arrayBuffer = await fetch(api).then(function (response) {
     return response.arrayBuffer();
   });
