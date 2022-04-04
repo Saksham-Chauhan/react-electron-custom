@@ -31,7 +31,6 @@ function Settings({ selectedMonitorToken, settingOption, accountList }) {
   const navigate = useNavigate();
   const chromeList = useSelector(fetchChromeUserListState);
   const selectedChrome = useSelector(fetchLOchromeUserState);
-  const keywordList = useSelector(fetchLOKeywordList);
   const channelList = useSelector(fetchLOChannelList);
   const selectedToken = useSelector(fetchSelectedClaimerTokenInviteJoiner);
   const ijMonitor = useSelector(fetchIJMonitorState);

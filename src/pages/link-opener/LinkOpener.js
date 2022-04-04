@@ -25,7 +25,7 @@ import {
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
-import { makeLogText, makeStrOfArr, openChromeBrowser } from "../../helper";
+import { makeLogText, makeStrOfArr } from "../../helper";
 import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";

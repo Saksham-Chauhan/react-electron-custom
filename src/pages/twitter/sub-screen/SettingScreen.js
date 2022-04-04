@@ -42,8 +42,6 @@ function SettingScreen({
     apiName: "",
     apiKey: "",
     apiSecret: "",
-    accessToken: "",
-    accessSecret: "",
   });
 
   const handleChange = (e) => {
@@ -61,8 +59,6 @@ function SettingScreen({
         apiName: "",
         apiKey: "",
         apiSecret: "",
-        accessToken: "",
-        accessSecret: "",
       });
     }
   };
@@ -139,24 +135,6 @@ function SettingScreen({
               value={twitterApi?.apiSecret}
               onChange={handleChange}
               placeholderText="Enter API Secret"
-            />
-            <AppInputField
-              hideLabel={true}
-              isCustomLabel={true}
-              fieldTitle=""
-              name="accessToken"
-              value={twitterApi?.accessToken}
-              onChange={handleChange}
-              placeholderText="Enter Access Token"
-            />
-            <AppInputField
-              hideLabel={true}
-              isCustomLabel={true}
-              fieldTitle=""
-              name="accessSecret"
-              value={twitterApi?.accessSecret}
-              onChange={handleChange}
-              placeholderText="Enter Access Token Secret"
             />
             <AppSpacer spacer={15} />
             <div className="setting-twitter-flex full">
