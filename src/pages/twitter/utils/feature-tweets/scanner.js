@@ -68,7 +68,6 @@ async function ocrResolver(media) {
     }
     return ocrArr;
   } catch (error) {
-    console.log("Error in reading OCR", error.message);
     return ocrArr;
   }
 }

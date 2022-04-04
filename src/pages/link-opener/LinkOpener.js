@@ -121,7 +121,6 @@ class LinkOpener extends React.PureComponent {
     const { settingOption, accountList } = this.props;
     try {
       this.monitor.on("ready", () => {
-        console.log("Link opener is Ready..");
         toastInfo("Link opener is ready!!");
       });
       this.monitor.on("message", async (message) => {
@@ -130,14 +129,11 @@ class LinkOpener extends React.PureComponent {
         let msgID = message.id;
         this.checkSettingOption(content, channelID, msgID);
       });
-      if (settingOption?.linkOpenerState) {
-        console.log("Already Opened so don't open Again");
-      } else {
-        console.log("Destroying if previous client is open");
+      if (!settingOption?.linkOpenerState) {
         this.monitor.destroy();
       }
     } catch (error) {
-      console.log("Error in Link Opener", error.message);
+      // console.log("Error in Link Opener", error.message);
     }
     if (accountList.length === 0) {
       this.props.resetToken();
@@ -179,7 +175,6 @@ class LinkOpener extends React.PureComponent {
             });
           }
         } else {
-          console.log("Destroying monitor...");
           this.monitor.destroy();
           if (this.monitor.user !== null) {
             this.setState({ isStart: false });

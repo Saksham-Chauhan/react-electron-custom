@@ -92,7 +92,6 @@ class InviteJoiner extends React.PureComponent {
                   let result = `Joined ${info.data.guild.name} server 🥳 `;
                   const date = new Date().toUTCString();
                   this.props.handleSendLog(result, msgID, date);
-                  console.log("Joined the server", info.data.guild.name, index);
                   if (webhookList?.length > 0) {
                     await inviteJoinerTest(
                       webhookList[0],
@@ -113,7 +112,6 @@ class InviteJoiner extends React.PureComponent {
                   break;
                 }
               } catch (err) {
-                console.log("Error in joining server", err.message);
                 toastWarning(`Error in joininig server ${err.message}`);
               }
             }
@@ -127,7 +125,6 @@ class InviteJoiner extends React.PureComponent {
     const { ijMonitorState, accountList } = this.props;
     try {
       this.monitor.on("ready", () => {
-        console.log("Invite joiner is Ready..");
         toastInfo("Invite joiner is ready!!");
       });
       this.monitor.on("message", async (message) => {
@@ -136,11 +133,8 @@ class InviteJoiner extends React.PureComponent {
         let msgID = message.id;
         this.checkingMessage(content, channelID, msgID);
       });
-      if (ijMonitorState) {
-        console.log("Already Opened so don't open Again");
-      }
     } catch (error) {
-      console.log("Error in Link Opener", error.message);
+      // console.log("Error in Link Opener", error.message);
     }
     if (accountList.length === 0) {
       this.props.resetSelectedToken();
@@ -163,7 +157,6 @@ class InviteJoiner extends React.PureComponent {
       selectedToken !== prevProps.selectedToken
     ) {
       if (ijMonitorState) {
-        console.log("Starting monitor...");
         if (discordTokenRegExp.test(selectedToken["discordToken"])) {
           this.monitor.login(selectedToken["discordToken"]).catch((e) => {
             toastWarning(e.message);
@@ -176,7 +169,6 @@ class InviteJoiner extends React.PureComponent {
         this.setState({ webhookSetting: webhookSetting });
         this.setState({ webhookList: webhookList });
       } else {
-        console.log("Destroyng monitor...");
         this.monitor.destroy();
         if (this.monitor.user !== null) {
           this.setState({ isStart: false });

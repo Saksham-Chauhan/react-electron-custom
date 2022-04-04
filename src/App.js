@@ -108,7 +108,7 @@ function App() {
               globalSetting?.logOnOff
             );
           } catch (e) {
-            console.log(e);
+            // console.log(e);
           }
           dispatch(setUserDetails(decode));
         } else toastWarning("Sorry, you don't have required role  😭");

@@ -106,27 +106,6 @@ export const makeProxyOptions = (proxyGroupList = []) => {
   } else return [];
 };
 
-export const openChromeBrowser = async (url, chromeUser) => {
-  console.log("first", url, chromeUser);
-  if (chromeUser) {
-    console.log("if", url, chromeUser);
-    await open(url, {
-      app: {
-        name: open.apps.chrome,
-        arguments: [`--profile-directory=${chromeUser["value"]}`],
-      },
-    });
-  } else {
-    console.log("else", url, chromeUser);
-    await open(url, {
-      app: {
-        name: open.apps.chrome,
-        arguments: [`--profile-directory=Default`],
-      },
-    });
-  }
-};
-
 export const sleep = (time) => {
   return new Promise((resolve) => {
     setTimeout(resolve, time);

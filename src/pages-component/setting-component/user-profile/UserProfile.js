@@ -33,7 +33,7 @@ function UserProfile({ userDetails }) {
       let title = `${userDetails?.username}#${userDetails?.discriminator} Logged out 🥲 `;
       await loggedUserWebhook(title, webhookList[0], option?.logOnOff);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
     dispatch(setUserDetails({}));
     dispatch(resetUserLoggedState());
