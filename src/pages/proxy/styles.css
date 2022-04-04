@@ -1,0 +1,21 @@
+.page-section {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+.left-container {
+  height: 100%;
+  width: 18%;
+  border-right: 0.5px solid #131b3c;
+}
+.group-card-scroll {
+  height: 50vh;
+  padding: 0px 20px;
+}
+.right-container{
+  width: calc(100% - 18%);
+
+}
+.page-padding-section{
+  padding: 0px 1em;
+}

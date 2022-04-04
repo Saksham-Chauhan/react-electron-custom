@@ -1,0 +1,77 @@
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: var(--app-bg);
+}
+.app.sidebar {
+  width: var(--sidebar-width);
+  height: 100%;
+  background: var(--sidebar-bg);
+}
+
+.app.page-section {
+  width: calc(100% - var(--sidebar-width));
+  box-sizing: border-box;
+}
+
+.app.overlay-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#kyro-bot {
+  position: absolute;
+  right: 0%;
+  top: 20%;
+  opacity: 0.2;
+  height: 400px;
+  animation: botMove 1s ease-in-out infinite;
+}
+#kyro-bot-no-animation {
+  position: absolute;
+  right: 0%;
+  top: 20%;
+  opacity: 0.2;
+  height: 400px;
+  animation: unset !important;
+}
+#kyro-chip {
+  position: absolute;
+  right: 0;
+  top: 65%;
+  opacity: 0.8;
+  height: 200px;
+}
+
+@keyframes botMove {
+  0%,
+  100% {
+    transform: translateY(-20px);
+  }
+  50% {
+    transform: translateY(0px);
+  }
+}
+
+/* OVERLAY */
+.page-section-overlay {
+  position: absolute;
+  top: 0%;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  /* padding: 0px 20px 30px 20px; */
+}
+
+/* PAGES SECTION CSS */
+.btn {
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+}
+.btn:hover {
+  opacity: 0.6;
+}
+

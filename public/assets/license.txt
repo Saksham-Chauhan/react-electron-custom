@@ -1,0 +1,58 @@
+Koders © 2022
+
+Between: Koders (the “Vendor”), an Indian startup having its principal place of business at 111, New Mohanpur Colony, Tyagi Market, Premnagar, Dehradun, Uttarakhand, India 248007
+
+And User (the “Licensee”) for the Kyro Tools Software and services related to it (the ‘Services’)
+
+Background
+
+The Vendor wishes to license the Services to the Licensee and the Licensee desires to use the Service under the terms and conditions stated below
+
+License
+
+1. Under the Agreement the Vendor grants to the Licensee a non-exclusive and non-transferable license (the “License”) to use the Service. 
+
+2. “Services” includes the executable computer program (not the source code) and any related printed, electronic and online documentation and any other files that may accompany the product. 
+
+3. Title, copyright, IPR (intellectual property rights), and distribution rights of the Service remain exclusively with the Vendor. Intellectual property rights include the look and feel of the Services (not limited to the Software only)
+
+4. The Software may be loaded onto no more than one computer. A single copy may be made for backup purposes only but should be used on the same computer. 
+
+5. The rights and obligations of this Agreement are personal rights granted to the Licensee only. The Licensee may not transfer or assign any of the rights or obligations granted under this Agreement to any other person or legal entity. 
+
+6. The Services may not be modified, reverse-engineered, or de-compiled in any manner through current or future available technologies. 
+
+7. Failure to comply with any of the terms under the License section will be considered a material breach of this Agreement
+
+
+Limitation of Liability 
+
+8. The Service is provided by the Vendor and accepted by the Licensee “as is”. The liability of the Vendor will be limited to a maximum of the original purchase price of the Software. The Vendor will not be liable for any general, special, incidental, or consequential damages including, but not limited to, loss of production, loss of profits, loss of revenue, loss of data, or any other business or economic disadvantages suffered by the Licensee arising out of the use or failure to use the Services.
+
+9. The vendor makes no warranty expressed or implied regarding the fitness of the Services for a particular purpose or that the Software will be suitable or appropriate for the specific required of the Licensee. 
+
+10. The Vendor does not warrant that the use of the Services will be uninterrupted or error-free. The Licensee accepts that the Services, in general, is prone to bugs and flaws within reasonable/acceptable level as determined in the industry.
+
+Warrants and Representation
+11. The vendor warrants and represents that it is the copyright holder of the Services. The Vendor warrants and represents that granting the license to use the Services is not in violation of any other agreement, copyright, or applicable statute.
+
+Acceptance
+12. All terms, conditions, and obligations of this Agreement will be deemed to be fully understood, without any uncertainty, and accepted by the Licensee (“Acceptance”) upon execution of this Agreement
+
+Term
+13. The term of this Agreement will begin on Acceptance and is perpetual. 
+
+Termination
+14. This Agreement will be terminated and the License forfeited where the Licensee has failed to comply with any of the terms of this Agreement or is in breach of this Agreement. On termination of this Agreement for any reason, the Licensee will promptly stop using the Services and destroy all remnants of the Services from its possession. 
+
+Force Majeure
+15. The Vendor will be free of liability to the Licensee where the Vendor is prevented from executing its obligations under this Agreement in whole or in part due to Force Majeure, such as earthquake, typhoon, flood, fire, and war, or any other unforeseen and uncontrollable event where the Vendor has taken any and all appropriate action to mitigate such an event.  
+
+Miscellaneous
+16. This Agreement can only be modified by the Vendor on its sole discretion with prior notice to the Licensee.
+
+17. This Agreement does not create or imply any relationship in agency or partnership between the Vendor and the Licensee.
+
+18. If any term, covenant, condition, or provision of this Agreement is held by a court of competent jurisdiction to be invalid, void, or unenforceable. It is the parties’ intent that such provision is reduced in scope by the court only to the extent deemed necessary by that court to render the provision reasonable and enforceable and the remainder of the provisions of this Agreement will in no way be affected, impaired or invalidated as a result
+
+19. This Agreement and the terms and conditions contained in this Agreement apply to and are binding upon the Vendor’s successors and assigns. 

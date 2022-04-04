@@ -1,0 +1,88 @@
+.twitter-setting-page-back {
+  background: var(--sidebar-bg);
+  padding: 0.8em 1.2em;
+  display: flex;
+  align-items: center;
+  border-radius: 7px;
+  max-width: 150px;
+  justify-content: center;
+}
+.twitter-setting-page-back > span {
+  font-weight: 600;
+  font-size: 13.1437px;
+  line-height: 20px;
+  color: var(--primary);
+  margin-left: 10px;
+}
+.twitter-setting-page-inner {
+  padding: 0px 3em;
+}
+.twitter-secting-col {
+  display: flex;
+  justify-content: space-between;
+}
+.twitter-secting-col > div {
+  width: 30%;
+}
+.twitter-secting-col > div > h3 {
+  font-weight: 500;
+  font-size: 17.525px;
+  line-height: 26px;
+  color: var(--primary);
+  margin-bottom: 1.5em;
+}
+.setting-twitter-flex {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+}
+.setting-twitter-flex.full > div {
+  width: 100%;
+}
+.setting-twitter-flex > div {
+  width: 46%;
+  background: var(--sidebar-bg);
+  padding: 0.7em 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 2.92083px 2.92083px rgba(0, 0, 0, 0.25);
+  border-radius: 7.30208px;
+}
+.setting-twitter-flex > div > span {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13.1437px;
+  line-height: 20px;
+  color: var(--primary);
+}
+.api-keys-scroll-acrea {
+  padding: 1em;
+  background: var(--sidebar-bg);
+  height: 320px;
+  border-radius: 7.30208px;
+  overflow-y: scroll;
+}
+.api-keys-scroll-acrea::-webkit-scrollbar {
+  width: 4px;
+}
+.api-keys-scroll-acrea::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--scrollbar-bg);
+}
+.api-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+}
+.api-list-item > span {
+  font-size: 13.1437px;
+  line-height: 20px;
+  color: var(--primary);
+  text-transform: capitalize;
+}
+.api-list-item > img {
+  height: 15px;
+  cursor: pointer;
+}

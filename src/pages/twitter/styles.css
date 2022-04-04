@@ -1,0 +1,31 @@
+.twitter-page-outer {
+  height: 100%;
+}
+.twitter-page-section {
+  display: flex;
+  padding: 0px 20px;
+  height: calc(100% - 130px);
+}
+.twitter-page-left-section {
+  width: 44%;
+  margin-right: 0.5em;
+}
+.twitter-page-right-section {
+  width: 60%;
+}
+.twitter-flex-list-row {
+  display: flex;
+  justify-content: space-between;
+  height: calc(100% - 196px);
+}
+.twitter-flex-list-row > div {
+  width: 49.5%;
+}
+.twitter-page-card-scroll-flex {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+.twitter-page-card-scroll-flex > div {
+  width: 49.5%;
+}
