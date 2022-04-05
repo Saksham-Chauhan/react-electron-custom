@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { debounce } from "lodash";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -32,6 +33,7 @@ import {
   MIN_SAFE_DELAY_VALUE,
   RoutePath,
 } from "../../constant";
+import { checkForURL, getURL } from "../../helper/electron-bridge";
 
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
@@ -60,6 +62,8 @@ function InviteJoinerSettings() {
     safeDelay: 0,
   });
 
+  const [url, setUrl] = useState();
+
   React.useEffect(() => {
     if (selectedClaimerGroup || selectedClaimerGroup || safeDelayModeValue) {
       setSetting((pre) => {
@@ -71,7 +75,7 @@ function InviteJoinerSettings() {
         };
       });
     }
-  }, [selectedClaimerGroup, selectedProxyGroup, safeDelayModeValue]);
+  }, [selectedClaimerGroup, selectedProxyGroup, safeDelayModeValue, url]);
 
   const checkValidation = () => {
     let valid;
@@ -143,9 +147,20 @@ function InviteJoinerSettings() {
       return { ...pre, [name]: checked };
     });
   };
+  const sendQuery = (value) => {
+    checkForURL(value);
+    getURL((res) => {
+      setUrl(res);
+    });
+  };
 
-  const handleInviteChange = (e) => {
+  const delayedQuery = useRef(debounce((q) => sendQuery(q), 500)).current;
+
+  const handleInviteChange = async (e) => {
     const { value } = e.target;
+
+    delayedQuery(e.target.value);
+
     setSetting((pre) => {
       return { ...pre, inviteCode: value };
     });
@@ -265,7 +280,7 @@ function InviteJoinerSettings() {
   };
 
   return (
-    <ModalWrapper style={{ width: "52%" }}>
+    <ModalWrapper bgImageURL={url} style={{ width: "52%" }}>
       <div
         onClick={(e) => {
           setIsEmoji(false);

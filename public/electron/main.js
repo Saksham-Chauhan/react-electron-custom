@@ -13,7 +13,7 @@ const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
-const cp = require("child_process");
+
 let win = null;
 let mainWindow = null;
 let splash = null;
