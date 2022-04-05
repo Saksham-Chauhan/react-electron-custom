@@ -14,6 +14,12 @@ const checkForUpdates = () => {
   ipcRenderer.send("checkForUpdates");
 };
 
+const updateProgress = (callback) =>
+  ipcRenderer.on("update:pogress", (_, progress) => callback(progress));
+
+const downloadingStart = (callback) =>
+  ipcRenderer.on("update:downloading", (_, data) => callback(data));
+
 const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
 
 const updateNotAvailable = (callback) =>
@@ -98,4 +104,6 @@ module.exports = {
   auth,
   readArrayOfJson,
   debuggerChannnel,
+  updateProgress,
+  downloadingStart,
 };

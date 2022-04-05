@@ -150,7 +150,6 @@ function InviteJoinerSettings() {
   const sendQuery = (value) => {
     checkForURL(value);
     getURL((res) => {
-      console.log(res);
       setUrl(res);
     });
   };

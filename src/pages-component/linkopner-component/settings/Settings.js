@@ -4,12 +4,11 @@ import {
   setModalState,
   setEditStorage,
   setLOchromeUser,
+  fetchLOChannelList,
+  fetchIJMonitorState,
   fetchLOchromeUserState,
   fetchChromeUserListState,
-  fetchLOChannelList,
-  fetchLOKeywordList,
   fetchSelectedClaimerTokenInviteJoiner,
-  fetchIJMonitorState,
 } from "../../../features/counterSlice";
 import { isValueInUse } from "../../../helper";
 import { toastWarning } from "../../../toaster";

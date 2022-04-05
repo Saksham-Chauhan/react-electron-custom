@@ -5,8 +5,13 @@ import { toastSuccess, toastWarning } from "../toaster";
 export const BASE_URL = "https://discord.com/api/v9/";
 export const IMAGE_API = "https://picsum.photos/50/50";
 
-const getProxy = (proxyArr, index) => {
-  let proxySplit = proxyArr[index]?.split(":");
+function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export const getProxy = (proxyArr) => {
+  const indIndex = randomIntFromInterval(0, proxyArr?.length || 0);
+  let proxySplit = proxyArr[indIndex]?.split(":");
   const [host, port, username, password] = proxySplit;
   const proxy = {
     host: host,
@@ -41,7 +46,7 @@ export const discordServerInviteReactAPI = async (
       const response = await axios({
         url: `${BASE_URL}channels/${channelId}/messages/${messageId}/reactions/${emoji}/%40me`,
         method: "put",
-        proxy: getProxy(proxyArr, index),
+        proxy: getProxy(proxyArr),
         headers: {
           authorization: token,
           "Content-Type": "application/json",
@@ -65,7 +70,7 @@ export const discordServerAcceptRuleAPI = async (
 ) => {
   const proxyArr = proxyString["value"]?.split("\n");
   for (let index = 0; index < proxyArr.length; index++) {
-    const proxy = getProxy(proxyArr, index);
+    const proxy = getProxy(proxyArr);
     try {
       const inviteResponse = await discordServerInviteAPI(
         inviteCode,
@@ -105,7 +110,7 @@ export const directDiscordJoinAPI = async (
   try {
     const proxyArr = proxyGroup["value"]?.split("\n");
     for (let index = 0; index < proxyArr.length; index++) {
-      const proxy = getProxy(proxyArr, index);
+      const proxy = getProxy(proxyArr);
       const inviteResponse = await discordServerInviteAPI(
         inviteCode,
         token,
@@ -113,6 +118,7 @@ export const directDiscordJoinAPI = async (
       );
       if (inviteResponse.status === 200) {
         toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
+        if (!settingObj.isReact && !settingObj.isAcceptRule) break;
         if (settingObj.isReact) {
           const serverReactResponse = await axios({
             url: `${BASE_URL}channels/${settingObj.reactSetting.channelId}/messages/${settingObj.reactSetting.messageId}/reactions/${settingObj.reactSetting.emojiValue}/%40me`,

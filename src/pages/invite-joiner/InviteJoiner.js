@@ -29,7 +29,7 @@ import {
 } from "../../pages-component";
 import helper from "../twitter/utils/feature-tweets/helper";
 import { checkDiscordInvite } from "../link-opener/utils";
-import { discordServerInviteAPI } from "../../api";
+import { discordServerInviteAPI, getProxy } from "../../api";
 import { toastInfo, toastWarning } from "../../toaster";
 import { inviteJoinerTest } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
@@ -71,17 +71,8 @@ class InviteJoiner extends React.PureComponent {
             const token = tokenArray[i].split(":")[3];
             const proxyArr = selectedProxyGroup["value"]?.split("\n");
             for (let index = 0; index < proxyArr.length; index++) {
-              let proxySplit = proxyArr[index]?.split(":");
-              const proxy = {
-                host: proxySplit[0],
-                port: proxySplit[1],
-                auth: {
-                  username: proxySplit[2],
-                  password: proxySplit[3],
-                },
-              };
+              const proxy = getProxy(proxyArr);
               await this.sleep();
-
               try {
                 const info = await discordServerInviteAPI(
                   inviteCode,
@@ -122,7 +113,7 @@ class InviteJoiner extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { ijMonitorState, accountList } = this.props;
+    const { accountList } = this.props;
     try {
       this.monitor.on("ready", () => {
         toastInfo("Invite joiner is ready!!");

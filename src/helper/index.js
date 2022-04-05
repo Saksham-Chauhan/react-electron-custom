@@ -1,5 +1,4 @@
 import { v4 as uuid } from "uuid";
-const open = window.require("open");
 
 export const makeStrOfArr = (arrOfObj) => arrOfObj.map((data) => data["value"]);
 
@@ -82,7 +81,8 @@ export const getClaimerValue = (list, obj) => {
   } else return [];
 };
 
-export const handleExportLogs = (logs, type) => downloadLogs(logs, type);
+export const handleExportLogs = (logs, type, logTitle) =>
+  downloadLogs(logs, type, logTitle);
 
 export const tweetTimeToEpoch = (str) => {};
 

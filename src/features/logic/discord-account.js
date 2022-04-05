@@ -34,8 +34,9 @@ export const editDiscordAccountInList =
     const currentAccountList = fetchDiscordAccountList(getState());
     const inviteJoinerToken = fetchSelectedClaimerTokenInviteJoiner(getState());
     const linkOpenerToken = fetchSelectedMinitorTokenLinkOpener(getState());
+    let tempCurrentAccount = [...currentAccountList];
     let tempAccount = { ...editedAccount };
-    let afterUpdate = currentAccountList.map((account) => {
+    let afterUpdate = tempCurrentAccount.map((account) => {
       if (account["id"] === tempAccount["id"]) return tempAccount;
       return account;
     });
@@ -51,8 +52,9 @@ export const editDiscordAccountInList =
 export const deleteAccountFromList =
   (deleteAccount) => (dispatch, getState) => {
     const currentAccountList = fetchDiscordAccountList(getState());
+    let tempCurrentAccount = [...currentAccountList];
     let tempAccount = { ...deleteAccount };
-    let afterDelete = currentAccountList.filter(
+    let afterDelete = tempCurrentAccount.filter(
       (account) => account["id"] !== tempAccount["id"]
     );
     dispatch(appendDiscordAccount(afterDelete));
@@ -63,11 +65,12 @@ export const addKeywordInList = (data) => (dispatch, getState) => {
   const { key, word } = data;
   if (key === "LO") {
     const currentList = fetchLOKeywordList(getState());
+    let tempCurrentList = [...currentList];
     let obj = {};
     obj["id"] = generateId();
     obj["label"] = word;
-    obj["value"] = obj["label"];
-    let combiner = [obj, ...currentList];
+    obj["value"] = word;
+    let combiner = [obj, ...tempCurrentList];
     dispatch(appendKeywordInArrayList({ list: combiner, key: "linkOpener" }));
   }
 };
@@ -76,7 +79,8 @@ export const deleteKeywordFromList = (data) => (dispatch, getState) => {
   const { key, word } = data;
   if (key === "LO") {
     const currentList = fetchLOKeywordList(getState());
-    let filter = currentList.filter((data) => data.id !== word.id);
+    let tempCurrentList = [...currentList];
+    let filter = tempCurrentList.filter((data) => data.id !== word.id);
     dispatch(appendKeywordInArrayList({ list: filter, key: "linkOpener" }));
   }
 };
