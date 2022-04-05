@@ -14,6 +14,7 @@ import {
 } from "../../features/logic/discord-account";
 import { discordTokenRegExp } from "../../constant/regex";
 import { toastWarning } from "../../toaster";
+import { sendLogs } from "../../helper/electron-bridge";
 
 function DiscordAccount() {
   const dispatch = useDispatch();
@@ -51,6 +52,9 @@ function DiscordAccount() {
       const result = validationChecker(discordAccountSchema, account);
       if (result) {
         if (Object.keys(editState).length === 0) {
+          const token = account.discordToken.substring(0, 4) + "## ##";
+          const log = `Created new Discord with account name ${account.accountName} & token ${token}  `;
+          sendLogs(log);
           dispatch(addDiscordAccountInList(account));
         } else {
           dispatch(editDiscordAccountInList(account));

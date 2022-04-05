@@ -15,6 +15,7 @@ import {
 } from "../../features/logic/setting";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import { toastWarning } from "../../toaster";
+import { sendLogs } from "../../helper/electron-bridge";
 
 function ClaimerGroup() {
   const dispatch = useDispatch();
@@ -73,6 +74,8 @@ function ClaimerGroup() {
             dispatch(setSelectedClaimerGroup(objClaimer));
           }
         } else {
+          const log = `New Token Group is created ${obj["name"]}`;
+          sendLogs(log);
           dispatch(addGroupInClaimerList(obj));
         }
         handleCloseModal();

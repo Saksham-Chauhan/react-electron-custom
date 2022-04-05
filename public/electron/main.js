@@ -8,6 +8,7 @@ const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
+const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
@@ -212,6 +213,7 @@ app.on("activate", () => {
 
 app.on("window-all-closed", function () {
   spooferManager.deleteAllSpoofer();
+  logManager.saveLogs();
   app.quit();
 });
 
@@ -223,6 +225,7 @@ if (!shouldNotQuit) {
 }
 app.on("ready", () => {
   createWindow();
+  logManager.initLogs();
   global.mainWin = mainWindow;
 });
 
@@ -489,3 +492,12 @@ const downloadCsvFileDialog = async (fileName, url) => {
     });
   }
 };
+
+// LOG IPC EVENT
+ipcMain.on("add-log", (_, log) => {
+  logManager.logMessage(log);
+});
+
+ipcMain.on("export-log-report", (_, data) => {
+  logManager.sendLogs();
+});

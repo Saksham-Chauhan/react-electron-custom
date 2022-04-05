@@ -33,6 +33,7 @@ import { discordServerInviteAPI, getProxy } from "../../api";
 import { toastInfo, toastWarning } from "../../toaster";
 import { inviteJoinerTest } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
+import { sendLogs } from "../../helper/electron-bridge";
 
 const { Client } = window.require("discord.js-selfbot");
 
@@ -149,6 +150,9 @@ class InviteJoiner extends React.PureComponent {
     ) {
       if (ijMonitorState) {
         if (discordTokenRegExp.test(selectedToken["discordToken"])) {
+          const token = selectedToken["discordToken"].substring(0, 4);
+          let log = `Invite joiner monitor start with ${token}**** **** ****`;
+          sendLogs(log);
           this.monitor.login(selectedToken["discordToken"]).catch((e) => {
             toastWarning(e.message);
           });

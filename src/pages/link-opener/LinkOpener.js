@@ -32,6 +32,7 @@ import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
 import { toastInfo, toastWarning } from "../../toaster";
 import { linkOpenerWebhook } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
+import { sendLogs } from "../../helper/electron-bridge";
 
 const open = window.require("open");
 const { Client } = window.require("discord.js-selfbot");
@@ -74,6 +75,8 @@ class LinkOpener extends React.PureComponent {
               }
               if (Object.keys(selectedChrome).length > 0) {
                 if (selectedChrome) {
+                  let log = `LO open with ${selectedChrome["value"]} chrome user`;
+                  sendLogs(log);
                   await open(content, {
                     app: {
                       name: open.apps.chrome,
@@ -84,10 +87,12 @@ class LinkOpener extends React.PureComponent {
                   });
                 }
               } else {
+                let log = `LO open with Default chrome profile`;
+                sendLogs(log);
                 await open(content, {
                   app: {
                     name: open.apps.chrome,
-                    arguments: [`--profile-directory=Guest`],
+                    arguments: [`--profile-directory=Default`],
                   },
                 });
               }
@@ -133,7 +138,8 @@ class LinkOpener extends React.PureComponent {
         this.monitor.destroy();
       }
     } catch (error) {
-      // console.log("Error in Link Opener", error.message);
+      const log = `Error in Link Opener ${error.message}`;
+      sendLogs(log);
     }
     if (accountList.length === 0) {
       this.props.resetToken();
@@ -170,6 +176,9 @@ class LinkOpener extends React.PureComponent {
         this.setState({ webhookList: webhookList });
         if (settingOption?.linkOpenerState) {
           if (discordTokenRegExp.test(discordToken)) {
+            const token = discordToken?.substring(0, 4);
+            let log = `Link opener monitor start with ${token}**** **** ****`;
+            sendLogs(log);
             this.monitor.login(discordToken).catch((e) => {
               toastWarning(e.message);
             });

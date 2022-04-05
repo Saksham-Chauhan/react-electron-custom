@@ -33,7 +33,7 @@ import {
   MIN_SAFE_DELAY_VALUE,
   RoutePath,
 } from "../../constant";
-import { checkForURL, getURL } from "../../helper/electron-bridge";
+import { checkForURL, getURL, sendLogs } from "../../helper/electron-bridge";
 
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
@@ -214,7 +214,10 @@ function InviteJoinerSettings() {
           setting
         );
         if (response === null) {
-          toastWarning("Something went wrong 🥲");
+          const token = token.split(":")[3].substring(0, 4) + "## ##";
+          const log = "Something went wrong in Direct Join with" + token;
+          sendLogs(log);
+          toastWarning(`Something went wrong 🥲`);
         }
       });
       handleCloseModal();

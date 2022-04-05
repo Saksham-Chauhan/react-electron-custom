@@ -17,6 +17,7 @@ import {
   addProxyInList,
   editProxyGroup,
 } from "../../features/logic/proxy";
+import { sendLogs } from "../../helper/electron-bridge";
 
 function ProxyGroup() {
   const dispatch = useDispatch();
@@ -71,8 +72,11 @@ function ProxyGroup() {
     proxyGroup["id"] = generateId();
     proxyGroup["proxyList"] = valid;
     proxyGroup["proxies"] = valid.map((proxy) => proxy["proxy"]).join("\n");
+    const log = `New Proxy group created ${proxyGroup["groupName"]} with ${valid.length} proxies`;
+    sendLogs(log);
     dispatch(addProxyGroupInList(proxyGroup));
   };
+
   const handleEditProxyGroup = () => {
     let valid = [];
     let proxyGroup = { ...proxy };

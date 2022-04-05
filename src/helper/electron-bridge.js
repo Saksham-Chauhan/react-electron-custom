@@ -20,6 +20,8 @@ const updateProgress = (callback) =>
 const downloadingStart = (callback) =>
   ipcRenderer.on("update:downloading", (_, data) => callback(data));
 
+const sendLogs = (log) => ipcRenderer.send("add-log", log);
+const exportLogs = () => ipcRenderer.send("export-log-report");
 const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
 
 const updateNotAvailable = (callback) =>
@@ -106,4 +108,6 @@ module.exports = {
   debuggerChannnel,
   updateProgress,
   downloadingStart,
+  sendLogs,
+  exportLogs,
 };

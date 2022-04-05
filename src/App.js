@@ -49,12 +49,13 @@ import {
   updateNotAvailable,
   proxyTestResultListener,
   downloadingStart,
+  sendLogs,
 } from "./helper/electron-bridge";
 import {
   updateSpooferStatus,
   resetSpooferStatus,
 } from "./features/logic/spoof";
-import { RoutePath } from "./constant";
+import { EndPointToPage, RoutePath } from "./constant";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { progressToast, toastInfo, toastWarning } from "./toaster";
@@ -132,6 +133,13 @@ function App() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
+
+  // Route Navigation Listener
+  useEffect(() => {
+    const currentPage = EndPointToPage[location.pathname];
+    const log = `Navigate to ${currentPage}`;
+    sendLogs(log);
+  }, [location.pathname]);
 
   // check is user log in or not
   if (Object.keys(logggedUserDetails).length === 0) {

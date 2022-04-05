@@ -1,5 +1,6 @@
 import axios from "axios";
 import { arrayBufferToString } from "../helper";
+import { sendLogs } from "../helper/electron-bridge";
 import { toastSuccess, toastWarning } from "../toaster";
 
 export const BASE_URL = "https://discord.com/api/v9/";
@@ -117,7 +118,10 @@ export const directDiscordJoinAPI = async (
         proxy
       );
       if (inviteResponse.status === 200) {
+        const tkn = token.substring(0, 4) + "## ##";
         toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
+        const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
+        sendLogs(log);
         if (!settingObj.isReact && !settingObj.isAcceptRule) break;
         if (settingObj.isReact) {
           const serverReactResponse = await axios({
@@ -130,6 +134,8 @@ export const directDiscordJoinAPI = async (
             },
           });
           if (serverReactResponse.status === 201) {
+            const log = `Direct join Reaction added successfully  with ${tkn}`;
+            sendLogs(log);
             toastSuccess("Reaction added successfully");
           }
         }
@@ -148,6 +154,8 @@ export const directDiscordJoinAPI = async (
             acceptServerRulResponse !== null &&
             acceptServerRulResponse === 201
           ) {
+            const log = `Direct join Rules accepted successfully ${tkn}`;
+            sendLogs(log);
             toastSuccess("Rules accepted successfully");
           }
         }

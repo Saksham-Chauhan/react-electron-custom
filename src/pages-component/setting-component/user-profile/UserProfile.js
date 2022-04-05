@@ -10,6 +10,7 @@ import {
   setUserDetails,
 } from "../../../features/counterSlice";
 import { MONTHS } from "../../../helper";
+import { exportLogs } from "../../../helper/electron-bridge";
 import { loggedUserWebhook } from "../../../helper/webhook";
 import "./styles.css";
 
@@ -39,11 +40,15 @@ function UserProfile({ userDetails }) {
     dispatch(resetUserLoggedState());
   };
 
+  const test = () => {
+    exportLogs();
+  };
+
   return (
     <div className="flex-right-align">
       <div className="user-profile-section">
         <div className="discord-avatar">
-          <img src={userDetails?.avatar || user} alt="" />
+          <img onClick={test} src={userDetails?.avatar || user} alt="" />
         </div>
         <div className="user-profile-details">
           <h3>
