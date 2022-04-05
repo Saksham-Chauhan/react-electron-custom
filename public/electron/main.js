@@ -4,18 +4,16 @@ const ping = require("ping");
 const auth = require("./auth");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
-const NetworkSpeed = require("network-speed");
 const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
-const testNetworkSpeed = new NetworkSpeed();
 const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
-
+const cp = require("child_process");
 let win = null;
 let mainWindow = null;
 let splash = null;
@@ -449,38 +447,10 @@ ipcMain.on("proxy-tester", async (event, data) => {
 });
 
 // NEWTORK SPEED
-async function getNetworkDownloadSpeed() {
-  const baseUrl = "https://eu.httpbin.org/stream-bytes/500000";
-  const fileSizeInBytes = 500000;
-  const speed = await testNetworkSpeed.checkDownloadSpeed(
-    baseUrl,
-    fileSizeInBytes
-  );
-  return speed.kbps;
-}
-
-async function getNetworkUploadSpeed() {
-  const options = {
-    hostname: "www.google.com",
-    port: 80,
-    path: "/catchers/544b09b4599c1d0200000289",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const fileSizeInBytes = 2000000;
-  const speed = await testNetworkSpeed.checkUploadSpeed(
-    options,
-    fileSizeInBytes
-  );
-  return speed.kbps;
-}
+async function getNetworkSpeed() {}
 
 ipcMain.handle("get-speed", async () => {
-  const download = await getNetworkDownloadSpeed();
-  const upload = await getNetworkUploadSpeed();
-  return { download, upload };
+  const networkSpeed = await getNetworkSpeed();
 });
 
 const debugSendToRendrer = (log) => {

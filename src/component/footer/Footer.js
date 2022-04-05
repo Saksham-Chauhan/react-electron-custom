@@ -7,7 +7,7 @@ import up from "../../assests/images/up.svg";
 import down from "../../assests/images/down.svg";
 import { fetchNetworkSpeed } from "../../helper/electron-bridge";
 
-const FETCH_NETWORK_SPEED_GAP = 3 * 60 * 1000;
+const FETCH_NETWORK_SPEED_GAP = 2 * 60 * 1000;
 
 function Footer() {
   const [speed, setSpeed] = useState({

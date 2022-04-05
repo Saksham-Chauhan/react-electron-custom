@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import bot from "./assests/images/bot.svg";
 import chip from "./assests/images/chip.svg";
