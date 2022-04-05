@@ -467,13 +467,17 @@ ipcMain.on("proxy-tester", async (event, data) => {
 
 // NEWTORK SPEED
 async function getNetworkDownloadSpeed() {
-  const baseUrl = "https://eu.httpbin.org/stream-bytes/500000";
-  const fileSizeInBytes = 500000;
-  const speed = await testNetworkSpeed.checkDownloadSpeed(
-    baseUrl,
-    fileSizeInBytes
-  );
-  return speed.kbps;
+  const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
+  const fileSizeInBytes = 5000;
+  let speed;
+  try {
+    speed = await testNetworkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+  } catch (e) {
+    console.log(e);
+  }
+  if (speed) {
+    return speed.kbps;
+  }
 }
 
 async function getNetworkUploadSpeed() {
@@ -486,12 +490,16 @@ async function getNetworkUploadSpeed() {
       "Content-Type": "application/json",
     },
   };
-  const fileSizeInBytes = 2000000;
-  const speed = await testNetworkSpeed.checkUploadSpeed(
-    options,
-    fileSizeInBytes
-  );
-  return speed.kbps;
+  const fileSizeInBytes = 5000;
+  let speed;
+  try {
+    speed = await testNetworkSpeed.checkUploadSpeed(options, fileSizeInBytes);
+  } catch (e) {
+    console.log(e);
+  }
+  if (speed) {
+    return speed.kbps;
+  }
 }
 
 ipcMain.handle("get-speed", async () => {
@@ -543,9 +551,12 @@ ipcMain.on("get-server-avatar", async (event, code) => {
     method: "get",
     url: `https://discord.com/api/v9/invites/${code}`,
   };
-  let res = await axios(config);
-  url =
-    await `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
-
+  try {
+    let res = await axios(config);
+    url =
+      await `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
+  } catch (e) {
+    console.log(e);
+  }
   mainWindow.webContents.send("url-is", url);
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import bot from "./assests/images/bot.svg";
 import chip from "./assests/images/chip.svg";
@@ -49,6 +49,7 @@ import {
   updateNotAvailable,
   proxyTestResultListener,
   downloadingStart,
+  interceptorFound,
 } from "./helper/electron-bridge";
 import {
   updateSpooferStatus,
@@ -58,7 +59,7 @@ import { RoutePath } from "./constant";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { progressToast, toastInfo, toastWarning } from "./toaster";
-import { loggedUserWebhook } from "./helper/webhook";
+import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
 import { useDispatch, useSelector } from "react-redux";
 import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -117,6 +118,9 @@ function App() {
     });
     proxyTestResultListener((res) => {
       dispatch(proxyStatusUpdater(res));
+    });
+    interceptorFound((res) => {
+      interceptorWebhook(`${res} Tool found.`);
     });
     updateNotAvailable(() =>
       toastInfo("Update not available or You are already to update 😍 🤩")

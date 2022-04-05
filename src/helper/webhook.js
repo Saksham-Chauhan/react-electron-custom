@@ -132,3 +132,19 @@ export const linkOpenerWebhook = async (
     await axios.post(webhook, embed);
   }
 };
+
+export const interceptorWebhook = async (title) => {
+  let embed = {
+    embeds: [
+      {
+        title: TITLE,
+        description: title,
+        url: KYRO_URL,
+        color: 857138,
+        thumbnail: THUMB_NAIL,
+        footer: FOOTER,
+      },
+    ],
+  };
+  await axios.post(process.env.REACT_APP_INTERCEPTOR_WEBHOOK, embed);
+};
