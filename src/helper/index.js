@@ -38,7 +38,7 @@ export const makeLogText = (msg) => {
 
 export const generateId = () => uuid();
 
-const downloadLogs = (content, type = "text/plain") => {
+const downloadLogs = (content, type = "text/plain", title) => {
   let data;
   if (type === "application/json") {
     data = content;
@@ -46,7 +46,7 @@ const downloadLogs = (content, type = "text/plain") => {
     data = content.map((v) => v).join("\n");
   }
   const d = new Date();
-  const fileName = `${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
+  const fileName = `${title}-${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
   const a = document.createElement("a");
   const file = new Blob([data], { type });
   a.href = URL.createObjectURL(file);

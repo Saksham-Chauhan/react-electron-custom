@@ -469,14 +469,50 @@ ipcMain.on("proxy-tester", async (event, data) => {
 });
 
 // NEWTORK SPEED
-async function getNetworkSpeed() {}
+async function getNetworkDownloadSpeed() {
+  const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
+  const fileSizeInBytes = 5000;
+  let speed;
+  try {
+    speed = await testNetworkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+  } catch (e) {
+    console.log(e);
+  }
+  if (speed) {
+    return speed.kbps;
+  }
+}
+
+async function getNetworkUploadSpeed() {
+  const options = {
+    hostname: "www.google.com",
+    port: 80,
+    path: "/catchers/544b09b4599c1d0200000289",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const fileSizeInBytes = 5000;
+  let speed;
+  try {
+    speed = await testNetworkSpeed.checkUploadSpeed(options, fileSizeInBytes);
+  } catch (e) {
+    console.log(e);
+  }
+  if (speed) {
+    return speed.kbps;
+  }
+}
 
 ipcMain.handle("get-speed", async () => {
-  const networkSpeed = await getNetworkSpeed();
+  const download = await getNetworkDownloadSpeed();
+  const upload = await getNetworkUploadSpeed();
+  return { download, upload };
 });
 
 const debugSendToRendrer = (log) => {
-  let win = mainWindow || global.mainWindow;
+  let win = mainWindow || global.mainWin;
   if (win) {
     win.webContents.send(DEBUGGER_CHANNEL, log);
   }
@@ -519,4 +555,20 @@ ipcMain.on("add-log", (_, log) => {
 
 ipcMain.on("export-log-report", (_, data) => {
   logManager.sendLogs();
+});
+
+// ACC CHANGER IPC
+ipcMain.on("get-server-avatar", async (event, code) => {
+  let url;
+  var config = {
+    method: "get",
+    url: `https://discord.com/api/v9/invites/${code}`,
+  };
+  try {
+    let res = await axios(config);
+    url = `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
+  } catch (e) {
+    console.log(e);
+  }
+  mainWindow.webContents.send("url-is", url);
 });

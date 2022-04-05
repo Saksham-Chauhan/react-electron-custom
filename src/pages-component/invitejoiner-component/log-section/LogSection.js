@@ -10,7 +10,7 @@ function LogSection({ logList }) {
 
   const handleExport = () => {
     if (logList.length > 0) {
-      handleExportLogs(logList);
+      handleExportLogs(logList, "text/plain", "invite-joiner");
     } else toastWarning("Nothing to export");
   };
 

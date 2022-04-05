@@ -202,7 +202,7 @@ function Twitter() {
           }
           const maskedKey = apiList[rotaterIndex].apiKey.substring(0, 4);
           const maskedSecret = apiList[rotaterIndex].apiSecret.substring(0, 4);
-          const token = `Api Key ${maskedKey} ## ## & Api Scret${maskedSecret}## ##`;
+          const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
           let log = `Twitter  monitor start with ${token}`;
           sendLogs(log);
           dispatch(setTwitterSetting(prevState));

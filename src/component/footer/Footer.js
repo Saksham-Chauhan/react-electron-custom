@@ -5,9 +5,9 @@ import connected from "../../assests/images/network.svg";
 import disconnected from "../../assests/images/nowifi.svg";
 import up from "../../assests/images/up.svg";
 import down from "../../assests/images/down.svg";
-import { fetchNetworkSpeed } from "../../helper/electron-bridge";
+import { fetchNetworkSpeed, sendLogs } from "../../helper/electron-bridge";
 
-const FETCH_NETWORK_SPEED_GAP = 2 * 60 * 1000;
+const FETCH_NETWORK_SPEED_GAP = 3 * 1000;
 
 function Footer() {
   const [speed, setSpeed] = useState({
@@ -25,7 +25,8 @@ function Footer() {
         });
         timer = setTimeout(fetchSpeed, FETCH_NETWORK_SPEED_GAP);
       } catch (error) {
-        // console.log("Error in getting Network Spped", error.message);
+        const log = `Error in getting Network Spped, ${error.message}`;
+        sendLogs(log);
       }
     };
     fetchSpeed();
@@ -35,7 +36,11 @@ function Footer() {
   }, []);
 
   function makeRound(str) {
-    return Math.round(Number(str) / 1000);
+    if (str === "Infinity" || str === undefined) {
+      return Math.round(Number(0) / 1000);
+    } else {
+      return Math.round(Number(str) / 1000);
+    }
   }
 
   return (

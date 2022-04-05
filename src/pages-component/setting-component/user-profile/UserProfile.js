@@ -1,18 +1,17 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import logout from "../../../assests/images/logout.svg";
-import user from "../../../assests/images/user.svg";
-import { discordJoinedAtRegex } from "../../../constant/regex";
+import "./styles.css";
 import {
+  setUserDetails,
+  resetUserLoggedState,
   fetchWebhookListState,
   fetchWebhookSettingState,
-  resetUserLoggedState,
-  setUserDetails,
 } from "../../../features/counterSlice";
 import { MONTHS } from "../../../helper";
-import { exportLogs } from "../../../helper/electron-bridge";
+import user from "../../../assests/images/user.svg";
+import { useDispatch, useSelector } from "react-redux";
+import logout from "../../../assests/images/logout.svg";
 import { loggedUserWebhook } from "../../../helper/webhook";
-import "./styles.css";
+import { discordJoinedAtRegex } from "../../../constant/regex";
 
 function UserProfile({ userDetails }) {
   const dispatch = useDispatch();
@@ -40,15 +39,11 @@ function UserProfile({ userDetails }) {
     dispatch(resetUserLoggedState());
   };
 
-  const test = () => {
-    exportLogs();
-  };
-
   return (
     <div className="flex-right-align">
       <div className="user-profile-section">
         <div className="discord-avatar">
-          <img onClick={test} src={userDetails?.avatar || user} alt="" />
+          <img src={userDetails?.avatar || user} alt="" />
         </div>
         <div className="user-profile-details">
           <h3>
