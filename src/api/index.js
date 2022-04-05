@@ -161,23 +161,3 @@ export const generateRandomAvatar = async (api = IMAGE_API) => {
   const str = arrayBufferToString(arrayBuffer, "base64");
   return "data:image/jpeg;base64," + str;
 };
-
-export const getServerAvatarURL = async (inviteCode, token, proxy) => {
-  console.log("token", token);
-  try {
-    let res = await fetch(`http://discordapp.com/api/invites/${inviteCode}`, {
-      method: "GET",
-      mode: "no-cors",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      proxy: proxy,
-    });
-    console.log("res", res);
-    return `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
-  } catch (e) {
-    //  console.log(e)
-  }
-};
