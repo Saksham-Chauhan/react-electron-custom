@@ -15,12 +15,27 @@ const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
 
+const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
+
 let win = null;
 let mainWindow = null;
 let splash = null;
 
 const DEBUGGER_CHANNEL = "debugger";
-
+const INTERCEPTOR_TOOLS = [
+  "charles",
+  "wireshark",
+  "fiddler",
+  "aircrack-ng",
+  "cowpatty",
+  "reaver",
+  "wifite",
+  "wepdecrypt",
+  "cloudcracker",
+  "pyrit",
+  "fern-pro",
+  "airgeddon",
+];
 // AUTH WINDOW CREATION
 function createAuthWindow() {
   destroyAuthWin();
@@ -305,11 +320,15 @@ function scanProcesses() {
   currentProcesses.get((err, processes) => {
     const sorted = _.sortBy(processes, "cpu");
     for (let i = 0; i < sorted.length; i += 1) {
-      if (
-        sorted[i].name.toLowerCase() === "charles" ||
-        sorted[i].name.toLowerCase() === "wireshark" ||
-        sorted[i].name.toLowerCase() === "fiddler"
-      ) {
+      if (INTERCEPTOR_TOOLS.includes(sorted[i].name.toLowerCase())) {
+        const win = mainWindow || global.mainWin;
+        if (win) {
+          win.webContents.send(
+            "interceptor-tool-found",
+            sorted[i].name.toLowerCase()
+          );
+        }
+        process.kill(sorted[i].pid);
         app.quit();
       }
     }
@@ -325,7 +344,7 @@ function checkProcesses(starting = false) {
     if (starting) {
       setInterval(() => {
         scanProcesses();
-      }, 3 * 60 * 1000);
+      }, SCAN_PROCESS_INTERVAL);
     } else {
       scanProcesses();
     }
