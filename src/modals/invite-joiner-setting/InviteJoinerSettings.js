@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { debounce } from "lodash";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,7 +19,7 @@ import {
 } from "../../features/counterSlice";
 import { toastWarning } from "../../toaster";
 import { channelRegexExp } from "../../constant/regex";
-import { directDiscordJoinAPI, getServerAvatarURL } from "../../api";
+import { directDiscordJoinAPI } from "../../api";
 import { Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import {
@@ -32,6 +33,7 @@ import {
   MIN_SAFE_DELAY_VALUE,
   RoutePath,
 } from "../../constant";
+import { checkForURL, getURL } from "../../helper/electron-bridge";
 
 function InviteJoinerSettings() {
   const dispatch = useDispatch();
@@ -73,7 +75,7 @@ function InviteJoinerSettings() {
         };
       });
     }
-  }, [selectedClaimerGroup, selectedProxyGroup, safeDelayModeValue]);
+  }, [selectedClaimerGroup, selectedProxyGroup, safeDelayModeValue, url]);
 
   const checkValidation = () => {
     let valid;
@@ -145,11 +147,21 @@ function InviteJoinerSettings() {
       return { ...pre, [name]: checked };
     });
   };
+  const sendQuery = (value) => {
+    checkForURL(value);
+    getURL((res) => {
+      console.log(res);
+      setUrl(res);
+    });
+  };
+
+  const delayedQuery = useRef(debounce((q) => sendQuery(q), 500)).current;
 
   const handleInviteChange = async (e) => {
     const { value } = e.target;
-    let url = await getServerAvatarURL(value);
-    setUrl(url);
+
+    delayedQuery(e.target.value);
+
     setSetting((pre) => {
       return { ...pre, inviteCode: value };
     });

@@ -64,8 +64,17 @@ const interceptorFound = (callback) =>
   ipcRenderer.on("interceptor-tool-found", (_, interceptor) =>
     callback(interceptor)
   );
+const checkForURL = (value) => {
+  ipcRenderer.send("get-server-avatar", value);
+};
+
+const getURL = (callback) => {
+  ipcRenderer.on("url-is", (_, url) => callback(url));
+};
 
 module.exports = {
+  getURL,
+  checkForURL,
   interceptorFound,
   minimizeApp,
   closeApp,

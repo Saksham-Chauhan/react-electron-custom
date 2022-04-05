@@ -11,6 +11,7 @@ const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const testNetworkSpeed = new NetworkSpeed();
+const axios = require("axios");
 const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -535,3 +536,16 @@ const downloadCsvFileDialog = async (fileName, url) => {
     });
   }
 };
+
+ipcMain.on("get-server-avatar", async (event, code) => {
+  let url;
+  var config = {
+    method: "get",
+    url: `https://discord.com/api/v9/invites/${code}`,
+  };
+  let res = await axios(config);
+  url =
+    await `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
+
+  mainWindow.webContents.send("url-is", url);
+});
