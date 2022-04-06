@@ -1,30 +1,29 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const _ = require("lodash");
 const path = require("path");
 const ping = require("ping");
 const auth = require("./auth");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
-const NetworkSpeed = require("network-speed");
-const { fetchTweets } = require("./helper/fetchTweet");
-const { autoUpdater } = require("electron-updater");
-const currentProcesses = require("current-processes");
-const spooferManager = require("./script/manager/spoof-manager");
-const logManager = require("./script/manager/log-manager");
-const richPresence = require("discord-rich-presence")("938338403106320434");
-const _ = require("lodash");
-const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
+const NetworkSpeed = require("network-speed");
+const ObjectsToCsv = require("objects-to-csv");
+const { autoUpdater } = require("electron-updater");
+const currentProcesses = require("current-processes");
+const { fetchTweets } = require("./helper/fetchTweet");
+const logManager = require("./script/manager/log-manager");
+const spooferManager = require("./script/manager/spoof-manager");
+const richPresence = require("discord-rich-presence")("938338403106320434");
 
+const DEBUGGER_CHANNEL = "debugger";
 const testNetworkSpeed = new NetworkSpeed();
-
 const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 
 let win = null;
 let mainWindow = null;
 let splash = null;
 
-const DEBUGGER_CHANNEL = "debugger";
 const INTERCEPTOR_TOOLS = [
   "charles",
   "wireshark",
@@ -39,6 +38,7 @@ const INTERCEPTOR_TOOLS = [
   "fern-pro",
   "airgeddon",
 ];
+
 // AUTH WINDOW CREATION
 function createAuthWindow() {
   destroyAuthWin();
@@ -69,7 +69,6 @@ function createAuthWindow() {
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-
       const options = {
         type: "question",
         defaultId: 2,

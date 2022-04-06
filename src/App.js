@@ -8,23 +8,23 @@ import {
   fetchSpoofModalState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
+  fetchDashboardModalState,
   fetchWebhookSettingState,
   fetchEditProxyModalState,
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
-  fetchInviteJoinerSettingModalState,
-  fetchDashboardModalState,
   fetchAccountChangerModalState,
+  fetchInviteJoinerSettingModalState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
   OnboardingModal,
   ProxyGroupModal,
   ClaimerGroupModal,
+  AccountChangerModal,
   DiscordAccountModal,
   EditProxySingleModal,
   InviteJoinerSettingModal,
-  AccountChangerModal,
 } from "./modals";
 import {
   Login,
@@ -39,60 +39,64 @@ import {
   InviteJoinerPage,
   AccountChangerPage,
 } from "./pages";
-
 import {
+  sendLogs,
   authUser,
   decodeUser,
   errorToaster,
   spooferToaster,
   updateProgress,
+  interceptorFound,
+  downloadingStart,
   updateNotAvailable,
   proxyTestResultListener,
-  downloadingStart,
-  sendLogs,
-  interceptorFound,
 } from "./helper/electron-bridge";
 import {
-  updateSpooferStatus,
   resetSpooferStatus,
+  updateSpooferStatus,
 } from "./features/logic/spoof";
-import { EndPointToPage, RoutePath } from "./constant";
+import {
+  toastInfo,
+  toastWarning,
+  progressToast,
+  MAX_TOAST_LIMIT,
+} from "./toaster";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { progressToast, toastInfo, toastWarning } from "./toaster";
-import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
+import { EndPointToPage, RoutePath } from "./constant";
 import { useDispatch, useSelector } from "react-redux";
 import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
+import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
 import { closelinkOpenerMonitor } from "./features/logic/discord-account";
 import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
 
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const proxyModalState = useSelector(fetchProxyGroupModalState);
-  const discordModalState = useSelector(fetchDiscordModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
-  const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
-  const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
+  const discordModalState = useSelector(fetchDiscordModalState);
+  const logggedUserDetails = useSelector(fetchLoggedUserDetails);
+  const proxyModalState = useSelector(fetchProxyGroupModalState);
+  const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const onBoardingModalState = useSelector(fetchDashboardModalState);
+  const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const accountChangerModalState = useSelector(fetchAccountChangerModalState);
   const inviteSettigModalState = useSelector(
     fetchInviteJoinerSettingModalState
   );
-  const logggedUserDetails = useSelector(fetchLoggedUserDetails);
 
   const animClass = !globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
 
   useEffect(() => {
-    dispatch(closelinkOpenerMonitor());
+    dispatch(resetIJMonitor());
     dispatch(resetSpooferStatus());
     dispatch(resetTwitterMonitor());
-    dispatch(resetIJMonitor());
+    dispatch(closelinkOpenerMonitor());
     spooferToaster((data) => {
       if (Object.keys(data).length > 0) {
         dispatch(updateSpooferStatus(data));
@@ -111,7 +115,8 @@ function App() {
               globalSetting?.logOnOff
             );
           } catch (e) {
-            // console.log(e);
+            const log = `Something went wrong on dispatch user ${e.message}`;
+            sendLogs(log);
           }
           dispatch(setUserDetails(decode));
         } else toastWarning("Sorry, you don't have required role  😭");
@@ -157,13 +162,13 @@ function App() {
 
   return (
     <div className="app">
-      {accountChangerModalState && <AccountChangerModal />}
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
       {!onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {proxyEditModalState && <EditProxySingleModal />}
+      {accountChangerModalState && <AccountChangerModal />}
       {inviteSettigModalState && <InviteJoinerSettingModal />}
       <div className="app sidebar">
         <AppSidebar />
@@ -195,7 +200,7 @@ function App() {
             </Routes>
             <AppFooter />
           </div>
-          <ToastContainer limit={4} />
+          <ToastContainer limit={MAX_TOAST_LIMIT} />
         </div>
       </div>
     </div>
