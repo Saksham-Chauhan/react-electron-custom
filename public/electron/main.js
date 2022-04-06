@@ -11,6 +11,7 @@ const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
 const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
+const axios = require("axios");
 const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
