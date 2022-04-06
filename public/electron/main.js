@@ -4,6 +4,7 @@ const ping = require("ping");
 const auth = require("./auth");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
+const NetworkSpeed = require("network-speed");
 const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
@@ -14,6 +15,8 @@ const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
+
+const testNetworkSpeed = new NetworkSpeed();
 
 const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 

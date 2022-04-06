@@ -214,8 +214,8 @@ function InviteJoinerSettings() {
           setting
         );
         if (response === null) {
-          const token = token.split(":")[3].substring(0, 4) + "## ##";
-          const log = "Something went wrong in Direct Join with" + token;
+          const tkn = token.split(":")[3].substring(0, 4) + "## ##";
+          const log = "Something went wrong in Direct Join with" + tkn;
           sendLogs(log);
           toastWarning(`Something went wrong 🥲`);
         }
