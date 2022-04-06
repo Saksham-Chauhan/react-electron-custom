@@ -17,7 +17,7 @@ const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
 
-const testNetworkSpeed = new NetworkSpeed();
+const networkSpeed = new NetworkSpeed();
 
 const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 
@@ -478,7 +478,7 @@ async function getNetworkDownloadSpeed() {
   const fileSizeInBytes = 5000;
   let speed;
   try {
-    speed = await testNetworkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+    speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
   } catch (e) {
     console.log(e);
   }
@@ -500,7 +500,7 @@ async function getNetworkUploadSpeed() {
   const fileSizeInBytes = 5000;
   let speed;
   try {
-    speed = await testNetworkSpeed.checkUploadSpeed(options, fileSizeInBytes);
+    speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
   } catch (e) {
     console.log(e);
   }
