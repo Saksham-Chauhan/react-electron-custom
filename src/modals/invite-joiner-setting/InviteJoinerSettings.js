@@ -217,7 +217,7 @@ function InviteJoinerSettings() {
           const tkn = token.split(":")[3].substring(0, 4) + "## ##";
           const log = "Something went wrong in Direct Join with" + tkn;
           sendLogs(log);
-          toastWarning(`Something went wrong 🥲`);
+          toastWarning(`Something went wrong while direct join`);
         }
       });
       handleCloseModal();

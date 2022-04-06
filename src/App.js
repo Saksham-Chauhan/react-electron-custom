@@ -114,7 +114,7 @@ function App() {
             // console.log(e);
           }
           dispatch(setUserDetails(decode));
-        } else toastWarning("Sorry, you don't have required role  😭");
+        } else toastWarning("Sorry, you don't have required role");
       }
     });
     proxyTestResultListener((res) => {

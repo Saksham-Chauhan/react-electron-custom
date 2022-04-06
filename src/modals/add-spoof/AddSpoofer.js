@@ -12,7 +12,6 @@ import {
   fetchProxyGroupList,
 } from "../../features/counterSlice";
 import { toastWarning } from "../../toaster";
-import { UrlRegexp } from "../../constant/regex";
 import { spooferSchema } from "../../validation";
 import { useDispatch, useSelector } from "react-redux";
 import decrement from "../../assests/images/decrement.svg";
@@ -100,7 +99,7 @@ function AddSpoofer() {
    * handler bind to submit btn
    */
   const handleSubmit = () => {
-    if (UrlRegexp.test(spoof.url)) {
+    if (spoof.url) {
       const result = validationChecker(spooferSchema, spoof);
       if (result) {
         for (let i = 0; i < Number(spoof.quantity); i++) {

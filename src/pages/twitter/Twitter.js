@@ -60,8 +60,8 @@ function Twitter() {
         userList.forEach(async (tweetUser) => {
           if (TweetHandlerRegExp.test(tweetUser["value"])) {
             const newTweets = await getTweets(
-              apiList[rotaterIndex].apiKey,
-              apiList[rotaterIndex].apiSecret,
+              apiList[rotaterIndex]?.apiKey,
+              apiList[rotaterIndex]?.apiSecret,
               tweetUser["value"]
             );
             if (newTweets !== undefined && typeof newTweets !== "string") {
@@ -149,14 +149,14 @@ function Twitter() {
                 }
               }
             } else {
-              const log = `${newTweets} with ${apiList[rotaterIndex].apiName}`;
+              const log = `${newTweets} with ${apiList[rotaterIndex]?.apiName}`;
               sendLogs(log);
               dispatch(incrementApiRotater());
             }
           }
         });
       } catch (error) {
-        const log = `${error.message} ${apiList[rotaterIndex].apiName}`;
+        const log = `${error.message} ${apiList[rotaterIndex]?.apiName}`;
         sendLogs(log);
         dispatch(incrementApiRotater());
       }
@@ -200,12 +200,18 @@ function Twitter() {
           } else {
             prevState["monitorStartDate"] = new Date().toUTCString();
           }
-          const maskedKey = apiList[rotaterIndex].apiKey.substring(0, 4);
-          const maskedSecret = apiList[rotaterIndex].apiSecret.substring(0, 4);
+          const maskedKey = apiList[rotaterIndex]?.apiKey.substring(0, 4);
+          const maskedSecret = apiList[rotaterIndex]?.apiSecret.substring(0, 4);
           const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
           let log = `Twitter  monitor start with ${token}`;
           sendLogs(log);
-          dispatch(setTwitterSetting(prevState));
+          if (checked === false) {
+            prevState["startAutoInviteJoiner"] = false;
+            prevState["startAutoLinkOpener"] = false;
+            dispatch(setTwitterSetting(prevState));
+          } else {
+            dispatch(setTwitterSetting(prevState));
+          }
         } else toastWarning("Enter some Twitter handlers");
       } else {
         toastWarning("Add some API keys");

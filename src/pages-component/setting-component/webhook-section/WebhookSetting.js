@@ -134,7 +134,7 @@ function WebhookSetting({ userDetails }) {
             </div>
           </div>
           <div className="system-setting log-report">
-            <label>Logs</label>
+            <label>Export logs</label>
             <svg
               onClick={handleExportLog}
               viewBox="0 0 12 12"

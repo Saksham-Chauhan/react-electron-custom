@@ -93,12 +93,11 @@ export const makeProxyOptions = (proxyGroupList = []) => {
   let arr = [];
   if (proxyGroupList.length > 0) {
     for (let i = 0; i < proxyGroupList.length; i++) {
-      let group = proxyGroupList[i];
-      if (group["proxyList"].length > 0) {
+      if (proxyGroupList[i]["proxyList"].length > 0) {
         let obj = {};
-        obj["label"] = group["groupName"];
-        obj["value"] = group["proxies"];
-        obj["id"] = group["id"];
+        obj["label"] = proxyGroupList[i]["groupName"];
+        obj["value"] = proxyGroupList[i]["proxies"];
+        obj["id"] = proxyGroupList[i]["id"];
         arr.push(obj);
       }
     }

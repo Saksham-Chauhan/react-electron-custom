@@ -462,7 +462,7 @@ const proxyTester = async (proxy) => {
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
   let proxyArr = proxy.split(":");
-  if (proxyArr.length === 4) {
+  if (proxyArr.length === 4 || proxyArr.length === 2) {
     let proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
@@ -515,7 +515,7 @@ ipcMain.handle("get-speed", async () => {
   return { download, upload };
 });
 
-const debugSendToRendrer = (log) => {
+const debugSendToIpcRenderer = (log) => {
   let win = mainWindow || global.mainWin;
   if (win) {
     win.webContents.send(DEBUGGER_CHANNEL, log);
@@ -523,16 +523,16 @@ const debugSendToRendrer = (log) => {
 };
 
 ipcMain.on("read-array", async (event, array) => {
-  debugSendToRendrer("Ready to read array", array);
+  debugSendToIpcRenderer("Ready to read array", array);
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
-  debugSendToRendrer(csv);
+  debugSendToIpcRenderer(csv);
   const data = await csv.toString();
-  debugSendToRendrer(data);
+  debugSendToIpcRenderer(data);
   const str = str2ab(data);
-  debugSendToRendrer(str);
+  debugSendToIpcRenderer(str);
   const url = `data:text/csv;base64,${new Buffer.from(str).toString("base64")}`;
-  debugSendToRendrer(url);
+  debugSendToIpcRenderer(url);
   await downloadCsvFileDialog(`${fileName}.csv`, url);
 });
 

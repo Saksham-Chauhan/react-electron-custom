@@ -118,7 +118,8 @@ export const directDiscordJoinAPI = async (
         proxy
       );
       if (inviteResponse.status === 200) {
-        const tkn = token.substring(0, 4) + "## ##";
+        const tkn =
+          token.substring(0, 4) + "## ##" + token.charAt(token.length() - 1);
         toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
         const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
         sendLogs(log);

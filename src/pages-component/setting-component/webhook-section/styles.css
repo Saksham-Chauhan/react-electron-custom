@@ -69,6 +69,11 @@
 }
 .system-setting.log-report {
   display: flex;
+  align-items: center;
+}
+.system-setting>label{
+  text-align: right;
+  margin-right: 0.5em;
 }
 .system-setting.log-report > label {
   flex: 1;
