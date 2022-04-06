@@ -11,8 +11,8 @@ function ProxyTableRow({ data, index, onEdit, onDelete, onTest }) {
     <div className="tbl-header-inner body">
       <div className="tbl-header-title body">{index}</div>
       <div className="tbl-header-title body">{`${proxyArr[0]}:${proxyArr[1]}`}</div>
-      <div className="tbl-header-title body">{proxyArr[2]}</div>
-      <div className="tbl-header-title body">{proxyArr[3]}</div>
+      <div className="tbl-header-title body">{proxyArr[2] || "N/A"}</div>
+      <div className="tbl-header-title body">{proxyArr[3] || "N/A"}</div>
       <div
         style={{
           color: getColor(data["status"]),

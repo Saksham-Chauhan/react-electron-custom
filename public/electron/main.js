@@ -449,7 +449,7 @@ ipcMain.on("launch-spoofer", (_, data) => {
 
 // proxy IPC
 const proxyTester = async (proxy) => {
-  let res = await ping.promise.probe(proxy);
+  let res = await ping.promise.probe(proxy, { timeout: 5 });
   if (res["time"] !== "unknown") {
     return res;
   } else {
@@ -460,7 +460,7 @@ const proxyTester = async (proxy) => {
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
   let proxyArr = proxy.split(":");
-  if (proxyArr.length === 4) {
+  if (proxyArr.length === 4 || proxyArr.length === 2) {
     let proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
