@@ -70,8 +70,6 @@ export const twiiterApiSchema = joi.object({
   apiName: joi.string().required().label("Enter API Name"),
   apiKey: joi.string().required().label("Enter API Key"),
   apiSecret: joi.string().required().label("Enter API Secret"),
-  accessToken: joi.string().required().label("Enter Access Token"),
-  accessSecret: joi.string().required().label("Enter Access Secret"),
 });
 
 export const claimerGroupSchema = joi.object({

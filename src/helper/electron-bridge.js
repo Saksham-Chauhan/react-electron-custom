@@ -14,6 +14,14 @@ const checkForUpdates = () => {
   ipcRenderer.send("checkForUpdates");
 };
 
+const updateProgress = (callback) =>
+  ipcRenderer.on("update:pogress", (_, progress) => callback(progress));
+
+const downloadingStart = (callback) =>
+  ipcRenderer.on("update:downloading", (_, data) => callback(data));
+
+const sendLogs = (log) => ipcRenderer.send("add-log", log);
+const exportLogs = () => ipcRenderer.send("export-log-report");
 const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
 
 const updateNotAvailable = (callback) =>
@@ -60,7 +68,22 @@ const decodeUser = (encodeString) =>
 const debuggerChannnel = () =>
   ipcRenderer.on("debugger", (_, logs) => console.log("Logs", logs));
 
+const interceptorFound = (callback) =>
+  ipcRenderer.on("interceptor-tool-found", (_, interceptor) =>
+    callback(interceptor)
+  );
+const checkForURL = (value) => {
+  ipcRenderer.send("get-server-avatar", value);
+};
+
+const getURL = (callback) => {
+  ipcRenderer.on("url-is", (_, url) => callback(url));
+};
+
 module.exports = {
+  getURL,
+  checkForURL,
+  interceptorFound,
   minimizeApp,
   closeApp,
   maximizeApp,
@@ -83,4 +106,8 @@ module.exports = {
   auth,
   readArrayOfJson,
   debuggerChannnel,
+  updateProgress,
+  downloadingStart,
+  sendLogs,
+  exportLogs,
 };

@@ -9,11 +9,15 @@ import {
 import { useDispatch } from "react-redux";
 import TableRow from "../spoof-table-row/SpooferTableRow";
 import { deleteSpooferFromList } from "../../../features/logic/spoof";
+import { toastWarning } from "../../../toaster";
 
 function SpooferTable({ tableList }) {
   const dispatch = useDispatch();
 
   const handleStart = (spoof, setValue) => {
+    if (!tableList.proxyValue) {
+      toastWarning("No proxy found. Using system proxy.");
+    }
     startSpoofer(spoof);
     setValue((pre) => !pre);
   };

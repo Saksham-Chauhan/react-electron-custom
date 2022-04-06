@@ -27,6 +27,9 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
 
   const handleAll = (key) => {
     if (tableList.length > 0) {
+      if (!tableList.proxyValue) {
+        toastWarning("No proxy found. Using system proxy.");
+      }
       tableList.forEach((spoof) => {
         if (key === "LAUNCH") {
           launchSpoofer(spoof);

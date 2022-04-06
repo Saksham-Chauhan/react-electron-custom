@@ -1,5 +1,4 @@
 import { v4 as uuid } from "uuid";
-const open = window.require("open");
 
 export const makeStrOfArr = (arrOfObj) => arrOfObj.map((data) => data["value"]);
 
@@ -39,7 +38,7 @@ export const makeLogText = (msg) => {
 
 export const generateId = () => uuid();
 
-const downloadLogs = (content, type = "text/plain") => {
+const downloadLogs = (content, type = "text/plain", title) => {
   let data;
   if (type === "application/json") {
     data = content;
@@ -47,7 +46,7 @@ const downloadLogs = (content, type = "text/plain") => {
     data = content.map((v) => v).join("\n");
   }
   const d = new Date();
-  const fileName = `${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
+  const fileName = `${title}-${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
   const a = document.createElement("a");
   const file = new Blob([data], { type });
   a.href = URL.createObjectURL(file);
@@ -82,7 +81,8 @@ export const getClaimerValue = (list, obj) => {
   } else return [];
 };
 
-export const handleExportLogs = (logs, type) => downloadLogs(logs, type);
+export const handleExportLogs = (logs, type, logTitle) =>
+  downloadLogs(logs, type, logTitle);
 
 export const tweetTimeToEpoch = (str) => {};
 
@@ -90,37 +90,19 @@ export const tweetTimeToEpoch = (str) => {};
  * function make option for select
  */
 export const makeProxyOptions = (proxyGroupList = []) => {
+  let arr = [];
   if (proxyGroupList.length > 0) {
-    const result = proxyGroupList.map((group) => {
-      let obj = {};
-      obj["label"] = group["groupName"];
-      obj["value"] = group["proxies"];
-      obj["id"] = group["id"];
-      return obj;
-    });
-    return result;
+    for (let i = 0; i < proxyGroupList.length; i++) {
+      if (proxyGroupList[i]["proxyList"].length > 0) {
+        let obj = {};
+        obj["label"] = proxyGroupList[i]["groupName"];
+        obj["value"] = proxyGroupList[i]["proxies"];
+        obj["id"] = proxyGroupList[i]["id"];
+        arr.push(obj);
+      }
+    }
+    return arr;
   } else return [];
-};
-
-export const openChromeBrowser = async (url, chromeUser) => {
-  console.log("first", url, chromeUser);
-  if (chromeUser) {
-    console.log("if", url, chromeUser);
-    await open(url, {
-      app: {
-        name: open.apps.chrome,
-        arguments: [`--profile-directory=${chromeUser["value"]}`],
-      },
-    });
-  } else {
-    console.log("else", url, chromeUser);
-    await open(url, {
-      app: {
-        name: open.apps.chrome,
-        arguments: [`--profile-directory=Default`],
-      },
-    });
-  }
 };
 
 export const sleep = (time) => {

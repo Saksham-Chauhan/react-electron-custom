@@ -1,17 +1,17 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import logout from "../../../assests/images/logout.svg";
-import user from "../../../assests/images/user.svg";
-import { discordJoinedAtRegex } from "../../../constant/regex";
+import "./styles.css";
 import {
+  setUserDetails,
+  resetUserLoggedState,
   fetchWebhookListState,
   fetchWebhookSettingState,
-  resetUserLoggedState,
-  setUserDetails,
 } from "../../../features/counterSlice";
 import { MONTHS } from "../../../helper";
+import user from "../../../assests/images/user.svg";
+import { useDispatch, useSelector } from "react-redux";
+import logout from "../../../assests/images/logout.svg";
 import { loggedUserWebhook } from "../../../helper/webhook";
-import "./styles.css";
+import { discordJoinedAtRegex } from "../../../constant/regex";
 
 function UserProfile({ userDetails }) {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ function UserProfile({ userDetails }) {
       let title = `${userDetails?.username}#${userDetails?.discriminator} Logged out 🥲 `;
       await loggedUserWebhook(title, webhookList[0], option?.logOnOff);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
     dispatch(setUserDetails({}));
     dispatch(resetUserLoggedState());

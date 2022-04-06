@@ -42,8 +42,6 @@ function SettingScreen({
     apiName: "",
     apiKey: "",
     apiSecret: "",
-    accessToken: "",
-    accessSecret: "",
   });
 
   const handleChange = (e) => {
@@ -61,8 +59,6 @@ function SettingScreen({
         apiName: "",
         apiKey: "",
         apiSecret: "",
-        accessToken: "",
-        accessSecret: "",
       });
     }
   };
@@ -140,24 +136,6 @@ function SettingScreen({
               onChange={handleChange}
               placeholderText="Enter API Secret"
             />
-            <AppInputField
-              hideLabel={true}
-              isCustomLabel={true}
-              fieldTitle=""
-              name="accessToken"
-              value={twitterApi?.accessToken}
-              onChange={handleChange}
-              placeholderText="Enter Access Token"
-            />
-            <AppInputField
-              hideLabel={true}
-              isCustomLabel={true}
-              fieldTitle=""
-              name="accessSecret"
-              value={twitterApi?.accessSecret}
-              onChange={handleChange}
-              placeholderText="Enter Access Token Secret"
-            />
             <AppSpacer spacer={15} />
             <div className="setting-twitter-flex full">
               <div onClick={handleSubmit} className="btn">
@@ -175,7 +153,7 @@ function SettingScreen({
                     strokeColor="#B60E0E"
                     size={25}
                     wrapperStyle={{ cursor: "pointer" }}
-                  ></UseAnimations>
+                  />
                 </div>
               ))}
             </div>
@@ -188,7 +166,9 @@ function SettingScreen({
               isCustomLabel={true}
               onChange={handleClaimerSelect}
               placeholderText={
-                claimerList.length > 0 ? "Enter Token Group" : "Add Token Group"
+                claimerList.length > 0
+                  ? "Select Token Group"
+                  : "Add Token Group"
               }
               selectOptions={makeClaimerSelectOption(claimerList)}
               value={getClaimerValue(claimerList, selectedClaimer)}

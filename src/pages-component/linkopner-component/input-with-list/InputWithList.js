@@ -3,8 +3,8 @@ import "./styles.css";
 import { AppSpacer } from "../../../component";
 import plus from "../../../assests/images/plus.svg";
 import exportIcon from "../../../assests/images/export.svg";
-import UseAnimations from 'react-useanimations';
-import trash2 from 'react-useanimations/lib/trash2';
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
 
 function InputWithList({
   title = "Channel ID[s]",
@@ -40,7 +40,11 @@ function InputWithList({
                   <img src={exportIcon} alt="" />
                 </div>
                 <div onClick={logAction?.onClear} className="plus-icon-btn btn">
-                <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25}></UseAnimations>
+                  <UseAnimations
+                    animation={trash2}
+                    strokeColor="#B60E0E"
+                    size={25}
+                  ></UseAnimations>
                 </div>
               </div>
             )}
@@ -50,7 +54,13 @@ function InputWithList({
                 ? list?.map((data, index) => (
                     <div key={data["id"] || index} className="scroll-list-item">
                       <span>{data["label"]}</span>
-                      <UseAnimations onClick={() => onDelete(data)} animation={trash2} strokeColor="#B60E0E" size={25} wrapperStyle={{cursor:"pointer"}}></UseAnimations>
+                      <UseAnimations
+                        onClick={() => onDelete(data)}
+                        animation={trash2}
+                        strokeColor="#B60E0E"
+                        size={25}
+                        wrapperStyle={{ cursor: "pointer" }}
+                      ></UseAnimations>
                     </div>
                   ))
                 : list?.map((data, index) => (
@@ -58,6 +68,15 @@ function InputWithList({
                       <span>{data}</span>
                     </div>
                   ))}
+              {!isLogs ? (
+                list.length ? (
+                  ""
+                ) : (
+                  <p className="blank-text">Leave Blank For All.</p>
+                )
+              ) : (
+                ""
+              )}
             </div>
           </React.Fragment>
         ) : (

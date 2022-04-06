@@ -45,19 +45,22 @@ import {
   decodeUser,
   errorToaster,
   spooferToaster,
-  debuggerChannnel,
+  updateProgress,
   updateNotAvailable,
   proxyTestResultListener,
+  downloadingStart,
+  sendLogs,
+  interceptorFound,
 } from "./helper/electron-bridge";
 import {
   updateSpooferStatus,
   resetSpooferStatus,
 } from "./features/logic/spoof";
-import { RoutePath } from "./constant";
+import { EndPointToPage, RoutePath } from "./constant";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { toastInfo, toastWarning } from "./toaster";
-import { loggedUserWebhook } from "./helper/webhook";
+import { progressToast, toastInfo, toastWarning } from "./toaster";
+import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
 import { useDispatch, useSelector } from "react-redux";
 import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -108,25 +111,39 @@ function App() {
               globalSetting?.logOnOff
             );
           } catch (e) {
-            console.log(e);
+            // console.log(e);
           }
           dispatch(setUserDetails(decode));
-        } else toastWarning("Sorry, you don't have required role  😭");
+        } else toastWarning("Sorry, you don't have required role");
       }
     });
     proxyTestResultListener((res) => {
       dispatch(proxyStatusUpdater(res));
     });
+    interceptorFound((res) => {
+      interceptorWebhook(`${res} Tool found.`);
+    });
     updateNotAvailable(() =>
       toastInfo("Update not available or You are already to update 😍 🤩")
     );
+    downloadingStart(() => {
+      progressToast();
+    });
+    updateProgress((percent) => {
+      const progressDiv = document.querySelector(".progress-value");
+      progressDiv.innerHTML = percent;
+    });
     errorToaster((err) => toastWarning(err));
 
-    if (process.env.NODE_ENV === "development") {
-      debuggerChannnel();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
+
+  // Route Navigation Listener
+  useEffect(() => {
+    const currentPage = EndPointToPage[location.pathname];
+    const log = `Navigate to ${currentPage}`;
+    sendLogs(log);
+  }, [location.pathname]);
 
   // check is user log in or not
   if (Object.keys(logggedUserDetails).length === 0) {

@@ -16,7 +16,7 @@ function LogSection({ list }) {
 
   const handleExport = () => {
     if (list.length > 0) {
-      handleExportLogs(list);
+      handleExportLogs(list, "text/plain", "link-opener");
     } else {
       toastWarning("No log to export !!");
     }

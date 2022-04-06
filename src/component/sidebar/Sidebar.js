@@ -13,9 +13,9 @@ import activeTwitter from "../../assests/activeDefault/twitter-active.svg";
 import activeSettings from "../../assests/activeDefault/settings-active.svg";
 import activeUpdate from "../../assests/activeDefault/update-active.svg";
 import activeSpoof from "../../assests/activeDefault/spoof-active.svg";
-import activeInvite from "../../assests/activeDefault/invite-active.svg";
-import activeNft from "../../assests/activeDefault/nft-active.svg";
-import activeProfile from "../../assests/activeDefault/profile-active.svg";
+import activeInvite from "../../assests//activeDefault/invite-active.svg";
+import activeNft from "../../assests//activeDefault/nft-active.svg";
+import activeProfile from "../../assests//activeDefault/profile-active.svg";
 
 // default icon import
 import defaultDashboard from "../../assests//activeDefault/dashboard-default.svg";
@@ -28,7 +28,7 @@ import defaultSettings from "../../assests/activeDefault/settings-default.svg";
 import defaultSpoof from "../../assests/activeDefault/spoof-default.svg";
 import defaultUpdate from "../../assests/activeDefault/update-default.svg";
 import defaultNft from "../../assests/activeDefault/nft-default.svg";
-import defaultprofile from "../../assests/activeDefault/profile-default.svg";
+import activeDefault from "../../assests//activeDefault/profile-default.svg";
 import { checkForUpdates } from "../../helper/electron-bridge";
 
 const pjson = require("../../../package.json");
@@ -74,7 +74,7 @@ const iconData = [
     to: RoutePath.accountChanger,
     activeIcon: activeProfile,
     activeClass: "profile",
-    defaultIcon: defaultprofile,
+    defaultIcon: activeDefault,
   },
   {
     to: RoutePath.oneclick,

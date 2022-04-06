@@ -9,19 +9,37 @@ const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
+const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
-const testNetworkSpeed = new NetworkSpeed();
+const axios = require("axios");
 const _ = require("lodash");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
+
+const networkSpeed = new NetworkSpeed();
+
+const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 
 let win = null;
 let mainWindow = null;
 let splash = null;
 
 const DEBUGGER_CHANNEL = "debugger";
-
+const INTERCEPTOR_TOOLS = [
+  "charles",
+  "wireshark",
+  "fiddler",
+  "aircrack-ng",
+  "cowpatty",
+  "reaver",
+  "wifite",
+  "wepdecrypt",
+  "cloudcracker",
+  "pyrit",
+  "fern-pro",
+  "airgeddon",
+];
 // AUTH WINDOW CREATION
 function createAuthWindow() {
   destroyAuthWin();
@@ -214,6 +232,7 @@ app.on("activate", () => {
 
 app.on("window-all-closed", function () {
   spooferManager.deleteAllSpoofer();
+  logManager.saveLogs();
   app.quit();
 });
 
@@ -225,6 +244,7 @@ if (!shouldNotQuit) {
 }
 app.on("ready", () => {
   createWindow();
+  logManager.initLogs();
   global.mainWin = mainWindow;
 });
 
@@ -304,11 +324,15 @@ function scanProcesses() {
   currentProcesses.get((err, processes) => {
     const sorted = _.sortBy(processes, "cpu");
     for (let i = 0; i < sorted.length; i += 1) {
-      if (
-        sorted[i].name.toLowerCase() === "charles" ||
-        sorted[i].name.toLowerCase() === "wireshark" ||
-        sorted[i].name.toLowerCase() === "fiddler"
-      ) {
+      if (INTERCEPTOR_TOOLS.includes(sorted[i].name.toLowerCase())) {
+        const win = mainWindow || global.mainWin;
+        if (win) {
+          win.webContents.send(
+            "interceptor-tool-found",
+            sorted[i].name.toLowerCase()
+          );
+        }
+        process.kill(sorted[i].pid);
         app.quit();
       }
     }
@@ -324,7 +348,7 @@ function checkProcesses(starting = false) {
     if (starting) {
       setInterval(() => {
         scanProcesses();
-      }, 3 * 60 * 1000);
+      }, SCAN_PROCESS_INTERVAL);
     } else {
       scanProcesses();
     }
@@ -438,7 +462,7 @@ const proxyTester = async (proxy) => {
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
   let proxyArr = proxy.split(":");
-  if (proxyArr.length === 4) {
+  if (proxyArr.length === 4 || proxyArr.length === 2) {
     let proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
@@ -450,13 +474,17 @@ ipcMain.on("proxy-tester", async (event, data) => {
 
 // NEWTORK SPEED
 async function getNetworkDownloadSpeed() {
-  const baseUrl = "https://eu.httpbin.org/stream-bytes/500000";
-  const fileSizeInBytes = 500000;
-  const speed = await testNetworkSpeed.checkDownloadSpeed(
-    baseUrl,
-    fileSizeInBytes
-  );
-  return speed.kbps;
+  const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
+  const fileSizeInBytes = 5000;
+  let speed;
+  try {
+    speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+  } catch (e) {
+    console.log(e);
+  }
+  if (speed) {
+    return speed.kbps;
+  }
 }
 
 async function getNetworkUploadSpeed() {
@@ -469,12 +497,16 @@ async function getNetworkUploadSpeed() {
       "Content-Type": "application/json",
     },
   };
-  const fileSizeInBytes = 2000000;
-  const speed = await testNetworkSpeed.checkUploadSpeed(
-    options,
-    fileSizeInBytes
-  );
-  return speed.kbps;
+  const fileSizeInBytes = 5000;
+  let speed;
+  try {
+    speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
+  } catch (e) {
+    console.log(e);
+  }
+  if (speed) {
+    return speed.kbps;
+  }
 }
 
 ipcMain.handle("get-speed", async () => {
@@ -483,24 +515,24 @@ ipcMain.handle("get-speed", async () => {
   return { download, upload };
 });
 
-const debugSendToRendrer = (log) => {
-  let win = mainWindow || global.mainWindow;
+const debugSendToIpcRenderer = (log) => {
+  let win = mainWindow || global.mainWin;
   if (win) {
     win.webContents.send(DEBUGGER_CHANNEL, log);
   }
 };
 
 ipcMain.on("read-array", async (event, array) => {
-  debugSendToRendrer("Ready to read array", array);
+  debugSendToIpcRenderer("Ready to read array", array);
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
-  debugSendToRendrer(csv);
+  debugSendToIpcRenderer(csv);
   const data = await csv.toString();
-  debugSendToRendrer(data);
+  debugSendToIpcRenderer(data);
   const str = str2ab(data);
-  debugSendToRendrer(str);
+  debugSendToIpcRenderer(str);
   const url = `data:text/csv;base64,${new Buffer.from(str).toString("base64")}`;
-  debugSendToRendrer(url);
+  debugSendToIpcRenderer(url);
   await downloadCsvFileDialog(`${fileName}.csv`, url);
 });
 
@@ -519,3 +551,28 @@ const downloadCsvFileDialog = async (fileName, url) => {
     });
   }
 };
+
+// LOG IPC EVENT
+ipcMain.on("add-log", (_, log) => {
+  logManager.logMessage(log);
+});
+
+ipcMain.on("export-log-report", (_, data) => {
+  logManager.sendLogs();
+});
+
+// ACC CHANGER IPC
+ipcMain.on("get-server-avatar", async (event, code) => {
+  let url;
+  var config = {
+    method: "get",
+    url: `https://discord.com/api/v9/invites/${code}`,
+  };
+  try {
+    let res = await axios(config);
+    url = `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
+  } catch (e) {
+    console.log(e);
+  }
+  mainWindow.webContents.send("url-is", url);
+});

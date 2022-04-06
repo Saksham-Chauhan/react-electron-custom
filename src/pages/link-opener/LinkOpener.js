@@ -25,13 +25,14 @@ import {
 } from "../../features/counterSlice";
 import { connect } from "react-redux";
 import sound from "../../assests/audio/sound.mp3";
-import { makeLogText, makeStrOfArr, openChromeBrowser } from "../../helper";
+import { makeLogText, makeStrOfArr } from "../../helper";
 import { discordTokenRegExp } from "../../constant/regex";
 import { addLogInList } from "../../features/logic/discord-account";
 import { checkOptions, containsKeyword, testUrlRegex } from "./utils";
 import { toastInfo, toastWarning } from "../../toaster";
 import { linkOpenerWebhook } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
+import { sendLogs } from "../../helper/electron-bridge";
 
 const open = window.require("open");
 const { Client } = window.require("discord.js-selfbot");
@@ -74,6 +75,8 @@ class LinkOpener extends React.PureComponent {
               }
               if (Object.keys(selectedChrome).length > 0) {
                 if (selectedChrome) {
+                  let log = `LO open with ${selectedChrome["value"]} chrome user`;
+                  sendLogs(log);
                   await open(content, {
                     app: {
                       name: open.apps.chrome,
@@ -84,10 +87,12 @@ class LinkOpener extends React.PureComponent {
                   });
                 }
               } else {
+                let log = `LO open with Default chrome profile`;
+                sendLogs(log);
                 await open(content, {
                   app: {
                     name: open.apps.chrome,
-                    arguments: [`--profile-directory=Guest`],
+                    arguments: [`--profile-directory=Default`],
                   },
                 });
               }
@@ -121,7 +126,6 @@ class LinkOpener extends React.PureComponent {
     const { settingOption, accountList } = this.props;
     try {
       this.monitor.on("ready", () => {
-        console.log("Link opener is Ready..");
         toastInfo("Link opener is ready!!");
       });
       this.monitor.on("message", async (message) => {
@@ -130,14 +134,12 @@ class LinkOpener extends React.PureComponent {
         let msgID = message.id;
         this.checkSettingOption(content, channelID, msgID);
       });
-      if (settingOption?.linkOpenerState) {
-        console.log("Already Opened so don't open Again");
-      } else {
-        console.log("Destroying if previous client is open");
+      if (!settingOption?.linkOpenerState) {
         this.monitor.destroy();
       }
     } catch (error) {
-      console.log("Error in Link Opener", error.message);
+      const log = `Error in Link Opener ${error.message}`;
+      sendLogs(log);
     }
     if (accountList.length === 0) {
       this.props.resetToken();
@@ -174,12 +176,14 @@ class LinkOpener extends React.PureComponent {
         this.setState({ webhookList: webhookList });
         if (settingOption?.linkOpenerState) {
           if (discordTokenRegExp.test(discordToken)) {
+            const token = discordToken?.substring(0, 4);
+            let log = `Link opener monitor start with ${token}**** **** ****`;
+            sendLogs(log);
             this.monitor.login(discordToken).catch((e) => {
               toastWarning(e.message);
             });
           }
         } else {
-          console.log("Destroying monitor...");
           this.monitor.destroy();
           if (this.monitor.user !== null) {
             this.setState({ isStart: false });

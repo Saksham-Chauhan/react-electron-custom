@@ -64,8 +64,8 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
       if (tempData["proxyList"].length > 0) {
         let obj = {};
         obj["proxies"] = tempData["proxyList"];
-        handleExportLogs(JSON.stringify(obj), "application/json");
-      } else toastWarning("Nothing to Import");
+        handleExportLogs(JSON.stringify(obj), "application/json", "proxy");
+      } else toastWarning("Nothing to Export");
     } else toastWarning("Select proxy group");
   };
 
@@ -76,7 +76,6 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
     } else toastWarning("Select proxy group");
   };
 
-  // FIXME:: need to implement import proxies functionality
   const handleImportProxy = (e) => {
     const { files } = e.target;
     const reader = new FileReader();

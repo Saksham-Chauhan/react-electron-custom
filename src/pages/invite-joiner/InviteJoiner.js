@@ -29,10 +29,11 @@ import {
 } from "../../pages-component";
 import helper from "../twitter/utils/feature-tweets/helper";
 import { checkDiscordInvite } from "../link-opener/utils";
-import { discordServerInviteAPI } from "../../api";
+import { discordServerInviteAPI, getProxy } from "../../api";
 import { toastInfo, toastWarning } from "../../toaster";
 import { inviteJoinerTest } from "../../helper/webhook";
 import { NoAccountAlertModal } from "../../modals";
+import { sendLogs } from "../../helper/electron-bridge";
 
 const { Client } = window.require("discord.js-selfbot");
 
@@ -71,17 +72,8 @@ class InviteJoiner extends React.PureComponent {
             const token = tokenArray[i].split(":")[3];
             const proxyArr = selectedProxyGroup["value"]?.split("\n");
             for (let index = 0; index < proxyArr.length; index++) {
-              let proxySplit = proxyArr[index]?.split(":");
-              const proxy = {
-                host: proxySplit[0],
-                port: proxySplit[1],
-                auth: {
-                  username: proxySplit[2],
-                  password: proxySplit[3],
-                },
-              };
+              const proxy = getProxy(proxyArr);
               await this.sleep();
-
               try {
                 const info = await discordServerInviteAPI(
                   inviteCode,
@@ -92,7 +84,6 @@ class InviteJoiner extends React.PureComponent {
                   let result = `Joined ${info.data.guild.name} server 🥳 `;
                   const date = new Date().toUTCString();
                   this.props.handleSendLog(result, msgID, date);
-                  console.log("Joined the server", info.data.guild.name, index);
                   if (webhookList?.length > 0) {
                     await inviteJoinerTest(
                       webhookList[0],
@@ -113,7 +104,6 @@ class InviteJoiner extends React.PureComponent {
                   break;
                 }
               } catch (err) {
-                console.log("Error in joining server", err.message);
                 toastWarning(`Error in joininig server ${err.message}`);
               }
             }
@@ -124,10 +114,9 @@ class InviteJoiner extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { ijMonitorState, accountList } = this.props;
+    const { accountList } = this.props;
     try {
       this.monitor.on("ready", () => {
-        console.log("Invite joiner is Ready..");
         toastInfo("Invite joiner is ready!!");
       });
       this.monitor.on("message", async (message) => {
@@ -136,11 +125,8 @@ class InviteJoiner extends React.PureComponent {
         let msgID = message.id;
         this.checkingMessage(content, channelID, msgID);
       });
-      if (ijMonitorState) {
-        console.log("Already Opened so don't open Again");
-      }
     } catch (error) {
-      console.log("Error in Link Opener", error.message);
+      // console.log("Error in Link Opener", error.message);
     }
     if (accountList.length === 0) {
       this.props.resetSelectedToken();
@@ -163,8 +149,10 @@ class InviteJoiner extends React.PureComponent {
       selectedToken !== prevProps.selectedToken
     ) {
       if (ijMonitorState) {
-        console.log("Starting monitor...");
         if (discordTokenRegExp.test(selectedToken["discordToken"])) {
+          const token = selectedToken["discordToken"].substring(0, 4);
+          let log = `Invite joiner monitor start with ${token}**** **** ****`;
+          sendLogs(log);
           this.monitor.login(selectedToken["discordToken"]).catch((e) => {
             toastWarning(e.message);
           });
@@ -176,7 +164,6 @@ class InviteJoiner extends React.PureComponent {
         this.setState({ webhookSetting: webhookSetting });
         this.setState({ webhookList: webhookList });
       } else {
-        console.log("Destroyng monitor...");
         this.monitor.destroy();
         if (this.monitor.user !== null) {
           this.setState({ isStart: false });
