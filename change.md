@@ -33,3 +33,12 @@
 
 - fix twitter monitor link opener
 - fix link opener chrome profile
+
+# v0.8.4
+
+- Fetch server image using invite code.
+- Optimize code.
+- Added functionality which provide protection from interceptor tools.
+- Added toaster for download progress.
+- Added functionality of download logs file.
+ 

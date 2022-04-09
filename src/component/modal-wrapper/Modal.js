@@ -1,10 +1,14 @@
 import React from "react";
+import small_bot from "../../assests/images/small-bot.svg";
 import "./styles.css";
 
-function Modal({ children, ...props }) {
+function Modal({ children, bgImageURL, ...props }) {
   return (
     <div className="modal-wrapper">
       <div {...props} className="modal-inner">
+        <div className="server-img">
+          <img src={bgImageURL ? bgImageURL : small_bot} alt="Server Logo" />
+        </div>
         {children}
       </div>
     </div>
