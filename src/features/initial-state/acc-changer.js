@@ -41,5 +41,10 @@ export const AccChangerInitialState = {
       list: [],
       cardTitle: "Mass Joiner",
     },
+    {
+      changerType: "tokenRetrieve",
+      list: [],
+      cardTitle: "Token Retrieve",
+    },
   ],
 };

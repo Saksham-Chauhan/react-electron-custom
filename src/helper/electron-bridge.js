@@ -27,7 +27,7 @@ const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
 const updateNotAvailable = (callback) =>
   ipcRenderer.on("update:not-avail", () => callback());
 
-const fetchNetworkSpeed = () => ipcRenderer.invoke("get-speed");
+// const fetchNetworkSpeed = () => ipcRenderer.invoke("get-speed");
 
 // Spoof IPC
 const startSpoofer = (spoof) => ipcRenderer.send("start-spoofer", spoof);
@@ -99,7 +99,7 @@ module.exports = {
   proxyTestResultListener,
   updateNotAvailable,
   checkForUpdates,
-  fetchNetworkSpeed,
+  // fetchNetworkSpeed,
   decodeUser,
   authUser,
   logoutUser,

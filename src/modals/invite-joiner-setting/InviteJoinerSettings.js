@@ -206,7 +206,7 @@ function InviteJoinerSettings() {
     const result = checkValidation();
     if (result) {
       const claimerArr = selectedClaimerGroup["value"]?.split("\n");
-      claimerArr.forEach(async (token) => {
+      claimerArr?.forEach(async (token) => {
         const response = await directDiscordJoinAPI(
           setting.proxyGroup,
           setting.inviteCode,
