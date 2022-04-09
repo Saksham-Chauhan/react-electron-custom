@@ -120,7 +120,7 @@ export const linkOpenerWebhook = async (
         color: 857138,
         thumbnail: THUMBNAIL,
         author: {
-          name: `Link Openedby ${userName}`,
+          name: `Link opened by ${userName}`,
           icon_url: avatarProfile,
         },
         footer: FOOTER,
