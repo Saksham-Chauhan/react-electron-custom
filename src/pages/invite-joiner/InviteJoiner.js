@@ -19,7 +19,7 @@ import {
   setSelectedClaimerTokenIJ,
 } from "../../features/counterSlice";
 import { addLogInList } from "../../features/logic/discord-account";
-import { makeLogText, makeStrOfArr } from "../../helper";
+import { makeLogText } from "../../helper";
 import {
   InviteJoinerTopSection,
   InviteJoinerLogSection,
@@ -57,13 +57,13 @@ class InviteJoiner extends React.PureComponent {
     const { user } = this.props;
     if (isStart) {
       const {
-        keywordList,
+        // keywordList,
         selectedClaimerGroup,
         selectedProxyGroup,
         webhookSetting,
         webhookList,
       } = this.state;
-      if (makeStrOfArr(keywordList).includes(channelID)) {
+      // if (makeStrOfArr(keywordList).includes(channelID)) {
         let isInviteLink = checkDiscordInvite(content);
         let inviteCode = helper.isDiscordInvite(content);
         if (inviteCode && isInviteLink) {
@@ -109,7 +109,7 @@ class InviteJoiner extends React.PureComponent {
             }
           }
         }
-      }
+      // }
     }
   }
 

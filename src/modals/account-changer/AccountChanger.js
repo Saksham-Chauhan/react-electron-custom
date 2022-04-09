@@ -29,6 +29,7 @@ import {
   ServerLeaverSlide,
   TokenCheckerSlide,
   MassInviteSlide,
+  TokenRetriverSlide,
 } from "./slides";
 import NicknameChanger from "./slides/NicknameChanger";
 import randomNamne from "node-random-name";
@@ -271,6 +272,8 @@ const getDynamicSlideRnder = (
       return <TokenCheckerSlide onChange={handleChange} />;
     case "massInviter":
       return <MassInviteSlide onChange={handleChange} />;
+    case "tokenRetrieve":
+      return <TokenRetriverSlide onChange={handleChange} />;
     default:
       return <UserNameChangerSlide onChange={handleChange} />;
   }

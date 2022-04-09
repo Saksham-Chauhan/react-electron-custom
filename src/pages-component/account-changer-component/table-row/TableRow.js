@@ -13,7 +13,8 @@ function TableRow({ onDelete, obj, index, onPlay, onDownload, type }) {
       <div style={{ color: getColor(obj?.status) }}>{obj?.status}</div>
       <div>
         <div className="acc-changer-table-row-action-column">
-          {obj?.status === "Completed" && type === "passwordChanger" ? (
+          {obj?.status === "Completed" &&
+          (type === "passwordChanger" || type === "tokenRetrieve") ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
           ) : (
             <img

@@ -6,6 +6,7 @@ import {
   deleteDataFromTableList,
   updatePasswordChangerStatus,
   updateStatusOfTableRow,
+  updateTokenRetrieveverStatus,
 } from "../../../features/logic/acc-changer";
 import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
 import serverLeaverAPI from "../../../api/account-changer/leave-server";
@@ -15,6 +16,7 @@ import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
 import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
+import tokenChanger from "../../../api/account-changer/token-changer";
 import { generateRandomAvatar } from "../../../api";
 import { toastWarning } from "../../../toaster";
 import { generateRandomPassword, sleep } from "../../../helper";
@@ -23,12 +25,12 @@ import { readArrayOfJson } from "../../../helper/electron-bridge";
 
 function TableSection({ list, selectedCard }) {
   const dispatch = useDispatch();
-
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
   };
 
   const handlePlay = async (obj) => {
+    let ind = 0;
     const type = selectedCard["changerType"];
     const { proxyGroup, claimerGroup } = obj;
     const tokenArray = claimerGroup["value"]?.split("\n");
@@ -60,26 +62,50 @@ function TableSection({ list, selectedCard }) {
           newPass: obj.commonPassword,
           invideCodes: obj.inviteCodes,
           avatarAPI: obj.url,
+          email: tokenArr[0],
         });
         if (apiResponse !== null) {
-          if (apiResponse.status === 200) {
+          if (apiResponse.status === 200 || apiResponse.status === 204) {
             let tempObj = { ...obj };
             let arr = [];
             let user = [];
+            let emailArr = [];
 
-            if (type === "passwordChanger") {
-              let newPass = JSON.parse(apiResponse.config.data)["new_password"];
-              let tempuser = apiResponse.data.username;
-              arr.push(newPass);
-              user.push(tempuser);
-              if (index > 0) {
-                arr = [...tempObj["newPass"].split("\n"), ...arr];
-                user = [...tempObj["username"].split("\n"), ...user];
+            if (type === "passwordChanger" || type === "tokenRetrieve") {
+              if (type === "passwordChanger") {
+                let newPass = JSON.parse(apiResponse.config.data)[
+                  "new_password"
+                ];
+                let tempuser = apiResponse.data.username;
+                arr.push(newPass);
+                user.push(tempuser);
+                if (index > 0) {
+                  arr = [...tempObj["newPass"].split("\n"), ...arr];
+                  user = [...tempObj["username"].split("\n"), ...user];
+                }
+                tempObj["newPass"] = arr.join("\n");
+                tempObj["username"] = user.join("\n");
+                tempObj["status"] = "Completed";
+                dispatch(updatePasswordChangerStatus(tempObj));
               }
-              tempObj["newPass"] = arr.join("\n");
-              tempObj["username"] = user.join("\n");
-              tempObj["status"] = "Completed";
-              dispatch(updatePasswordChangerStatus(tempObj));
+
+              if (type === "tokenRetrieve") {
+                let newToken = apiResponse.data.token;
+                arr.push(newToken);
+                user.push(tokenArr[1]);
+                emailArr.push(tokenArr[0]);
+                if (ind > 0) {
+                  arr = [...tempObj["newToken"].split("\n"), ...arr];
+                  user = [...tempObj["newUsername"].split("\n"), ...user];
+                  emailArr = [...tempObj["email"].split("\n"), ...user];
+                }
+                tempObj["newToken"] = arr.join("\n");
+                tempObj["newUsername"] = user.join("\n");
+                tempObj["email"] = emailArr.join("\n");
+                tempObj["status"] = "Completed";
+                dispatch(updateTokenRetrieveverStatus(tempObj));
+                ind = ind + 1;
+              }
             } else {
               dispatch(updateStatusOfTableRow(tempObj, "Completed"));
             }
@@ -105,6 +131,20 @@ function TableSection({ list, selectedCard }) {
         let obj = {};
         obj["newPassword"] = passArr[i];
         obj["userName"] = userNameArr[i];
+        arrOfObj.push(obj);
+      }
+      readArrayOfJson(arrOfObj);
+    }
+    if (type === "tokenRetrieve") {
+      const { newToken, newUsername, email } = obj;
+      let userNameArr = newUsername.split("\n");
+      let tokenArr = newToken.split("\n");
+      let newEmail = email.split("\n");
+      for (let i = 0; i < userNameArr.length; i++) {
+        let obj = {};
+        obj["token"] = tokenArr[i];
+        obj["username"] = userNameArr[i];
+        obj["email"] = newEmail[i];
         arrOfObj.push(obj);
       }
       readArrayOfJson(arrOfObj);
@@ -153,6 +193,7 @@ export const apiCallToDiscord = async ({
   username,
   invideCodes,
   avatarAPI,
+  email,
 }) => {
   if (type === "avatarChanger") {
     let response;
@@ -255,6 +296,14 @@ export const apiCallToDiscord = async ({
         toastWarning(response.response.data.message);
         return null;
       }
+    }
+  } else if (type === "tokenRetrieve") {
+    const response = await tokenChanger(proxy, email, password);
+    if (response.status === 200) {
+      return response;
+    } else {
+      toastWarning(response.response);
+      return null;
     }
   }
 };

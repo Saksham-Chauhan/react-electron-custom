@@ -13,6 +13,7 @@ import tokenChecker from "../../../assests/images/token-checker.svg";
 import nicknameChanger from "../../../assests/images/nickname-changer.svg";
 import passwordChanger from "../../../assests/images/password-changer.svg";
 import massInviter from "../../../assests/images/mass-inviter.svg";
+import tokenRetrieve from "../../../assests/images/token-retrieve.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAccChangerListState,
@@ -30,7 +31,7 @@ function LeftSection({ selectedCard }) {
   return (
     <>
       <TopWrapper>
-        <GroupTitle hideBtn={true} title="Acc Changer" />
+        <GroupTitle hideBtn={true} title="Discord" />
       </TopWrapper>
       <AppSpacer spacer={20} />
       <div className="group-card-scroll">
@@ -75,6 +76,8 @@ const getIcon = (type) => {
       return tokenChecker;
     case "massInviter":
       return massInviter;
+    case "tokenRetrieve":
+      return tokenRetrieve;
     default:
       return usernameChanger;
   }

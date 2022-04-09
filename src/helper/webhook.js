@@ -4,7 +4,7 @@ const KYRO_URL = "https://www.kyrotools.in/";
 const FOOTER = {
   text: "Made with ❤️ by Koders",
 };
-const TITLE = "Kyro tool";
+const TITLE = "Kyro Tools";
 const THUMBNAIL = {
   url: "https://cdn.discordapp.com/attachments/540447710239784971/953925375149355008/Kyros_logo.png",
 };
@@ -120,7 +120,7 @@ export const linkOpenerWebhook = async (
         color: 857138,
         thumbnail: THUMBNAIL,
         author: {
-          name: `Link open by ${userName}`,
+          name: `Link opened by ${userName}`,
           icon_url: avatarProfile,
         },
         footer: FOOTER,

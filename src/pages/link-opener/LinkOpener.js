@@ -65,7 +65,7 @@ class LinkOpener extends React.PureComponent {
         this.state;
       let channel = channelLIST;
       let keyword = keywordLIST;
-      if (makeStrOfArr(channel).includes(channelID)) {
+      // if (makeStrOfArr(channel).includes(channelID)) {
         if (testUrlRegex(content)) {
           let flag = containsKeyword(makeStrOfArr(keyword), content);
           if (keyword.length === 0 || flag) {
@@ -118,7 +118,7 @@ class LinkOpener extends React.PureComponent {
             }
           }
         }
-      }
+      // }
     }
   }
 

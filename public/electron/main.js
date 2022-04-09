@@ -473,47 +473,47 @@ ipcMain.on("proxy-tester", async (event, data) => {
 });
 
 // NEWTORK SPEED
-async function getNetworkDownloadSpeed() {
-  const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
-  const fileSizeInBytes = 5000;
-  let speed;
-  try {
-    speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
-  } catch (e) {
-    console.log(e);
-  }
-  if (speed) {
-    return speed.kbps;
-  }
-}
+// async function getNetworkDownloadSpeed() {
+//   const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
+//   const fileSizeInBytes = 5000;
+//   let speed;
+//   try {
+//     speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   if (speed) {
+//     return speed.kbps;
+//   }
+// }
 
-async function getNetworkUploadSpeed() {
-  const options = {
-    hostname: "www.google.com",
-    port: 80,
-    path: "/catchers/544b09b4599c1d0200000289",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const fileSizeInBytes = 5000;
-  let speed;
-  try {
-    speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
-  } catch (e) {
-    console.log(e);
-  }
-  if (speed) {
-    return speed.kbps;
-  }
-}
+// async function getNetworkUploadSpeed() {
+//   const options = {
+//     hostname: "www.google.com",
+//     port: 80,
+//     path: "/catchers/544b09b4599c1d0200000289",
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   };
+//   const fileSizeInBytes = 5000;
+//   let speed;
+//   try {
+//     speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   if (speed) {
+//     return speed.kbps;
+//   }
+// }
 
-ipcMain.handle("get-speed", async () => {
-  const download = await getNetworkDownloadSpeed();
-  const upload = await getNetworkUploadSpeed();
-  return { download, upload };
-});
+// ipcMain.handle("get-speed", async () => {
+//   const download = await getNetworkDownloadSpeed();
+//   const upload = await getNetworkUploadSpeed();
+//   return { download, upload };
+// });
 
 const debugSendToIpcRenderer = (log) => {
   let win = mainWindow || global.mainWin;
