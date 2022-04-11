@@ -102,6 +102,7 @@ const DashboardChart = () => {
   const twitterList = useSelector(fetchLatestTweetList);
   const spoofList = useSelector(fetchSpoofTableList);
   const lastDate = useSelector(fetchLastDate);
+  console.log(discord);
 
   // // //GET THE LAST WEEK DATA
   const lastWeekLink = useSelector(fetchLastWeekLinks);
