@@ -9,4 +9,5 @@ export const DashboardState = {
   invite: [0, 0, 0, 0, 0, 0, 0],
   twites: [0, 0, 0, 0, 0, 0, 0],
   spoof: [0, 0, 0, 0, 0, 0, 0],
+  linkOpner: [],
 };

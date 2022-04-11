@@ -138,7 +138,7 @@ const DashboardChart = () => {
       let date = new Date();
       // let day = date.getDay() - 1;
       let day = 0;
-      if (day > lastDate || (lastDate >day)) {
+      if (day > lastDate || lastDate > day) {
         dispatch(addlastWeekLink(linkOpnerData));
         dispatch(addlastWeekInvite(inviteJoinerData));
         dispatch(addlastWeekTweets(twitterData));
@@ -160,10 +160,9 @@ const DashboardChart = () => {
         dispatch(updateSpoofArray(s));
         dispatch(addlastDate(day));
       } else {
-        if(l[day]<(linkOpnerData - lastWeekLink)){
+        if (l[day] < linkOpnerData - lastWeekLink) {
           l[day] = linkOpnerData - lastWeekLink;
-        }else{
-
+        } else {
         }
         dispatch(updateLinkArray(l));
         i[day] = inviteJoinerData - lastWeekInvites;

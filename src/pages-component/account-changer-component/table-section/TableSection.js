@@ -302,7 +302,7 @@ export const apiCallToDiscord = async ({
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response);
+      toastWarning(response.response.data.message);
       return null;
     }
   }

@@ -39,6 +39,7 @@ export const counterSlice = createSlice({
   name: STATE_KEY,
   initialState,
   reducers: {
+    updateLinkOpnerArray: (state, action) => {},
     updateLinkArray: (state, action) => {
       state.link = [...action.payload];
     },
@@ -380,6 +381,8 @@ export const fetchLink = (state) => state[STATE_KEY].link;
 export const fetchInvite = (state) => state[STATE_KEY].invite;
 export const fetchTweets = (state) => state[STATE_KEY].twites;
 export const fetchSpoof = (state) => state[STATE_KEY].spoof;
+
+export const fetchLinkOpnerArray = (state) => state[STATE_KEY].linkOpner;
 
 // INVITE JOINER;
 export const fetchInviteJoinerListState = (state) =>

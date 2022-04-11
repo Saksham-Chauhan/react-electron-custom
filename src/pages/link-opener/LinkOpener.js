@@ -66,58 +66,59 @@ class LinkOpener extends React.PureComponent {
       let channel = channelLIST;
       let keyword = keywordLIST;
       // if (makeStrOfArr(channel).includes(channelID)) {
-        if (testUrlRegex(content)) {
-          let flag = containsKeyword(makeStrOfArr(keyword), content);
-          if (keyword.length === 0 || flag) {
-            if (checkOptions(settingOption, content)) {
-              if (settingOption.playSound) {
-                this.playSound();
-              }
-              if (Object.keys(selectedChrome).length > 0) {
-                if (selectedChrome) {
-                  let log = `LO open with ${selectedChrome["value"]} chrome user`;
-                  sendLogs(log);
-                  await open(content, {
-                    app: {
-                      name: open.apps.chrome,
-                      arguments: [
-                        `--profile-directory=${selectedChrome["value"]}`,
-                      ],
-                    },
-                  });
-                }
-              } else {
-                let log = `LO open with Default chrome profile`;
+      if (testUrlRegex(content)) {
+        let flag = containsKeyword(makeStrOfArr(keyword), content);
+        if (keyword.length === 0 || flag) {
+          if (checkOptions(settingOption, content)) {
+            if (settingOption.playSound) {
+              this.playSound();
+            }
+            console.log(settingOption, content);
+            if (Object.keys(selectedChrome).length > 0) {
+              if (selectedChrome) {
+                let log = `LO open with ${selectedChrome["value"]} chrome user`;
                 sendLogs(log);
                 await open(content, {
                   app: {
                     name: open.apps.chrome,
-                    arguments: [`--profile-directory=Default`],
+                    arguments: [
+                      `--profile-directory=${selectedChrome["value"]}`,
+                    ],
                   },
                 });
               }
-              const date = new Date().toUTCString();
-              this.props.handleSendLog(content, msgID, date);
-              if (webhookList.length > 0) {
-                await linkOpenerWebhook(
-                  content,
-                  user.username,
-                  user.avatar,
-                  webhookList[0],
-                  webhookSetting?.linkOpener
-                );
-              } else {
-                await linkOpenerWebhook(
-                  content,
-                  user.username,
-                  user.avatar,
-                  "",
-                  false
-                );
-              }
+            } else {
+              let log = `LO open with Default chrome profile`;
+              sendLogs(log);
+              await open(content, {
+                app: {
+                  name: open.apps.chrome,
+                  arguments: [`--profile-directory=Default`],
+                },
+              });
+            }
+            const date = new Date().toUTCString();
+            this.props.handleSendLog(content, msgID, date);
+            if (webhookList.length > 0) {
+              await linkOpenerWebhook(
+                content,
+                user.username,
+                user.avatar,
+                webhookList[0],
+                webhookSetting?.linkOpener
+              );
+            } else {
+              await linkOpenerWebhook(
+                content,
+                user.username,
+                user.avatar,
+                "",
+                false
+              );
             }
           }
         }
+      }
       // }
     }
   }
