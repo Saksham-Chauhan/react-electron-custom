@@ -46,5 +46,10 @@ export const AccChangerInitialState = {
       list: [],
       cardTitle: "Token Retrieve",
     },
+    {
+      changerType: "giveawayJoiner",
+      list: [],
+      cardTitle: "Giveaway Joiner",
+    },
   ],
 };

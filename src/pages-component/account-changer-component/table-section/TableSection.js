@@ -22,6 +22,8 @@ import { toastWarning } from "../../../toaster";
 import { generateRandomPassword, sleep } from "../../../helper";
 import rndName from "node-random-name";
 import { readArrayOfJson } from "../../../helper/electron-bridge";
+import { toastInfo } from "../../../toaster";
+const { Client } = window.require("discord.js-selfbot");
 
 function TableSection({ list, selectedCard }) {
   const dispatch = useDispatch();
@@ -29,93 +31,138 @@ function TableSection({ list, selectedCard }) {
     dispatch(deleteDataFromTableList(obj));
   };
 
+  const replyList = [
+    "lfgooooo",
+    "nice",
+    "lets do it",
+    "lets gooooo",
+    "excited",
+    "praying🙏",
+    "fingers crossed",
+    "🤞",
+    "🙏",
+    "THIS IS MINE!",
+  ];
+
   const handlePlay = async (obj) => {
-    let ind = 0;
     const type = selectedCard["changerType"];
-    const { proxyGroup, claimerGroup } = obj;
-    const tokenArray = claimerGroup["value"]?.split("\n");
-    for (let index = 0; index < tokenArray.length; index++) {
-      const token = tokenArray[index];
-      const tokenArr = token?.split(":");
-      const proxyArray = proxyGroup["value"].split("\n");
-      for (let j = 0; j < proxyArray.length; j++) {
-        let proxySplit = proxyArray[j]?.split(":");
-        const proxy = {
-          host: proxySplit[0],
-          port: proxySplit[1],
-          auth: {
-            username: proxySplit[2],
-            password: proxySplit[3],
-          },
-        };
-        dispatch(updateStatusOfTableRow(obj, "Running"));
-        const apiResponse = await apiCallToDiscord({
-          type,
-          token: tokenArr[3],
-          proxy,
-          username: obj.username,
-          password: tokenArr[2],
-          guildId: obj.serverIDs,
-          activityDetail: obj.activityDetails,
-          nickName: obj.nicknameGenerate,
-          currentPass: tokenArr[2],
-          newPass: obj.commonPassword,
-          invideCodes: obj.inviteCodes,
-          avatarAPI: obj.url,
-          email: tokenArr[0],
+    if (type === "giveawayJoiner") {
+      const monitor = new Client();
+      monitor.login(obj.token);
+      try {
+        monitor.on("ready", () => {
+          toastInfo("Giveaway Joiner ready!!");
+          dispatch(updateStatusOfTableRow(obj, "Monitoring"));
         });
-        if (apiResponse !== null) {
-          if (apiResponse.status === 200 || apiResponse.status === 204) {
-            let tempObj = { ...obj };
-            let arr = [];
-            let user = [];
-            let emailArr = [];
-
-            if (type === "passwordChanger" || type === "tokenRetrieve") {
-              if (type === "passwordChanger") {
-                let newPass = JSON.parse(apiResponse.config.data)[
-                  "new_password"
-                ];
-                let tempuser = apiResponse.data.username;
-                arr.push(newPass);
-                user.push(tempuser);
-                if (index > 0) {
-                  arr = [...tempObj["newPass"].split("\n"), ...arr];
-                  user = [...tempObj["username"].split("\n"), ...user];
-                }
-                tempObj["newPass"] = arr.join("\n");
-                tempObj["username"] = user.join("\n");
-                tempObj["status"] = "Completed";
-                dispatch(updatePasswordChangerStatus(tempObj));
+        monitor.on("message", async (message) => {
+          const embed = message.embeds[0];
+          const serverId = message.channel.guild.id;
+          const authorId = message.author.id;
+          if (serverId === obj.serverid) {
+            if (authorId === obj.botid) {
+              if (
+                embed.title.toLowerCase().includes("montserrat") &&
+                embed.description.toLowerCase().includes("montserrat")
+              ) {
+                await message.react("🎉");
+                let x = Math.floor(Math.random() * replyList.length + 1);
+                await message.channel.startTyping();
+                await sleep(obj.delay);
+                await message.channel.send(replyList[x]);
+                await message.channel.stopTyping();
               }
-
-              if (type === "tokenRetrieve") {
-                let newToken = apiResponse.data.token;
-                arr.push(newToken);
-                user.push(tokenArr[1]);
-                emailArr.push(tokenArr[0]);
-                if (ind > 0) {
-                  arr = [...tempObj["newToken"].split("\n"), ...arr];
-                  user = [...tempObj["newUsername"].split("\n"), ...user];
-                  emailArr = [...tempObj["email"].split("\n"), ...user];
-                }
-                tempObj["newToken"] = arr.join("\n");
-                tempObj["newUsername"] = user.join("\n");
-                tempObj["email"] = emailArr.join("\n");
-                tempObj["status"] = "Completed";
-                dispatch(updateTokenRetrieveverStatus(tempObj));
-                ind = ind + 1;
-              }
-            } else {
-              dispatch(updateStatusOfTableRow(tempObj, "Completed"));
             }
-            break;
           }
-        } else {
-          dispatch(updateStatusOfTableRow(obj, "Stopped"));
-        }
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      let ind = 0;
+      const { proxyGroup, claimerGroup } = obj;
+      const tokenArray = claimerGroup["value"]?.split("\n");
+      for (let index = 0; index < tokenArray.length; index++) {
+        const token = tokenArray[index];
+        const tokenArr = token?.split(":");
+        const proxyArray = proxyGroup["value"].split("\n");
+        for (let j = 0; j < proxyArray.length; j++) {
+          let proxySplit = proxyArray[j]?.split(":");
+          const proxy = {
+            host: proxySplit[0],
+            port: proxySplit[1],
+            auth: {
+              username: proxySplit[2],
+              password: proxySplit[3],
+            },
+          };
+          dispatch(updateStatusOfTableRow(obj, "Running"));
+          const apiResponse = await apiCallToDiscord({
+            type,
+            token: tokenArr[3],
+            proxy,
+            username: obj.username,
+            password: tokenArr[2],
+            guildId: obj.serverIDs,
+            activityDetail: obj.activityDetails,
+            nickName: obj.nicknameGenerate,
+            currentPass: tokenArr[2],
+            newPass: obj.commonPassword,
+            invideCodes: obj.inviteCodes,
+            avatarAPI: obj.url,
+            email: tokenArr[0],
+          });
+          if (apiResponse !== null) {
+            if (apiResponse.status === 200 || apiResponse.status === 204) {
+              let tempObj = { ...obj };
+              let arr = [];
+              let user = [];
+              let emailArr = [];
 
-        await sleep(Number(obj.delay) || 3000);
+              if (type === "passwordChanger" || type === "tokenRetrieve") {
+                if (type === "passwordChanger") {
+                  let newPass = JSON.parse(apiResponse.config.data)[
+                    "new_password"
+                  ];
+                  let tempuser = apiResponse.data.username;
+                  arr.push(newPass);
+                  user.push(tempuser);
+                  if (index > 0) {
+                    arr = [...tempObj["newPass"].split("\n"), ...arr];
+                    user = [...tempObj["username"].split("\n"), ...user];
+                  }
+                  tempObj["newPass"] = arr.join("\n");
+                  tempObj["username"] = user.join("\n");
+                  tempObj["status"] = "Completed";
+                  dispatch(updatePasswordChangerStatus(tempObj));
+                }
+
+                if (type === "tokenRetrieve") {
+                  let newToken = apiResponse.data.token;
+                  arr.push(newToken);
+                  user.push(tokenArr[1]);
+                  emailArr.push(tokenArr[0]);
+                  if (ind > 0) {
+                    arr = [...tempObj["newToken"].split("\n"), ...arr];
+                    user = [...tempObj["newUsername"].split("\n"), ...user];
+                    emailArr = [...tempObj["email"].split("\n"), ...user];
+                  }
+                  tempObj["newToken"] = arr.join("\n");
+                  tempObj["newUsername"] = user.join("\n");
+                  tempObj["email"] = emailArr.join("\n");
+                  tempObj["status"] = "Completed";
+                  dispatch(updateTokenRetrieveverStatus(tempObj));
+                  ind = ind + 1;
+                }
+              } else {
+                dispatch(updateStatusOfTableRow(tempObj, "Completed"));
+              }
+              break;
+            }
+          } else {
+            dispatch(updateStatusOfTableRow(obj, "Stopped"));
+          }
+          await sleep(Number(obj.delay) || 3000);
+        }
       }
     }
   };
@@ -156,7 +203,11 @@ function TableSection({ list, selectedCard }) {
       <div className="acc-chnager-table-header-parent">
         <div className="acc-chnager-page-table-header">
           <div>#</div>
-          <div>Token Group</div>
+          <div>
+            {selectedCard.changerType === "giveawayJoiner"
+              ? "Token "
+              : "Token Group"}
+          </div>
           <div>Status</div>
           <div>Actions</div>
         </div>
@@ -168,6 +219,7 @@ function TableSection({ list, selectedCard }) {
             onDelete={handleDelete}
             onPlay={handlePlay}
             onDownload={handleDownload}
+            selectedCard={selectedCard}
             {...{ obj }}
             key={obj.id}
             type={selectedCard["changerType"]}

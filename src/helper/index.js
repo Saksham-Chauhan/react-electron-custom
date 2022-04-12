@@ -33,7 +33,7 @@ export const makeLogText = (msg) => {
   const d = new Date();
   return `[${DAYS[d.getDay()]}, ${d.getDate()} ${
     MONTHS[d.getMonth()]
-  } ${d.getFullYear()}  ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}] - ${msg}`;
+  } ${d.getFullYear()}  ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}] - ${msg}-id${generateId()}`;
 };
 
 export const generateId = () => uuid();

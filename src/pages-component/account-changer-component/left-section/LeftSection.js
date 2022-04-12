@@ -33,24 +33,26 @@ function LeftSection({ selectedCard }) {
       <TopWrapper>
         <GroupTitle hideBtn={true} title="Discord" />
       </TopWrapper>
-      <AppSpacer spacer={20} />
-      <div className="group-card-scroll">
-        {accountList.map((option) => {
-          return (
-            <GroupCard
-              onClick={() => handleSelectedCard(option)}
-              key={option["changerType"]}
-              hideSubText={true}
-              cardIcon={getIcon(option["changerType"])}
-              cardTitle={option["cardTitle"]}
-              activeClass={
-                selectedCard["changerType"] === option["changerType"]
-                  ? "active-card"
-                  : ""
-              }
-            />
-          );
-        })}
+      <div style={{ overflowY: "scroll", height: "88%" }}>
+        <AppSpacer spacer={20} />
+        <div className="group-card-scroll">
+          {accountList.map((option) => {
+            return (
+              <GroupCard
+                onClick={() => handleSelectedCard(option)}
+                key={option["changerType"]}
+                hideSubText={true}
+                cardIcon={getIcon(option["changerType"])}
+                cardTitle={option["cardTitle"]}
+                activeClass={
+                  selectedCard["changerType"] === option["changerType"]
+                    ? "active-card"
+                    : ""
+                }
+              />
+            );
+          })}
+        </div>
       </div>
     </>
   );
@@ -77,6 +79,8 @@ const getIcon = (type) => {
     case "massInviter":
       return massInviter;
     case "tokenRetrieve":
+      return tokenRetrieve;
+    case "giveawayJoiner":
       return tokenRetrieve;
     default:
       return usernameChanger;

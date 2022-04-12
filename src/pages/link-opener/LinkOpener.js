@@ -61,9 +61,8 @@ class LinkOpener extends React.PureComponent {
     const { user } = this.props;
     const { isStart, webhookSetting, webhookList } = this.state;
     if (isStart) {
-      const { settingOption, channelLIST, keywordLIST, selectedChrome } =
-        this.state;
-      let channel = channelLIST;
+      const { settingOption, keywordLIST, selectedChrome } = this.state;
+      // let channel = channelLIST;
       let keyword = keywordLIST;
       // if (makeStrOfArr(channel).includes(channelID)) {
       if (testUrlRegex(content)) {
@@ -73,7 +72,6 @@ class LinkOpener extends React.PureComponent {
             if (settingOption.playSound) {
               this.playSound();
             }
-            console.log(settingOption, content);
             if (Object.keys(selectedChrome).length > 0) {
               if (selectedChrome) {
                 let log = `LO open with ${selectedChrome["value"]} chrome user`;
