@@ -5,7 +5,7 @@ async function leaveServer(token, guildid, proxy) {
   try {
     const json = JSON.stringify({ lurking: false });
     return await axios({
-      url: `${BASE_URL}users/@me/guilds/${guildid}`,
+      url: `${BASE_URL}/users/@me/guilds/${guildid}`,
       method: "DELETE",
       headers: { "Content-Type": "application/json", Authorization: token },
       proxy: proxy,

@@ -3,7 +3,7 @@ import { arrayBufferToString } from "../helper";
 import { sendLogs } from "../helper/electron-bridge";
 import { toastSuccess, toastWarning } from "../toaster";
 
-export const BASE_URL = "https://discord.com/api/v9/";
+export const BASE_URL = "https://discord.com/api/v9";
 export const IMAGE_API = "https://picsum.photos/50/50";
 
 function randomIntFromInterval(min, max) {
@@ -27,7 +27,7 @@ export const getProxy = (proxyArr) => {
 
 export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
   await axios({
-    url: `${BASE_URL}invites/${inviteCode}`,
+    url: `${BASE_URL}/invites/${inviteCode}`,
     headers: { Authorization: token },
     method: "post",
     data: JSON.stringify({}),
@@ -45,7 +45,7 @@ export const discordServerInviteReactAPI = async (
   for (let index = 0; index < proxyArr.length; index++) {
     try {
       const response = await axios({
-        url: `${BASE_URL}channels/${channelId}/messages/${messageId}/reactions/${emoji}/%40me`,
+        url: `${BASE_URL}/channels/${channelId}/messages/${messageId}/reactions/${emoji}/%40me`,
         method: "put",
         proxy: getProxy(proxyArr),
         headers: {
@@ -83,7 +83,7 @@ export const discordServerAcceptRuleAPI = async (
           `${inviteResponse.data.guild.name} server joined successfully`
         );
         const acceptresponse = await axios({
-          url: `${BASE_URL}guilds/${guildId}/requests/@me`,
+          url: `${BASE_URL}/guilds/${guildId}/requests/@me`,
           method: "put",
           headers: {
             Authorization: token,
@@ -126,7 +126,7 @@ export const directDiscordJoinAPI = async (
         if (!settingObj.isReact && !settingObj.isAcceptRule) break;
         if (settingObj.isReact) {
           const serverReactResponse = await axios({
-            url: `${BASE_URL}channels/${settingObj.reactSetting.channelId}/messages/${settingObj.reactSetting.messageId}/reactions/${settingObj.reactSetting.emojiValue}/%40me`,
+            url: `${BASE_URL}/channels/${settingObj.reactSetting.channelId}/messages/${settingObj.reactSetting.messageId}/reactions/${settingObj.reactSetting.emojiValue}/%40me`,
             method: "put",
             proxy,
             headers: {
@@ -142,7 +142,7 @@ export const directDiscordJoinAPI = async (
         }
         if (settingObj.isAcceptRule) {
           const acceptServerRulResponse = await axios({
-            url: `${BASE_URL}guilds/${settingObj.acceptRule.guildID}/requests/@me`,
+            url: `${BASE_URL}/guilds/${settingObj.acceptRule.guildID}/requests/@me`,
             method: "put",
             headers: {
               Authorization: token,

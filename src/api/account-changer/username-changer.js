@@ -7,7 +7,7 @@ async function changeUsername(token, password, proxy, username) {
       username: username,
       password: password,
     });
-    let res = await axios.patch(`${BASE_URL}users/@me`, json, {
+    let res = await axios.patch(`${BASE_URL}/users/@me`, json, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${token}`,

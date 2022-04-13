@@ -7,7 +7,7 @@ async function tokenChanger(proxy, email, password) {
       login: email,
       password: password,
     });
-    let res = await axios.post(`${BASE_URL}auth/login`, json, {
+    let res = await axios.post(`${BASE_URL}/auth/login`, json, {
       headers: {
         "Content-Type": "application/json",
       },

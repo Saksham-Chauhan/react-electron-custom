@@ -9,7 +9,7 @@ async function changeActivity(token, message, proxy) {
       },
     });
 
-    let res = await axios.patch(`${BASE_URL}users/@me/settings`, json, {
+    let res = await axios.patch(`${BASE_URL}/users/@me/settings`, json, {
       headers: {
         "Content-Type": "application/json",
         Authorization: token,

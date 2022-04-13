@@ -8,7 +8,7 @@ async function changePassword(token, current_pass, new_pass, proxy) {
       new_password: new_pass,
     });
 
-    let res = await axios.patch(`${BASE_URL}users/@me`, json, {
+    let res = await axios.patch(`${BASE_URL}/users/@me`, json, {
       headers: {
         "Content-Type": "application/json",
         Authorization: token,
