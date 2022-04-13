@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,28 +13,18 @@ import "./dashboardchart.css";
 import chartbg from "../../../assests/images/chartbg.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addlastDate,
-  addlastWeekInvite,
-  addlastWeekLink,
-  addlastWeekSpoofs,
-  addlastWeekTweets,
-  fetchInvite,
-  fetchLastDate,
-  fetchLastWeekInvites,
-  fetchLastWeekLinks,
-  fetchLastWeekSpoof,
-  fetchLastWeekTweets,
-  fetchLink,
-  fetchSpoof,
   fetchSpoofTableList,
-  fetchTweets,
-  updateTweetsArray,
-  updateSpoofArray,
-  updateLinkArray,
-  updateInviteArray,
   fetchLinkOpenerLogState,
   fetchLatestTweetList,
   fetchInviteJoinerLogState,
+  fetchLinkOpnerArray,
+  updateLinkOpnerArray,
+  updateInviteJoinerArray,
+  fetchInviteJoinerArray,
+  fetchTwiterArray,
+  updateTwiterArray,
+  fetchSpooferArray,
+  updatespooferArray,
 } from "../../../features/counterSlice";
 
 ChartJS.register(
@@ -96,103 +86,130 @@ const options = {
 
 const DashboardChart = () => {
   let dispatch = useDispatch();
-  //GET STATE OF LINK OPNER,INVITE JOINER,TWITTER AND SPOOFER
   const discord = useSelector(fetchLinkOpenerLogState);
   const inviteJoinerobj = useSelector(fetchInviteJoinerLogState);
   const twitterList = useSelector(fetchLatestTweetList);
   const spoofList = useSelector(fetchSpoofTableList);
-  const lastDate = useSelector(fetchLastDate);
 
-  // // //GET THE LAST WEEK DATA
-  const lastWeekLink = useSelector(fetchLastWeekLinks);
-  const lastWeekInvites = useSelector(fetchLastWeekInvites);
-  const lastWeekTweets = useSelector(fetchLastWeekTweets);
-  const lastWeekSpoof = useSelector(fetchLastWeekSpoof);
+  const lnlArr = useSelector(fetchLinkOpnerArray);
+  const IJArr = useSelector(fetchInviteJoinerArray);
+  const TWArr = useSelector(fetchTwiterArray);
+  const SPArr = useSelector(fetchSpooferArray);
 
-  // //PAGES DATA GETTING FROM REDUCERS
-  const linkOpnerData = Object.keys(discord).length;
-  const inviteJoinerData = Object.keys(inviteJoinerobj).length;
-  const twitterData = Object.keys(twitterList).length;
-  const spooferData = spoofList.length;
+  let lO = [0, 0, 0, 0, 0, 0, 0];
+  let IJ = [0, 0, 0, 0, 0, 0, 0];
+  let TM = [0, 0, 0, 0, 0, 0, 0];
+  let SO = [0, 0, 0, 0, 0, 0, 0];
 
-  // //FOR CHART
-  let li = useSelector(fetchLink);
-  let inv = useSelector(fetchInvite);
-  let tw = useSelector(fetchTweets);
-  let sp = useSelector(fetchSpoof);
-
-  useEffect(() => {
-    //temp variables
-    let l = [...li];
-    let i = [...inv];
-    let t = [...tw];
-    let s = [...sp];
-    const setPagesData = () => {
-      if (linkOpnerData === 0) dispatch(addlastWeekLink(0));
-      if (inviteJoinerData === 0) dispatch(addlastWeekInvite(0));
-      if (twitterData === 0) dispatch(addlastWeekTweets(0));
-      if (spooferData === 0) dispatch(addlastWeekSpoofs(0));
-
-      if (spooferData < lastWeekSpoof) dispatch(addlastWeekSpoofs(spooferData));
-
-      let date = new Date();
-      // let day = date.getDay() - 1;
-      let day = 0;
-      if (day > lastDate || (lastDate >day)) {
-        dispatch(addlastWeekLink(linkOpnerData));
-        dispatch(addlastWeekInvite(inviteJoinerData));
-        dispatch(addlastWeekTweets(twitterData));
-        dispatch(addlastWeekSpoofs(spooferData));
-        dispatch(addlastDate(day));
+  const setDataInLO = () => {
+    let temp = [];
+    let arr = Object.values(discord);
+    for (let j = 0; j < arr.length; j++) {
+      if (!lnlArr.includes(arr[j])) {
+        temp.push(arr[j]);
       }
-      if (day === 0) {
-        l = [0, 0, 0, 0, 0, 0, 0];
-        l[day] = linkOpnerData - lastWeekLink;
-        dispatch(updateLinkArray(l));
-        i = [0, 0, 0, 0, 0, 0, 0];
-        i[day] = inviteJoinerData - lastWeekInvites;
-        dispatch(updateInviteArray(i));
-        t = [0, 0, 0, 0, 0, 0, 0];
-        t[day] = twitterData - lastWeekTweets;
-        dispatch(updateTweetsArray(t));
-        s = [0, 0, 0, 0, 0, 0, 0];
-        s[day] = spooferData - lastWeekSpoof;
-        dispatch(updateSpoofArray(s));
-        dispatch(addlastDate(day));
-      } else {
-        if(l[day]<(linkOpnerData - lastWeekLink)){
-          l[day] = linkOpnerData - lastWeekLink;
-        }else{
+    }
+    if (temp.length) {
+      dispatch(updateLinkOpnerArray([...temp, ...lnlArr]));
+    }
 
+    for (let i = 0; i < lnlArr.length; i++) {
+      if (lnlArr[i].indexOf("Mon") > 0) lO[0] = lO[0] + 1;
+      if (lnlArr[i].indexOf("Tus") > 0) lO[1] = lO[1] + 1;
+      if (lnlArr[i].indexOf("Wed") > 0) lO[2] = lO[2] + 1;
+      if (lnlArr[i].indexOf("Thr") > 0) lO[3] = lO[3] + 1;
+      if (lnlArr[i].indexOf("Fri") > 0) lO[4] = lO[4] + 1;
+      if (lnlArr[i].indexOf("Sat") > 0) lO[5] = lO[5] + 1;
+      if (lnlArr[i].indexOf("Sun") > 0) lO[6] = lO[6] + 1;
+    }
+    return lO;
+  };
+
+  const setDataInIJ = () => {
+    let temp = [];
+    let arr = Object.values(inviteJoinerobj);
+    for (let j = 0; j < arr.length; j++) {
+      if (!IJArr.includes(arr[j])) {
+        temp.push(arr[j]);
+      }
+    }
+    if (temp.length) {
+      dispatch(updateInviteJoinerArray([...temp, ...IJArr]));
+    }
+
+    for (let i = 0; i < IJArr.length; i++) {
+      if (IJArr[i].indexOf("Mon") > 0) IJ[0] = IJ[0] + 1;
+      if (IJArr[i].indexOf("Tus") > 0) IJ[1] = IJ[1] + 1;
+      if (IJArr[i].indexOf("Wed") > 0) IJ[2] = IJ[2] + 1;
+      if (IJArr[i].indexOf("Thr") > 0) IJ[3] = IJ[3] + 1;
+      if (IJArr[i].indexOf("Fri") > 0) IJ[4] = IJ[4] + 1;
+      if (IJArr[i].indexOf("Sat") > 0) IJ[5] = IJ[5] + 1;
+      if (IJArr[i].indexOf("Sun") > 0) IJ[6] = IJ[6] + 1;
+    }
+    return IJ;
+  };
+  const setDataInTM = () => {
+    let temp = [];
+    let tweetsAr = Object.values(twitterList);
+    for (let i = 0; i < tweetsAr.length; i++) {
+      let dec = true;
+      for (let j = 0; j < TWArr.length; j++) {
+        if (tweetsAr[i].id === TWArr[j].id) {
+          dec = false;
         }
-        dispatch(updateLinkArray(l));
-        i[day] = inviteJoinerData - lastWeekInvites;
-        dispatch(updateInviteArray(i));
-        t[day] = twitterData - lastWeekTweets;
-        dispatch(updateTweetsArray(t));
-        s[day] = spooferData - lastWeekSpoof;
-        dispatch(updateSpoofArray(s));
       }
-    };
-    setPagesData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    discord,
-    inviteJoinerobj,
-    twitterList,
-    spoofList,
-    dispatch,
-    inviteJoinerData,
-    lastDate,
-    lastWeekInvites,
-    lastWeekLink,
-    lastWeekSpoof,
-    lastWeekTweets,
-    linkOpnerData,
-    spooferData,
-    twitterData,
-  ]);
-  //CHART DATA
+      if (dec) {
+        temp.push(tweetsAr[i]);
+      }
+    }
+    if (temp.length > 0) {
+      dispatch(updateTwiterArray([...temp, ...tweetsAr]));
+    }
+    for (let i = 0; i < TWArr.length; i++) {
+      if (TWArr[i].createAt.indexOf("Mon") >= 0) TM[0] = TM[0] + 1;
+      if (TWArr[i].createAt.indexOf("Tus") >= 0) TM[1] = TM[1] + 1;
+      if (TWArr[i].createAt.indexOf("Wed") >= 0) TM[2] = TM[2] + 1;
+      if (TWArr[i].createAt.indexOf("Thr") >= 0) TM[3] = TM[3] + 1;
+      if (TWArr[i].createAt.indexOf("Fri") >= 0) TM[4] = TM[4] + 1;
+      if (TWArr[i].createAt.indexOf("Sat") >= 0) TM[5] = TM[5] + 1;
+      if (TWArr[i].createAt.indexOf("Sun") >= 0) TM[6] = TM[6] + 1;
+    }
+    return TM;
+  };
+  const setDataInSp = () => {
+    let temp = [];
+    let spoofAr = Object.values(spoofList);
+    if (SPArr.legend === 0) {
+      dispatch(updatespooferArray([...spoofAr]));
+    } else {
+      for (let i = 0; i < spoofAr.length; i++) {
+        let dec = true;
+        for (let j = 0; j < SPArr.length; j++) {
+          if (spoofAr[i].id === SPArr[j].id) {
+            dec = false;
+          }
+        }
+        if (dec) {
+          temp.push(spoofAr[i]);
+        }
+      }
+    }
+
+    if (temp.length > 0) {
+      dispatch(updatespooferArray([...temp, ...SPArr]));
+    }
+    for (let i = 0; i < SPArr.length; i++) {
+      if (SPArr[i].createdAt.indexOf("Mon") >= 0) SO[0] = SO[0] + 1;
+      if (SPArr[i].createdAt.indexOf("Tue") >= 0) SO[1] = SO[1] + 1;
+      if (SPArr[i].createdAt.indexOf("Wed") >= 0) SO[2] = SO[2] + 1;
+      if (SPArr[i].createdAt.indexOf("Thr") >= 0) SO[3] = SO[3] + 1;
+      if (SPArr[i].createdAt.indexOf("Fri") >= 0) SO[4] = SO[4] + 1;
+      if (SPArr[i].createdAt.indexOf("Sat") >= 0) SO[5] = SO[5] + 1;
+      if (SPArr[i].createdAt.indexOf("Sun") >= 0) SO[6] = SO[6] + 1;
+    }
+    return SO;
+  };
+
   const labels = ["Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"];
   const colors = ["#FB49C0", "#3EB7E5", "#0D24EF", "#F5A623"];
   const data = {
@@ -200,22 +217,22 @@ const DashboardChart = () => {
     labels,
     datasets: [
       {
-        data: [...li],
+        data: setDataInLO(),
         pointRadius: 0,
         borderWidth: 3,
       },
       {
-        data: [...inv],
+        data: setDataInIJ(),
         pointRadius: 0,
         borderWidth: 3,
       },
       {
-        data: [...tw],
+        data: setDataInTM(),
         pointRadius: 0,
         borderWidth: 3,
       },
       {
-        data: [...sp],
+        data: setDataInSp(),
         pointRadius: 0,
         borderWidth: 3,
       },

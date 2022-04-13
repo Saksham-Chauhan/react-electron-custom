@@ -207,13 +207,14 @@ function InviteJoinerSettings() {
     if (result) {
       const claimerArr = selectedClaimerGroup["value"]?.split("\n");
       claimerArr?.forEach(async (token) => {
-        const response = await directDiscordJoinAPI(
-          setting.proxyGroup,
-          setting.inviteCode,
-          token.split(":")[3],
-          setting
-        );
-        if (response === null) {
+        try {
+          await directDiscordJoinAPI(
+            setting.proxyGroup,
+            setting.inviteCode,
+            token.split(":")[3],
+            setting
+          );
+        } catch (e) {
           const tkn = token.split(":")[3].substring(0, 4) + "## ##";
           const log = "Something went wrong in Direct Join with" + tkn;
           sendLogs(log);

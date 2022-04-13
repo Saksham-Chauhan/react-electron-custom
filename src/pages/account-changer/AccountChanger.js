@@ -32,7 +32,6 @@ const AccountChanger = () => {
       } else setTempList([]);
     } else setTempList([...selectedCard["list"]]);
   };
-
   return (
     <div className="page-section">
       <div className="left-container">

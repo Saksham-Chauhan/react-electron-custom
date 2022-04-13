@@ -90,6 +90,7 @@
   animation-iteration-count: infinite;
   background-repeat: repeat-y;
   background-size: 100% 100%;
+  cursor: pointer;
 }
 .sidebar-option-inner.update:hover {
   background: url("../../assests/sidebar_animation/updater-animation.svg");

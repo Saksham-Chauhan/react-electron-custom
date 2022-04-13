@@ -5,12 +5,33 @@ import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
 
-function TableRow({ onDelete, obj, index, onPlay, onDownload, type }) {
+function TableRow({
+  onDelete,
+  obj,
+  index,
+  onPlay,
+  onDownload,
+  type,
+  selectedCard,
+}) {
   return (
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
-      <div>{obj?.claimerGroup?.label}</div>
-      <div style={{ color: getColor(obj?.status) }}>{obj?.status}</div>
+      <div style={{ display: "flex" }}>
+        <div style={{ width: "70%", overflow: "hidden" }}>
+          {selectedCard.changerType === "giveawayJoiner"
+            ? obj?.token
+            : obj?.claimerGroup?.label}
+        </div>
+        {selectedCard.changerType === "giveawayJoiner" && "..."}
+      </div>
+      <div
+        style={{
+          color: getColor(obj?.status),
+        }}
+      >
+        {obj?.status}
+      </div>
       <div>
         <div className="acc-changer-table-row-action-column">
           {obj?.status === "Completed" &&
@@ -18,7 +39,11 @@ function TableRow({ onDelete, obj, index, onPlay, onDownload, type }) {
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
           ) : (
             <img
-              src={obj?.status === "Running" ? stop : play}
+              src={
+                obj?.status === "Running" || obj?.status === "Monitoring"
+                  ? stop
+                  : play
+              }
               alt=""
               onClick={() => onPlay(obj)}
             />
@@ -41,6 +66,8 @@ export default TableRow;
 const getColor = (status) => {
   switch (status) {
     case "Running":
+      return "var(--status)";
+    case "Monitoring":
       return "var(--status)";
     case "Completed":
       return "#1186db";

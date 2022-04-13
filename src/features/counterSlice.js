@@ -39,32 +39,17 @@ export const counterSlice = createSlice({
   name: STATE_KEY,
   initialState,
   reducers: {
-    updateLinkArray: (state, action) => {
-      state.link = [...action.payload];
+    updatespooferArray: (state, action) => {
+      state.spoofArr = [...action.payload];
     },
-    updateInviteArray: (state, action) => {
-      state.invite = [...action.payload];
+    updateTwiterArray: (state, action) => {
+      state.tweetsArr = [...action.payload];
     },
-    updateSpoofArray: (state, action) => {
-      state.spoof = [...action.payload];
+    updateLinkOpnerArray: (state, action) => {
+      state.linkOpnerArr = [...action.payload];
     },
-    updateTweetsArray: (state, action) => {
-      state.twites = [...action.payload];
-    },
-    addlastDate: (state, action) => {
-      state.date = action.payload;
-    },
-    addlastWeekLink: (state, action) => {
-      state.lastWeekLink = action.payload;
-    },
-    addlastWeekInvite: (state, action) => {
-      state.lastWeekInvite = action.payload;
-    },
-    addlastWeekTweets: (state, action) => {
-      state.lastWeekTweets = action.payload;
-    },
-    addlastWeekSpoofs: (state, action) => {
-      state.lastWeekSpoof = action.payload;
+    updateInviteJoinerArray: (state, action) => {
+      state.inviteJoinerArr = [...action.payload];
     },
     appendProxyGroupInList: (state, action) => {
       state.proxyGroupList = action.payload;
@@ -211,16 +196,11 @@ export const counterSlice = createSlice({
 });
 
 export const {
+  updatespooferArray,
+  updateTwiterArray,
+  updateInviteJoinerArray,
+  updateLinkOpnerArray,
   appendApInList,
-  updateTweetsArray,
-  updateSpoofArray,
-  updateLinkArray,
-  updateInviteArray,
-  addlastDate,
-  addlastWeekSpoofs,
-  addlastWeekTweets,
-  addlastWeekInvite,
-  addlastWeekLink,
   resetUserLoggedState,
   resetIJMonitor,
   setInviteProxyGroup,
@@ -371,15 +351,11 @@ export const fetchDashboardModalState = (state) =>
   state[STATE_KEY].modals.dashboardModal;
 
 // FOR DASHBOARD CHART
-export const fetchLastWeekLinks = (state) => state[STATE_KEY].lastWeekLink;
-export const fetchLastWeekInvites = (state) => state[STATE_KEY].lastWeekInvite;
-export const fetchLastWeekTweets = (state) => state[STATE_KEY].lastWeekTweets;
-export const fetchLastWeekSpoof = (state) => state[STATE_KEY].lastWeekSpoof;
-export const fetchLastDate = (state) => state[STATE_KEY].date;
-export const fetchLink = (state) => state[STATE_KEY].link;
-export const fetchInvite = (state) => state[STATE_KEY].invite;
-export const fetchTweets = (state) => state[STATE_KEY].twites;
-export const fetchSpoof = (state) => state[STATE_KEY].spoof;
+export const fetchLinkOpnerArray = (state) => state[STATE_KEY].linkOpnerArr;
+export const fetchInviteJoinerArray = (state) =>
+  state[STATE_KEY].inviteJoinerArr;
+export const fetchTwiterArray = (state) => state[STATE_KEY].tweetsArr;
+export const fetchSpooferArray = (state) => state[STATE_KEY].spoofArr;
 
 // INVITE JOINER;
 export const fetchInviteJoinerListState = (state) =>
@@ -392,3 +368,9 @@ export const fetchSelectedAccChangerCard = (state) =>
   state[STATE_KEY].selectedAccChangerType;
 export const fetchAccChangerListState = (state) =>
   state[STATE_KEY].accountOptionList;
+
+// fetchTweets,
+// updateTweetsArray,
+// updateSpoofArray,
+// updateLinkArray,
+// updateInviteArray,

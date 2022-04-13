@@ -19,6 +19,7 @@ import {
   fetchAccChangerListState,
   setSelctedAccChangerCard,
 } from "../../../features/counterSlice";
+import "./style.css";
 
 function LeftSection({ selectedCard }) {
   const accountList = useSelector(fetchAccChangerListState);
@@ -33,24 +34,26 @@ function LeftSection({ selectedCard }) {
       <TopWrapper>
         <GroupTitle hideBtn={true} title="Discord" />
       </TopWrapper>
-      <AppSpacer spacer={20} />
-      <div className="group-card-scroll">
-        {accountList.map((option) => {
-          return (
-            <GroupCard
-              onClick={() => handleSelectedCard(option)}
-              key={option["changerType"]}
-              hideSubText={true}
-              cardIcon={getIcon(option["changerType"])}
-              cardTitle={option["cardTitle"]}
-              activeClass={
-                selectedCard["changerType"] === option["changerType"]
-                  ? "active-card"
-                  : ""
-              }
-            />
-          );
-        })}
+      <div className="account-changer-buttons-list">
+        <AppSpacer spacer={20} />
+        <div className="group-card-scroll">
+          {accountList.map((option) => {
+            return (
+              <GroupCard
+                onClick={() => handleSelectedCard(option)}
+                key={option["changerType"]}
+                hideSubText={true}
+                cardIcon={getIcon(option["changerType"])}
+                cardTitle={option["cardTitle"]}
+                activeClass={
+                  selectedCard["changerType"] === option["changerType"]
+                    ? "active-card"
+                    : ""
+                }
+              />
+            );
+          })}
+        </div>
       </div>
     </>
   );
@@ -77,6 +80,8 @@ const getIcon = (type) => {
     case "massInviter":
       return massInviter;
     case "tokenRetrieve":
+      return tokenRetrieve;
+    case "giveawayJoiner":
       return tokenRetrieve;
     default:
       return usernameChanger;

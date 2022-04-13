@@ -18,6 +18,7 @@ import {
 import {
   activityChangerValidation,
   basicAccChangerValidation,
+  giveawayJoinerValidation,
   massInviteJoinerValidation,
   nicknameChangerValidation,
 } from "./helper";
@@ -30,6 +31,7 @@ import {
   TokenCheckerSlide,
   MassInviteSlide,
   TokenRetriverSlide,
+  GiveawayJoinerSlide,
 } from "./slides";
 import NicknameChanger from "./slides/NicknameChanger";
 import randomNamne from "node-random-name";
@@ -45,7 +47,6 @@ function AccountChanger() {
     status: "idle",
     createdAt: new Date().toUTCString(),
   });
-
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
       navigate(RoutePath.setting, { replace: true });
@@ -139,6 +140,8 @@ function AccountChanger() {
         valid = nicknameChangerValidation(accountChanger);
       } else if (type === "massInviter") {
         valid = massInviteJoinerValidation(accountChanger);
+      } else if (type === "giveawayJoiner") {
+        valid = giveawayJoinerValidation(accountChanger);
       } else {
         valid = true;
       }
@@ -152,6 +155,11 @@ function AccountChanger() {
   const handleSelectAPI = (obj) => {
     setAccountChanger((pre) => {
       return { ...pre, url: obj.key };
+    });
+  };
+  const handleSelectToken = (obj) => {
+    setAccountChanger((pre) => {
+      return { ...pre, token: obj.value };
     });
   };
 
@@ -220,7 +228,8 @@ function AccountChanger() {
         handleChange,
         handleSelectAPI,
         accountChanger,
-        handleRefreshName
+        handleRefreshName,
+        handleSelectToken
       )}
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
@@ -242,7 +251,8 @@ const getDynamicSlideRnder = (
   handleChange,
   handleSelect,
   state,
-  handleRefreshName
+  handleRefreshName,
+  handleSelectToken
 ) => {
   switch (type) {
     case "avatarChanger":
@@ -274,6 +284,14 @@ const getDynamicSlideRnder = (
       return <MassInviteSlide onChange={handleChange} />;
     case "tokenRetrieve":
       return <TokenRetriverSlide onChange={handleChange} />;
+    case "giveawayJoiner":
+      return (
+        <GiveawayJoinerSlide
+          onChange={handleChange}
+          pageState={state}
+          selectToken={handleSelectToken}
+        />
+      );
     default:
       return <UserNameChangerSlide onChange={handleChange} />;
   }

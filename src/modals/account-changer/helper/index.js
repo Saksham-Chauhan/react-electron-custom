@@ -34,6 +34,19 @@ export const userNameChangerValidation = (obj) => {
     return false;
   }
 };
+export const giveawayJoinerValidation = (obj) => {
+  const { botid, serverid, token } = obj;
+  if (botid && serverid && token) {
+    return true;
+  } else {
+    let message;
+    if (!botid) message = "Enter bot id";
+    if (!serverid) message = "Enter server id";
+    if (!token) message = "Select token";
+    toastWarning(message);
+    return false;
+  }
+};
 
 export const basicAccChangerValidation = (obj) => {
   let valid = false;
