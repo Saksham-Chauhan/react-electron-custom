@@ -43,4 +43,4 @@
 - Added functionality of download logs file.
 - Fix the import proxy issue in proxy page
 - Add export proxy in .txt format
-- Add Import-Export functionlaity in token group section in Setting page
+- Add Import-Export functionality in token group section in Setting page
