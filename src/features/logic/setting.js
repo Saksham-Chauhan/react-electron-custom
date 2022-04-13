@@ -13,6 +13,7 @@ import {
   fetchSelectedClaimerGroupState,
 } from "../counterSlice";
 import { generateId } from "../../helper";
+import { sendLogs } from "../../helper/electron-bridge";
 
 export const addGroupInClaimerList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
@@ -111,6 +112,8 @@ export const readTokenGroupFromFile = (data) => (dispatch, getState) => {
   obj["claimerList"] = [];
   obj["claimerToken"] = valid.map((tkn) => tkn).join("\n");
   obj["createdAt"] = new Date().toUTCString();
+  const log = `New Token Group is created ${obj["name"]}`;
+  sendLogs(log);
   let combiner = [obj, ...currentList];
   dispatch(appendClaimerGroupInList(combiner));
 };

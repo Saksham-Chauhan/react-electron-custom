@@ -51,6 +51,17 @@ export const downloadLogs = (content, title) => {
       }
     }
     data = tempData.map((tkn) => tkn).join("\n");
+  } else if (title === "proxy") {
+    let tempData = [];
+    for (let i = 0; i < content.length; i++) {
+      const proxyGroup = content[i];
+      let proxyList = [...proxyGroup["proxyList"]];
+      for (let j = 0; j < proxyList.length; j++) {
+        const proxy = proxyList[j]["proxy"];
+        tempData.push(proxy);
+      }
+    }
+    data = tempData.map((tkn) => tkn).join("\n");
   } else {
     data = content.map((v) => v["proxy"]).join("\n");
   }

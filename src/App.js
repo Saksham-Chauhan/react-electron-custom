@@ -28,15 +28,10 @@ import {
 } from "./modals";
 import {
   Login,
-  ProxyPage,
   TwitterPage,
   SettingPage,
   SpooferPage,
-  MinitingPage,
   DashboardPage,
-  AccountGenPage,
-  LinkOpenerPage,
-  InviteJoinerPage,
   AccountChangerPage,
 } from "./pages";
 import {
@@ -151,7 +146,7 @@ function App() {
   }, [location.pathname]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length === 0) {
+  if (Object.keys(logggedUserDetails).length !== 0) {
     return (
       <React.Fragment>
         <Login />
@@ -185,17 +180,9 @@ function App() {
                 path={RoutePath.accountChanger}
                 element={<AccountChangerPage />}
               />
-              <Route path={RoutePath.accountGen} element={<AccountGenPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />
-              <Route
-                path={RoutePath.inviteJoiner}
-                element={<InviteJoinerPage />}
-              />
-              <Route path={RoutePath.linkOpener} element={<LinkOpenerPage />} />
-              <Route path={RoutePath.proxy} element={<ProxyPage />} />
-              <Route path={RoutePath.oneclick} element={<MinitingPage />} />
               <Route path={RoutePath.home} element={<DashboardPage />} />
             </Routes>
             <AppFooter />

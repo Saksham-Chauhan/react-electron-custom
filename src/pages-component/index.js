@@ -1,6 +1,3 @@
-export { default as ProxyTopBtnsWrapper } from "./proxy-component/proxt-top-btns-wrapper/ProxyTopBtnsWrapper";
-export { default as ProxyTableContainer } from "./proxy-component/proxy-table/ProxyTable";
-
 export { default as InputFieldWithScrollList } from "./linkopner-component/input-with-list/InputWithList";
 export { default as ChannelSection } from "./linkopner-component/channel-list/ChannelList";
 export { default as KeywordSection } from "./linkopner-component/key-list/KeyList";
@@ -31,12 +28,12 @@ export { default as SpooferTopBtnsWrraper } from "./spoof-component/spoof-top-bt
 export { default as SpooferTableSection } from "./spoof-component/spoof-table-section/SpooferTable";
 
 // SETTING PAGE COMPONENET
-export { default as SeetingUserProfile } from "./setting-component/user-profile/UserProfile";
+export { default as SettingUserProfile } from "./setting-component/user-profile/UserProfile";
 export { default as SettingTopSection } from "./setting-component/setting-top/SettingTop";
 export { default as SettingChromeUserSection } from "./setting-component/chrome-user/ChromeUser";
 export { default as SettingCalimerGroupSection } from "./setting-component/claimer-group/CalimerGroup";
 export { default as SettingWebhookSection } from "./setting-component/webhook-section/WebhookSetting";
-
+export { default as SettingProxyGroupSection } from "./setting-component/proxy-group/ProxyGroup";
 //LOGIN COMPONENTS
 export { default as LoginInner } from "./login-component/LoginInner";
 

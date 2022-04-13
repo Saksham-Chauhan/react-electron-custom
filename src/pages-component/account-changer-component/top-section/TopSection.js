@@ -7,7 +7,7 @@ function TopSection({ selectedCard }) {
       <GroupStatusCard
         subText={`${
           selectedCard["list"]?.filter((obj) => STATUS.includes(obj["status"]))
-            .length
+            .length || 0
         } Running Task`}
         title={selectedCard["cardTitle"]}
       />

@@ -82,6 +82,7 @@ class InviteJoiner extends React.PureComponent {
                 );
                 if (info.status === 200) {
                   let result = `Joined ${info.data.guild.name} server 🥳 `;
+                  sendLogs(result);
                   const date = new Date().toUTCString();
                   this.props.handleSendLog(result, msgID, date);
                   if (webhookList?.length > 0) {

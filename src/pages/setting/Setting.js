@@ -4,10 +4,11 @@ import { AppSpacer } from "../../component";
 import { fetchLoggedUserDetails } from "../../features/counterSlice";
 import {
   SettingTopSection,
-  SeetingUserProfile,
+  SettingUserProfile,
   SettingWebhookSection,
   SettingChromeUserSection,
   SettingCalimerGroupSection,
+  SettingProxyGroupSection,
 } from "../../pages-component";
 import "./styles.css";
 
@@ -18,18 +19,25 @@ function Setting() {
     <div className="setting-page-outer">
       <SettingTopSection />
       <div className="setting-page-padding">
-        <AppSpacer spacer={50} />
-        <SeetingUserProfile {...{ userDetails }} />
-        <AppSpacer spacer={100} />
-        <div className="setting-page-section-col">
-          <div className="setting-global-section">
+        <AppSpacer spacer={10} />
+        <div className="setting-page_top-section">
+          <div className="setting-page_webhook-section">
             <SettingWebhookSection {...{ userDetails }} />
           </div>
+          <div className="setting-page_user-section">
+            <SettingUserProfile {...{ userDetails }} />
+          </div>
+        </div>
+        <AppSpacer spacer={30} />
+        <div className="setting-page-section-col">
           <div className="chrome-user-section">
             <SettingChromeUserSection />
           </div>
           <div className="claimer-group-section">
             <SettingCalimerGroupSection />
+          </div>
+          <div className="proxy-group-section">
+            <SettingProxyGroupSection />
           </div>
         </div>
       </div>

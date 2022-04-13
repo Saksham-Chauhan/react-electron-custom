@@ -84,7 +84,7 @@ function WebhookSetting({ userDetails }) {
             <span>Test</span>
           </div>
         </div>
-        <AppSpacer spacer={50} />
+        <AppSpacer spacer={40} />
         <div className="setting-toggle-wrapper">
           <div className="setting-toggle-with-label">
             <AppToggler
@@ -119,7 +119,7 @@ function WebhookSetting({ userDetails }) {
             <span>Log On/Off</span>
           </div>
         </div>
-        <AppSpacer spacer={50} />
+        <AppSpacer spacer={40} />
         <div className="setting-system-control">
           <div className="system-setting">
             <label>System Toggle</label>
@@ -145,6 +145,7 @@ function WebhookSetting({ userDetails }) {
             </svg>
           </div>
         </div>
+        <AppSpacer spacer={10} />
       </div>
     </div>
   );

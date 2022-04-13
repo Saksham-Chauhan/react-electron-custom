@@ -1,5 +1,4 @@
 export { default as Login } from "./login/Login";
-export { default as ProxyPage } from "./proxy/Proxy";
 export { default as TwitterPage } from "./twitter/Twitter";
 export { default as SpooferPage } from "./spoofer/Spoofer";
 export { default as SettingPage } from "./setting/Setting";
