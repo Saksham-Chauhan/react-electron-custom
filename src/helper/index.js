@@ -40,8 +40,17 @@ export const generateId = () => uuid();
 
 export const downloadLogs = (content, title) => {
   let data;
-  if (title !== "proxy") {
-    data = content.map((log) => log).join("\n");
+  if (title === "token") {
+    let tempData = [];
+    for (let i = 0; i < content.length; i++) {
+      const tokenGroup = content[i];
+      let tokenList = [...tokenGroup["claimerToken"].split("\n")];
+      for (let j = 0; j < tokenList.length; j++) {
+        const token = tokenList[j];
+        tempData.push(token);
+      }
+    }
+    data = tempData.map((tkn) => tkn).join("\n");
   } else {
     data = content.map((v) => v["proxy"]).join("\n");
   }

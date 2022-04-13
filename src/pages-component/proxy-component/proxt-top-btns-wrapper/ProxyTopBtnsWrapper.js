@@ -121,7 +121,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
             strokeColor="#B60E0E"
             size={27}
             wrapperStyle={{ paddingBottom: "2px" }}
-          ></UseAnimations>
+          />
           <span>Remove Bad Proxies</span>
         </div>
         <div className="icon-btn-wrapper import-file-btn btn">

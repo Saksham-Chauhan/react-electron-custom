@@ -12,14 +12,27 @@
   line-height: 26px;
   color: var(--primary);
 }
-.claimer-add-btn {
-  height: 40px;
-  padding: 0.5em 0.7em;
-  border-radius: 4px;
-  background: var(--sidebar-bg);
+.claimer-btns {
   position: absolute;
+  height: 35px;
   right: 0;
-  top: -5px;
+  top: 0px;
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+}
+.claimer-btns > div {
+  background: var(--sidebar-bg);
+  border-radius: 4px;
+  padding: 0.5em;
+  width: 35px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.claimer-btns > div > img {
+  height: 20px;
 }
 .claimer-group-list-scroll-list {
   background: var(--sidebar-bg);

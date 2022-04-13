@@ -1,5 +1,7 @@
 import React from "react";
 import plus from "../../../assests/images/plus.svg";
+import exportIcon from "../../../assests/images/export.svg";
+import importIcon from "../../../assests/images/import.svg";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import edit from "react-useanimations/lib/edit";
@@ -11,7 +13,12 @@ import {
   setEditStorage,
   setModalState,
 } from "../../../features/counterSlice";
-import { deleteClaimerGroupFromList } from "../../../features/logic/setting";
+import {
+  deleteClaimerGroupFromList,
+  readTokenGroupFromFile,
+} from "../../../features/logic/setting";
+import { downloadLogs } from "../../../helper";
+import { toastWarning } from "../../../toaster";
 
 function CalimerGroup() {
   const dispatch = useDispatch();
@@ -30,12 +37,44 @@ function CalimerGroup() {
     dispatch(deleteClaimerGroupFromList(group));
   };
 
+  const handleImportTokenGroup = (e) => {
+    const { files } = e.target;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const tknStr = event.target.result;
+      const fileName = files[0].name.split(".")[0];
+      dispatch(readTokenGroupFromFile({ name: fileName, tokenArr: tknStr }));
+    };
+    reader.readAsText(files[0]);
+  };
+
+  const handleExportTokenGroup = () => {
+    if (list.length > 0) {
+      downloadLogs(list, "token");
+    } else toastWarning("No token group to export!!");
+  };
+
   return (
     <div className="claimer-group-outer">
       <div className="claimer-flex">
         <h3>Token Group</h3>
-        <div onClick={handleOpenModal} className="claimer-add-btn btn">
-          <img src={plus} alt="" />
+        <div className="claimer-btns">
+          <div className="import-file-btn btn">
+            <img src={importIcon} alt="" />
+            <input
+              onChange={handleImportTokenGroup}
+              id="token-group-import-btn"
+              type="file"
+              accept=".txt"
+            />
+            <label htmlFor="token-group-import-btn" />
+          </div>
+          <div onClick={handleExportTokenGroup} className="btn">
+            <img src={exportIcon} alt="" />
+          </div>
+          <div onClick={handleOpenModal} className="btn">
+            <img src={plus} alt="" />
+          </div>
         </div>
       </div>
       <AppSpacer spacer={14} />

@@ -41,4 +41,6 @@
 - Added functionality which provide protection from interceptor tools.
 - Added toaster for download progress.
 - Added functionality of download logs file.
- 
+- Fix the import proxy issue in proxy page
+- Add export proxy in .txt format
+- Add Import-Export functionlaity in token group section in Setting page
