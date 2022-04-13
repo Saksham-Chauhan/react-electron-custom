@@ -41,4 +41,10 @@
 - Added functionality which provide protection from interceptor tools.
 - Added toaster for download progress.
 - Added functionality of download logs file.
- 
+
+# v0.8.6
+
+- Added giveaway joiner functionality.
+- Removed upload and download speed test component.
+- Fixed bugs in dashboard page.
+- Changed alignment of export button.
