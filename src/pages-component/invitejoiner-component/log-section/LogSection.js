@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { InputFieldWithScrollList } from "../..";
 import { clearLogList } from "../../../features/counterSlice";
-import { handleExportLogs } from "../../../helper";
+import { downloadLogs } from "../../../helper";
 import { toastWarning } from "../../../toaster";
 
 function LogSection({ logList }) {
@@ -10,7 +10,7 @@ function LogSection({ logList }) {
 
   const handleExport = () => {
     if (logList.length > 0) {
-      handleExportLogs(logList, "text/plain", "invite-joiner");
+      downloadLogs(logList, "invite-joiner");
     } else toastWarning("Nothing to export");
   };
 

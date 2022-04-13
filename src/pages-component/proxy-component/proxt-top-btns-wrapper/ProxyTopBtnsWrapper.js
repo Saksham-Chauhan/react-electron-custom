@@ -13,7 +13,7 @@ import {
   setStatusInProxy,
 } from "../../../features/logic/proxy";
 import { toastWarning } from "../../../toaster";
-import { handleExportLogs } from "../../../helper";
+import { downloadLogs } from "../../../helper";
 import { proxyTester } from "../../../helper/electron-bridge";
 import {
   fetchSelctedInviteProxyGroup,
@@ -47,9 +47,11 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
   const handleTestproxy = () => {
     if (Object.keys(tempData).length > 0) {
       dispatch(setStatusInProxy());
-      tempData["proxyList"].forEach((proxy) => {
-        proxyTester(proxy);
-      });
+      if (tempData["proxyList"].length > 0) {
+        tempData["proxyList"].forEach((proxy) => {
+          proxyTester(proxy);
+        });
+      } else toastWarning("No proxy to test");
     } else toastWarning("Select proxy group");
   };
 
@@ -64,7 +66,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
       if (tempData["proxyList"].length > 0) {
         let obj = {};
         obj["proxies"] = tempData["proxyList"];
-        handleExportLogs(JSON.stringify(obj), "application/json", "proxy");
+        downloadLogs(obj["proxies"], "proxy");
       } else toastWarning("Nothing to Export");
     } else toastWarning("Select proxy group");
   };
@@ -76,12 +78,12 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
     } else toastWarning("Select proxy group");
   };
 
-  const handleImportProxy = (e) => {
+  const handleImportProxy = async (e) => {
     const { files } = e.target;
     const reader = new FileReader();
     reader.onload = async (event) => {
-      const text = event.target.result;
-      const proxyArr = text.split("\n");
+      const str = event.target.result;
+      const proxyArr = await str.split("\n");
       dispatch(readProxyFromFile(proxyArr));
     };
     reader.readAsText(files[0]);
@@ -128,7 +130,7 @@ function ProxyTopBtnsWrapper({ search, handleSearching, tempData }) {
             onChange={handleImportProxy}
             id="proxy-import-btn"
             type="file"
-            accept="*.txt"
+            accept=".txt"
           />
           <label htmlFor="proxy-import-btn" />
         </div>

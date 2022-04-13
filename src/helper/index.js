@@ -38,17 +38,17 @@ export const makeLogText = (msg) => {
 
 export const generateId = () => uuid();
 
-const downloadLogs = (content, type = "text/plain", title) => {
+export const downloadLogs = (content, title) => {
   let data;
-  if (type === "application/json") {
-    data = content;
+  if (title !== "proxy") {
+    data = content.map((log) => log).join("\n");
   } else {
-    data = content.map((v) => v).join("\n");
+    data = content.map((v) => v["proxy"]).join("\n");
   }
   const d = new Date();
-  const fileName = `${title}-${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
+  const fileName = `${title}_${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
   const a = document.createElement("a");
-  const file = new Blob([data], { type });
+  const file = new Blob([data], { type: "text/plain" });
   a.href = URL.createObjectURL(file);
   a.download = fileName;
   a.click();
@@ -80,11 +80,6 @@ export const getClaimerValue = (list, obj) => {
     } else return [];
   } else return [];
 };
-
-export const handleExportLogs = (logs, type, logTitle) =>
-  downloadLogs(logs, type, logTitle);
-
-export const tweetTimeToEpoch = (str) => {};
 
 /**
  * function make option for select

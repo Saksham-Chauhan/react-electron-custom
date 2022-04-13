@@ -133,7 +133,8 @@ export const readProxyFromFile = (proxyArr) => (dispatch, getState) => {
   let tempSelectedObj = { ...currentSelectedGroup };
   let valid = [];
   for (let i = 0; i < proxyArr.length; i++) {
-    if (ProxyRegExp.test(proxyArr[i])) {
+    let len = proxyArr[i]?.split(":")?.length;
+    if (ProxyRegExp.test(proxyArr[i]) || len === 2) {
       let obj = {};
       obj["id"] = generateId();
       obj["proxy"] = proxyArr[i];
