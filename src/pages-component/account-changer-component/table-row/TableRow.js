@@ -14,25 +14,25 @@ function TableRow({
   type,
   selectedCard,
 }) {
-  console.log(obj);
   return (
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
-      <div style={{ width: "30%", overflow: "hidden" }}>
-        {selectedCard.changerType === "giveawayJoiner"
-          ? obj?.token
-          : obj?.claimerGroup?.label}
+      <div style={{ display: "flex" }}>
+        <div style={{ width: "70%", overflow: "hidden" }}>
+          {selectedCard.changerType === "giveawayJoiner"
+            ? obj?.token
+            : obj?.claimerGroup?.label}
+        </div>
+        {selectedCard.changerType === "giveawayJoiner" && "..."}
       </div>
       <div
         style={{
           color: getColor(obj?.status),
-          width: "30%",
-          textAlign: "center",
         }}
       >
         {obj?.status}
       </div>
-      <div className="actions-btns-div">
+      <div>
         <div className="acc-changer-table-row-action-column">
           {obj?.status === "Completed" &&
           (type === "passwordChanger" || type === "tokenRetrieve") ? (
@@ -66,6 +66,8 @@ export default TableRow;
 const getColor = (status) => {
   switch (status) {
     case "Running":
+      return "var(--status)";
+    case "Monitoring":
       return "var(--status)";
     case "Completed":
       return "#1186db";

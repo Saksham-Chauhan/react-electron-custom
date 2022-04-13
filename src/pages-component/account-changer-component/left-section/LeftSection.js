@@ -19,6 +19,7 @@ import {
   fetchAccChangerListState,
   setSelctedAccChangerCard,
 } from "../../../features/counterSlice";
+import "./style.css";
 
 function LeftSection({ selectedCard }) {
   const accountList = useSelector(fetchAccChangerListState);
@@ -33,7 +34,7 @@ function LeftSection({ selectedCard }) {
       <TopWrapper>
         <GroupTitle hideBtn={true} title="Discord" />
       </TopWrapper>
-      <div style={{ overflowY: "scroll", height: "88%" }}>
+      <div className="account-changer-buttons-list">
         <AppSpacer spacer={20} />
         <div className="group-card-scroll">
           {accountList.map((option) => {

@@ -46,7 +46,7 @@ function TableSection({ list, selectedCard }) {
 
   const handlePlay = async (obj) => {
     const type = selectedCard["changerType"];
-    if (type === "giveawayJoiner") {
+    if (type === "giveawayJoiner" && obj.status !== "Monitoring") {
       const monitor = new Client();
       monitor.login(obj.token);
       try {
@@ -61,9 +61,8 @@ function TableSection({ list, selectedCard }) {
           if (serverId === obj.serverid) {
             if (authorId === obj.botid) {
               if (
-                embed.title.toLowerCase().includes("google") &&
-                embed.description.toLowerCase().includes("images")
-                // in the next jackpot
+                embed.title.toLowerCase().includes("jackpot") &&
+                embed.description.toLowerCase().includes("rs3 in the next")
               ) {
                 await message.react("🎉");
                 let x = Math.floor(Math.random() * replyList.length + 1);
