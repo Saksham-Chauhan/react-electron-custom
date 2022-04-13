@@ -61,15 +61,17 @@ function TableSection({ list, selectedCard }) {
           if (serverId === obj.serverid) {
             if (authorId === obj.botid) {
               if (
-                embed.title.toLowerCase().includes("montserrat") &&
-                embed.description.toLowerCase().includes("montserrat")
+                embed.title.toLowerCase().includes("google") &&
+                embed.description.toLowerCase().includes("images")
+                // in the next jackpot
               ) {
                 await message.react("🎉");
                 let x = Math.floor(Math.random() * replyList.length + 1);
-                await message.channel.startTyping();
-                await sleep(obj.delay);
-                await message.channel.send(replyList[x]);
-                await message.channel.stopTyping();
+                message.channel.startTyping();
+                setTimeout(function () {
+                  message.channel.stopTyping();
+                  message.channel.send(replyList[x]);
+                }, obj.delay);
               }
             }
           }
