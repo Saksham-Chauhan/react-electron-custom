@@ -11,9 +11,8 @@ function randomIntFromInterval(min, max) {
 }
 
 export const getProxy = (proxyArr) => {
-  const indIndex = randomIntFromInterval(0, proxyArr?.length || 0);
-  let proxySplit = proxyArr[indIndex]?.split(":");
-  const [host, port, username, password] = proxySplit;
+  const randomIndex = randomIntFromInterval(0, proxyArr?.length || 0);
+  const [host, port, username, password] = proxyArr[randomIndex]?.split(":");
   const proxy = {
     host: host,
     port: port,
@@ -29,7 +28,7 @@ export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
   await axios({
     url: `${BASE_URL}/invites/${inviteCode}`,
     headers: { Authorization: token },
-    method: "post",
+    method: "POST",
     data: JSON.stringify({}),
     proxy,
   });
@@ -46,7 +45,7 @@ export const discordServerInviteReactAPI = async (
     try {
       const response = await axios({
         url: `${BASE_URL}/channels/${channelId}/messages/${messageId}/reactions/${emoji}/%40me`,
-        method: "put",
+        method: "PUT",
         proxy: getProxy(proxyArr),
         headers: {
           authorization: token,
@@ -84,7 +83,7 @@ export const discordServerAcceptRuleAPI = async (
         );
         const acceptresponse = await axios({
           url: `${BASE_URL}/guilds/${guildId}/requests/@me`,
-          method: "put",
+          method: "PUT",
           headers: {
             Authorization: token,
             "Content-Type": "application/json",
@@ -120,14 +119,13 @@ export const directDiscordJoinAPI = async (
       if (inviteResponse.status === 200) {
         const tkn =
           token.substring(0, 4) + "## ##" + token.charAt(token.length() - 1);
-        toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
-        const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
-        sendLogs(log);
+        toastSuccess(`Joined ${inviteResponse.data.guild.name} server successfully`);
+        sendLogs(`Joined ${inviteResponse.data.guild.name} server with ${tkn}`);
         if (!settingObj.isReact && !settingObj.isAcceptRule) break;
         if (settingObj.isReact) {
           const serverReactResponse = await axios({
             url: `${BASE_URL}/channels/${settingObj.reactSetting.channelId}/messages/${settingObj.reactSetting.messageId}/reactions/${settingObj.reactSetting.emojiValue}/%40me`,
-            method: "put",
+            method: "PUT",
             proxy,
             headers: {
               authorization: token,
@@ -135,15 +133,14 @@ export const directDiscordJoinAPI = async (
             },
           });
           if (serverReactResponse.status === 201) {
-            const log = `Direct join Reaction added successfully  with ${tkn}`;
-            sendLogs(log);
+            sendLogs(`Direct join Reaction added successfully  with ${tkn}`);
             toastSuccess("Reaction added successfully");
           }
         }
         if (settingObj.isAcceptRule) {
           const acceptServerRulResponse = await axios({
             url: `${BASE_URL}/guilds/${settingObj.acceptRule.guildID}/requests/@me`,
-            method: "put",
+            method: "PUT",
             headers: {
               Authorization: token,
               "Content-Type": "application/json",
@@ -155,8 +152,7 @@ export const directDiscordJoinAPI = async (
             acceptServerRulResponse !== null &&
             acceptServerRulResponse === 201
           ) {
-            const log = `Direct join Rules accepted successfully ${tkn}`;
-            sendLogs(log);
+            sendLogs(`Direct join Rules accepted successfully ${tkn}`);
             toastSuccess("Rules accepted successfully");
           }
         }
@@ -169,6 +165,7 @@ export const directDiscordJoinAPI = async (
   }
 };
 
+// TODO => What made you do fetch instead of axios at the end of program?
 export const generateRandomAvatar = async (api = IMAGE_API) => {
   const arrayBuffer = await fetch(api).then(function (response) {
     return response.arrayBuffer();
