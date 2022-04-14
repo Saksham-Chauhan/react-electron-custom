@@ -1,19 +1,19 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import { sleep } from "../../../helper";
+import {
+  deleteAllTableRow,
+  updateStatusOfTableRow,
+} from "../../../features/logic/acc-changer";
 import UseAnimations from "react-useanimations";
 import add from "../../../assests/images/plus.svg";
 import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import searchIcon from "../../../assests/images/search.svg";
 import { setModalState } from "../../../features/counterSlice";
-import {
-  deleteAllTableRow,
-  updateStatusOfTableRow,
-} from "../../../features/logic/acc-changer";
 import { apiCallToDiscord } from "../table-section/TableSection";
-import { sleep } from "../../../helper";
 
-function TopBtnsWrapper({ search, handleSearching, selectedCard }) {
+function TopBtnsWrapper({ search, handleSearching, tempList }) {
   const dispatch = useDispatch();
 
   const handleAdd = () => {
@@ -25,7 +25,7 @@ function TopBtnsWrapper({ search, handleSearching, selectedCard }) {
   };
 
   const handleSinglePlay = async (obj) => {
-    const type = selectedCard["changerType"];
+    const type = obj["changerType"];
     const { proxyGroup, claimerGroup } = obj;
     const tokenArray = claimerGroup["value"]?.split("\n");
     for (let index = 0; index < tokenArray.length; index++) {
@@ -67,8 +67,8 @@ function TopBtnsWrapper({ search, handleSearching, selectedCard }) {
   };
 
   const handlePlayAll = () => {
-    if (selectedCard["list"]?.length > 0) {
-      selectedCard["list"]?.forEach(async (data) => {
+    if (tempList?.length > 0) {
+      tempList?.forEach(async (data) => {
         await handleSinglePlay(data);
       });
     }

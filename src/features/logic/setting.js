@@ -13,6 +13,7 @@ import {
   fetchSelectedClaimerGroupState,
 } from "../counterSlice";
 import { generateId } from "../../helper";
+import { sendLogs } from "../../helper/electron-bridge";
 
 export const addGroupInClaimerList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
@@ -91,4 +92,28 @@ export const addWebhookInList = (webhook) => (dispatch, getState) => {
   obj["id"] = generateId();
   let combiner = [obj, ...currentList];
   dispatch(appendWebhookInList(combiner));
+};
+
+export const readTokenGroupFromFile = (data) => (dispatch, getState) => {
+  const { name, tokenArr } = data;
+  let valid = [];
+  const currentList = fetchClaimerGroupList(getState());
+  let tokenList = [...tokenArr.split("\n")];
+  for (let i = 0; i < tokenList.length; i++) {
+    const token = tokenList[i];
+    let len = token.split(":").length;
+    if (len === 4) {
+      valid.push(token);
+    }
+  }
+  let obj = {};
+  obj["id"] = generateId();
+  obj["name"] = name;
+  obj["claimerList"] = [];
+  obj["claimerToken"] = valid.map((tkn) => tkn).join("\n");
+  obj["createdAt"] = new Date().toUTCString();
+  const log = `New Token Group is created ${obj["name"]}`;
+  sendLogs(log);
+  let combiner = [obj, ...currentList];
+  dispatch(appendClaimerGroupInList(combiner));
 };

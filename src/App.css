@@ -101,3 +101,134 @@
   object-fit: contain;
   border-radius: 2px;
 }
+.page-section {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+.left-container {
+  height: 100%;
+  width: 18%;
+  border-right: 0.5px solid #131b3c;
+}
+.group-card-scroll {
+  height: 50vh;
+  padding: 0px 20px;
+}
+.right-container {
+  width: calc(100% - 18%);
+}
+.page-padding-section {
+  padding: 0px 1em;
+}
+
+/* TOP BTNS CSS IN PROXY , SPOOFER , ACC CHNAGER PAGE */
+.page-top-btns-wrapper {
+  display: flex;
+  height: 40px;
+}
+.page-top-btns-wrapper > .page-left-container,
+.page-top-btns-wrapper > .page-right-container {
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+.page-top-btns-wrapper > .page-left-container.spoofer-page {
+  width: 100%;
+}
+.page-top-btns-wrapper > .page-right-container {
+  justify-content: flex-end;
+}
+.page-top-search-container {
+  display: flex;
+  align-items: center;
+  background: var(--btn-bg);
+  height: 100%;
+  min-width: 256px;
+  margin-right: 10px;
+  padding: 0px 0.5em;
+  opacity: 0.82;
+  border-radius: 5px;
+}
+
+.page-top-search-container > img {
+  height: 18px;
+  margin-right: 0.3em;
+}
+.page-top-search-container > input {
+  background: transparent;
+  outline: none;
+  border: none;
+  flex: 1;
+  font-size: 15.5px;
+  line-height: 23px;
+  color: var(--primary);
+}
+
+.page-top-search-container > input::placeholder {
+  font-size: 15.5px;
+  line-height: 23px;
+  color: var(--primary);
+  opacity: 0.5;
+}
+.icon-btn-wrapper {
+  width: 40px;
+  height: 40px;
+  background: var(--btn-bg);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+.icon-btn-wrapper > img {
+  height: 20px;
+  padding-top: 2px;
+}
+.remove-btn {
+  display: flex;
+  align-items: center;
+  background: var(--btn-bg);
+  height: 100%;
+  padding: 0px 0.7em;
+  border-radius: 5px;
+}
+.remove-btn > span {
+  font-size: 15.5px;
+  line-height: 23px;
+  color: var(--red);
+  margin-left: 8px;
+}
+
+/* spoofer page css */
+.btn-with-no-icon {
+  margin-left: 0.5em;
+  padding: 0px 1.5em;
+}
+.btn-with-no-icon.remove-btn > span {
+  margin-left: 0px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--active-input);
+}
+.import-file-btn {
+  position: relative;
+}
+.import-file-btn > input {
+  -webkit-appearance: none;
+  opacity: 0;
+}
+.import-file-btn > label {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  left: 0;
+  cursor: pointer;
+}
+.import-file-btn > img {
+  position: absolute;
+  left: 8px;
+}

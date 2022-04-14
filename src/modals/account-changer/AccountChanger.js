@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
-import { RoutePath } from "../../constant";
+import { DISCORD_MASS_OPTIONS, RoutePath } from "../../constant";
 import {
+  fetchChromeUserListState,
   fetchClaimerGroupList,
   fetchProxyGroupList,
-  fetchSelectedAccChangerCard,
   setModalState,
 } from "../../features/counterSlice";
 import { addDataInTableList } from "../../features/logic/acc-changer";
@@ -19,6 +19,8 @@ import {
   activityChangerValidation,
   basicAccChangerValidation,
   giveawayJoinerValidation,
+  inviteJoinerValidation,
+  linkOpenerValidation,
   massInviteJoinerValidation,
   nicknameChangerValidation,
 } from "./helper";
@@ -32,12 +34,19 @@ import {
   MassInviteSlide,
   TokenRetriverSlide,
   GiveawayJoinerSlide,
+  InviteJoinerSlide,
+  LinkOpenerSlide,
 } from "./slides";
 import NicknameChanger from "./slides/NicknameChanger";
-import randomNamne from "node-random-name";
+import Chance from "chance";
+import {
+  ModalFlexInnerRow,
+  ModalFlexOuterRow,
+} from "../../component/modal-wrapper/Modal";
 function AccountChanger() {
   const navigate = useNavigate();
-  const selectedCard = useSelector(fetchSelectedAccChangerCard);
+  const chromeList = useSelector(fetchChromeUserListState);
+  // const selectedCard = useSelector(fetchSelectedAccChangerCard);
   const proxyGroupList = useSelector(fetchProxyGroupList);
   const claimerGroupList = useSelector(fetchClaimerGroupList);
   const dispatch = useDispatch();
@@ -46,18 +55,25 @@ function AccountChanger() {
     claimerGroup: {},
     status: "idle",
     createdAt: new Date().toUTCString(),
+    changerType: "",
   });
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
-      navigate(RoutePath.setting, { replace: true });
       handleCloseModal();
+      navigate(RoutePath.setting, { replace: true });
     }
+  };
+
+  const handleTypeChanger = ({ value }) => {
+    setAccountChanger((pre) => {
+      return { ...pre, changerType: value };
+    });
   };
 
   const handleProxyMenuOpen = () => {
     if (proxyGroupList.length === 0) {
-      navigate(RoutePath.proxy, { replace: true });
       handleCloseModal();
+      navigate(RoutePath.setting, { replace: true });
     }
   };
 
@@ -83,14 +99,22 @@ function AccountChanger() {
     return [];
   };
 
-  const handleClaimer = (data) => {
+  const makeRndName = (data) => {
     let arr = [];
-    if (selectedCard["changerType"] === "nicknameChanger") {
-      data["value"]?.split("\n").forEach((grp) => {
-        arr.push(randomNamne());
-      });
+    const chance = new Chance();
+    const list = [...data["value"]?.split("\n")];
+    for (let i = 0; i < list.length; i++) {
+      const name = chance.name();
+      arr.push(name);
+    }
+    return arr;
+  };
+
+  const handleClaimer = (data) => {
+    if (accountChanger["changerType"] === "nicknameChanger") {
+      const rndList = makeRndName(data);
       setAccountChanger((pre) => {
-        return { ...pre, nicknameGenerate: arr.join("\n") };
+        return { ...pre, nicknameGenerate: rndList.join("\n") };
       });
     }
     setAccountChanger((pre) => {
@@ -120,18 +144,15 @@ function AccountChanger() {
   };
 
   const handleRefreshName = () => {
-    let arr = [];
-    accountChanger.claimerGroup["value"]?.split("\n").forEach((grp) => {
-      arr.push(randomNamne());
-    });
+    const rndList = makeRndName(accountChanger.claimerGroup);
     setAccountChanger((pre) => {
-      return { ...pre, nicknameGenerate: arr.join("\n") };
+      return { ...pre, nicknameGenerate: rndList.join("\n") };
     });
   };
 
   const handleSubmit = () => {
     const validation = basicAccChangerValidation(accountChanger);
-    const type = selectedCard["changerType"];
+    const type = accountChanger["changerType"];
     if (validation) {
       let valid;
       if (type === "activityChanger") {
@@ -142,6 +163,10 @@ function AccountChanger() {
         valid = massInviteJoinerValidation(accountChanger);
       } else if (type === "giveawayJoiner") {
         valid = giveawayJoinerValidation(accountChanger);
+      } else if (type === "linkOpener") {
+        valid = linkOpenerValidation(accountChanger);
+      } else if (type === "inviteJoiner") {
+        valid = inviteJoinerValidation(accountChanger);
       } else {
         valid = true;
       }
@@ -163,24 +188,63 @@ function AccountChanger() {
     });
   };
 
+  const handleMonitorToken = (data) => {
+    setAccountChanger((pre) => {
+      return { ...pre, monitorToken: data };
+    });
+  };
+
+  const handleChromeMenuOpen = () => {
+    if (chromeList.length === 0) {
+      handleCloseModal();
+      navigate(RoutePath.setting, { replace: true });
+    }
+  };
+
+  const handleChromeUser = (data) => {
+    setAccountChanger((pre) => {
+      return { ...pre, chromeUser: data };
+    });
+  };
+
   return (
     <ModalWrapper>
       <div className="modal-tilte">
         <h2>Create Task</h2>
       </div>
       <AppSpacer spacer={30} />
-      <div className="modal-flex-field-wrapper">
-        <div className="half-flex-field">
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
           <AppInputField
+            onChange={handleTypeChanger}
             fieldTitle="Type"
-            disabled={true}
-            placeholderText={selectedCard["cardTitle"] || ""}
+            isSelect={true}
+            value={DISCORD_MASS_OPTIONS.filter(
+              (type) => type["value"] === accountChanger["changerType"]
+            )}
+            selectOptions={DISCORD_MASS_OPTIONS}
+            placeholderText="Select Type"
           />
-        </div>
-      </div>
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
+          {accountChanger["changerType"] === "linkOpener" && (
+            <AppInputField
+              onChange={handleChromeUser}
+              placeholderText={
+                chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
+              }
+              selectOptions={chromeList}
+              fieldTitle="Chrome User"
+              isSelect={chromeList.length > 0}
+              disabled={chromeList.length > 0}
+              navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
+            />
+          )}
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
       <AppSpacer spacer={10} />
-      <div className="modal-flex-field-wrapper">
-        <div className="half-flex-field">
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Token Group"
             placeholderText={
@@ -201,8 +265,8 @@ function AccountChanger() {
               claimerGroupList.length > 0 ? () => {} : handleProxyMenuOpen
             }
           />
-        </div>
-        <div className="half-flex-field">
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Proxy Group"
             placeholderText={
@@ -220,16 +284,17 @@ function AccountChanger() {
               proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
             }
           />
-        </div>
-      </div>
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
       <AppSpacer spacer={10} />
       {getDynamicSlideRnder(
-        selectedCard["changerType"],
+        accountChanger["changerType"],
         handleChange,
         handleSelectAPI,
         accountChanger,
         handleRefreshName,
-        handleSelectToken
+        handleSelectToken,
+        handleMonitorToken
       )}
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
@@ -252,7 +317,8 @@ const getDynamicSlideRnder = (
   handleSelect,
   state,
   handleRefreshName,
-  handleSelectToken
+  handleSelectToken,
+  handleMonitorToken
 ) => {
   switch (type) {
     case "avatarChanger":
@@ -290,6 +356,22 @@ const getDynamicSlideRnder = (
           onChange={handleChange}
           pageState={state}
           selectToken={handleSelectToken}
+        />
+      );
+    case "inviteJoiner":
+      return (
+        <InviteJoinerSlide
+          onChange={handleChange}
+          state={state}
+          handleMonitorToken={handleMonitorToken}
+        />
+      );
+    case "linkOpener":
+      return (
+        <LinkOpenerSlide
+          onChange={handleChange}
+          state={state}
+          handleMonitorToken={handleMonitorToken}
         />
       );
     default:
