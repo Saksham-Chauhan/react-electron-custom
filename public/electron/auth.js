@@ -1,13 +1,15 @@
 const axios = require("axios");
 const url = require("url");
 const jwt = require("jsonwebtoken");
-// FOR PRODUCTION CREDENTIALS
+
+// PROD CREDS. TODO => Pass it with .env file
 const bot_token = "OTM4MzM4NDAzMTA2MzIwNDM0.Yfo1vA.RA9WBRV-R6CpsTUqt6OVlGtUIXg";
 const client_id = "938338403106320434";
 const client_secret = "L74jCftmysbzbqpy08i8O_QegPvo8NRb";
 const guildId = "936538800027467816";
 const redirect_uri = "http://localhost/callback/*";
 let accessToken = null;
+let user = null;
 
 function getAccessToken() {
   return accessToken;
@@ -40,7 +42,6 @@ async function loadTokens(callbackURL) {
   const response = await axios(options);
   accessToken = response.data.access_token;
 }
-let user = null;
 
 function getCurrentUser() {
   if (user) {

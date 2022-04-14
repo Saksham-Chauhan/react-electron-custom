@@ -64,6 +64,11 @@ function createAuthWindow() {
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     try {
       await auth.loadTokens(url);
+    }
+    catch(e){
+      mainWindow.reload();
+    }
+    try{
       await auth.login();
       if (!mainWindow) return;
       mainWindow.reload();
@@ -72,11 +77,10 @@ function createAuthWindow() {
       destroyAuthWin();
 
       const options = {
-        type: "question",
-        defaultId: 2,
-        title: "Login Error",
-        message: "Login Failed",
-        detail: "You are not allowed to login",
+        type: "error",
+        title: "Error",
+        message: "Login failed",
+        detail: "You are not a beta member",
       };
       dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
     }
