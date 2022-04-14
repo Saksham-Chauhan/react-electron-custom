@@ -1,28 +1,28 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { InputFieldWithScrollList } from "../..";
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { InputFieldWithScrollList } from '../..'
 import {
   addTwitterKeywordInList,
   deleteTwitterDatafromList,
-} from "../../../features/logic/twitter";
+} from '../../../features/logic/twitter'
 
-function KeywordScrollList({ keyWordList }) {
-  const [keyword, setKeyword] = useState("");
-  const dispatch = useDispatch();
+function KeywordScrollList({ keyWordList, appTheme }) {
+  const [keyword, setKeyword] = useState('')
+  const dispatch = useDispatch()
 
   const handleKeywordChange = (e) => {
-    const { value } = e.target;
-    setKeyword(value);
-  };
+    const { value } = e.target
+    setKeyword(value)
+  }
 
   const handleAddKeyword = () => {
-    dispatch(addTwitterKeywordInList({ key: "KEYWORD", word: keyword }));
-    setKeyword("");
-  };
+    dispatch(addTwitterKeywordInList({ key: 'KEYWORD', word: keyword }))
+    setKeyword('')
+  }
 
   const handleDeleteKeyword = (word) => {
-    dispatch(deleteTwitterDatafromList({ key: "KEYWORD", word }));
-  };
+    dispatch(deleteTwitterDatafromList({ key: 'KEYWORD', word }))
+  }
 
   return (
     <div>
@@ -37,9 +37,10 @@ function KeywordScrollList({ keyWordList }) {
         title="Keywords"
         placeHolder="Enter Keywords"
         onDelete={handleDeleteKeyword}
+        appTheme={appTheme}
       />
     </div>
-  );
+  )
 }
 
-export default KeywordScrollList;
+export default KeywordScrollList

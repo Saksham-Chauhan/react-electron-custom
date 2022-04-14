@@ -1,7 +1,7 @@
-import React from "react";
-import "./styles.css";
-import ReactTooltip from "react-tooltip";
-import help from "../../assests/images/help.svg";
+import React from 'react'
+import './styles.css'
+import ReactTooltip from 'react-tooltip'
+import help from '../../assests/images/help.svg'
 function LabelWithTooltip({
   toolTopText = "I'm Tooltip",
   labelText,
@@ -30,7 +30,7 @@ function LabelWithTooltip({
         )}
       </ReactTooltip>
     </div>
-  );
+  )
 }
 
-export default LabelWithTooltip;
+export default LabelWithTooltip

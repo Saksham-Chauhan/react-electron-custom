@@ -1,25 +1,28 @@
-import React from "react";
-import Select from "react-select";
-import { selectCustomStyles, selectStyles } from "./styles";
-import NumberFormat from "react-number-format";
-import "./styles.css";
-
-const DefaultOptions = [];
+import React from 'react'
+import Select from 'react-select'
+import { selectCustomStyles, selectStyles } from './styles'
+import NumberFormat from 'react-number-format'
+import './styles.css'
+import { useSelector } from 'react-redux'
+import { fetchThemsState } from '../../features/counterSlice'
+const DefaultOptions = []
 
 function InputField({
   isSelect = false,
   isCustomInputField = false,
-  placeholderText = "Select Site",
-  fieldTitle = "Site",
+  placeholderText = 'Select Site',
+  fieldTitle = 'Site',
   hideLabel = false,
-  format = "### ### ####",
-  defaultValue = "",
+  format = '### ### ####',
+  defaultValue = '',
   isMulti = false,
-  multiHeight = "150px",
+  multiHeight = '150px',
   selectOptions = DefaultOptions,
   isCustomLabel = false,
   ...props
 }) {
+  const appTheme = useSelector(fetchThemsState)
+
   return (
     <div className="input-field-container" onClick={props.navigate}>
       {isCustomLabel && <label className="custom-label">{fieldTitle}</label>}
@@ -29,13 +32,14 @@ function InputField({
           {!isMulti ? (
             !isCustomInputField ? (
               <input
-                className={`${isCustomLabel && "custom-label-input"}`}
+                className={`${isCustomLabel && 'custom-label-input'}`}
                 {...props}
                 autoSave="off"
                 autoCapitalize="off"
                 autoCorrect="off"
                 autoComplete="off"
                 placeholder={placeholderText}
+                style={{ background: appTheme ? 'none' : '' }}
               />
             ) : (
               <NumberFormat
@@ -71,7 +75,7 @@ function InputField({
         </div>
       )}
     </div>
-  );
+  )
 }
 
-export default InputField;
+export default InputField
