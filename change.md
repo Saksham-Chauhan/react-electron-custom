@@ -44,5 +44,5 @@
 - Fix the import proxy issue in proxy page
 - Add export proxy in .txt format
 - Add Import-Export functionality in token group section in Setting page
-- Remove the proxy page from Router and its componenets
+- Remove the proxy page from Router and its componenets~
 - Chnage the location of proxy page into small section in setting page

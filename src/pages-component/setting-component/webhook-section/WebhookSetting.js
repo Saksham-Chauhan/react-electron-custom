@@ -84,7 +84,7 @@ function WebhookSetting({ userDetails }) {
             <span>Test</span>
           </div>
         </div>
-        <AppSpacer spacer={40} />
+        <AppSpacer spacer={20} />
         <div className="setting-toggle-wrapper">
           <div className="setting-toggle-with-label">
             <AppToggler

@@ -1,19 +1,28 @@
 import React from "react";
-import play from "../../../assests/images/play.svg";
 import UseAnimations from "react-useanimations";
+import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
+import { DISCORD_MASS_OPTIONS } from "../../../constant";
 import download from "../../../assests/images/download.svg";
 
-function TableRow({ onDelete, obj, index, onPlay, onDownload, type }) {
+function TableRow({ onDelete, obj, index, onPlay, onDownload }) {
   return (
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
+      <div>
+        {
+          DISCORD_MASS_OPTIONS.filter(
+            (type) => type["value"] === obj["changerType"]
+          )[0]["label"]
+        }
+      </div>
       <div>{obj?.claimerGroup?.label}</div>
       <div style={{ color: getColor(obj?.status) }}>{obj?.status}</div>
       <div>
         <div className="acc-changer-table-row-action-column">
-          {obj?.status === "Completed" && type === "passwordChanger" ? (
+          {obj?.status === "Completed" &&
+          obj["changerType"] === "passwordChanger" ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
           ) : (
             <img

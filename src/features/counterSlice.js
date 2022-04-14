@@ -201,11 +201,8 @@ export const counterSlice = createSlice({
     setSelectedClaimerGroup: (state, action) => {
       state.selectedInviteClaimerGroup = action.payload;
     },
-    setSelctedAccChangerCard: (state, action) => {
-      state.selectedAccChangerType = action.payload;
-    },
-    setAccountChangerList: (state, action) => {
-      state.accountOptionList = action.payload;
+    appendTaskInTable: (state, action) => {
+      state.accChangerList = action.payload;
     },
   },
 });
@@ -257,8 +254,7 @@ export const {
   setSelectedClaimerTokenIJ,
   appendClaimerDiscordAccount,
   appendInviteJoinerAccount,
-  setSelctedAccChangerCard,
-  setAccountChangerList,
+  appendTaskInTable,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -388,7 +384,5 @@ export const fetchInviteJoinerListState = (state) =>
 // ACC CHNAGER
 export const fetchAccountChangerModalState = (state) =>
   state[STATE_KEY].modals.accountChangerModal;
-export const fetchSelectedAccChangerCard = (state) =>
-  state[STATE_KEY].selectedAccChangerType;
-export const fetchAccChangerListState = (state) =>
-  state[STATE_KEY].accountOptionList;
+export const fetchTaskTableListState = (state) =>
+  state[STATE_KEY].accChangerList;

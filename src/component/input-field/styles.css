@@ -51,3 +51,30 @@
   line-height: 18px;
   color: var(--placeholder);
 }
+
+/* custom selecy css */
+
+.group-title {
+  font-size: 15.5px;
+  line-height: 23px;
+  color: var(--scrollbar-bg);
+  font-family: "Poppins";
+  pointer-events: none;
+  padding: 5px 0px;
+  padding-left: 10px;
+}
+.group-item-label {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--placeholder);
+  padding: 5px 0px;
+  padding-left: 1.5em;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+.active-option {
+  background: var(--sidebar-bg);
+  color: var(--primary);
+}

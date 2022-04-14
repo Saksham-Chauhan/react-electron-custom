@@ -53,6 +53,7 @@ export const discordServerInviteReactAPI = async (
           "Content-Type": "application/json",
         },
       });
+
       if (response.status === 204) {
         return response;
       }

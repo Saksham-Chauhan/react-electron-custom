@@ -8,6 +8,7 @@ import {
   setEditStorage,
   fetchProxyGroupList,
 } from "../../../features/counterSlice";
+import { downloadLogs } from "../../../helper";
 import { AppSpacer } from "../../../component";
 import UseAnimations from "react-useanimations";
 import edit from "react-useanimations/lib/edit";
@@ -16,7 +17,6 @@ import plus from "../../../assests/images/plus.svg";
 import { useDispatch, useSelector } from "react-redux";
 import exportIcon from "../../../assests/images/export.svg";
 import importIcon from "../../../assests/images/import.svg";
-import { downloadLogs } from "../../../helper";
 
 function ProxyGroup() {
   const dispatch = useDispatch();

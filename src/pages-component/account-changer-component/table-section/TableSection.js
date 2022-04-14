@@ -1,27 +1,27 @@
 import React from "react";
 import "./styles.css";
-import TableRow from "../table-row/TableRow";
+import Chance from "chance";
 import { useDispatch } from "react-redux";
 import {
+  updateStatusOfTableRow,
   deleteDataFromTableList,
   updatePasswordChangerStatus,
-  updateStatusOfTableRow,
 } from "../../../features/logic/acc-changer";
-import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
+import TableRow from "../table-row/TableRow";
+import { toastWarning } from "../../../toaster";
+import { generateRandomAvatar } from "../../../api";
+import { generateRandomPassword, sleep } from "../../../helper";
+import { readArrayOfJson } from "../../../helper/electron-bridge";
 import serverLeaverAPI from "../../../api/account-changer/leave-server";
+import tokenCheckerAPI from "../../../api/account-changer/token-checker";
+import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
+import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import usernameChangerAPI from "../../../api/account-changer/username-changer";
 import activityChangerAPI from "../../../api/account-changer/activity-changer";
 import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
-import tokenCheckerAPI from "../../../api/account-changer/token-checker";
-import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
-import { generateRandomAvatar } from "../../../api";
-import { toastWarning } from "../../../toaster";
-import { generateRandomPassword, sleep } from "../../../helper";
-import rndName from "node-random-name";
-import { readArrayOfJson } from "../../../helper/electron-bridge";
 
-function TableSection({ list, selectedCard }) {
+function TableSection({ list }) {
   const dispatch = useDispatch();
 
   const handleDelete = (obj) => {
@@ -29,7 +29,7 @@ function TableSection({ list, selectedCard }) {
   };
 
   const handlePlay = async (obj) => {
-    const type = selectedCard["changerType"];
+    const type = obj["changerType"];
     const { proxyGroup, claimerGroup } = obj;
     const tokenArray = claimerGroup["value"]?.split("\n");
     for (let index = 0; index < tokenArray.length; index++) {
@@ -66,7 +66,6 @@ function TableSection({ list, selectedCard }) {
             let tempObj = { ...obj };
             let arr = [];
             let user = [];
-
             if (type === "passwordChanger") {
               let newPass = JSON.parse(apiResponse.config.data)["new_password"];
               let tempuser = apiResponse.data.username;
@@ -88,7 +87,6 @@ function TableSection({ list, selectedCard }) {
         } else {
           dispatch(updateStatusOfTableRow(obj, "Stopped"));
         }
-
         await sleep(Number(obj.delay) || 3000);
       }
     }
@@ -96,7 +94,7 @@ function TableSection({ list, selectedCard }) {
 
   const handleDownload = (obj) => {
     let arrOfObj = [];
-    const type = selectedCard["changerType"];
+    const type = obj["changerType"];
     if (type === "passwordChanger") {
       const { username, newPass } = obj;
       let userNameArr = username.split("\n");
@@ -116,6 +114,7 @@ function TableSection({ list, selectedCard }) {
       <div className="acc-chnager-table-header-parent">
         <div className="acc-chnager-page-table-header">
           <div>#</div>
+          <div>Type</div>
           <div>Token Group</div>
           <div>Status</div>
           <div>Actions</div>
@@ -130,7 +129,6 @@ function TableSection({ list, selectedCard }) {
             onDownload={handleDownload}
             {...{ obj }}
             key={obj.id}
-            type={selectedCard["changerType"]}
           />
         ))}
       </div>
@@ -182,8 +180,9 @@ export const apiCallToDiscord = async ({
     }
   } else if (type === "usernameChanger") {
     let name = username;
+    const chance = new Chance();
     if (!name) {
-      name = rndName();
+      name = chance.name();
     }
     const response = await usernameChangerAPI(token, password, proxy, name);
     if (response.status === 200) {

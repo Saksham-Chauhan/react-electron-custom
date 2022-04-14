@@ -43,3 +43,37 @@ export const EndPointToPage = {
   "/twitter": "Twitter Page",
   "/settings": "Settings Page",
 };
+
+export const DISCORD_MASS_OPTIONS = [
+  {
+    label: "Username Changer",
+    value: "usernameChanger",
+  },
+  {
+    label: "Avatar Changer",
+    value: "avatarChanger",
+  },
+  {
+    value: "activityChanger",
+    label: "Activity Changer",
+  },
+  {
+    value: "serverLeaver",
+    label: "Server Leaver",
+  },
+  {
+    value: "tokenChecker",
+    label: "Token checker",
+  },
+  {
+    value: "nicknameChanger",
+    label: "Nickname  Changer",
+  },
+  {
+    value: "passwordChanger",
+    label: "Password Changer",
+  },
+  { value: "massInviter", label: "Mass Joiner" },
+  { value: "inviteJoiner", label: "Invite Joiner" },
+  { value: "linkOpener", label: "Link Opener" },
+];

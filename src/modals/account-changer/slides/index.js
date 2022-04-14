@@ -6,3 +6,5 @@ export { default as NickNameChangerSlide } from "./NicknameChanger";
 export { default as ServerLeaverSlide } from "./ServerLeaver";
 export { default as TokenCheckerSlide } from "./TokenChecker";
 export { default as MassInviteSlide } from "./MassInviteJoiner";
+export { default as InviteJoinerSlide } from "./InviteJoiner";
+export { default as LinkOpenerSlide } from "./LinkOpener";

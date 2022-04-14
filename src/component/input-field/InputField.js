@@ -1,6 +1,6 @@
 import React from "react";
 import Select from "react-select";
-import { selectCustomStyles, selectStyles } from "./styles";
+import { groupCustomStyles, selectCustomStyles, selectStyles } from "./styles";
 import NumberFormat from "react-number-format";
 import "./styles.css";
 
@@ -12,6 +12,7 @@ function InputField({
   placeholderText = "Select Site",
   fieldTitle = "Site",
   hideLabel = false,
+  isCustomSelect = false,
   format = "### ### ####",
   defaultValue = "",
   isMulti = false,
@@ -60,14 +61,25 @@ function InputField({
         </div>
       ) : (
         <div className="input-field-box">
-          <Select
-            {...props}
-            placeholder={placeholderText}
-            isOptionSelected={true}
-            options={selectOptions}
-            styles={isCustomLabel ? selectCustomStyles : selectStyles}
-            isSearchable={false}
-          />
+          {!isCustomSelect ? (
+            <Select
+              {...props}
+              placeholder={placeholderText}
+              isOptionSelected={true}
+              options={selectOptions}
+              styles={isCustomLabel ? selectCustomStyles : selectStyles}
+              isSearchable={false}
+            />
+          ) : (
+            <Select
+              {...props}
+              placeholder={placeholderText}
+              isOptionSelected={true}
+              options={selectOptions}
+              styles={groupCustomStyles}
+              isSearchable={false}
+            />
+          )}
         </div>
       )}
     </div>

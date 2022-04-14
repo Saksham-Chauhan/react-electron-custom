@@ -1,16 +1,16 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { AppSpacer } from "../../component";
-import { fetchLoggedUserDetails } from "../../features/counterSlice";
+import "./styles.css";
 import {
   SettingTopSection,
   SettingUserProfile,
   SettingWebhookSection,
   SettingChromeUserSection,
-  SettingCalimerGroupSection,
   SettingProxyGroupSection,
+  SettingCalimerGroupSection,
 } from "../../pages-component";
-import "./styles.css";
+import { useSelector } from "react-redux";
+import { AppSpacer } from "../../component";
+import { fetchLoggedUserDetails } from "../../features/counterSlice";
 
 function Setting() {
   const userDetails = useSelector(fetchLoggedUserDetails);
@@ -28,7 +28,7 @@ function Setting() {
             <SettingUserProfile {...{ userDetails }} />
           </div>
         </div>
-        <AppSpacer spacer={30} />
+        <AppSpacer spacer={50} />
         <div className="setting-page-section-col">
           <div className="chrome-user-section">
             <SettingChromeUserSection />

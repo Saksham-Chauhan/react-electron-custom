@@ -1,12 +1,16 @@
 import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
+import {
+  ModalFlexInnerRow,
+  ModalFlexOuterRow,
+} from "../../../component/modal-wrapper/Modal";
 
 function MassInviteJoiner({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
-      <div className="modal-flex-field-wrapper">
-        <div className="half-flex-field">
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
@@ -15,8 +19,9 @@ function MassInviteJoiner({ ...props }) {
             {...props}
             type="number"
           />
-        </div>
-      </div>
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
+      <AppSpacer spacer={10} />
       <AppInputField
         isMulti={true}
         name="inviteCodes"

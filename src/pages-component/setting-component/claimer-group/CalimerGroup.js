@@ -1,24 +1,24 @@
 import React from "react";
-import plus from "../../../assests/images/plus.svg";
-import exportIcon from "../../../assests/images/export.svg";
-import importIcon from "../../../assests/images/import.svg";
-import UseAnimations from "react-useanimations";
-import trash2 from "react-useanimations/lib/trash2";
-import edit from "react-useanimations/lib/edit";
 import "./styles.css";
-import { AppSpacer } from "../../../component";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchClaimerGroupList,
-  setEditStorage,
   setModalState,
+  setEditStorage,
+  fetchClaimerGroupList,
 } from "../../../features/counterSlice";
 import {
-  deleteClaimerGroupFromList,
   readTokenGroupFromFile,
+  deleteClaimerGroupFromList,
 } from "../../../features/logic/setting";
 import { downloadLogs } from "../../../helper";
 import { toastWarning } from "../../../toaster";
+import { AppSpacer } from "../../../component";
+import edit from "react-useanimations/lib/edit";
+import UseAnimations from "react-useanimations";
+import plus from "../../../assests/images/plus.svg";
+import trash2 from "react-useanimations/lib/trash2";
+import exportIcon from "../../../assests/images/export.svg";
+import importIcon from "../../../assests/images/import.svg";
+import { useDispatch, useSelector } from "react-redux";
 
 function CalimerGroup() {
   const dispatch = useDispatch();

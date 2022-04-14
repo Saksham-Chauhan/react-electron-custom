@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { AppSpacer } from "../../component";
-import { fetchSelectedAccChangerCard } from "../../features/counterSlice";
-import { searchingFunction } from "../../hooks/searchFunction";
+import "./style.css";
 import {
-  AccountChangeLeftSection,
+  AccountChangerTopSection,
   AccountChangerTableSection,
   AccountChangerTopBtnsWrapper,
-  AccountChangerTopSection,
 } from "../../pages-component";
-import "./style.css";
+import { useSelector } from "react-redux";
+import { AppSpacer } from "../../component";
+import { searchingFunction } from "../../hooks/searchFunction";
+import { fetchTaskTableListState } from "../../features/counterSlice";
 
 const AccountChanger = () => {
-  const selectedCard = useSelector(fetchSelectedAccChangerCard);
   const [search, setSearch] = useState("");
   const [tempList, setTempList] = useState([]);
+  const accChangerList = useSelector(fetchTaskTableListState);
 
   useEffect(() => {
-    if (selectedCard["list"]?.length > 0) {
-      setTempList([...selectedCard["list"]]);
+    if (accChangerList?.length > 0) {
+      setTempList([...accChangerList]);
     } else setTempList([]);
-  }, [selectedCard]);
+  }, [accChangerList]);
 
   const handleSearching = (e) => {
     const { value } = e.target;
@@ -30,24 +29,19 @@ const AccountChanger = () => {
       if (result.length > 0) {
         setTempList([...result]);
       } else setTempList([]);
-    } else setTempList([...selectedCard["list"]]);
+    } else setTempList([...accChangerList]);
   };
 
   return (
-    <div className="page-section">
-      <div className="left-container">
-        <AccountChangeLeftSection {...{ selectedCard }} />
-      </div>
-      <div className="right-container">
-        <AccountChangerTopSection {...{ selectedCard }} />
+    <div className="spoofer-page-outer-section">
+      <AccountChangerTopSection list={tempList} />
+      <div className="spoofer-page-inner-section">
+        <AppSpacer spacer={30} />
+        <AccountChangerTopBtnsWrapper
+          {...{ search, handleSearching, tempList }}
+        />
         <AppSpacer spacer={20} />
-        <div className="acc-changer-padding">
-          <AccountChangerTopBtnsWrapper
-            {...{ search, handleSearching, selectedCard }}
-          />
-          <AppSpacer spacer={20} />
-          <AccountChangerTableSection {...{ selectedCard }} list={tempList} />
-        </div>
+        <AccountChangerTableSection list={tempList} />
       </div>
     </div>
   );

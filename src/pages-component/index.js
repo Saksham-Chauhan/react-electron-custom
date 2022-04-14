@@ -43,7 +43,6 @@ export { default as DashboardChart } from "./dashboard-components/dashboard-char
 export { default as ChartLabel } from "./dashboard-components/chart-label/ChartLabel";
 
 // ACCOUNT CHANGES COMPONENT
-export { default as AccountChangeLeftSection } from "./account-changer-component/left-section/LeftSection";
 export { default as AccountChangerTopSection } from "./account-changer-component/top-section/TopSection";
 export { default as AccountChangerTopBtnsWrapper } from "./account-changer-component/top-btns-wrapper/TopBtnsWrapper";
 export { default as AccountChangerTableSection } from "./account-changer-component/table-section/TableSection";

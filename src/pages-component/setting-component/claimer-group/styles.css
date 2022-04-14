@@ -16,8 +16,8 @@
   position: absolute;
   height: 35px;
   right: 0;
-  top: 0px;
-  width: 34%;
+  top: -7px;
+  width: 35%;
   display: flex;
   justify-content: space-between;
 }
