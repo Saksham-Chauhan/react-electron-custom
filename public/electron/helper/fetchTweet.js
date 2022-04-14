@@ -27,4 +27,30 @@ async function fetchTweets(cKey, cSecret, account) {
   }
 }
 
-module.exports = { fetchTweets };
+const inviteJoinerTest = async (
+  webhook,
+  userName,
+  avatarProfile,
+  serverName
+) => {
+  let embed = {
+    embeds: [
+      {
+        title: TITLE,
+        description: `${serverName} server joined successfully`,
+        url: KYRO_URL,
+        color: 857138,
+        thumbnail: THUMB_NAIL,
+        footer: FOOTER,
+        author: {
+          name: `Link opened by ${userName}`,
+          icon_url: avatarProfile,
+        },
+      },
+    ],
+  };
+
+  await axios.post(webhook, embed);
+};
+
+module.exports = { fetchTweets, inviteJoinerTest };

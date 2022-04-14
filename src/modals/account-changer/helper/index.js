@@ -96,20 +96,23 @@ export const basicAccChangerValidation = (obj) => {
     toastWarning("Select Type");
     valid = false;
   }
-  if (Object.keys(obj.claimerGroup).length > 0) {
-    valid = true;
-  } else {
-    valid = false;
-    toastWarning("Select Token group");
-    return valid;
+  if (obj.changerType !== "linkOpener") {
+    if (Object.keys(obj.claimerGroup).length > 0) {
+      valid = true;
+    } else {
+      valid = false;
+      toastWarning("Select Token group");
+      return valid;
+    }
+    if (Object.keys(obj.proxyGroup).length > 0) {
+      valid = true;
+    } else {
+      toastWarning("Select proxy group");
+      valid = false;
+      return valid;
+    }
   }
-  if (Object.keys(obj.proxyGroup).length > 0) {
-    valid = true;
-  } else {
-    toastWarning("Select proxy group");
-    valid = false;
-    return valid;
-  }
+
   return valid;
 };
 

@@ -29,7 +29,9 @@ function Footer() {
         sendLogs(log);
       }
     };
-    fetchSpeed();
+    if (process.env.NODE_ENV !== "development") {
+      fetchSpeed();
+    }
     return () => {
       clearTimeout(timer);
     };

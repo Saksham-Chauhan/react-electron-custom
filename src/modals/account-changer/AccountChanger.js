@@ -43,7 +43,6 @@ import {
 function AccountChanger() {
   const navigate = useNavigate();
   const chromeList = useSelector(fetchChromeUserListState);
-  // const selectedCard = useSelector(fetchSelectedAccChangerCard);
   const proxyGroupList = useSelector(fetchProxyGroupList);
   const claimerGroupList = useSelector(fetchClaimerGroupList);
   const dispatch = useDispatch();
@@ -53,6 +52,7 @@ function AccountChanger() {
     status: "idle",
     createdAt: new Date().toUTCString(),
     changerType: "",
+    active: false,
   });
 
   const handleClaimerMenuOpen = () => {
@@ -234,49 +234,52 @@ function AccountChanger() {
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
       <AppSpacer spacer={10} />
-      <ModalFlexOuterRow>
-        <ModalFlexInnerRow>
-          <AppInputField
-            fieldTitle="Token Group"
-            placeholderText={
-              claimerGroupList.length > 0
-                ? "Select Token Group"
-                : "Add Token Group"
-            }
-            onMenuOpen={handleClaimerMenuOpen}
-            selectOptions={makeClaimerSelectOption(claimerGroupList)}
-            onChange={handleClaimer}
-            value={getClaimerValue(
-              claimerGroupList,
-              accountChanger.claimerGroup
-            )}
-            isSelect={claimerGroupList.length > 0 ? true : false}
-            disabled={claimerGroupList.length > 0 ? false : true}
-            navigate={
-              claimerGroupList.length > 0 ? () => {} : handleProxyMenuOpen
-            }
-          />
-        </ModalFlexInnerRow>
-        <ModalFlexInnerRow>
-          <AppInputField
-            fieldTitle="Proxy Group"
-            placeholderText={
-              proxyGroupList.length > 0
-                ? "Select Proxy Group"
-                : "Add Proxy group"
-            }
-            onMenuOpen={handleProxyMenuOpen}
-            value={getProxyGroupValue()}
-            selectOptions={makeProxyOptions(proxyGroupList)}
-            onChange={handleSelectProxyGroup}
-            isSelect={proxyGroupList.length > 0 ? true : false}
-            disabled={proxyGroupList.length > 0 ? false : true}
-            navigate={
-              proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
-            }
-          />
-        </ModalFlexInnerRow>
-      </ModalFlexOuterRow>
+      {accountChanger["changerType"] !== "linkOpener" && (
+        <ModalFlexOuterRow>
+          <ModalFlexInnerRow>
+            <AppInputField
+              fieldTitle="Token Group"
+              placeholderText={
+                claimerGroupList.length > 0
+                  ? "Select Token Group"
+                  : "Add Token Group"
+              }
+              onMenuOpen={handleClaimerMenuOpen}
+              selectOptions={makeClaimerSelectOption(claimerGroupList)}
+              onChange={handleClaimer}
+              value={getClaimerValue(
+                claimerGroupList,
+                accountChanger.claimerGroup
+              )}
+              isSelect={claimerGroupList.length > 0 ? true : false}
+              disabled={claimerGroupList.length > 0 ? false : true}
+              navigate={
+                claimerGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+              }
+            />
+          </ModalFlexInnerRow>
+          <ModalFlexInnerRow>
+            <AppInputField
+              fieldTitle="Proxy Group"
+              placeholderText={
+                proxyGroupList.length > 0
+                  ? "Select Proxy Group"
+                  : "Add Proxy group"
+              }
+              onMenuOpen={handleProxyMenuOpen}
+              value={getProxyGroupValue()}
+              selectOptions={makeProxyOptions(proxyGroupList)}
+              onChange={handleSelectProxyGroup}
+              isSelect={proxyGroupList.length > 0 ? true : false}
+              disabled={proxyGroupList.length > 0 ? false : true}
+              navigate={
+                proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+              }
+            />
+          </ModalFlexInnerRow>
+        </ModalFlexOuterRow>
+      )}
+
       <AppSpacer spacer={10} />
       {getDynamicSlideRnder(
         accountChanger["changerType"],

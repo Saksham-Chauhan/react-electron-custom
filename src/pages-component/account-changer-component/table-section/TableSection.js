@@ -9,9 +9,15 @@ import {
 } from "../../../features/logic/acc-changer";
 import TableRow from "../table-row/TableRow";
 import { toastWarning } from "../../../toaster";
-import { generateRandomAvatar } from "../../../api";
+import { generateRandomAvatar, getProxy } from "../../../api";
 import { generateRandomPassword, sleep } from "../../../helper";
-import { readArrayOfJson } from "../../../helper/electron-bridge";
+import {
+  readArrayOfJson,
+  startInviteJoinerMonitor,
+  startLinkOpenerMonitor,
+  stopInviteJoinerMonitor,
+  stopLinkOpenerMonitor,
+} from "../../../helper/electron-bridge";
 import serverLeaverAPI from "../../../api/account-changer/leave-server";
 import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
@@ -32,62 +38,62 @@ function TableSection({ list }) {
     const type = obj["changerType"];
     const { proxyGroup, claimerGroup } = obj;
     const tokenArray = claimerGroup["value"]?.split("\n");
-    for (let index = 0; index < tokenArray.length; index++) {
-      const token = tokenArray[index];
-      const tokenArr = token?.split(":");
-      const proxyArray = proxyGroup["value"].split("\n");
-      for (let j = 0; j < proxyArray.length; j++) {
-        let proxySplit = proxyArray[j]?.split(":");
-        const proxy = {
-          host: proxySplit[0],
-          port: proxySplit[1],
-          auth: {
-            username: proxySplit[2],
-            password: proxySplit[3],
-          },
-        };
-        dispatch(updateStatusOfTableRow(obj, "Running"));
-        const apiResponse = await apiCallToDiscord({
-          type,
-          token: tokenArr[3],
-          proxy,
-          username: obj.username,
-          password: tokenArr[2],
-          guildId: obj.serverIDs,
-          activityDetail: obj.activityDetails,
-          nickName: obj.nicknameGenerate,
-          currentPass: tokenArr[2],
-          newPass: obj.commonPassword,
-          invideCodes: obj.inviteCodes,
-          avatarAPI: obj.url,
-        });
-        if (apiResponse !== null) {
-          if (apiResponse.status === 200) {
-            let tempObj = { ...obj };
-            let arr = [];
-            let user = [];
-            if (type === "passwordChanger") {
-              let newPass = JSON.parse(apiResponse.config.data)["new_password"];
-              let tempuser = apiResponse.data.username;
-              arr.push(newPass);
-              user.push(tempuser);
-              if (index > 0) {
-                arr = [...tempObj["newPass"].split("\n"), ...arr];
-                user = [...tempObj["username"].split("\n"), ...user];
+    if (type === "linkOpener") {
+      startLinkOpenerMonitor(obj);
+    } else if (type === "inviteJoiner") {
+      startInviteJoinerMonitor(obj);
+    } else {
+      for (let index = 0; index < tokenArray.length; index++) {
+        const token = tokenArray[index];
+        const tokenArr = token?.split(":");
+        const proxyArray = proxyGroup["value"].split("\n");
+        for (let j = 0; j < proxyArray.length; j++) {
+          const proxy = getProxy(proxyArray);
+          dispatch(updateStatusOfTableRow(obj, "Running"));
+          const apiResponse = await apiCallToDiscord({
+            type,
+            token: tokenArr[3],
+            proxy,
+            username: obj.username,
+            password: tokenArr[2],
+            guildId: obj.serverIDs,
+            activityDetail: obj.activityDetails,
+            nickName: obj.nicknameGenerate,
+            currentPass: tokenArr[2],
+            newPass: obj.commonPassword,
+            invideCodes: obj.inviteCodes,
+            avatarAPI: obj.url,
+          });
+          if (apiResponse !== null) {
+            if (apiResponse.status === 200) {
+              let tempObj = { ...obj };
+              let arr = [];
+              let user = [];
+              if (type === "passwordChanger") {
+                let newPass = JSON.parse(apiResponse.config.data)[
+                  "new_password"
+                ];
+                let tempuser = apiResponse.data.username;
+                arr.push(newPass);
+                user.push(tempuser);
+                if (index > 0) {
+                  arr = [...tempObj["newPass"].split("\n"), ...arr];
+                  user = [...tempObj["username"].split("\n"), ...user];
+                }
+                tempObj["newPass"] = arr.join("\n");
+                tempObj["username"] = user.join("\n");
+                tempObj["status"] = "Completed";
+                dispatch(updatePasswordChangerStatus(tempObj));
+              } else {
+                dispatch(updateStatusOfTableRow(tempObj, "Completed"));
               }
-              tempObj["newPass"] = arr.join("\n");
-              tempObj["username"] = user.join("\n");
-              tempObj["status"] = "Completed";
-              dispatch(updatePasswordChangerStatus(tempObj));
-            } else {
-              dispatch(updateStatusOfTableRow(tempObj, "Completed"));
+              break;
             }
-            break;
+          } else {
+            dispatch(updateStatusOfTableRow(obj, "Stopped"));
           }
-        } else {
-          dispatch(updateStatusOfTableRow(obj, "Stopped"));
+          await sleep(Number(obj.delay) || 3000);
         }
-        await sleep(Number(obj.delay) || 3000);
       }
     }
   };
@@ -109,6 +115,15 @@ function TableSection({ list }) {
     }
   };
 
+  const handleStop = (obj) => {
+    const type = obj["changerType"];
+    if (type === "linkOpener") {
+      stopLinkOpenerMonitor(obj.id);
+    } else if (type === "inviteJoiner") {
+      stopInviteJoinerMonitor(obj.id);
+    }
+  };
+
   return (
     <div className="acc-changer-page-table-section">
       <div className="acc-chnager-table-header-parent">
@@ -126,6 +141,7 @@ function TableSection({ list }) {
             index={index + 1}
             onDelete={handleDelete}
             onPlay={handlePlay}
+            onStop={handleStop}
             onDownload={handleDownload}
             {...{ obj }}
             key={obj.id}

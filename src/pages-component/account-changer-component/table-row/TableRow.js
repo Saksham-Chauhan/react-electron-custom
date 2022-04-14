@@ -6,7 +6,9 @@ import stop from "../../../assests/images/stop.svg";
 import { DISCORD_MASS_OPTIONS } from "../../../constant";
 import download from "../../../assests/images/download.svg";
 
-function TableRow({ onDelete, obj, index, onPlay, onDownload }) {
+const CONDITIONAL_TOKEN = ["linkOpener"];
+
+function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
   return (
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
@@ -17,19 +19,26 @@ function TableRow({ onDelete, obj, index, onPlay, onDownload }) {
           )[0]["label"]
         }
       </div>
-      <div>{obj?.claimerGroup?.label}</div>
+      <div
+        style={{
+          textOverflow: "ellipsis",
+          overflowX: "hidden",
+        }}
+      >
+        {CONDITIONAL_TOKEN.includes(obj["changerType"])
+          ? obj?.monitorToken?.label
+          : obj?.claimerGroup?.label}
+      </div>
       <div style={{ color: getColor(obj?.status) }}>{obj?.status}</div>
       <div>
         <div className="acc-changer-table-row-action-column">
           {obj?.status === "Completed" &&
           obj["changerType"] === "passwordChanger" ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
+          ) : obj["active"] ? (
+            <img src={stop} alt="" onClick={() => onStop(obj)} />
           ) : (
-            <img
-              src={obj?.status === "Running" ? stop : play}
-              alt=""
-              onClick={() => onPlay(obj)}
-            />
+            <img src={play} alt="" onClick={() => onPlay(obj)} />
           )}
           <UseAnimations
             wrapperStyle={{ cursor: "pointer" }}
@@ -49,6 +58,8 @@ export default TableRow;
 const getColor = (status) => {
   switch (status) {
     case "Running":
+      return "var(--status)";
+    case "Monitoring...":
       return "var(--status)";
     case "Completed":
       return "#1186db";
