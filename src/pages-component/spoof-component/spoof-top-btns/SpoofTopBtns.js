@@ -72,7 +72,7 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
             onChange={handleSearching}
             placeholder="Search"
             type="search"
-            style={{ color: appTheme ? '#0D0027 ' : '' }}
+            className={appTheme ? 'lightModeInput' : ''}
           />
         </div>
 

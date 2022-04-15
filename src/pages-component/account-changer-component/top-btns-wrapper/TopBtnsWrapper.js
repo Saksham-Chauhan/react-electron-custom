@@ -94,11 +94,11 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
             alt="search-icon"
           />
           <input
-            style={{ color: appTheme ? '#0D0027 ' : '' }}
             value={search}
             onChange={handleSearching}
             placeholder="Search"
             type="search"
+            className={appTheme ? 'lightModeInput' : ''}
           />
         </div>
         <div onClick={handleAdd} className={btnClass}>
