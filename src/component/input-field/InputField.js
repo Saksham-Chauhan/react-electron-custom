@@ -32,14 +32,18 @@ function InputField({
           {!isMulti ? (
             !isCustomInputField ? (
               <input
-                className={`${isCustomLabel && 'custom-label-input'}`}
+                className={
+                  appTheme
+                    ? `${isCustomLabel} paragraph-color lightBg`
+                    : `${isCustomLabel && 'custom-label-input'}`
+                }
                 {...props}
                 autoSave="off"
                 autoCapitalize="off"
                 autoCorrect="off"
                 autoComplete="off"
                 placeholder={placeholderText}
-                style={{ background: appTheme ? 'none' : '' }}
+                style={{ border: appTheme ? 'none' : '' }}
               />
             ) : (
               <NumberFormat

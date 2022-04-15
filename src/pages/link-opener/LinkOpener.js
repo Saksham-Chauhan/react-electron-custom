@@ -85,34 +85,27 @@ class LinkOpener extends React.PureComponent {
                   },
                 })
               }
-            } else {
-              let log = `LO open with Default chrome profile`
+              const date = new Date().toUTCString()
+              const log = `Link opener ${makeLogText(content)}`
               sendLogs(log)
-              await open(content, {
-                app: {
-                  name: open.apps.chrome,
-                  arguments: [`--profile-directory=Default`],
-                },
-              })
-            }
-            const date = new Date().toUTCString()
-            this.props.handleSendLog(content, msgID, date)
-            if (webhookList.length > 0) {
-              await linkOpenerWebhook(
-                content,
-                user.username,
-                user.avatar,
-                webhookList[0],
-                webhookSetting?.linkOpener,
-              )
-            } else {
-              await linkOpenerWebhook(
-                content,
-                user.username,
-                user.avatar,
-                '',
-                false,
-              )
+              this.props.handleSendLog(content, msgID, date)
+              if (webhookList.length > 0) {
+                await linkOpenerWebhook(
+                  content,
+                  user.username,
+                  user.avatar,
+                  webhookList[0],
+                  webhookSetting?.linkOpener,
+                )
+              } else {
+                await linkOpenerWebhook(
+                  content,
+                  user.username,
+                  user.avatar,
+                  '',
+                  false,
+                )
+              }
             }
           }
         }

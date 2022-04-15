@@ -1,26 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import './styles.css'
-import { AppToggler } from '..'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { fetchThemsState } from '../../features/counterSlice'
-import { setThemeState } from '../../features/counterSlice'
 
-function GroupStatus({
-  title = 'Proxy Group 1',
-  subText = '2 Proxies running',
-  isHide = false,
-}) {
-  const [lightMode, setlightMode] = useState(false)
-  const dispatch = useDispatch()
+function GroupStatus({ title = '', subText = '', isHide = false }) {
   const appTheme = useSelector(fetchThemsState)
-  const handleToggle = () => {
-    setlightMode(!lightMode)
-  }
-
-  useEffect(() => {
-    dispatch(setThemeState(lightMode))
-  }, [lightMode, dispatch])
-
   return (
     <div className="group-status">
       <h1 className={appTheme ? 'lightMode_color' : ''}>{title}</h1>
@@ -30,15 +14,6 @@ function GroupStatus({
           <span className={appTheme ? 'lightMode_color' : ''}>{subText}</span>
         </div>
       )}
-
-      <div className="darkMode">
-        <AppToggler
-          id="turn-twitter-monitor"
-          name="twitterMonitor"
-          onClick={handleToggle}
-        />
-        <p>light mode</p>
-      </div>
     </div>
   )
 }

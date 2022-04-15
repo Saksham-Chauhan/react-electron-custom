@@ -2,29 +2,33 @@ import React from "react";
 import { AppSpacer, LabelWithToolTip, AppInputField } from "../../../component";
 import refresh from "../../../assests/images/refresh.svg";
 import "./style.css";
+import {
+  ModalFlexInnerRow,
+  ModalFlexOuterRow,
+} from "../../../component/modal-wrapper/Modal";
 
 function NicknameChanger({ state, onRefresh, ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
-      <div className="modal-flex-field-wrapper">
-        <div className="half-flex-field">
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
           <AppInputField
             name="delay"
             {...props}
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
           />
-        </div>
-        <div className="half-flex-field">
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
           <AppInputField
             {...props}
             fieldTitle="Server ID[s]"
             placeholderText="Eg. 936538800027467123"
             name="serverIDs"
           />
-        </div>
-      </div>
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
       <AppSpacer spacer={20} />
       <div className="nickname-row">
         <LabelWithToolTip
@@ -42,10 +46,10 @@ function NicknameChanger({ state, onRefresh, ...props }) {
         value={state["nicknameGenerate"]}
         name="nicknameGenerate"
         multiHeight="100px"
-        placeholderText="Eg. 
-      jack123
-      jack234
-      jack344"
+        placeholderText={`Eg. 
+        jack123
+        jack234
+        jack344`}
       />
     </React.Fragment>
   );

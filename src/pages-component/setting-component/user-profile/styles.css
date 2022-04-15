@@ -1,11 +1,11 @@
 .flex-right-align {
   display: flex;
   justify-content: flex-end;
+  margin-top: 1em;
 }
 .user-profile-section {
   display: flex;
   align-items: center;
-  width: 30%;
 }
 .user-profile-details {
   margin-left: 0.5em;
@@ -29,7 +29,7 @@
   align-items: center;
   height: 40px;
   width: 120px;
-  margin-left: auto;
+  margin-left: 3rem;
   border-radius: 4px;
 }
 .user-logout-btn > span {

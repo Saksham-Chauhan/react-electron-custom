@@ -1,5 +1,9 @@
 import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
+import {
+  ModalFlexInnerRow,
+  ModalFlexOuterRow,
+} from "../../../component/modal-wrapper/Modal";
 
 const api = [
   {
@@ -18,8 +22,8 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
-      <div className="modal-flex-field-wrapper">
-        <div className="half-flex-field">
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
@@ -28,8 +32,8 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
             min={0}
             {...props}
           />
-        </div>
-        <div className="half-flex-field">
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="API"
             placeholderText="Select API"
@@ -37,8 +41,8 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
             isSelect={true}
             onChange={handleSelectAPI}
           />
-        </div>
-      </div>
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
     </React.Fragment>
   );
 }

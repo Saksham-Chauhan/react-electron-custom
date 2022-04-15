@@ -8,3 +8,5 @@ export { default as TokenCheckerSlide } from "./TokenChecker";
 export { default as MassInviteSlide } from "./MassInviteJoiner";
 export { default as TokenRetriverSlide } from "./TokenRetriver";
 export { default as GiveawayJoinerSlide } from "./GiveawayJoiner";
+export { default as InviteJoinerSlide } from "./InviteJoiner";
+export { default as LinkOpenerSlide } from "./LinkOpener";

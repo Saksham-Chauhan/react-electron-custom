@@ -1,4 +1,5 @@
 import React from 'react'
+import './dashboard.css'
 import {
   ChartLabel,
   DashboardButton,
@@ -21,11 +22,11 @@ import oneclick from '../../assests/activeDefault/nft-default.svg'
 import invite from '../../assests/images/discord-dash.svg'
 import { useSelector } from 'react-redux'
 import {
-  fetchInviteJoinerLogState,
-  fetchLinkOpenerLogState,
   fetchProxyGroupList,
   fetchSpoofTableList,
   fetchLatestTweetList,
+  fetchLinkOpenerLogState,
+  fetchInviteJoinerLogState,
 } from '../../features/counterSlice'
 
 const DashboardPage = () => {
@@ -47,7 +48,6 @@ const DashboardPage = () => {
   //GET STATE OF SPOOFER
   const spoofList = useSelector(fetchSpoofTableList)
 
-  //RETURN THE TOTAL PROXIES
   const getTotalProxy = () => {
     let totalProxy = 0
     for (let i = 0; i < proxyList.length; i++) {

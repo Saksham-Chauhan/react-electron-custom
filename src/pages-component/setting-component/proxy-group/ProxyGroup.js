@@ -1,75 +1,71 @@
 import React from "react";
-import "./styles.css";
+import {
+  deleteProxyGroup,
+  readProxyFromFile,
+} from "../../../features/logic/proxy";
 import {
   setModalState,
   setEditStorage,
-  fetchClaimerGroupList,
+  fetchProxyGroupList,
 } from "../../../features/counterSlice";
-import {
-  readTokenGroupFromFile,
-  deleteClaimerGroupFromList,
-} from "../../../features/logic/setting";
 import { downloadLogs } from "../../../helper";
-import { toastWarning } from "../../../toaster";
 import { AppSpacer } from "../../../component";
-import edit from "react-useanimations/lib/edit";
 import UseAnimations from "react-useanimations";
-import plus from "../../../assests/images/plus.svg";
+import edit from "react-useanimations/lib/edit";
 import trash2 from "react-useanimations/lib/trash2";
+import plus from "../../../assests/images/plus.svg";
+import { useDispatch, useSelector } from "react-redux";
 import exportIcon from "../../../assests/images/export.svg";
 import importIcon from "../../../assests/images/import.svg";
-import { useDispatch, useSelector } from "react-redux";
 
-function CalimerGroup() {
+function ProxyGroup() {
   const dispatch = useDispatch();
-  const list = useSelector(fetchClaimerGroupList);
+  const proxyList = useSelector(fetchProxyGroupList);
 
   const handleOpenModal = () => {
-    dispatch(setModalState("claimerGroup"));
+    dispatch(setModalState("proxyGroup"));
   };
 
-  const handleEdit = (group) => {
+  const handleEditGroup = (group) => {
     dispatch(setEditStorage(group));
     handleOpenModal();
   };
 
-  const handleDelete = (group) => {
-    dispatch(deleteClaimerGroupFromList(group));
-  };
-
-  const handleImportTokenGroup = (e) => {
+  const handleImportProxy = (e) => {
     const { files } = e.target;
     const reader = new FileReader();
-    reader.onload = (event) => {
-      const tknStr = event.target.result;
+    reader.onload = async (event) => {
+      const proxyStr = event.target.result;
       const fileName = files[0].name.split(".")[0];
-      dispatch(readTokenGroupFromFile({ name: fileName, tokenArr: tknStr }));
+      dispatch(readProxyFromFile({ name: fileName, tokenArr: proxyStr }));
     };
     reader.readAsText(files[0]);
   };
 
-  const handleExportTokenGroup = () => {
-    if (list.length > 0) {
-      downloadLogs(list, "token");
-    } else toastWarning("No token group to export!!");
+  const handleExportProxy = () => {
+    downloadLogs(proxyList, "proxy");
+  };
+
+  const handleDeleteGroup = (group) => {
+    dispatch(deleteProxyGroup(group));
   };
 
   return (
     <div className="claimer-group-outer">
       <div className="claimer-flex">
-        <h3>Token Group</h3>
+        <h3>Proxy Group</h3>
         <div className="claimer-btns">
           <div className="import-file-btn btn">
             <img src={importIcon} alt="" />
             <input
-              onChange={handleImportTokenGroup}
-              id="token-group-import-btn"
+              onChange={handleImportProxy}
+              id="proxy-group-import-btn"
               type="file"
               accept=".txt"
             />
-            <label htmlFor="token-group-import-btn" />
+            <label htmlFor="proxy-group-import-btn" />
           </div>
-          <div onClick={handleExportTokenGroup} className="btn">
+          <div onClick={handleExportProxy} className="btn">
             <img src={exportIcon} alt="" />
           </div>
           <div onClick={handleOpenModal} className="btn">
@@ -79,19 +75,19 @@ function CalimerGroup() {
       </div>
       <AppSpacer spacer={14} />
       <div className="claimer-group-list-scroll-list">
-        {list.map((group) => (
+        {proxyList.map((group) => (
           <div key={group["id"]} className="claimer-group-list-item">
-            <span>{group["name"]}</span>
+            <span>{group["groupName"]}</span>
             <div className="claimer-group-item-action">
               <UseAnimations
-                onClick={() => handleEdit(group)}
+                onClick={() => handleEditGroup(group)}
                 animation={edit}
                 strokeColor="#ffff"
                 size={20}
                 wrapperStyle={{ cursor: "pointer" }}
               />
               <UseAnimations
-                onClick={() => handleDelete(group)}
+                onClick={() => handleDeleteGroup(group)}
                 animation={trash2}
                 strokeColor="#B60E0E"
                 size={22}
@@ -105,4 +101,4 @@ function CalimerGroup() {
   );
 }
 
-export default CalimerGroup;
+export default ProxyGroup;

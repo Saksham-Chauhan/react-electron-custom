@@ -59,7 +59,15 @@ function ProxyGroup() {
     let valid = [];
     const proxyString = proxy.proxies.split("\n");
     for (let i = 0; i < proxyString.length; i++) {
+      let len = proxyString[i].split(":").length;
       if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
+      } else if (len === 2) {
         let obj = {};
         obj["id"] = generateId();
         obj["proxy"] = proxyString[i];
@@ -68,6 +76,7 @@ function ProxyGroup() {
         valid.push(obj);
       }
     }
+
     let proxyGroup = { ...proxy };
     proxyGroup["id"] = generateId();
     proxyGroup["proxyList"] = valid;
@@ -82,7 +91,15 @@ function ProxyGroup() {
     let proxyGroup = { ...proxy };
     const proxyString = proxy.proxies.split("\n");
     for (let i = 0; i < proxyString.length; i++) {
+      let len = proxyString[i].split(":").length;
       if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
+      } else if (len === 2) {
         let obj = {};
         obj["id"] = generateId();
         obj["proxy"] = proxyString[i];
@@ -115,7 +132,15 @@ function ProxyGroup() {
     let proxyGroup = { ...proxy };
     const proxyString = proxy.proxies.split("\n");
     for (let i = 0; i < proxyString.length; i++) {
+      let len = proxyString[i].split(":").length;
       if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
+      } else if (len === 2) {
         let obj = {};
         obj["id"] = generateId();
         obj["proxy"] = proxyString[i];

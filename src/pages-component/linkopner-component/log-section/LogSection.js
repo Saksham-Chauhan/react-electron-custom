@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { InputFieldWithScrollList } from "../..";
 import { toastWarning } from "../../../toaster";
-import { handleExportLogs } from "../../../helper";
+import { downloadLogs } from "../../../helper";
 import { clearLogList } from "../../../features/counterSlice";
 
 function LogSection({ list }) {
@@ -16,7 +16,7 @@ function LogSection({ list }) {
 
   const handleExport = () => {
     if (list.length > 0) {
-      handleExportLogs(list, "text/plain", "link-opener");
+      downloadLogs(list, "link-opener");
     } else {
       toastWarning("No log to export !!");
     }

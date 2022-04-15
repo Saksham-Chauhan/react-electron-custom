@@ -1,0 +1,8 @@
+.darkMode {
+  -webkit-app-region: no-drag;
+  border: 1px solid red;
+  position: absolute;
+  top: 2%;
+  right: 8%;
+  z-index: 101;
+}

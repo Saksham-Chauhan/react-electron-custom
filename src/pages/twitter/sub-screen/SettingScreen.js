@@ -147,12 +147,21 @@ function SettingScreen({
             />
             <AppSpacer spacer={15} />
             <div className="setting-twitter-flex full">
-              <div onClick={handleSubmit} className="btn">
+              <div
+                onClick={handleSubmit}
+                className={appTheme ? 'btn lightModeSidebar' : ''}
+              >
                 <span>Save Token</span>
               </div>
             </div>
             <AppSpacer spacer={15} />
-            <div className="api-keys-scroll-acrea">
+            <div
+              className={
+                appTheme
+                  ? 'api-keys-scroll-acrea lightModeSidebar'
+                  : 'api-keys-scroll-acrea'
+              }
+            >
               {apiList.map((api, index) => (
                 <div key={api['id']} className="api-list-item">
                   <span>{api['apiName']}</span>

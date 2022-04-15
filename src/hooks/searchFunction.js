@@ -21,7 +21,7 @@ const PageListSearchPattern = {
     "disableImages",
     "isDisableImage",
   ],
-  ACC_GEN: ["status", "claimerGroup.label", "proxyGroup.label"],
+  ACC_GEN: ["status", "claimerGroup.label", "proxyGroup.label", "changerType"],
 };
 
 /**

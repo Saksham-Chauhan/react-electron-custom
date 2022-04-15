@@ -1,31 +1,31 @@
 import React from "react";
 import "./styles.css";
-import TableRow from "../table-row/TableRow";
+import Chance from "chance";
 import { useDispatch } from "react-redux";
 import {
+  updateStatusOfTableRow,
   deleteDataFromTableList,
   updatePasswordChangerStatus,
-  updateStatusOfTableRow,
-  updateTokenRetrieveverStatus,
 } from "../../../features/logic/acc-changer";
-import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
+import TableRow from "../table-row/TableRow";
+import { toastWarning } from "../../../toaster";
+import { generateRandomAvatar } from "../../../api";
+import { generateRandomPassword, sleep } from "../../../helper";
+import { readArrayOfJson } from "../../../helper/electron-bridge";
 import serverLeaverAPI from "../../../api/account-changer/leave-server";
+import tokenCheckerAPI from "../../../api/account-changer/token-checker";
+import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
+import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import usernameChangerAPI from "../../../api/account-changer/username-changer";
 import activityChangerAPI from "../../../api/account-changer/activity-changer";
 import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
-import tokenCheckerAPI from "../../../api/account-changer/token-checker";
-import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import tokenChanger from "../../../api/account-changer/token-changer";
-import { generateRandomAvatar } from "../../../api";
-import { toastWarning } from "../../../toaster";
-import { generateRandomPassword, sleep } from "../../../helper";
-import rndName from "node-random-name";
-import { readArrayOfJson } from "../../../helper/electron-bridge";
 import { toastInfo } from "../../../toaster";
+
 const { Client } = window.require("discord.js-selfbot");
 
-function TableSection({ list, selectedCard }) {
+function TableSection({ list }) {
   const dispatch = useDispatch();
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
@@ -45,7 +45,8 @@ function TableSection({ list, selectedCard }) {
   ];
 
   const handlePlay = async (obj) => {
-    const type = selectedCard["changerType"];
+    const type = obj["changerType"];
+
     if (type === "giveawayJoiner" && obj.status !== "Monitoring") {
       const monitor = new Client();
       monitor.login(obj.token);
@@ -61,8 +62,8 @@ function TableSection({ list, selectedCard }) {
           if (serverId === obj.serverid) {
             if (authorId === obj.botid) {
               if (
-                embed.title.toLowerCase().includes("jackpot") &&
-                embed.description.toLowerCase().includes("rs3 in the next")
+                embed.title.toLowerCase().includes("google") &&
+                embed.description.toLowerCase().includes("search")
               ) {
                 await message.react("🎉");
                 let x = Math.floor(Math.random() * replyList.length + 1);
@@ -151,7 +152,7 @@ function TableSection({ list, selectedCard }) {
                   tempObj["newUsername"] = user.join("\n");
                   tempObj["email"] = emailArr.join("\n");
                   tempObj["status"] = "Completed";
-                  dispatch(updateTokenRetrieveverStatus(tempObj));
+                  dispatch(updatePasswordChangerStatus(tempObj));
                   ind = ind + 1;
                 }
               } else {
@@ -170,7 +171,7 @@ function TableSection({ list, selectedCard }) {
 
   const handleDownload = (obj) => {
     let arrOfObj = [];
-    const type = selectedCard["changerType"];
+    const type = obj["changerType"];
     if (type === "passwordChanger") {
       const { username, newPass } = obj;
       let userNameArr = username.split("\n");
@@ -204,11 +205,8 @@ function TableSection({ list, selectedCard }) {
       <div className="acc-chnager-table-header-parent">
         <div className="acc-chnager-page-table-header">
           <div>#</div>
-          <div>
-            {selectedCard.changerType === "giveawayJoiner"
-              ? "Token "
-              : "Token Group"}
-          </div>
+          <div>{"Token Group"}</div>
+          <div>Type</div>
           <div>Status</div>
           <div>Actions</div>
         </div>
@@ -220,10 +218,9 @@ function TableSection({ list, selectedCard }) {
             onDelete={handleDelete}
             onPlay={handlePlay}
             onDownload={handleDownload}
-            selectedCard={selectedCard}
+            selectedCard={obj}
             {...{ obj }}
             key={obj.id}
-            type={selectedCard["changerType"]}
           />
         ))}
       </div>
@@ -276,8 +273,9 @@ export const apiCallToDiscord = async ({
     }
   } else if (type === "usernameChanger") {
     let name = username;
+    const chance = new Chance();
     if (!name) {
-      name = rndName();
+      name = chance.name();
     }
     const response = await usernameChangerAPI(token, password, proxy, name);
     if (response.status === 200) {

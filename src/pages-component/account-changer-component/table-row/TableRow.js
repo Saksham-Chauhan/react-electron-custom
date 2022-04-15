@@ -1,30 +1,24 @@
 import React from "react";
-import play from "../../../assests/images/play.svg";
 import UseAnimations from "react-useanimations";
+import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
 
-function TableRow({
-  onDelete,
-  obj,
-  index,
-  onPlay,
-  onDownload,
-  type,
-  selectedCard,
-}) {
+function TableRow({ onDelete, obj, index, onPlay, onDownload }) {
+  let type = "";
   return (
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
       <div style={{ display: "flex" }}>
         <div style={{ width: "70%", overflow: "hidden" }}>
-          {selectedCard.changerType === "giveawayJoiner"
+          {obj.changerType === "giveawayJoiner"
             ? obj?.token
             : obj?.claimerGroup?.label}
         </div>
-        {selectedCard.changerType === "giveawayJoiner" && "..."}
+        {obj.changerType === "giveawayJoiner" && "..."}
       </div>
+      <div>{obj.changerType}</div>
       <div
         style={{
           color: getColor(obj?.status),
