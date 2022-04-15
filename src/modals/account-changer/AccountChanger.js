@@ -192,7 +192,6 @@ function AccountChanger() {
     setAccountChanger((pre) => {
       return { ...pre, monitorToken: data };
     });
-    console.log(accountChanger, data);
   };
 
   const handleChromeMenuOpen = () => {
