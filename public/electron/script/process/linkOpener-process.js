@@ -33,9 +33,9 @@ class LinkOpenerMonitor {
     if (/^[0-9A-Za-z_.-]+$/.test(this.token)) {
       this.isMonitorStart = true;
       this.monitor.login(this.token).catch((e) => {
-        console.error(e.message);
+        this.sensMonitorStatus("Invalid token", false);
       });
-    } else console.log("Not valid token");
+    } else this.sensMonitorStatus("Invalid token", false);
   }
 
   /**
@@ -51,6 +51,7 @@ class LinkOpenerMonitor {
           if (this.keywordList.length === 0 || flag) {
             if (this.chromeProfile) {
               let log = `${msgContent} open with ${this.chromeProfile.label} chrome profile`;
+              this.sendWebhook(log);
               ipcMain.emit("add-log", log);
               await open(msgContent, {
                 app: {
@@ -60,6 +61,7 @@ class LinkOpenerMonitor {
               });
             } else {
               let log = `${msgContent} open with Default chrome profile`;
+              this.sendWebhook(log);
               ipcMain.emit("add-log", log);
               await open(msgContent, {
                 app: {
@@ -118,6 +120,17 @@ class LinkOpenerMonitor {
     const win = global.mainWin;
     if (win) {
       win.webContents.send("lo-status", { id: this.id, status, active });
+    }
+  }
+
+  /**
+   * function send webhook notification
+   * @param {String} status
+   */
+  sendWebhook(status) {
+    const win = global.mainWin;
+    if (win) {
+      win.webContents.send("webhook-status", { status, type: "LO" });
     }
   }
 }

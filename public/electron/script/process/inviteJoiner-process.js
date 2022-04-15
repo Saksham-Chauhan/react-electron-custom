@@ -1,7 +1,5 @@
 const { Client } = require("discord.js-selfbot");
-const open = require("open");
 const { ipcMain } = require("electron");
-const { inviteJoinerTest } = require("../../helper/fetchTweet");
 const { default: axios } = require("axios");
 const BASE_URL = "https://discord.com/api/v9/";
 
@@ -39,9 +37,9 @@ class InviteJoinerMonitor {
     if (/^[0-9A-Za-z_.-]+$/.test(this.token)) {
       this.isMonitorStart = true;
       this.monitor.login(this.token).catch((e) => {
-        console.error(e.message);
+        this.sensMonitorStatus("Invalid token", false);
       });
-    } else console.log("Not valid token");
+    } else this.sensMonitorStatus("Invalid token", false);
   }
 
   /**
@@ -65,6 +63,7 @@ class InviteJoinerMonitor {
               );
               if (info.status === 200) {
                 let log = `Joined ${info.data.guild.name} server `;
+                this.sendWebhook(log);
                 ipcMain.emit("add-log", log);
                 break;
               }
@@ -148,6 +147,17 @@ class InviteJoinerMonitor {
   }
 
   /**
+   * function send webhook notification
+   * @param {String} status
+   */
+  sendWebhook(status) {
+    const win = global.mainWin;
+    if (win) {
+      win.webContents.send("webhook-status", { status, type: "IJ" });
+    }
+  }
+
+  /**
    * API call for server joiner
    * @param {String} inviteCode
    * @param {String} token
@@ -165,22 +175,3 @@ class InviteJoinerMonitor {
 }
 
 module.exports = InviteJoinerMonitor;
-
-// on] {
-//   [electron]   id: '733225747363397636',
-//   [electron]   username: 'jack1998',
-//   [electron]   avatar: 'https://cdn.discordapp.com/avatars/733225747363397636/b9738c4de589b634d52e09ce0a863d21.png',
-//   [electron]   discriminator: '4346',
-//   [electron]   public_flags: 0,
-//   [electron]   flags: 0,
-//   [electron]   banner: null,
-//   [electron]   banner_color: null,
-//   [electron]   accent_color: null,
-//   [electron]   locale: 'en-US',
-//   [electron]   mfa_enabled: false,
-//   [electron]   email: 'yaduvanshiabhi1998@gmail.com',
-//   [electron]   verified: true,
-//   [electron]   joined_at: '2022-04-01T08:44:24.776000+00:00',
-//   [electron]   roles: [],
-//   [electron]   iat: 1649962784
-//   [electron] }

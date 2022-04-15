@@ -95,7 +95,8 @@ const stopInviteJoinerMonitor = (id) =>
 const updateStatusLOmonitor = (callback) =>
   ipcRenderer.on("lo-status", (_, res) => callback(res));
 
-const sendUserData = (user) => ipcRenderer.send("get-user-details", user);
+const webhookNotificationListener = (callback) =>
+  ipcRenderer.on("webhook-status", (_, status) => callback(status));
 
 module.exports = {
   getURL,
@@ -132,5 +133,5 @@ module.exports = {
   stopLinkOpenerMonitor,
   startInviteJoinerMonitor,
   stopInviteJoinerMonitor,
-  sendUserData,
+  webhookNotificationListener,
 };

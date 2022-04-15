@@ -45,6 +45,7 @@ import {
   updateNotAvailable,
   proxyTestResultListener,
   updateStatusLOmonitor,
+  webhookNotificationListener,
 } from "./helper/electron-bridge";
 import {
   resetSpooferStatus,
@@ -66,6 +67,7 @@ import { resetTwitterMonitor } from "./features/logic/twitter";
 import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
 import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
 import { resetTaskState, updateTaskState } from "./features/logic/acc-changer";
+import { webhookNotifier } from "./features/logic/setting";
 
 function App() {
   const dispatch = useDispatch();
@@ -100,7 +102,6 @@ function App() {
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
-        // sendUserData({ ...decode, webhook: globalSetting?.webhookList[0] });
         if (decode.roles.length > 0) {
           try {
             let title = `${decode?.username}#${decode?.discriminator} Just Logged In 🥰 🥳 `;
@@ -136,6 +137,7 @@ function App() {
     errorToaster((err) => toastWarning(err));
     // LO IPC
     updateStatusLOmonitor((res) => dispatch(updateTaskState(res)));
+    webhookNotificationListener((res) => dispatch(webhookNotifier(res)));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);

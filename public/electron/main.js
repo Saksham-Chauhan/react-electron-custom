@@ -27,7 +27,6 @@ const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 let win = null;
 let mainWindow = null;
 let splash = null;
-global.userDetails = {};
 
 const INTERCEPTOR_TOOLS = [
   "charles",
@@ -178,11 +177,6 @@ ipcMain.handle("authenticate-user", (_, __) => {
   return auth.getCurrentUser();
 });
 
-ipcMain.on("get-user-details", (_, user) => {
-  console.log(user);
-  global.userDetails = user;
-});
-console.log(global.userDetails);
 ipcMain.on("logout-user", () => {
   auth.logout();
 });
