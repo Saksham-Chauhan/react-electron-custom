@@ -27,9 +27,11 @@ import {
   fetchLatestTweetList,
   fetchLinkOpenerLogState,
   fetchInviteJoinerLogState,
+  fetchThemsState,
 } from '../../features/counterSlice'
 
 const DashboardPage = () => {
+  const appTheme = useSelector(fetchThemsState)
   //GET PROXY LIST
   const proxyList = useSelector(fetchProxyGroupList)
 
@@ -108,7 +110,7 @@ const DashboardPage = () => {
   ]
 
   return (
-    <div className="dashboard">
+    <div className={appTheme ? 'dashboard lightModePage-section' : 'dashboard'}>
       <TopWrapper>
         <GroupStatusCard title="Dashboard" isHide={true} />
       </TopWrapper>

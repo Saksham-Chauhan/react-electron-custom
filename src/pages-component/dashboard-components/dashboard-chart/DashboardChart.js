@@ -25,6 +25,7 @@ import {
   updateTwiterArray,
   fetchSpooferArray,
   updatespooferArray,
+  fetchThemsState,
 } from '../../../features/counterSlice'
 
 ChartJS.register(
@@ -36,56 +37,10 @@ ChartJS.register(
   Legend,
 )
 
-const options = {
-  animations: {
-    tension: {
-      duration: 1000,
-      easing: 'linear',
-    },
-  },
-  maintainAspectRatio: true,
-  hover: {
-    intersect: false,
-  },
-  tension: 0.5,
-  borderCapStyle: 'round',
-  responsive: true,
-  scales: {
-    x: {
-      grid: {
-        display: true,
-        borderColor: '#0d0027',
-        color: '#161037',
-      },
-      ticks: {
-        color: '#FFFFFF',
-        fontFamily: 'Poppins',
-      },
-    },
-    y: {
-      grid: {
-        display: true,
-        borderColor: '#161037',
-        color: '#161037',
-      },
-      ticks: {
-        stepSize: 1,
-        color: '#FFFFFF',
-      },
-    },
-  },
-  plugins: {
-    legend: {
-      display: false,
-      labels: {
-        color: 'white',
-      },
-    },
-  },
-}
-
 const DashboardChart = () => {
   let dispatch = useDispatch()
+  const appTheme = useSelector(fetchThemsState)
+
   const discord = useSelector(fetchLinkOpenerLogState)
   const inviteJoinerobj = useSelector(fetchInviteJoinerLogState)
   const twitterList = useSelector(fetchLatestTweetList)
@@ -100,6 +55,54 @@ const DashboardChart = () => {
   let IJ = [0, 0, 0, 0, 0, 0, 0]
   let TM = [0, 0, 0, 0, 0, 0, 0]
   let SO = [0, 0, 0, 0, 0, 0, 0]
+
+  const options = {
+    animations: {
+      tension: {
+        duration: 1000,
+        easing: 'linear',
+      },
+    },
+    maintainAspectRatio: true,
+    hover: {
+      intersect: false,
+    },
+    tension: 0.5,
+    borderCapStyle: 'round',
+    responsive: true,
+    scales: {
+      x: {
+        grid: {
+          display: true,
+          borderColor: '#0d0027',
+          color: '#161037',
+        },
+        ticks: {
+          color: appTheme ? '#0D0027' : '#FFFFFF',
+          fontFamily: 'Poppins',
+        },
+      },
+      y: {
+        grid: {
+          display: true,
+          borderColor: '#161037',
+          color: '#161037',
+        },
+        ticks: {
+          stepSize: 1,
+          color: appTheme ? '#0D0027' : '#FFFFFF',
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+        labels: {
+          color: 'white',
+        },
+      },
+    },
+  }
 
   const setDataInLO = () => {
     let temp = []
@@ -249,7 +252,7 @@ const DashboardChart = () => {
   return (
     <div className="dashboardchart">
       <img src={chartbg} alt="" className="chartbg" />
-      <Line data={chartData} options={{ ...options }} />;
+      <Line data={chartData} options={{ ...options }} />
     </div>
   )
 }
