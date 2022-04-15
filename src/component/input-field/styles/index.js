@@ -240,5 +240,7 @@ export const groupCustomStyles = {
       backgroundColor: "rgba(255, 255, 255, 0.02)",
     },
     borderBottom: "1px solid rgba(56, 110, 180, 0.5)",
+    overflowX: "hidden",
+    textOverflow: "ellipsis",
   }),
 };

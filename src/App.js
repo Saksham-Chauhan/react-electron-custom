@@ -4,7 +4,6 @@ import bot from "./assests/images/bot.svg";
 import chip from "./assests/images/chip.svg";
 import {
   setUserDetails,
-  resetIJMonitor,
   fetchSpoofModalState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
@@ -45,6 +44,8 @@ import {
   downloadingStart,
   updateNotAvailable,
   proxyTestResultListener,
+  updateStatusLOmonitor,
+  webhookNotificationListener,
 } from "./helper/electron-bridge";
 import {
   resetSpooferStatus,
@@ -64,8 +65,9 @@ import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
 import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
-import { closelinkOpenerMonitor } from "./features/logic/discord-account";
 import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
+import { resetTaskState, updateTaskState } from "./features/logic/acc-changer";
+import { webhookNotifier } from "./features/logic/setting";
 
 function App() {
   const dispatch = useDispatch();
@@ -88,10 +90,9 @@ function App() {
     : "kyro-bot-no-animation";
 
   useEffect(() => {
-    dispatch(resetIJMonitor());
+    dispatch(resetTaskState());
     dispatch(resetSpooferStatus());
     dispatch(resetTwitterMonitor());
-    dispatch(closelinkOpenerMonitor());
     spooferToaster((data) => {
       if (Object.keys(data).length > 0) {
         dispatch(updateSpooferStatus(data));
@@ -134,6 +135,9 @@ function App() {
       progressDiv.innerHTML = percent;
     });
     errorToaster((err) => toastWarning(err));
+    // LO IPC
+    updateStatusLOmonitor((res) => dispatch(updateTaskState(res)));
+    webhookNotificationListener((res) => dispatch(webhookNotifier(res)));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
@@ -146,7 +150,7 @@ function App() {
   }, [location.pathname]);
 
   // check is user log in or not
-  if (Object.keys(logggedUserDetails).length !== 0) {
+  if (Object.keys(logggedUserDetails).length === 0) {
     return (
       <React.Fragment>
         <Login />

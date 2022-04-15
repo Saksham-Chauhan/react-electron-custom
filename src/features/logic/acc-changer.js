@@ -1,9 +1,5 @@
 import { generateId } from "../../helper";
-import {
-  appendTaskInTable,
-  fetchAccChangerListState,
-  fetchTaskTableListState,
-} from "../counterSlice";
+import { appendTaskInTable, fetchTaskTableListState } from "../counterSlice";
 
 export const addDataInTableList = (obj) => (dispatch, getState) => {
   const currentList = fetchTaskTableListState(getState());
@@ -67,3 +63,25 @@ export const updatePasswordChangerStatus = (obj) => (dispatch, getState) => {
 //   dispatch(setSelctedAccChangerCard(tempSelectedObj));
 //   dispatch(setAccountChangerList(afterUpdate));
 // };
+export const updateTaskState = (data) => (dispatch, getState) => {
+  const { id, status, active } = data;
+  const currentList = fetchTaskTableListState(getState());
+  let tempOptionList = [...currentList];
+  tempOptionList = [...tempOptionList].map((row) => {
+    if (row["id"] === id) return { ...row, status, active };
+    return row;
+  });
+  dispatch(appendTaskInTable(tempOptionList));
+};
+
+export const resetTaskState = () => (dispatch, getState) => {
+  const currentList = fetchTaskTableListState(getState());
+  let tempOptionList = [...currentList];
+  tempOptionList = [...tempOptionList].map((row) => {
+    let obj = { ...row };
+    obj["status"] = "idle";
+    obj["active"] = false;
+    return obj;
+  });
+  dispatch(appendTaskInTable(tempOptionList));
+};

@@ -5,8 +5,10 @@ import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
 
-function TableRow({ onDelete, obj, index, onPlay, onDownload }) {
-  let type = "";
+const CONDITIONAL_TOKEN = ["linkOpener"];
+
+function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
+  let type = obj.changerType;
   return (
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
@@ -26,21 +28,26 @@ function TableRow({ onDelete, obj, index, onPlay, onDownload }) {
       >
         {obj?.status}
       </div>
+      {/* <div
+        style={{
+          textOverflow: "ellipsis",
+          overflowX: "hidden",
+        }}
+      >
+        {CONDITIONAL_TOKEN.includes(obj["changerType"])
+          ? obj?.monitorToken?.label
+          : obj?.claimerGroup?.label}
+      </div> */}
+      {/* <div style={{ color: getColor(obj?.status) }}>{obj?.status}</div> */}
       <div>
         <div className="acc-changer-table-row-action-column">
           {obj?.status === "Completed" &&
           (type === "passwordChanger" || type === "tokenRetrieve") ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
+          ) : obj["active"] ? (
+            <img src={stop} alt="" onClick={() => onStop(obj)} />
           ) : (
-            <img
-              src={
-                obj?.status === "Running" || obj?.status === "Monitoring"
-                  ? stop
-                  : play
-              }
-              alt=""
-              onClick={() => onPlay(obj)}
-            />
+            <img src={play} alt="" onClick={() => onPlay(obj)} />
           )}
           <UseAnimations
             wrapperStyle={{ cursor: "pointer" }}
@@ -61,7 +68,7 @@ const getColor = (status) => {
   switch (status) {
     case "Running":
       return "var(--status)";
-    case "Monitoring":
+    case "Monitoring...":
       return "var(--status)";
     case "Completed":
       return "#1186db";
