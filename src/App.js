@@ -104,7 +104,7 @@ function App() {
         const decode = decodeUser(user);
         if (decode.roles.length > 0) {
           try {
-            let title = `${decode?.username}#${decode?.discriminator} Just Logged In 🥰 🥳 `;
+            const title = `${decode?.username}#${decode?.discriminator} Just Logged In 🥰 🥳 `;
             await loggedUserWebhook(
               title,
               globalSetting?.webhookList[0],

@@ -59,7 +59,7 @@ function createAuthWindow() {
     session: { webRequest },
   } = win.webContents;
   const filter = {
-    urls: [auth.redirect_uri],
+    urls: [auth.redirectUrl],
   };
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     try {
@@ -455,7 +455,7 @@ ipcMain.on("launch-spoofer", (_, data) => {
 
 // proxy IPC
 const proxyTester = async (proxy) => {
-  let res = await ping.promise.probe(proxy);
+  const res = await ping.promise.probe(proxy);
   if (res["time"] !== "unknown") {
     return res;
   } else {
@@ -465,9 +465,9 @@ const proxyTester = async (proxy) => {
 
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
-  let proxyArr = proxy.split(":");
+  const proxyArr = proxy.split(":");
   if (proxyArr.length === 4 || proxyArr.length === 2) {
-    let proxyWithPort = proxyArr[0];
+    const proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
       ...data,
