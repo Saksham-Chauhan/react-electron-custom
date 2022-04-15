@@ -17,7 +17,7 @@ class LinkOpenerMonitor {
     this.token = monitorToken;
     this.id = id;
     this.chromeProfile = chromeUser;
-    this.isMonitorStart = false;
+    this.isMonitorStart = true;
     this.init();
   }
 
@@ -53,12 +53,18 @@ class LinkOpenerMonitor {
               let log = `${msgContent} open with ${this.chromeProfile.label} chrome profile`;
               this.sendWebhook(log);
               ipcMain.emit("add-log", log);
-              await open(msgContent, {
-                app: {
-                  name: open.apps.chrome,
-                  arguments: [`--profile-directory=${selectedChrome["value"]}`],
-                },
-              });
+              try {
+                await open(msgContent, {
+                  app: {
+                    name: open.apps.chrome,
+                    arguments: [
+                      `--profile-directory=${this.chromeProfile["value"]}`,
+                    ],
+                  },
+                });
+              } catch (e) {
+                console.log(e);
+              }
             } else {
               let log = `${msgContent} open with Default chrome profile`;
               this.sendWebhook(log);

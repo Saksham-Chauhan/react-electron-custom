@@ -6,6 +6,7 @@ class InviteJoinerManager {
   }
 
   addMonitor(data) {
+    console.log(data);
     const channelArray = data?.channelIDs?.split("\n");
     const proxyArray = data?.proxyGroup?.value?.split("\n");
     const tokenArray = data?.claimerGroup?.value?.split("\n");

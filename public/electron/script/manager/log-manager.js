@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const { download } = require("electron-dl");
 
-const FILE_NAME_PREFIX = "kyro_tool_log.txt";
+const FILE_NAME_PREFIX = "kyro_tool";
 
 class LogManager {
   constructor() {
@@ -11,8 +11,8 @@ class LogManager {
     this.logString = [];
     this.folderPath = path.join(app.getPath("userData"), "/Logs");
     this.maxFileSize = 1;
-    this.lastLogFile = null;
     this.currentLogFile = null;
+    this.logFile = `${FILE_NAME_PREFIX}.log`;
   }
 
   saveLogs() {
@@ -26,23 +26,26 @@ class LogManager {
   }
 
   checkFileSize() {
-    // const stats = fs.statSync(`${this.folderPath}/${this.currentLogFile}`);
-    // const fileSizeInBytes = stats.size;
-    // const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-    // return fileSizeInMB;
+    const filePath = `${this.folderPath}/${this.logFile}`;
+    if (fs.existsSync(filePath)) {
+      const stats = fs.statSync(filePath);
+      const fileSizeInBytes = stats.size;
+      const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      return fileSizeInMB;
+    }
   }
-
   initLogs() {
     if (!fs.existsSync(this.folderPath)) {
       fs.mkdirSync(this.folderPath);
     }
-    const newLogFile = FILE_NAME_PREFIX;
+    const newLogFile = this.logFile;
     const logFiles = fs.readdirSync(this.folderPath);
     if (logFiles.length > 0) {
       this.lastLogFile = logFiles[logFiles.length - 1];
-      if (this.checkFileSize() < this.maxFileSize) {
+      const isExceed = this.checkFileSize() < this.maxFileSize;
+      if (isExceed) {
         this.currentLogFile = this.lastLogFile;
-        console.log("Last file does not exceed the limit so use the last one");
+        console.log("Last file has the same date, dont create a new one");
       } else {
         for (let i = 0; i < logFiles.length; i++) {
           fs.rmSync(`${this.folderPath}/${logFiles[i]}`);

@@ -1,6 +1,6 @@
 const { Client } = require("discord.js-selfbot");
 const { ipcMain } = require("electron");
-const { default: axios } = require("axios");
+const axios = require("axios");
 const BASE_URL = "https://discord.com/api/v9/";
 
 class InviteJoinerMonitor {
@@ -19,7 +19,7 @@ class InviteJoinerMonitor {
     this.tokenList = tokenArray;
     this.proxyList = proxyArray;
     this.isMonitorStart = false;
-    this.chromeProfile = chromeUser;
+    // this.chromeProfile = chromeUser;
     this.channelList = channelArray || [];
     this.delay = delay ? parseInt(delay) : 2000;
     this.init();
@@ -50,17 +50,20 @@ class InviteJoinerMonitor {
   async scanMessage(channelID, msgContent) {
     if (this.isMonitorStart) {
       if (this.channelList.includes(channelID)) {
-        let inviteCode = checkDiscordInvite(msgContent);
+        let inviteCode = this.checkDiscordInvite(msgContent);
+        let code = this.getInviteCode(msgContent);
         if (inviteCode) {
+          console.log(inviteCode, code);
           for (let i = 0; i < this.tokenList.length; i++) {
             const token = this.tokenList[i].split(":")[3];
             const proxy = this.getProxy(this.proxyList);
             try {
               const info = await this.discordServerInviteAPI(
-                inviteCode,
+                code,
                 token,
                 proxy
               );
+              console.log("res", info);
               if (info.status === 200) {
                 let log = `Joined ${info.data.guild.name} server `;
                 this.sendWebhook(log);
@@ -116,6 +119,16 @@ class InviteJoinerMonitor {
     return inviteCheck ? true : false;
   }
 
+  getInviteCode(url) {
+    let invite = url.match(
+      /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discord\.com|discordapp\.com\/invite)\/.+[a-z|A-Z|0-9]/g
+    );
+    if (invite) {
+      return url.split("/").pop();
+    }
+    return invite;
+  }
+
   /**
    * helper function that stop the process for given delay duration
    */
@@ -164,13 +177,37 @@ class InviteJoinerMonitor {
    * @param {String} proxy
    */
   async discordServerInviteAPI(inviteCode, token, proxy) {
-    return await axios({
-      url: `${BASE_URL}invites/${inviteCode}`,
-      headers: { Authorization: token },
-      method: "POST",
-      data: JSON.stringify({}),
-      proxy,
-    });
+    console.log("hjgwaefhesvgfhebr");
+    // return await axios({
+    //   url: `${BASE_URL}invites/${inviteCode}`,
+    //   headers: { Authorization: token },
+    //   method: "post",
+    //   data: JSON.stringify({}),
+    //   proxy,
+    // });
+    // const url = `https://discord.com/api/v9/invites/${inviteCode}`;
+    // const res = await axios.post(url, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorozation: token,
+    //   },
+    //   proxy: proxy,
+    // });
+    // console.log(res);
+    // return res;
+
+    const res = await fetch(
+      `https://discord.com/api/v9/invites/${inviteCode}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      }
+    );
+    console.log("qweFC", res);
+    return res;
   }
 }
 

@@ -567,6 +567,7 @@ ipcMain.on("export-log-report", (_, data) => {
 // ACC CHANGER IPC
 ipcMain.on("get-server-avatar", async (event, code) => {
   let url;
+  qq;
   var config = {
     method: "get",
     url: `https://discord.com/api/v9/invites/${code}`,

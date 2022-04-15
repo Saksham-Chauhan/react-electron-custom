@@ -90,15 +90,15 @@ function TableSection({ list }) {
       let ind = 0;
       const { proxyGroup, claimerGroup } = obj;
       const tokenArray = claimerGroup["value"]?.split("\n");
-      for (let index = 0; index < tokenArray.length; index++) {
-        const token = tokenArray[index];
-        const tokenArr = token?.split(":");
-        const proxyArray = proxyGroup["value"].split("\n");
-        if (type === "linkOpener") {
-          startLinkOpenerMonitor(obj);
-        } else if (type === "inviteJoiner") {
-          startInviteJoinerMonitor(obj);
-        } else {
+      if (type === "linkOpener") {
+        startLinkOpenerMonitor(obj);
+      } else if (type === "inviteJoiner") {
+        startInviteJoinerMonitor(obj);
+      } else {
+        for (let index = 0; index < tokenArray.length; index++) {
+          const token = tokenArray[index];
+          const tokenArr = token?.split(":");
+          const proxyArray = proxyGroup["value"].split("\n");
           for (let j = 0; j < proxyArray.length; j++) {
             let proxySplit = proxyArray[j]?.split(":");
             const proxy = {
