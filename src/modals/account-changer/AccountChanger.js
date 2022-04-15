@@ -8,6 +8,7 @@ import {
   fetchChromeUserListState,
   fetchClaimerGroupList,
   fetchProxyGroupList,
+  fetchThemsState,
   setModalState,
 } from '../../features/counterSlice'
 import { addDataInTableList } from '../../features/logic/acc-changer'
@@ -45,7 +46,10 @@ import {
 } from '../../component/modal-wrapper/Modal'
 function AccountChanger() {
   const navigate = useNavigate()
+  const appTheme = useSelector(fetchThemsState)
+
   const chromeList = useSelector(fetchChromeUserListState)
+
   // const selectedCard = useSelector(fetchSelectedAccChangerCard);
   const proxyGroupList = useSelector(fetchProxyGroupList)
   const claimerGroupList = useSelector(fetchClaimerGroupList)
@@ -206,11 +210,11 @@ function AccountChanger() {
       return { ...pre, chromeUser: data }
     })
   }
-
+  const textClass = appTheme ? 'lightMode_color' : ''
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Create Task</h2>
+        <h2 className={textClass}>Create Task</h2>
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
@@ -298,11 +302,25 @@ function AccountChanger() {
       )}
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
-        <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-          <span>Cancel</span>
+        <div
+          onClick={handleCloseModal}
+          className={
+            appTheme
+              ? 'modal-cancel-btn btn lightMode-modalBtn '
+              : 'modal-cancel-btn btn'
+          }
+        >
+          <span className={textClass}>Cancel</span>
         </div>
-        <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>Create</span>
+        <div
+          onClick={handleSubmit}
+          className={
+            appTheme
+              ? 'modal-cancel-btn submit btn btn_shadow '
+              : ' modal-cancel-btn submit btn'
+          }
+        >
+          <span className={textClass}>Create</span>
         </div>
       </div>
     </ModalWrapper>

@@ -1,6 +1,10 @@
 import React from 'react'
 import Select from 'react-select'
-import { selectCustomStyles, selectStyles } from './styles'
+import {
+  selectCustomStyles,
+  selectStyles,
+  lightMode_selectStyles,
+} from './styles'
 import NumberFormat from 'react-number-format'
 import './styles.css'
 import { useSelector } from 'react-redux'
@@ -22,11 +26,11 @@ function InputField({
   ...props
 }) {
   const appTheme = useSelector(fetchThemsState)
-
+  const textClass = appTheme ? 'lightMode_color' : ''
   return (
     <div className="input-field-container" onClick={props.navigate}>
-      {isCustomLabel && <label className="custom-label">{fieldTitle}</label>}
-      {!hideLabel && <label>{fieldTitle}</label>}
+      {isCustomLabel && <label className="custom-label ">{fieldTitle}</label>}
+      {!hideLabel && <label className={textClass}>{fieldTitle}</label>}
       {!isSelect ? (
         <div className="input-field-box">
           {!isMulti ? (
@@ -34,7 +38,7 @@ function InputField({
               <input
                 className={
                   appTheme
-                    ? `${isCustomLabel} paragraph-color lightBg`
+                    ? `${isCustomLabel} paragraph-color lightModeInput`
                     : `${isCustomLabel && 'custom-label-input'}`
                 }
                 {...props}
@@ -43,7 +47,6 @@ function InputField({
                 autoCorrect="off"
                 autoComplete="off"
                 placeholder={placeholderText}
-                style={{ border: appTheme ? 'none' : '' }}
               />
             ) : (
               <NumberFormat
@@ -63,6 +66,7 @@ function InputField({
               }}
               {...props}
               placeholder={placeholderText}
+              className={appTheme ? 'lightModeInput ' : ''}
             ></textarea>
           )}
         </div>
@@ -73,7 +77,13 @@ function InputField({
             placeholder={placeholderText}
             isOptionSelected={true}
             options={selectOptions}
-            styles={isCustomLabel ? selectCustomStyles : selectStyles}
+            styles={
+              isCustomLabel
+                ? selectCustomStyles
+                : appTheme
+                ? lightMode_selectStyles
+                : selectStyles
+            }
             isSearchable={false}
           />
         </div>
