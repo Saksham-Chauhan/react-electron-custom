@@ -61,13 +61,12 @@ class InviteJoinerMonitor {
                 token,
                 proxy
               );
-              // console.log("res", info);
-              // if (info.status === 200) {
-              //   let log = `Joined ${info.data.guild.name} server `;
-              //   this.sendWebhook(log);
-              //   ipcMain.emit("add-log", log);
-              //   break;
-              // }
+              if (info.status === 200) {
+                let log = `Joined ${info.data.guild.name} server `;
+                this.sendWebhook(log);
+                ipcMain.emit("add-log", log);
+                break;
+              }
             } catch (error) {
               let log = `Something went wrong ${error.message} while joining server  `;
               ipcMain.emit("add-log", log);
@@ -184,9 +183,7 @@ class InviteJoinerMonitor {
       method: "post",
       data: JSON.stringify({}),
       proxy,
-    })
-      .then((r) => console.log("Res", r.data))
-      .catch((er) => console.log("Err", er.message));
+    });
   }
 }
 
