@@ -1,6 +1,6 @@
 const { Client } = require("discord.js-selfbot");
 const { ipcMain } = require("electron");
-const axios = require("axios");
+const { default: axios } = require("axios");
 const BASE_URL = "https://discord.com/api/v9/";
 
 class InviteJoinerMonitor {
@@ -19,7 +19,6 @@ class InviteJoinerMonitor {
     this.tokenList = tokenArray;
     this.proxyList = proxyArray;
     this.isMonitorStart = false;
-    // this.chromeProfile = chromeUser;
     this.channelList = channelArray || [];
     this.delay = delay ? parseInt(delay) : 2000;
     this.init();
@@ -27,7 +26,7 @@ class InviteJoinerMonitor {
 
   init() {
     this.monitor.on("ready", () => {
-      this.sensMonitorStatus("Monitoring...", true);
+      this.sendMonitorStatus("Monitoring...", true);
     });
     this.monitor.on("message", async (message) => {
       let msgContent = message.content;
@@ -37,9 +36,9 @@ class InviteJoinerMonitor {
     if (/^[0-9A-Za-z_.-]+$/.test(this.token)) {
       this.isMonitorStart = true;
       this.monitor.login(this.token).catch((e) => {
-        this.sensMonitorStatus("Invalid token", false);
+        this.sendMonitorStatus("Invalid token", false);
       });
-    } else this.sensMonitorStatus("Invalid token", false);
+    } else this.sendMonitorStatus("Invalid token", false);
   }
 
   /**
@@ -50,20 +49,18 @@ class InviteJoinerMonitor {
   async scanMessage(channelID, msgContent) {
     if (this.isMonitorStart) {
       if (this.channelList.includes(channelID)) {
-        let inviteCode = this.checkDiscordInvite(msgContent);
-        let code = this.getInviteCode(msgContent);
-        if (inviteCode) {
-          console.log(inviteCode, code);
+        let isDiscordInvite = this.checkDiscordInvite(msgContent);
+        let inviteCode = this.getInviteCode(msgContent);
+        if (isDiscordInvite) {
           for (let i = 0; i < this.tokenList.length; i++) {
             const token = this.tokenList[i].split(":")[3];
             const proxy = this.getProxy(this.proxyList);
             try {
               const info = await this.discordServerInviteAPI(
-                code,
+                inviteCode,
                 token,
                 proxy
               );
-              console.log("res", info);
               if (info.status === 200) {
                 let log = `Joined ${info.data.guild.name} server `;
                 this.sendWebhook(log);
@@ -119,6 +116,9 @@ class InviteJoinerMonitor {
     return inviteCheck ? true : false;
   }
 
+  /**
+   * helper function extract invite code from invite link
+   */
   getInviteCode(url) {
     let invite = url.match(
       /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discord\.com|discordapp\.com\/invite)\/.+[a-z|A-Z|0-9]/g
@@ -143,7 +143,7 @@ class InviteJoinerMonitor {
    */
   stop() {
     this.isMonitorStart = false;
-    this.sensMonitorStatus("Stopped", false);
+    this.sendMonitorStatus("Stopped", false);
     this.monitor.destroy();
   }
 
@@ -152,7 +152,7 @@ class InviteJoinerMonitor {
    * @param {String} status
    * @param {Boolean} active
    */
-  sensMonitorStatus(status, active) {
+  sendMonitorStatus(status, active) {
     const win = global.mainWin;
     if (win) {
       win.webContents.send("lo-status", { id: this.id, status, active });
@@ -177,37 +177,13 @@ class InviteJoinerMonitor {
    * @param {String} proxy
    */
   async discordServerInviteAPI(inviteCode, token, proxy) {
-    console.log("hjgwaefhesvgfhebr");
-    // return await axios({
-    //   url: `${BASE_URL}invites/${inviteCode}`,
-    //   headers: { Authorization: token },
-    //   method: "post",
-    //   data: JSON.stringify({}),
-    //   proxy,
-    // });
-    // const url = `https://discord.com/api/v9/invites/${inviteCode}`;
-    // const res = await axios.post(url, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorozation: token,
-    //   },
-    //   proxy: proxy,
-    // });
-    // console.log(res);
-    // return res;
-
-    const res = await fetch(
-      `https://discord.com/api/v9/invites/${inviteCode}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
-    console.log("qweFC", res);
-    return res;
+    return await axios({
+      url: `${BASE_URL}invites/${inviteCode}`,
+      headers: { Authorization: token },
+      method: "post",
+      data: JSON.stringify({}),
+      proxy,
+    });
   }
 }
 

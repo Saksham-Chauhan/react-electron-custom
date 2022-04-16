@@ -28,7 +28,7 @@ function Setting() {
             <SettingUserProfile {...{ userDetails }} />
           </div>
         </div>
-        <AppSpacer spacer={50} />
+        <AppSpacer spacer={25} />
         <div className="setting-page-section-col">
           <div className="chrome-user-section">
             <SettingChromeUserSection />

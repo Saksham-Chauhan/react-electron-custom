@@ -15,7 +15,7 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
         return DISCORD_MASS_OPTIONS[i].label;
     }
   }
-  console.log(obj);
+
   let type = obj.changerType;
   return (
     <div className="acc-chnager-page-table-header body">
@@ -47,7 +47,6 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
           ? obj?.monitorToken?.label
           : obj?.claimerGroup?.label}
       </div> */}
-      {/* <div style={{ color: getColor(obj?.status) }}>{obj?.status}</div> */}
       <div>
         <div className="acc-changer-table-row-action-column">
           {obj?.status === "Completed" &&

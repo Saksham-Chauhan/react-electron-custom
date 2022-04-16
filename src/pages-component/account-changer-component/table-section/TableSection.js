@@ -28,32 +28,19 @@ import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
 import tokenChanger from "../../../api/account-changer/token-changer";
 import { toastInfo } from "../../../toaster";
+import { replyList } from "../../../constant";
 
 const { Client } = window.require("discord.js-selfbot");
 
 function TableSection({ list }) {
   const dispatch = useDispatch();
+
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
   };
 
-  const replyList = [
-    "lfgooooo",
-    "nice",
-    "lets do it",
-    "lets gooooo",
-    "excited",
-    "praying🙏",
-    "fingers crossed",
-    "🤞",
-    "🙏",
-    "THIS IS MINE!",
-  ];
-
   const handlePlay = async (obj) => {
-    console.log(obj);
     const type = obj["changerType"];
-
     if (type === "giveawayJoiner" && obj.status !== "Monitoring") {
       const monitor = new Client();
       monitor.login(obj.token);

@@ -1,6 +1,9 @@
 .acc-changer-page-table-section {
   height: calc(100% - 90px);
 }
+
+
+
 .acc-chnager-table-header-parent {
   background: var(--sidebar-bg);
   border-radius: 5px;
@@ -57,3 +60,4 @@
   outline: none;
   border-radius: 9px;
 }
+
