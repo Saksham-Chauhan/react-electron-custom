@@ -95,6 +95,8 @@ function SettingScreen({
     }
   }
 
+  const textClass = appTheme ? 'lightMode_color' : ''
+
   return (
     <div>
       <TwitterPageTopSection
@@ -117,7 +119,7 @@ function SettingScreen({
         <AppSpacer spacer={30} />
         <div className="twitter-secting-col">
           <div>
-            <h3>Keys</h3>
+            <h3 className={textClass}>Keys</h3>
             <AppInputField
               hideLabel={true}
               isCustomLabel={true}
@@ -177,7 +179,7 @@ function SettingScreen({
             </div>
           </div>
           <div>
-            <h3>Claimer</h3>
+            <h3 className={textClass}>Claimer</h3>
             <AppInputField
               fieldTitle=""
               hideLabel={true}
@@ -199,7 +201,7 @@ function SettingScreen({
             />
           </div>
           <div>
-            <h3>Chrome User</h3>
+            <h3 className={textClass}>Chrome User</h3>
             <AppInputField
               fieldTitle=""
               hideLabel={true}

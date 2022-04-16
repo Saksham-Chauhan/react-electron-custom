@@ -52,4 +52,8 @@
 - Add export proxy in .txt format
 - Add Import-Export functionality in token group section in Setting page
 - Remove the proxy page from Router and its componenets~
-- Chnage the location of proxy page into small section in setting page
+- Change the location of proxy page into small section in setting page
+- Add the proxy rotater functionality in spoofer
+- Add the LO and IJ modal slide in Task page and also add the handlers to tem on the basis of the changer type
+- Optimize the logs manager code
+- Rewrite the rntire logic for IJ & LO in main

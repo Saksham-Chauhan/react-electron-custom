@@ -80,6 +80,24 @@ const getURL = (callback) => {
   ipcRenderer.on("url-is", (_, url) => callback(url));
 };
 
+// LO IPC
+const startLinkOpenerMonitor = (data) =>
+  ipcRenderer.send("start-linkOpener-monitor", data);
+const stopLinkOpenerMonitor = (id) =>
+  ipcRenderer.send("stop-linkOpener-monitor", id);
+
+const startInviteJoinerMonitor = (data) =>
+  ipcRenderer.send("start-inviteJoiner-monitor", data);
+
+const stopInviteJoinerMonitor = (id) =>
+  ipcRenderer.send("stop-inviteJoiner-monitor", id);
+
+const updateStatusLOmonitor = (callback) =>
+  ipcRenderer.on("lo-status", (_, res) => callback(res));
+
+const webhookNotificationListener = (callback) =>
+  ipcRenderer.on("webhook-status", (_, status) => callback(status));
+
 module.exports = {
   getURL,
   checkForURL,
@@ -110,4 +128,10 @@ module.exports = {
   downloadingStart,
   sendLogs,
   exportLogs,
+  startLinkOpenerMonitor,
+  updateStatusLOmonitor,
+  stopLinkOpenerMonitor,
+  startInviteJoinerMonitor,
+  stopInviteJoinerMonitor,
+  webhookNotificationListener,
 };

@@ -2,26 +2,27 @@ import React, { useEffect, useState } from 'react'
 import './style.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchThemsState, setThemeState } from '../../features/counterSlice'
-import { AppToggler } from '..'
+import DarkModeToggle from 'react-dark-mode-toggle'
+
 const DarkMode = () => {
-  const [lightMode, setlightMode] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(() => false)
   const dispatch = useDispatch()
   const appTheme = useSelector(fetchThemsState)
-  const handleToggle = () => {
-    setlightMode(!lightMode)
-  }
-
   useEffect(() => {
-    dispatch(setThemeState(lightMode))
-  }, [lightMode, dispatch])
+    dispatch(setThemeState(!isDarkMode))
+  }, [isDarkMode, dispatch])
   return (
     <div className="darkMode">
-      <AppToggler
-        id="turn-twitter-monitor"
-        name="twitterMonitor"
-        onClick={handleToggle}
-      />
-      <p>light mode</p>
+      <div style={{ border: '1px solid #706A6A' }}>
+        <DarkModeToggle
+          onChange={setIsDarkMode}
+          checked={isDarkMode}
+          size={40}
+        />
+      </div>
+      <p className={appTheme ? 'lightMode_color ' : ''}>
+        {appTheme ? 'Light' : 'Dark'} Mode
+      </p>
     </div>
   )
 }

@@ -79,3 +79,16 @@ export const DISCORD_MASS_OPTIONS = [
   { value: "tokenRetrieve", label: "Token Retrieve" },
   { value: "giveawayJoiner", label: "Giveaway Joiner" },
 ];
+
+export const replyList = [
+  "lfgooooo",
+  "nice",
+  "lets do it",
+  "lets gooooo",
+  "excited",
+  "praying🙏",
+  "fingers crossed",
+  "🤞",
+  "🙏",
+  "THIS IS MINE!",
+];

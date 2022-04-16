@@ -10,6 +10,8 @@ const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager");
+const linkOpernerManager = require("./script/manager/linkOpener-manager");
 const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
@@ -192,7 +194,7 @@ ipcMain.on("close", () => {
       tempMainWindow.close();
     }
   } catch (error) {
-    console.log("Something went wroung on minizing app", error);
+    console.log("Something went wrong on closing app", error);
   }
 });
 
@@ -207,7 +209,7 @@ ipcMain.on("minimize", () => {
       tempMainWindow.minimize();
     }
   } catch (error) {
-    console.log("Something went wroung on minizing app", error);
+    console.log("Something went wrong on minimizing app", error);
   }
 });
 
@@ -553,8 +555,9 @@ const downloadCsvFileDialog = async (fileName, url) => {
 };
 
 // LOG IPC EVENT
-ipcMain.on("add-log", (_, log) => {
-  logManager.logMessage(log);
+ipcMain.on("add-log", (e, log) => {
+  const logMsg = log || e;
+  logManager.logMessage(logMsg);
 });
 
 ipcMain.on("export-log-report", (_, data) => {
@@ -564,6 +567,7 @@ ipcMain.on("export-log-report", (_, data) => {
 // ACC CHANGER IPC
 ipcMain.on("get-server-avatar", async (event, code) => {
   let url;
+  qq;
   var config = {
     method: "get",
     url: `https://discord.com/api/v9/invites/${code}`,
@@ -575,4 +579,19 @@ ipcMain.on("get-server-avatar", async (event, code) => {
     console.log(e);
   }
   mainWindow.webContents.send("url-is", url);
+});
+
+// LO IPC EVENTS
+ipcMain.on("start-linkOpener-monitor", (_, data) => {
+  linkOpernerManager.addMonitor(data);
+});
+ipcMain.on("stop-linkOpener-monitor", (_, id) => {
+  linkOpernerManager.stopMonitor(id);
+});
+
+ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
+  InviteJoinerManager.addMonitor(data);
+});
+ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
+  InviteJoinerManager.stopMonitor(id);
 });

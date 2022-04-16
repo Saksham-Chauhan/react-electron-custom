@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import UseAnimations from 'react-useanimations'
 import stop from '../../../assests/images/stop.svg'
 import play from '../../../assests/images/play.svg'
-import toggle from '../../../assests/images/toggle.svg'
-import UseAnimations from 'react-useanimations'
 import trash2 from 'react-useanimations/lib/trash2'
+import toggle from '../../../assests/images/toggle.svg'
 import { fetchThemsState } from '../../../features/counterSlice'
 import { useSelector } from 'react-redux'
-
 function SpooferTableRow({
   index,
   spoof,
@@ -33,20 +32,7 @@ function SpooferTableRow({
       <div>{index}</div>
       <div>{spoof['url']}</div>
       <div>{spoof['proxyName']}</div>
-      <div
-        style={{
-          color:
-            spoof.status === 'Stopped'
-              ? '#B60E0E'
-              : spoof.status === 'Running'
-              ? ' #03902B'
-              : spoof.status === 'Idle'
-              ? ' #111010'
-              : '',
-        }}
-      >
-        {spoof['status']}
-      </div>
+      <div style={{ color: getColor(spoof['status']) }}> {spoof['status']}</div>
       <div>
         <div className="spoofer-table-row-action-col">
           <img
@@ -79,3 +65,14 @@ function SpooferTableRow({
 }
 
 export default SpooferTableRow
+
+const getColor = (status) => {
+  switch (status) {
+    case 'Running':
+      return 'var(--status)'
+    case 'Stopped':
+      return 'var(--red)'
+    default:
+      return 'var(--primary)'
+  }
+}

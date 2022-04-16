@@ -99,7 +99,7 @@ function CalimerGroup() {
             <div className="claimer-group-item-action">
               <UseAnimations
                 onClick={() => handleEdit(group)}
-                animation={edit}
+                animation={appTheme ? lightModeEditbtn : edit}
                 strokeColor="#ffff"
                 size={20}
                 wrapperStyle={{ cursor: 'pointer' }}

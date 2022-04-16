@@ -1,8 +1,17 @@
 .darkMode {
   -webkit-app-region: no-drag;
-  border: 1px solid red;
   position: absolute;
-  top: 2%;
+  top: 13px;
   right: 8%;
   z-index: 101;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.darkMode > div {
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

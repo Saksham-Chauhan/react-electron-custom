@@ -4,6 +4,7 @@ import {
   selectCustomStyles,
   selectStyles,
   lightMode_selectStyles,
+  LightMode_selectCustomStyles,
 } from './styles'
 import NumberFormat from 'react-number-format'
 import './styles.css'
@@ -27,6 +28,10 @@ function InputField({
 }) {
   const appTheme = useSelector(fetchThemsState)
   const textClass = appTheme ? 'lightMode_color' : ''
+
+  const CustomLabelStyle = appTheme
+    ? LightMode_selectCustomStyles
+    : selectCustomStyles
   return (
     <div className="input-field-container" onClick={props.navigate}>
       {isCustomLabel && <label className="custom-label ">{fieldTitle}</label>}
@@ -79,7 +84,7 @@ function InputField({
             options={selectOptions}
             styles={
               isCustomLabel
-                ? selectCustomStyles
+                ? CustomLabelStyle
                 : appTheme
                 ? lightMode_selectStyles
                 : selectStyles
