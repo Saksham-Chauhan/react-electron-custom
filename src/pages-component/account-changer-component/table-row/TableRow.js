@@ -4,23 +4,32 @@ import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
+import { DISCORD_MASS_OPTIONS } from "../../../constant";
 
-const CONDITIONAL_TOKEN = ["linkOpener"];
+// const CONDITIONAL_TOKEN = ["linkOpener"];
 
 function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
+  function getLabel() {
+    for (let i = 0; i < DISCORD_MASS_OPTIONS.length; i++) {
+      if (DISCORD_MASS_OPTIONS[i].value === obj.changerType)
+        return DISCORD_MASS_OPTIONS[i].label;
+    }
+  }
+  console.log(obj);
   let type = obj.changerType;
   return (
     <div className="acc-chnager-page-table-header body">
       <div>{index}</div>
       <div style={{ display: "flex" }}>
         <div style={{ width: "70%", overflow: "hidden" }}>
-          {obj.changerType === "giveawayJoiner"
-            ? obj?.token
+          {obj.changerType === "giveawayJoiner" ||
+          obj.changerType === "linkOpener"
+            ? obj?.monitorToken?.label
             : obj?.claimerGroup?.label}
         </div>
         {obj.changerType === "giveawayJoiner" && "..."}
       </div>
-      <div>{obj.changerType}</div>
+      <div>{getLabel()}</div>
       <div
         style={{
           color: getColor(obj?.status),
