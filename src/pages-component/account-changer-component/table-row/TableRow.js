@@ -6,7 +6,7 @@ import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
 import { DISCORD_MASS_OPTIONS } from "../../../constant";
 
-const CONDITIONAL_TOKEN = ["linkOpener"];
+// const CONDITIONAL_TOKEN = ["linkOpener"];
 
 function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
   function getLabel() {
@@ -15,6 +15,7 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
         return DISCORD_MASS_OPTIONS[i].label;
     }
   }
+
   let type = obj.changerType;
   return (
     <div className="acc-chnager-page-table-header body">
