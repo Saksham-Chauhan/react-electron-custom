@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import UseAnimations from 'react-useanimations'
 import stop from '../../../assests/images/stop.svg'
+import lightMode_play from '../../../assests/images/lightMode_play.svg'
 import play from '../../../assests/images/play.svg'
 import trash2 from 'react-useanimations/lib/trash2'
 import toggle from '../../../assests/images/toggle.svg'
@@ -24,7 +25,7 @@ function SpooferTableRow({
     }
   }, [spoof])
   const lightModeClass = appTheme
-    ? 'spoofer-page-table-header tbody lightBg paragraph-color'
+    ? 'spoofer-page-table-header tbody lightBg lightMode_tableColor'
     : 'spoofer-page-table-header tbody'
 
   return (
@@ -32,7 +33,10 @@ function SpooferTableRow({
       <div>{index}</div>
       <div>{spoof['url']}</div>
       <div>{spoof['proxyName']}</div>
-      <div style={{ color: getColor(spoof['status']) }}> {spoof['status']}</div>
+      <div style={{ color: getColor(spoof['status'], appTheme) }}>
+        {' '}
+        {spoof['status']}
+      </div>
       <div>
         <div className="spoofer-table-row-action-col">
           <img
@@ -44,7 +48,7 @@ function SpooferTableRow({
           {!isStart ? (
             <img
               onClick={() => onStart(spoof, setIsStart)}
-              src={play}
+              src={appTheme ? lightMode_play : play}
               alt=""
               style={{ width: 18 }}
             />
@@ -66,13 +70,13 @@ function SpooferTableRow({
 
 export default SpooferTableRow
 
-const getColor = (status) => {
+const getColor = (status, appTheme) => {
   switch (status) {
     case 'Running':
-      return 'var(--status)'
+      return appTheme ? 'var(--lightMode-status)' : 'var(--status)'
     case 'Stopped':
       return 'var(--red)'
     default:
-      return 'var(--primary)'
+      return appTheme ? 'var(--lightMode-text-color)' : 'var(--primary)'
   }
 }

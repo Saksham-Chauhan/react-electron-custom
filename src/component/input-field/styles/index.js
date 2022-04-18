@@ -298,15 +298,15 @@ export const lightMode_selectStyles = {
     },
     '&::-webkit-scrollbar-thumb': {
       borderRadius: '10px',
-      backgroundColor: 'var(--scrollbar-bg)',
+      backgroundColor: '#706a6a',
     },
-    padding: '0px',
+    paddingRight: '3px',
   }),
 
   menu: (styles) => ({
     ...styles,
     zIndex: 3,
-    backgroundColor: '#E4E7EA',
+    backgroundColor: '#FFFFFF',
     border: '1px solid  var(--active-input)',
     marginLeft: '-10px',
   }),
@@ -323,7 +323,7 @@ export const lightMode_selectStyles = {
       backgroundColor: '#6940BB',
       color: '#E4E7EA',
     },
-    borderBottom: '1px solid rgba(56, 110, 180, 0.5)',
+    borderBottom: '1px solid #e4e7ea',
   }),
 }
 export const LightMode_selectCustomStyles = {

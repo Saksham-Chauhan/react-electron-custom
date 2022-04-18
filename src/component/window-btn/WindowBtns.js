@@ -21,8 +21,8 @@ function WindowBtns({ location }) {
           <img src={lightModehelp} alt="" className="helpImg" />
         ) : (
           <svg
-            width="14"
-            height="14"
+            width="18px"
+            height="18px"
             viewBox="0 0 14 14"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

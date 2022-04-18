@@ -20,9 +20,6 @@ const DarkMode = () => {
           size={40}
         />
       </div>
-      <p className={appTheme ? 'lightMode_color ' : ''}>
-        {appTheme ? 'Light' : 'Dark'} Mode
-      </p>
     </div>
   )
 }

@@ -43,6 +43,14 @@ code {
   --placeholder: #706a6a;
   --active-input: #30e2e7;
   --scrollbar-bg: rgba(255, 255, 255, 0.5);
+  --lightMode-status: #03902b;
+  --lightMode-monitoring: #076366;
+  --lightMode-complete: gradient(
+    92.61deg,
+    #e910a8 6.41%,
+    #cc2ef0 49.5%,
+    #fc984e 87.53%
+  );
 
   --lightMode-sidebar-bg: #6940bb;
   --lightMode-page-section: #ffffff;
@@ -50,6 +58,7 @@ code {
   --lightMode-text: #706a6a;
   --lightMode-bg: #e4e7ea;
   --lightMode-activeLink: #360c88;
+  --lightMode-tableColor: #111010;
 }
 
 /* HIDE DEFAULT ARROW WHEN INPUT TYPE IS NUMBER */

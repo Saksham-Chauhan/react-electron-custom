@@ -15,6 +15,11 @@
 .lightMode_color {
   color: var(--lightMode-text-color) !important;
 }
+
+.lightMode_tableColor {
+  color: var(--lightMode-tableColor) !important;
+}
+
 .lightBg {
   background: var(--lightMode-bg) !important;
 }
