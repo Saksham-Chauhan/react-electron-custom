@@ -9,7 +9,6 @@ import {
   fetchLoggedUserDetails,
   fetchDashboardModalState,
   fetchWebhookSettingState,
-  fetchEditProxyModalState,
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
@@ -22,7 +21,6 @@ import {
   ClaimerGroupModal,
   AccountChangerModal,
   DiscordAccountModal,
-  EditProxySingleModal,
   InviteJoinerSettingModal,
 } from "./modals";
 import {
@@ -77,7 +75,6 @@ function App() {
   const discordModalState = useSelector(fetchDiscordModalState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
   const proxyModalState = useSelector(fetchProxyGroupModalState);
-  const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const onBoardingModalState = useSelector(fetchDashboardModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const accountChangerModalState = useSelector(fetchAccountChangerModalState);
@@ -166,7 +163,6 @@ function App() {
       {!onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
-      {proxyEditModalState && <EditProxySingleModal />}
       {accountChangerModalState && <AccountChangerModal />}
       {inviteSettigModalState && <InviteJoinerSettingModal />}
       <div className="app sidebar">
