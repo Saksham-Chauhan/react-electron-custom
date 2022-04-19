@@ -117,10 +117,11 @@ export const directDiscordJoinAPI = async (
     );
     if (inviteResponse.status === 200) {
       const tkn =
-        token.substring(0, 4) + "## ##" + token.charAt(token.length() - 1);
+        token.substring(0, 4) + "## ##" + token.charAt(token.length - 1);
       toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
       const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
       sendLogs(log);
+
       if (settingObj.isReact) {
         const serverReactResponse = await axios({
           url: `${BASE_URL}channels/${settingObj.channelId}/messages/${settingObj.messageId}/reactions/${settingObj.emojiValue}/%40me`,
@@ -137,6 +138,7 @@ export const directDiscordJoinAPI = async (
           toastSuccess("Reaction added successfully");
         }
       }
+
       if (settingObj.isAcceptRule) {
         const acceptServerRulResponse = await axios({
           url: `${BASE_URL}guilds/${inviteResponse.data.guild.id}/requests/@me`,
