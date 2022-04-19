@@ -33,6 +33,7 @@ import {
   SpooferPage,
   DashboardPage,
   AccountChangerPage,
+  ETHminter,
 } from './pages'
 import {
   sendLogs,
@@ -194,6 +195,7 @@ function App() {
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />
               <Route path={RoutePath.home} element={<DashboardPage />} />
+              <Route path={RoutePath.ethMinter} element={<ETHminter />} />
             </Routes>
             <AppFooter />
           </div>
