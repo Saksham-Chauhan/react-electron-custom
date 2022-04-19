@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { InputFieldWithScrollList } from "../..";
+import { InputFieldWithScrollList } from "../../../component";
 import {
   addTwitterKeywordInList,
   deleteTwitterDatafromList,

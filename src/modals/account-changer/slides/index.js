@@ -10,3 +10,6 @@ export { default as TokenRetriverSlide } from "./TokenRetriver";
 export { default as GiveawayJoinerSlide } from "./GiveawayJoiner";
 export { default as InviteJoinerSlide } from "./InviteJoiner";
 export { default as LinkOpenerSlide } from "./LinkOpener";
+export { default as XPFarmerSlide } from "./XPFarmer";
+export { default as MassjoinerSlideOne } from "./MassjoinerSlideOne";
+export { default as MassjoinerSlideTwo } from "./MassjoinerSlideTwo";

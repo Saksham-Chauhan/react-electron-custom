@@ -50,7 +50,9 @@
 - Changed alignment of export button.
 - Fix the import proxy issue in proxy page
 
-# v0.8.7
+
+# V0.8.7
+
 
 - Add export proxy in .txt format
 - Add Import-Export functionality in token group section in Setting page

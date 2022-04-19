@@ -12,3 +12,16 @@
   width: 48.5%;
   padding: 0.8em;
 }
+.switch-with-text {
+  display: flex;
+  background: var(--sidebar-bg);
+  border-radius: 5px;
+  align-items: center;
+}
+.switch-with-text > span {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 13.1437px;
+  line-height: 20px;
+  margin-left: 0.8em;
+}

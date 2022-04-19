@@ -246,8 +246,6 @@ export const fetchEditStorageState = (state) => state[STATE_KEY].editStorage;
 export const fetchProxyGroupList = (state) => state[STATE_KEY].proxyGroupList;
 export const fetchProxyGroupModalState = (state) =>
   state[STATE_KEY].modals.proxyGroup;
-export const fetchEditProxyModalState = (state) =>
-  state[STATE_KEY].modals.editProxy;
 export const fetchIsAddnewProxyModalState = (state) =>
   state[STATE_KEY].addProxyStorage;
 

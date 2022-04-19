@@ -113,8 +113,12 @@
   line-height: 17px;
   color: var(--primary);
 }
-.blank-text{
-  color: white;
+.blank-text {
   text-align: center;
-  margin-top: 40%;
+  color: var(--primary);
+}
+.scroll-list.full-height {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

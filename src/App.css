@@ -232,3 +232,8 @@
   position: absolute;
   left: 8px;
 }
+
+/* UTILITY */
+.d-flex{
+  display: flex;
+}
