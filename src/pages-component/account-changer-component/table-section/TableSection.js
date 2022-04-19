@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./styles.css";
 import Chance from "chance";
 import { useDispatch } from "react-redux";
@@ -9,7 +9,7 @@ import {
 } from "../../../features/logic/acc-changer";
 import TableRow from "../table-row/TableRow";
 import { toastWarning } from "../../../toaster";
-import { generateRandomAvatar } from "../../../api";
+import { directDiscordJoinAPI, generateRandomAvatar } from "../../../api";
 import { generateRandomPassword, sleep } from "../../../helper";
 import {
   readArrayOfJson,
@@ -21,7 +21,6 @@ import {
 import serverLeaverAPI from "../../../api/account-changer/leave-server";
 import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
-import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import usernameChangerAPI from "../../../api/account-changer/username-changer";
 import activityChangerAPI from "../../../api/account-changer/activity-changer";
 import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
@@ -29,17 +28,22 @@ import passwordChangerAPI from "../../../api/account-changer/password-changer";
 import tokenChanger from "../../../api/account-changer/token-changer";
 import { toastInfo } from "../../../toaster";
 import { replyList } from "../../../constant";
+import xpFarmer from "../../../api/account-changer/xp-farmer";
 
 const { Client } = window.require("discord.js-selfbot");
 
+let status = false;
+
 function TableSection({ list }) {
+  let flag = useRef(false);
   const dispatch = useDispatch();
 
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
   };
-
   const handlePlay = async (obj) => {
+    flag.current = !flag.current;
+    status = flag.current;
     const type = obj["changerType"];
     if (type === "giveawayJoiner" && obj.status !== "Monitoring") {
       const monitor = new Client();
@@ -111,6 +115,10 @@ function TableSection({ list }) {
               invideCodes: obj.inviteCodes,
               avatarAPI: obj.url,
               email: tokenArr[0],
+              channelID: obj.channelId,
+              delay: obj.delay,
+              flagDec: flag.current,
+              settingObj: obj,
             });
             if (apiResponse !== null) {
               if (apiResponse.status === 200 || apiResponse.status === 204) {
@@ -254,6 +262,9 @@ export const apiCallToDiscord = async ({
   invideCodes,
   avatarAPI,
   email,
+  channelID,
+  delay,
+  settingObj,
 }) => {
   if (type === "avatarChanger") {
     let response;
@@ -349,7 +360,12 @@ export const apiCallToDiscord = async ({
     const inviteCodeList = invideCodes?.split("\n");
     for (let i = 0; i < inviteCodeList.length; i++) {
       let code = inviteCodeList[i];
-      const response = await massInviteJoinerAPI(code, token, proxy);
+      const response = await directDiscordJoinAPI(
+        proxy,
+        code,
+        token,
+        settingObj
+      );
 
       if (response.status === 200) {
         return response;
@@ -366,5 +382,27 @@ export const apiCallToDiscord = async ({
       toastWarning(response.response.data.message);
       return null;
     }
+  } else if (type === "xpFarmer") {
+    if (status) {
+      return await callApis(proxy, channelID, token, delay);
+    } else return null;
+  }
+};
+
+export const callApis = async (proxy, channelID, token, delay = "") => {
+  let response = null;
+  let delayTime = delay ? delay : 1000;
+  response = await xpFarmer(proxy, channelID, token);
+  console.log(response);
+  await sleep(delayTime);
+  if (status) {
+    callApis(proxy, channelID, token, (delay = ""));
+  }
+  if (response.status === 200) {
+    return response;
+  } else {
+    status = false;
+    toastWarning("error in calling");
+    return null;
   }
 };

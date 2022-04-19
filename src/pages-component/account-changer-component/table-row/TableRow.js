@@ -5,8 +5,6 @@ import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
 
-const CONDITIONAL_TOKEN = ["linkOpener"];
-
 function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
   let type = obj.changerType;
   return (
@@ -28,17 +26,6 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
       >
         {obj?.status}
       </div>
-      {/* <div
-        style={{
-          textOverflow: "ellipsis",
-          overflowX: "hidden",
-        }}
-      >
-        {CONDITIONAL_TOKEN.includes(obj["changerType"])
-          ? obj?.monitorToken?.label
-          : obj?.claimerGroup?.label}
-      </div> */}
-      {/* <div style={{ color: getColor(obj?.status) }}>{obj?.status}</div> */}
       <div>
         <div className="acc-changer-table-row-action-column">
           {obj?.status === "Completed" &&

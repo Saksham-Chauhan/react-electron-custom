@@ -36,6 +36,7 @@ import {
   GiveawayJoinerSlide,
   InviteJoinerSlide,
   LinkOpenerSlide,
+  XPFarmerSlide,
 } from "./slides";
 import NicknameChanger from "./slides/NicknameChanger";
 import Chance from "chance";
@@ -56,6 +57,7 @@ function AccountChanger() {
     createdAt: new Date().toUTCString(),
     changerType: "",
     active: false,
+    render: false,
   });
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
@@ -207,8 +209,25 @@ function AccountChanger() {
     });
   };
 
+  const handleToggler = (e) => {
+    const { name, checked } = e.target;
+    setAccountChanger((pre) => {
+      return { ...pre, [name]: checked };
+    });
+  };
+  const handleIsEmoji = (flag = false) => {
+    setAccountChanger((pre) => {
+      return { ...pre, emoji: flag };
+    });
+  };
+  const handleUpdateObject = (key, value) => {
+    setAccountChanger((pre) => {
+      return { ...pre, [key]: value };
+    });
+  };
+
   return (
-    <ModalWrapper>
+    <ModalWrapper onClick={handleIsEmoji}>
       <div className="modal-tilte">
         <h2>Create Task</h2>
       </div>
@@ -297,17 +316,37 @@ function AccountChanger() {
         accountChanger,
         handleRefreshName,
         handleSelectToken,
-        handleMonitorToken
+        handleMonitorToken,
+        handleToggler,
+        handleCloseModal,
+        handleSubmit,
+        handleIsEmoji,
+        handleUpdateObject
       )}
       <AppSpacer spacer={30} />
-      <div className="modal-control-btns">
-        <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-          <span>Cancel</span>
+      {accountChanger?.changerType ? (
+        accountChanger?.changerType === "massInviter" ? (
+          ""
+        ) : (
+          <div className="modal-control-btns">
+            <div onClick={handleCloseModal} className="modal-cancel-btn btn">
+              <span>Cancel</span>
+            </div>
+            <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
+              <span>Create</span>
+            </div>
+          </div>
+        )
+      ) : (
+        <div className="modal-control-btns">
+          <div onClick={handleCloseModal} className="modal-cancel-btn btn">
+            <span>Cancel</span>
+          </div>
+          <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
+            <span>Create</span>
+          </div>
         </div>
-        <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>Create</span>
-        </div>
-      </div>
+      )}
     </ModalWrapper>
   );
 }
@@ -321,7 +360,12 @@ const getDynamicSlideRnder = (
   state,
   handleRefreshName,
   handleSelectToken,
-  handleMonitorToken
+  handleMonitorToken,
+  handleToggler,
+  handleCloseModal,
+  handleSubmit,
+  handleIsEmoji,
+  handleUpdateObject
 ) => {
   switch (type) {
     case "avatarChanger":
@@ -350,7 +394,17 @@ const getDynamicSlideRnder = (
     case "tokenChecker":
       return <TokenCheckerSlide onChange={handleChange} />;
     case "massInviter":
-      return <MassInviteSlide onChange={handleChange} />;
+      return (
+        <MassInviteSlide
+          onChange={handleChange}
+          handleToggler={handleToggler}
+          pageState={state}
+          handleCloseModal={handleCloseModal}
+          handleSubmit={handleSubmit}
+          handleIsEmoji={handleIsEmoji}
+          handleUpdateObject={handleUpdateObject}
+        />
+      );
     case "tokenRetrieve":
       return <TokenRetriverSlide onChange={handleChange} />;
     case "giveawayJoiner":
@@ -372,6 +426,14 @@ const getDynamicSlideRnder = (
     case "linkOpener":
       return (
         <LinkOpenerSlide
+          onChange={handleChange}
+          state={state}
+          handleMonitorToken={handleMonitorToken}
+        />
+      );
+    case "xpFarmer":
+      return (
+        <XPFarmerSlide
           onChange={handleChange}
           state={state}
           handleMonitorToken={handleMonitorToken}

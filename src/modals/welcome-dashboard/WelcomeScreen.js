@@ -209,11 +209,11 @@ const WelcomeScreen = () => {
               <p>
                 Settings let you create create different Chrome Profiles that
                 can be used for Auto Link opener. You can also create separate
-                Token groups by entering multiple tokens, which can be
-                modified as how you want. It lets you start and/or stop
-                Background Animation. Enter a Webhook URL to test and select
-                toggles for whichever webhooks you want to display. The user
-                also has an option to Logout in this page.
+                Token groups by entering multiple tokens, which can be modified
+                as how you want. It lets you start and/or stop Background
+                Animation. Enter a Webhook URL to test and select toggles for
+                whichever webhooks you want to display. The user also has an
+                option to Logout in this page.
                 <br /> <br />
               </p>
             </div>

@@ -78,6 +78,7 @@ export const DISCORD_MASS_OPTIONS = [
   { value: "linkOpener", label: "Link Opener" },
   { value: "tokenRetrieve", label: "Token Retrieve" },
   { value: "giveawayJoiner", label: "Giveaway Joiner" },
+  // { value: "xpFarmer", label: "XP Farmer" },
 ];
 
 export const replyList = [
