@@ -4,7 +4,7 @@ import {
   addTwitterKeywordInList,
   deleteTwitterDatafromList,
 } from "../../../features/logic/twitter";
-import { InputFieldWithScrollList } from "../..";
+import { InputFieldWithScrollList } from "../../../component";
 import { TweetHandlerRegExp } from "../../../constant/regex";
 import { toastWarning } from "../../../toaster";
 

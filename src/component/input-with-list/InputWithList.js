@@ -1,8 +1,8 @@
 import React from "react";
 import "./styles.css";
-import { AppSpacer } from "../../../component";
-import plus from "../../../assests/images/plus.svg";
-import exportIcon from "../../../assests/images/export.svg";
+import AppSpacer from "../spacer/Spacer";
+import plus from "../../assests/images/plus.svg";
+import exportIcon from "../../assests/images/export.svg";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 
@@ -49,7 +49,9 @@ function InputWithList({
               </div>
             )}
             <AppSpacer spacer={10} />
-            <div className="scroll-list">
+            <div
+              className={`scroll-list ${list.length === 0 && "full-height"}`}
+            >
               {!isLogs
                 ? list?.map((data, index) => (
                     <div key={data["id"] || index} className="scroll-list-item">
@@ -60,7 +62,7 @@ function InputWithList({
                         strokeColor="#B60E0E"
                         size={25}
                         wrapperStyle={{ cursor: "pointer" }}
-                      ></UseAnimations>
+                      />
                     </div>
                   ))
                 : list?.map((data, index) => (
@@ -68,14 +70,8 @@ function InputWithList({
                       <span>{data}</span>
                     </div>
                   ))}
-              {!isLogs ? (
-                list.length ? (
-                  ""
-                ) : (
-                  <p className="blank-text">Leave Blank For All.</p>
-                )
-              ) : (
-                ""
+              {!isLogs && list.length === 0 && (
+                <p className="blank-text">Leave Blank For All.</p>
               )}
             </div>
           </React.Fragment>
