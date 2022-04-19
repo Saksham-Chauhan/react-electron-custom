@@ -25,7 +25,7 @@ const RightSection = ({ setwalletScreen }) => {
       <AppSpacer spacer={30} />
 
       <div className="page-top-btns-wrapper">
-        <div className="page-left-container">
+        <div className="page-left-container" style={{ paddingLeft: '15px' }}>
           <div
             className={
               appTheme

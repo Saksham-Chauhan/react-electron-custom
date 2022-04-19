@@ -12,6 +12,8 @@ import trash2 from 'react-useanimations/lib/trash2'
 import searchIcon from '../../../assests/images/search.svg'
 import lightModeplush from '../../../assests/images/lightModeplus.svg'
 import lightModesearch from '../../../assests/images/lightModesearch.svg'
+
+import { WalletTable } from '../../../pages-component'
 const WalletScreen = ({ setwalletScreen }) => {
   const appTheme = useSelector(fetchThemsState)
   const btnClass = appTheme
@@ -25,7 +27,7 @@ const WalletScreen = ({ setwalletScreen }) => {
       <AppSpacer spacer={30} />
 
       <div className="page-top-btns-wrapper">
-        <div className="page-left-container">
+        <div className="page-left-container" style={{ paddingLeft: '15px' }}>
           <div
             className={
               appTheme
@@ -72,6 +74,8 @@ const WalletScreen = ({ setwalletScreen }) => {
           </div>
         </div>
       </div>
+      <AppSpacer spacer={30} />
+      <WalletTable />
     </>
   )
 }

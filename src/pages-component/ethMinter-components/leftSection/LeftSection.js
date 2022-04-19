@@ -5,6 +5,7 @@ import {
   GroupCard,
   AppSpacer,
 } from '../../../component'
+import solanaSol from '../../../assests/images/solanaSol.svg'
 const LeftSection = () => {
   const handleOpenModal = () => {}
   return (
@@ -14,7 +15,11 @@ const LeftSection = () => {
       </TopWrapper>
       <AppSpacer spacer={20} />
       <div className="group-card-scroll">
-        <GroupCard cardIcon="mask" hideSubText={true} cardTitle="gjdgsad" />
+        <GroupCard
+          cardIcon={solanaSol}
+          hideSubText={true}
+          cardTitle="Group 1"
+        />
       </div>
     </>
   )

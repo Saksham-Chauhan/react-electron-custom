@@ -50,3 +50,5 @@ export { default as AccountChangerTableSection } from './account-changer-compone
 // ETH Minter COMPONENT
 export { default as EthMinterLeftSection } from './ethMinter-components/leftSection/LeftSection'
 export { default as EthMinterRightSection } from './ethMinter-components/rightSection/RightSection'
+export { default as EthMinterTableSection } from './ethMinter-components/tableSection/TableSection'
+export { default as WalletTable } from './ethMinter-components/walletSectionTable/WalletTable'

@@ -3,7 +3,9 @@ import WalletScreen from './walletScreen/WalletScreen'
 import {
   EthMinterLeftSection,
   EthMinterRightSection,
+  EthMinterTableSection,
 } from '../../pages-component'
+import { AppSpacer } from '../../component'
 
 const MinterScreen = ({ setwalletScreen }) => {
   return (
@@ -13,6 +15,8 @@ const MinterScreen = ({ setwalletScreen }) => {
       </div>
       <div className="right-container invite-joiner">
         <EthMinterRightSection setwalletScreen={setwalletScreen} />
+        <AppSpacer spacer={20} />
+        <EthMinterTableSection />
       </div>
     </div>
   )
