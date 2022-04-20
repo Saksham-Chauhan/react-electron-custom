@@ -59,9 +59,11 @@
 - Add the proxy rotater functionality in spoofer
 - Add the LO and IJ modal slide in Task page and also add the handlers to tem on the basis of the changer type
 - Optimize the logs manager code
-- Rewrite the rntire logic for IJ & LO in main
+- Rewrite the entire logic for IJ & LO in main
 
 # V0.8.8
 
--Added functionality of Direct Join.
--Added functionality of XP-Farmer.
+- Added functionality of Direct Join.
+- Added functionality of XP-Farmer.
+- Added the Minter page functionality
+- Adde the Wallet, Setting handlers with their modals
