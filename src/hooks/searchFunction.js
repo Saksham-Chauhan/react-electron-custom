@@ -28,6 +28,15 @@ const PageListSearchPattern = {
     "walletPublicKey",
     "walletBalance",
   ],
+  NFT_MINTER: [
+    "transactionCost",
+    "contractAddress",
+    "functionName",
+    "functionParam",
+    "gasPriceMethod",
+    "status",
+    "walletName",
+  ],
 };
 
 /**

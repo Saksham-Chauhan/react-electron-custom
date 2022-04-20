@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
 import {
   fetchNftWalletListState,
@@ -44,11 +44,15 @@ const WalletScreen = ({ setwalletScreen }) => {
     dispatch(setNftWalletList([]));
   };
 
+  const handleSettingModal = () => {
+    dispatch(setModalState("nftSettingModal"));
+  };
+
   const handleSearching = (e) => {
     const { value } = e.target;
     setSearch(value);
     if (value.length > 0) {
-      const result = searchingFunction(value, tempList, "ACC_GEN");
+      const result = searchingFunction(value, walletList, "NFT_WALLET");
       if (result.length > 0) {
         setTempList([...result]);
       } else setTempList([]);
@@ -61,7 +65,6 @@ const WalletScreen = ({ setwalletScreen }) => {
         <GroupStatusCard subText="10 Wallets Connected" title="Wallet" />
       </TopWrapper>
       <AppSpacer spacer={30} />
-
       <div className="page-top-btns-wrapper padding-horizontal">
         <div className="page-left-container ">
           <div
@@ -106,7 +109,7 @@ const WalletScreen = ({ setwalletScreen }) => {
             <img src={leftAero} alt="" className="walletBtnImg" />
             <span className="no-margin">Task Page</span>
           </div>
-          <div className={btnClass}>
+          <div onClick={handleSettingModal} className={btnClass}>
             <img src={EthMinterSetting} alt="" />
           </div>
         </div>

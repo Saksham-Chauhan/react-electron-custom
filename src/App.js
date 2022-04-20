@@ -15,6 +15,7 @@ import {
   fetchNftGroupModalState,
   fetchNftTaskModalState,
   fetchNftWalletModalState,
+  fetchNftSettingModalState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
@@ -26,6 +27,7 @@ import {
   NftGroupModal,
   NftTaskModal,
   NftWalletModal,
+  NftSettingModal,
 } from "./modals";
 import {
   Login,
@@ -75,6 +77,7 @@ import { webhookNotifier } from "./features/logic/setting";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const nftSettingModalState = useSelector(fetchNftSettingModalState);
   const nftTaskModalState = useSelector(fetchNftTaskModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
@@ -161,6 +164,7 @@ function App() {
 
   return (
     <div className="app">
+      {nftSettingModalState && <NftSettingModal />}
       {nftWalletModalState && <NftWalletModal />}
       {nftTaskModalState && <NftTaskModal />}
       {nftGroupModalState && <NftGroupModal />}

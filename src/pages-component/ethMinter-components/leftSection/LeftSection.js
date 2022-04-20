@@ -12,6 +12,7 @@ import {
 } from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import solanaSol from "../../../assests/images/solanaSol.svg";
+import { NoAccountAlertModal } from "../../../modals";
 
 const LeftSection = ({ activeNftGroup }) => {
   const dispatch = useDispatch();
@@ -25,9 +26,19 @@ const LeftSection = ({ activeNftGroup }) => {
     dispatch(setActiveNftGroup(group));
   };
 
-  console.log(activeNftGroup);
   return (
     <React.Fragment>
+      {list.length === 0 ? (
+        <NoAccountAlertModal
+          buttonPress={handleOpenModal}
+          modalTitle="No Mint Group"
+          buttonText="Create Minter Group"
+        />
+      ) : (
+        Object.keys(activeNftGroup).length === 0 && (
+          <NoAccountAlertModal hideBtn={true} modalTitle="Select  Group" />
+        )
+      )}
       <TopWrapper>
         <GroupTitle onClick={handleOpenModal} title="ETH Minter" />
       </TopWrapper>

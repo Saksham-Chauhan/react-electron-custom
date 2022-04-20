@@ -12,8 +12,17 @@ import rightAero from "../../../assests/images/rightAeroImg.svg";
 import lightModesearch from "../../../assests/images/lightModesearch.svg";
 import { fetchThemsState, setModalState } from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { deleteMinterGroup } from "../../../features/logic/nft";
+import { toastWarning } from "../../../toaster";
 
-const RightSection = ({ setwalletScreen }) => {
+const IS_RUNNING = ["Running"];
+
+const RightSection = ({
+  setwalletScreen,
+  activeNftGroup,
+  handleSearching,
+  search,
+}) => {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
   const btnClass = appTheme
@@ -21,13 +30,33 @@ const RightSection = ({ setwalletScreen }) => {
     : "icon-btn-wrapper btn";
 
   const handleOpenModal = () => {
-    dispatch(setModalState("nftTaskModal"));
+    if (Object.keys(activeNftGroup).length > 0) {
+      dispatch(setModalState("nftTaskModal"));
+    } else toastWarning("Select Group");
+  };
+
+  const handleSettingModal = () => {
+    dispatch(setModalState("nftSettingModal"));
+  };
+
+  const handleDeleteGroup = () => {
+    if (Object.keys(activeNftGroup).length > 0) {
+      dispatch(deleteMinterGroup());
+    } else toastWarning("Select Group");
   };
 
   return (
     <>
       <TopWrapper>
-        <GroupStatusCard subText="88 Tasks Running" title="Group 1" />
+        <GroupStatusCard
+          subText={` ${
+            activeNftGroup["minterList"]?.filter((m) =>
+              IS_RUNNING.includes(m?.status)
+            ).length || 0
+          }
+          Tasks Running`}
+          title={activeNftGroup["minterTitle"] || "Group 1"}
+        />
       </TopWrapper>
       <AppSpacer spacer={30} />
 
@@ -45,6 +74,9 @@ const RightSection = ({ setwalletScreen }) => {
               alt="search-icon"
             />
             <input
+              disabled={Object.keys(activeNftGroup).length === 0}
+              value={search}
+              onChange={handleSearching}
               placeholder="Search"
               type="search"
               className={appTheme ? "lightModeInput" : ""}
@@ -57,7 +89,12 @@ const RightSection = ({ setwalletScreen }) => {
             <img src={play} alt="" />
           </div>
           <div className={btnClass}>
-            <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
+            <UseAnimations
+              onClick={handleDeleteGroup}
+              animation={trash2}
+              strokeColor="#B60E0E"
+              size={25}
+            />
           </div>
         </div>
 
@@ -73,7 +110,7 @@ const RightSection = ({ setwalletScreen }) => {
             <span>Wallet Page</span>
             <img src={rightAero} alt="" className="walletBtnImg" />
           </div>
-          <div className={btnClass}>
+          <div onClick={handleSettingModal} className={btnClass}>
             <img src={EthMinterSetting} alt="" />
           </div>
         </div>

@@ -49,22 +49,26 @@ export const nftGroupSchema = joi.object({
   id: joi.optional(),
 });
 
-export const nftTaskSchema = joi.object({
-  wallet: joi.string().required().label("Select wallet"),
-  transactionCost: joi.number().required().label("Enter transaction cost"),
-  contractAddress: joi.string().required().label("Enter contract address"),
-  functionName: joi.string().required().label("Enter function name"),
-  functionParam: joi.string().required().label("Enter function param"),
-  gasPriceMethod: joi.string().required().label("Select gas method"),
-  maxPriorityFee: joi.string().when("gasPriceMethod", {
-    is: "manualPrice",
-    then: joi.number().required().label("Enter max priority Fee"),
-  }),
-  maxFee: joi.string().when("gasPriceMethod", {
-    is: "manualPrice",
-    then: joi.number().required().label("Enter max fee"),
-  }),
-});
+export const nftTaskSchema = (isRequired) => {
+  const userSchemaKeys = {
+    status: joi.optional(),
+    walletName: joi.optional(),
+    walletID: joi.string().required().label("Select wallet"),
+    gasPriceMethod: joi.string().required().label("Select gas method"),
+    functionName: joi.string().required().label("Enter function name"),
+    functionParam: joi.string().required().label("Enter function param"),
+    transactionCost: joi.number().required().label("Enter transaction cost"),
+    contractAddress: joi.string().required().label("Enter contract address"),
+  };
+  if (isRequired) {
+    userSchemaKeys.maxPriorityFee = joi
+      .number()
+      .required()
+      .label("Enter max priority Fee");
+    userSchemaKeys.maxFee = joi.number().required().label("Enter max  Fee");
+  }
+  return joi.object(userSchemaKeys);
+};
 
 export const nftWalletSchema = joi.object({
   walletNickName: joi.string().required().label("Enter nick name"),

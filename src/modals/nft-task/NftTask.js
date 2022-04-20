@@ -10,6 +10,7 @@ import {
   fetchThemsState,
   setModalState,
 } from "../../features/counterSlice";
+import { addTaskInGroup } from "../../features/logic/nft";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftTaskSchema } from "../../validation";
 
@@ -19,12 +20,14 @@ function NftTask() {
   const walletList = useSelector(fetchNftWalletListState);
   const textClass = appTheme ? "lightMode_color" : "";
   const [task, setTask] = useState({
-    wallet: "",
+    walletID: "",
     transactionCost: "",
     contractAddress: "",
     functionName: "",
     functionParam: "",
     gasPriceMethod: "",
+    status: "Idle",
+    walletName: "",
   });
 
   const handleCloseModal = () => {
@@ -37,9 +40,9 @@ function NftTask() {
     });
   };
 
-  const handleWalletMethod = ({ value }) => {
+  const handleWalletMethod = ({ value, label }) => {
     setTask((pre) => {
-      return { ...pre, wallet: value };
+      return { ...pre, walletID: value, walletName: label };
     });
   };
 
@@ -54,12 +57,19 @@ function NftTask() {
 
   const makeWalletOption = () => {
     return walletList.map((wallet) => {
-      return { label: wallet.walletNickName, value: wallet?.id };
+      return { label: wallet.walletNickName, value: wallet.id };
     });
   };
 
   const handleSubmit = () => {
-    const validationresult = validationChecker(nftTaskSchema, task);
+    const validationresult = validationChecker(
+      nftTaskSchema(task.gasPriceMethod === "manualPrice"),
+      task
+    );
+    if (validationresult) {
+      dispatch(addTaskInGroup(task));
+      handleCloseModal();
+    }
   };
   return (
     <ModalWrapper>
@@ -138,6 +148,7 @@ function NftTask() {
           <ModalFlexInnerRow>
             <AppInputField
               name="maxFee"
+              type="number"
               onChange={handleChange}
               fieldTitle="Max Fee"
               placeholderText="Enter Max Fee"
@@ -146,6 +157,7 @@ function NftTask() {
           <ModalFlexInnerRow>
             <AppInputField
               name="maxPriorityFee"
+              type="number"
               onChange={handleChange}
               fieldTitle="Max Priority Fee"
               placeholderText="Enter Max Priority Fee"
