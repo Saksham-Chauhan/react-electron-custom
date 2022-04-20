@@ -67,3 +67,4 @@
 - Added functionality of XP-Farmer.
 - Added the Minter page functionality
 - Adde the Wallet, Setting handlers with their modals
+- Added the edit functionality in minter table row

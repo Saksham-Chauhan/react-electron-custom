@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import {
@@ -6,17 +6,20 @@ import {
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
 import {
+  fetchEditStorageState,
   fetchNftWalletListState,
   fetchThemsState,
+  setEditStorage,
   setModalState,
 } from "../../features/counterSlice";
-import { addTaskInGroup } from "../../features/logic/nft";
+import { addTaskInGroup, editTaskInGroup } from "../../features/logic/nft";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftTaskSchema } from "../../validation";
 
 function NftTask() {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
+  const editState = useSelector(fetchEditStorageState);
   const walletList = useSelector(fetchNftWalletListState);
   const textClass = appTheme ? "lightMode_color" : "";
   const [task, setTask] = useState({
@@ -29,6 +32,17 @@ function NftTask() {
     status: "Idle",
     walletName: "",
   });
+
+  useEffect(() => {
+    if (Object.keys(editState).length > 0) {
+      setTask((pre) => {
+        return { ...editState };
+      });
+    }
+    return () => {
+      dispatch(setEditStorage({}));
+    };
+  }, [editState]);
 
   const handleCloseModal = () => {
     dispatch(setModalState("nftTaskModal"));
@@ -61,30 +75,47 @@ function NftTask() {
     });
   };
 
+  const getWalletOption = () => {
+    if (walletList.length > 0) {
+      for (let i = 0; i < walletList.length; i++) {
+        const wallet = walletList[i];
+        if (wallet?.id === task.walletID) {
+          return [{ label: task.walletName, value: task.walletID }];
+        }
+      }
+    } else return [];
+  };
+
   const handleSubmit = () => {
     const validationresult = validationChecker(
       nftTaskSchema(task.gasPriceMethod === "manualPrice"),
       task
     );
     if (validationresult) {
-      dispatch(addTaskInGroup(task));
+      if (Object.keys(editState).length === 0) {
+        dispatch(addTaskInGroup(task));
+      } else {
+        dispatch(editTaskInGroup(task));
+      }
       handleCloseModal();
     }
   };
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Create Task</h2>
+        <h2>{Object.keys(editState).length > 0 ? "Edit" : "Create"} Task</h2>
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
+            value={getWalletOption()}
             onChange={handleWalletMethod}
             fieldTitle="Wallet"
             isSelect={true}
             placeholderText="Select Wallet"
             selectOptions={makeWalletOption()}
+            // value={makeWalletOption()}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
@@ -94,6 +125,7 @@ function NftTask() {
           <AppInputField
             type="number"
             name="transactionCost"
+            value={task.transactionCost}
             onChange={handleChange}
             fieldTitle="Transaction Cost"
             placeholderText="Enter Transaction Cost"
@@ -103,6 +135,7 @@ function NftTask() {
           <AppInputField
             name="contractAddress"
             onChange={handleChange}
+            value={task.contractAddress}
             fieldTitle="Contract Address"
             placeholderText="Enter Contract Address"
           />
@@ -113,6 +146,7 @@ function NftTask() {
         <ModalFlexInnerRow>
           <AppInputField
             name="functionName"
+            value={task.functionName}
             onChange={handleChange}
             fieldTitle="Function Name"
             placeholderText="Enter Function Name"
@@ -121,6 +155,7 @@ function NftTask() {
         <ModalFlexInnerRow>
           <AppInputField
             name="functionParam"
+            value={task.functionParam}
             onChange={handleChange}
             fieldTitle="Function Parameters"
             placeholderText="Enter Function Parameters"
@@ -149,6 +184,7 @@ function NftTask() {
             <AppInputField
               name="maxFee"
               type="number"
+              value={task?.maxFee}
               onChange={handleChange}
               fieldTitle="Max Fee"
               placeholderText="Enter Max Fee"
@@ -158,6 +194,7 @@ function NftTask() {
             <AppInputField
               name="maxPriorityFee"
               type="number"
+              value={task?.maxPriorityFee}
               onChange={handleChange}
               fieldTitle="Max Priority Fee"
               placeholderText="Enter Max Priority Fee"
@@ -186,7 +223,7 @@ function NftTask() {
               : " modal-cancel-btn submit btn"
           }
         >
-          <span>Create</span>
+          <span>{Object.keys(editState).length > 0 ? "Save" : "Create"}</span>
         </div>
       </div>
     </ModalWrapper>

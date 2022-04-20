@@ -73,3 +73,24 @@ export const deleteMinterGroup = (group) => (dispatch, getState) => {
     )
   );
 };
+
+export const editTaskInGroup = (task) => (dispatch, getState) => {
+  const groupList = fetchNftGroupListState(getState());
+  const activeNftGroup = fetchActiveNftGroupState(getState());
+  const newTask = {
+    ...activeNftGroup,
+    minterList: [...activeNftGroup.minterList].map((data) => {
+      if (data.id === task.id) return task;
+      return data;
+    }),
+  };
+  dispatch(setActiveNftGroup(newTask));
+  dispatch(
+    appendGroupInNftList(
+      groupList.map((d) => {
+        if (d["id"] === task["id"]) return newTask;
+        return d;
+      })
+    )
+  );
+};

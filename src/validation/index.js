@@ -51,6 +51,7 @@ export const nftGroupSchema = joi.object({
 
 export const nftTaskSchema = (isRequired) => {
   const userSchemaKeys = {
+    id: joi.optional(),
     status: joi.optional(),
     walletName: joi.optional(),
     walletID: joi.string().required().label("Select wallet"),

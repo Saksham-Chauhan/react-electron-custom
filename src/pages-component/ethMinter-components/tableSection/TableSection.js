@@ -4,7 +4,11 @@ import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import edit from "../../../assests/images/edit.svg";
 import UseAnimations from "react-useanimations";
-import { fetchNftWalletListState } from "../../../features/counterSlice";
+import {
+  fetchNftWalletListState,
+  setEditStorage,
+  setModalState,
+} from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { removeTaskFromList } from "../../../features/logic/nft";
 
@@ -18,6 +22,11 @@ const TableSection = ({ list = [] }) => {
 
   const handleTaskPlay = (task) => {
     console.log(task);
+  };
+
+  const handleTaskEdit = (task) => {
+    dispatch(setEditStorage(task));
+    dispatch(setModalState("nftTaskModal"));
   };
 
   return (
@@ -38,6 +47,7 @@ const TableSection = ({ list = [] }) => {
             <MinterTableRow
               onDelete={handleDeleteTask}
               key={row["id"]}
+              onEdit={handleTaskEdit}
               {...{ row, index }}
               onPlay={handleTaskPlay}
               wallet={walletList?.filter((w) => w.id === row?.walletID)}
@@ -78,7 +88,7 @@ const MinterTableRow = ({
           }
           alt=""
         />
-        <img src={edit} alt="" />
+        <img onClick={() => onEdit(row)} src={edit} alt="" />
         <UseAnimations
           wrapperStyle={{ cursor: "pointer" }}
           animation={trash2}
