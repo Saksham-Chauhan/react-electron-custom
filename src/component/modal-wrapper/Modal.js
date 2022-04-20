@@ -2,9 +2,9 @@ import React from "react";
 import small_bot from "../../assests/images/small-bot.svg";
 import "./styles.css";
 
-function Modal({ children, bgImageURL, onClick, ...props }) {
+function Modal({ children, bgImageURL, handleIsEmoji, ...props }) {
   return (
-    <div className="modal-wrapper" onClick={() => onClick(false)}>
+    <div className="modal-wrapper" onClick={() => handleIsEmoji(false)}>
       <div {...props} className="modal-inner">
         <div className="server-img">
           <img src={bgImageURL ? bgImageURL : small_bot} alt="Server Logo" />
