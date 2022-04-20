@@ -1,19 +1,15 @@
 import React from "react";
 import "./style.css";
-import {
-  fetchThemsState,
-  fetchNftWalletListState,
-} from "../../../features/counterSlice";
+import { fetchThemsState } from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import refreshWallet from "../../../assests/images/refreshWallet.svg";
 import { removeNftWalletFromList } from "../../../features/logic/nft";
 
-const WalletTable = () => {
+const WalletTable = ({ walletList = [] }) => {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
-  const walletList = useSelector(fetchNftWalletListState);
 
   const handleDeleteRow = (row) => {
     dispatch(removeNftWalletFromList(row));

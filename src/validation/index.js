@@ -55,16 +55,12 @@ export const nftTaskSchema = joi.object({
   contractAddress: joi.string().required().label("Enter contract address"),
   functionName: joi.string().required().label("Enter function name"),
   functionParam: joi.string().required().label("Enter function param"),
-  gasPriceMethod: joi
-    .string()
-    .required()
-    .valid("rapidPrice", "manualPrice")
-    .label("Select gas method"),
-  maxPriorityFee: joi.alternatives().conditional("gasPriceMethod", {
+  gasPriceMethod: joi.string().required().label("Select gas method"),
+  maxPriorityFee: joi.string().when("gasPriceMethod", {
     is: "manualPrice",
     then: joi.number().required().label("Enter max priority Fee"),
   }),
-  maxFee: joi.alternatives().conditional("gasPriceMethod", {
+  maxFee: joi.string().when("gasPriceMethod", {
     is: "manualPrice",
     then: joi.number().required().label("Enter max fee"),
   }),

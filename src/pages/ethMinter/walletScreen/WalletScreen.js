@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
 import {
+  fetchNftWalletListState,
   fetchThemsState,
   setModalState,
   setNftWalletList,
@@ -18,12 +19,22 @@ import lightModeplush from "../../../assests/images/lightModeplus.svg";
 import lightModesearch from "../../../assests/images/lightModesearch.svg";
 
 import { WalletTable } from "../../../pages-component";
+import { searchingFunction } from "../../../hooks/searchFunction";
 const WalletScreen = ({ setwalletScreen }) => {
+  const [tempList, setTempList] = useState([]);
   const appTheme = useSelector(fetchThemsState);
+  const walletList = useSelector(fetchNftWalletListState);
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const btnClass = appTheme
     ? "icon-btn-wrapper btn lightBg"
     : "icon-btn-wrapper btn";
+
+  useEffect(() => {
+    if (walletList?.length > 0) {
+      setTempList([...walletList]);
+    } else setTempList([]);
+  }, [walletList]);
 
   const handleOpenModal = () => {
     dispatch(setModalState("nftWalletModal"));
@@ -31,6 +42,17 @@ const WalletScreen = ({ setwalletScreen }) => {
 
   const handleDeleteAll = () => {
     dispatch(setNftWalletList([]));
+  };
+
+  const handleSearching = (e) => {
+    const { value } = e.target;
+    setSearch(value);
+    if (value.length > 0) {
+      const result = searchingFunction(value, tempList, "ACC_GEN");
+      if (result.length > 0) {
+        setTempList([...result]);
+      } else setTempList([]);
+    } else setTempList([...walletList]);
   };
 
   return (
@@ -55,6 +77,8 @@ const WalletScreen = ({ setwalletScreen }) => {
             />
             <input
               placeholder="Search"
+              onChange={handleSearching}
+              value={search}
               type="search"
               className={appTheme ? "lightModeInput" : ""}
             />
@@ -89,7 +113,7 @@ const WalletScreen = ({ setwalletScreen }) => {
       </div>
       <AppSpacer spacer={30} />
       <div className="padding-horizontal">
-        <WalletTable />
+        <WalletTable walletList={tempList} />
       </div>
     </>
   );
