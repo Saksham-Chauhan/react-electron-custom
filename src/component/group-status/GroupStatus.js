@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import './styles.css'
 import { useSelector } from 'react-redux'
 import { fetchThemsState } from '../../features/counterSlice'

@@ -7,7 +7,7 @@ import EthMinterSetting from '../../../assests/images/EthMinterSetting.svg'
 import leftAero from '../../../assests/images/leftAero.svg'
 import UseAnimations from 'react-useanimations'
 import add from '../../../assests/images/plus.svg'
-import play from '../../../assests/images/play.svg'
+import processIcon from '../../../assests/images/process.svg'
 import trash2 from 'react-useanimations/lib/trash2'
 import searchIcon from '../../../assests/images/search.svg'
 import lightModeplush from '../../../assests/images/lightModeplus.svg'
@@ -49,7 +49,7 @@ const WalletScreen = ({ setwalletScreen }) => {
             <img src={appTheme ? lightModeplush : add} alt="" />
           </div>
           <div className={btnClass}>
-            <img src={play} alt="" />
+            <img src={processIcon} alt="" />
           </div>
           <div className={btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />

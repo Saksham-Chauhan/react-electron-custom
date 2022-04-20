@@ -1,7 +1,5 @@
 import React from 'react'
 import small_bot from '../../assests/images/small-bot.svg'
-import { fetchThemsState } from '../../features/counterSlice'
-import { useSelector } from 'react-redux'
 import './styles.css'
 
 function Modal({ children, bgImageURL, onClick, ...props }) {

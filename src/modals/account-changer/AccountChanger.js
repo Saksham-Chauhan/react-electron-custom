@@ -8,7 +8,6 @@ import {
   fetchChromeUserListState,
   fetchClaimerGroupList,
   fetchProxyGroupList,
-  fetchThemsState,
   setModalState,
 } from '../../features/counterSlice'
 import { addDataInTableList } from '../../features/logic/acc-changer'

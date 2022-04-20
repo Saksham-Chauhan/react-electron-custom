@@ -1,16 +1,10 @@
 import React from 'react'
 import './style.css'
-import { fetchThemsState } from '../../../features/counterSlice'
-import { useSelector } from 'react-redux'
-
 import play from '../../../assests/images/play.svg'
 import trash2 from 'react-useanimations/lib/trash2'
 import edit from '../../../assests/images/edit.svg'
-import stop from '../../../assests/images/stop.svg'
 import UseAnimations from 'react-useanimations'
 const TableSection = () => {
-  const appTheme = useSelector(fetchThemsState)
-
   return (
     <>
       <div className="minter-table">

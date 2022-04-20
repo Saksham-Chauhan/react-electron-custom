@@ -24,7 +24,6 @@ const MinterScreen = ({ setwalletScreen }) => {
 
 const ETHminter = () => {
   const [walletScreen, setwalletScreen] = useState(false)
-  const handleOpenModal = () => {}
 
   return walletScreen ? (
     <WalletScreen {...{ setwalletScreen }} />

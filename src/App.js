@@ -12,7 +12,6 @@ import {
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
-  fetchThemsState,
   fetchInviteJoinerSettingModalState,
 } from './features/counterSlice'
 import {
