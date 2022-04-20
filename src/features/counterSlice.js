@@ -7,6 +7,7 @@ import { spoofInitialState } from "./initial-state/spoof";
 import { settingInitialState } from "./initial-state/setting";
 import { initialUserState } from "./initial-state/user-initial-state";
 import { DashboardState } from "./initial-state/dashboard";
+import { NftInitialState } from "./initial-state/nft";
 import { inviteJoinerInitialState } from "./initial-state/invite-joiner";
 import { AccChangerInitialState } from "./initial-state/acc-changer";
 const initialState = {
@@ -21,17 +22,21 @@ const initialState = {
   ...DashboardState,
   ...inviteJoinerInitialState,
   ...AccChangerInitialState,
+  ...NftInitialState,
   modals: {
     proxyGroup: false,
     discordAccount: false,
-    addGmail: false,
-    inviteJoinerAccount: false,
-    inviteJoinerSetting: false,
     spoofModal: false,
-    editProxy: false,
     claimerGroup: false,
     dashboardModal: false,
     accountChangerModal: false,
+    nftGroupModal: false,
+    nftTaskModal: false,
+    nftWalletModal: false,
+    nftSettingModal: false,
+  },
+  themes: {
+    lightMode: false,
   },
 };
 
@@ -39,6 +44,10 @@ export const counterSlice = createSlice({
   name: STATE_KEY,
   initialState,
   reducers: {
+    setThemeState: (state, action) => {
+      state.themes.lightMode = action.payload;
+    },
+
     updatespooferArray: (state, action) => {
       state.spoofArr = [...action.payload];
     },
@@ -161,27 +170,8 @@ export const counterSlice = createSlice({
       state.isUserLoggedIn = !state.isUserLoggedIn;
       state.userDetails = action.payload;
     },
-    resetUserLoggedState: (state, action) => {
-      state.isUserLoggedIn = false;
-    },
     appendInviteJoinerAccount: (state, action) => {
       state.inviteJoinerAccount = action.payload;
-    },
-    // INVITE JOINER
-    toggleIJMonitor: (state) => {
-      state.isInviteJoinerStart = !state.isInviteJoinerStart;
-    },
-    resetIJMonitor: (state) => {
-      state.isInviteJoinerStart = false;
-    },
-    setIsIJmodal: (state) => {
-      state.isInviteJoinerModal = !state.isInviteJoinerModal;
-    },
-    setInviteProxyGroup: (state, action) => {
-      state.selectedInviteProxyGroup = action.payload;
-    },
-    setInviteJoinerDelay: (state, action) => {
-      state.safeModedelay = action.payload;
     },
     setSelectedClaimerGroup: (state, action) => {
       state.selectedInviteClaimerGroup = action.payload;
@@ -189,25 +179,32 @@ export const counterSlice = createSlice({
     appendTaskInTable: (state, action) => {
       state.accChangerList = action.payload;
     },
+    // NFT REDUCER
+    appendGroupInNftList: (state, action) => {
+      state.nftGroupList = action.payload;
+    },
+    setNftWalletList: (state, action) => {
+      state.nftWalletList = action.payload;
+    },
+    setActiveNftGroup: (state, action) => {
+      state.activeNftGroup = action.payload;
+    },
   },
 });
 
 export const {
+  setThemeState,
+  setNftWalletList,
   updatespooferArray,
   updateTwiterArray,
   updateInviteJoinerArray,
   updateLinkOpnerArray,
   appendApInList,
-  resetUserLoggedState,
-  resetIJMonitor,
-  setInviteProxyGroup,
-  setInviteJoinerDelay,
+  appendGroupInNftList,
   setSelectedClaimerGroup,
-  toggleIJMonitor,
   setUserDetails,
   setIsIJmodal,
-  clearLogList,
-  appendLogList,
+  setActiveNftGroup,
   setModalState,
   setIJLOSetting,
   setTempStorage,
@@ -286,8 +283,6 @@ export const fetchIJSettingState = (state) =>
   state[STATE_KEY].setting.inviteJoiner;
 export const fetchIJChannelList = (state) =>
   state[STATE_KEY].inviteJoiner.channelList;
-export const fetchInviteJoinerSettingModalState = (state) =>
-  state[STATE_KEY].modals.inviteJoinerSetting;
 export const fetchIJMonitorState = (state) =>
   state[STATE_KEY].isInviteJoinerStart;
 export const fetchIsInviteJoinerModalState = (state) =>
@@ -363,5 +358,22 @@ export const fetchSelectedAccChangerCard = (state) =>
 export const fetchAccChangerListState = (state) =>
   state[STATE_KEY].accountOptionList;
 
+// themes changer
+export const fetchThemsState = (state) => state[STATE_KEY].themes.lightMode;
 export const fetchTaskTableListState = (state) =>
   state[STATE_KEY].accChangerList;
+
+// NFT
+export const fetchNftGroupModalState = (state) =>
+  state[STATE_KEY].modals.nftGroupModal;
+export const fetchActiveNftGroupState = (state) =>
+  state[STATE_KEY].activeNftGroup;
+export const fetchNftTaskModalState = (state) =>
+  state[STATE_KEY].modals.nftTaskModal;
+export const fetchNftGroupListState = (state) => state[STATE_KEY].nftGroupList;
+export const fetchNftWalletListState = (state) =>
+  state[STATE_KEY].nftWalletList;
+export const fetchNftWalletModalState = (state) =>
+  state[STATE_KEY].modals.nftWalletModal;
+export const fetchNftSettingModalState = (state) =>
+  state[STATE_KEY].modals.nftSettingModal;

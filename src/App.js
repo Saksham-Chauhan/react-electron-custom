@@ -12,7 +12,9 @@ import {
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
-  fetchInviteJoinerSettingModalState,
+  fetchNftGroupModalState,
+  fetchNftTaskModalState,
+  fetchNftWalletModalState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
@@ -21,7 +23,9 @@ import {
   ClaimerGroupModal,
   AccountChangerModal,
   DiscordAccountModal,
-  InviteJoinerSettingModal,
+  NftGroupModal,
+  NftTaskModal,
+  NftWalletModal,
 } from "./modals";
 import {
   Login,
@@ -30,6 +34,7 @@ import {
   SpooferPage,
   DashboardPage,
   AccountChangerPage,
+  ETHminterPage,
 } from "./pages";
 import {
   sendLogs,
@@ -70,6 +75,7 @@ import { webhookNotifier } from "./features/logic/setting";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const nftTaskModalState = useSelector(fetchNftTaskModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
   const discordModalState = useSelector(fetchDiscordModalState);
@@ -78,10 +84,8 @@ function App() {
   const onBoardingModalState = useSelector(fetchDashboardModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const accountChangerModalState = useSelector(fetchAccountChangerModalState);
-  const inviteSettigModalState = useSelector(
-    fetchInviteJoinerSettingModalState
-  );
-
+  const nftGroupModalState = useSelector(fetchNftGroupModalState);
+  const nftWalletModalState = useSelector(fetchNftWalletModalState);
   const animClass = !globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
@@ -95,7 +99,6 @@ function App() {
         dispatch(updateSpooferStatus(data));
       }
     });
-
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
@@ -141,7 +144,7 @@ function App() {
 
   // Route Navigation Listener
   useEffect(() => {
-    const currentPage = EndPointToPage[location.pathname];
+    const currentPage = EndPointToPage[location?.pathname];
     const log = `Navigate to ${currentPage}`;
     sendLogs(log);
   }, [location.pathname]);
@@ -158,18 +161,21 @@ function App() {
 
   return (
     <div className="app">
+      {nftWalletModalState && <NftWalletModal />}
+      {nftTaskModalState && <NftTaskModal />}
+      {nftGroupModalState && <NftGroupModal />}
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {!onBoardingModalState && <OnboardingModal />}
+      {onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {accountChangerModalState && <AccountChangerModal />}
-      {inviteSettigModalState && <InviteJoinerSettingModal />}
+
       <div className="app sidebar">
         <AppSidebar />
       </div>
       <div className="app page-section">
-        <div className="app overlay-wrapper">
+        <div className="app overlay-wrapper ">
           <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
           <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
@@ -180,6 +186,7 @@ function App() {
                 path={RoutePath.accountChanger}
                 element={<AccountChangerPage />}
               />
+              <Route path={RoutePath.ethMinter} element={<ETHminterPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />

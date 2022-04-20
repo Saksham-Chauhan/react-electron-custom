@@ -1,13 +1,16 @@
-import React from "react";
-import { AppSpacer, LabelWithToolTip, AppInputField } from "../../../component";
-import refresh from "../../../assests/images/refresh.svg";
-import "./style.css";
+import React from 'react'
+import { AppSpacer, LabelWithToolTip, AppInputField } from '../../../component'
+import refresh from '../../../assests/images/refresh.svg'
+import './style.css'
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
-} from "../../../component/modal-wrapper/Modal";
-
+} from '../../../component/modal-wrapper/Modal'
+import { fetchThemsState } from '../../../features/counterSlice'
+import { useSelector } from 'react-redux'
 function NicknameChanger({ state, onRefresh, ...props }) {
+  const appTheme = useSelector(fetchThemsState)
+
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -35,7 +38,14 @@ function NicknameChanger({ state, onRefresh, ...props }) {
           toolTopText="Enter your server nick name"
           labelText="Nicknames"
         />
-        <div onClick={onRefresh} className="group-title btn refresh">
+        <div
+          onClick={onRefresh}
+          className={
+            appTheme
+              ? 'group-title btn refresh lightModeSidebar'
+              : 'group-title btn refresh'
+          }
+        >
           <img src={refresh} alt="ref" />
         </div>
       </div>
@@ -43,7 +53,7 @@ function NicknameChanger({ state, onRefresh, ...props }) {
         hideLabel={true}
         isMulti={true}
         {...props}
-        value={state["nicknameGenerate"]}
+        value={state['nicknameGenerate']}
         name="nicknameGenerate"
         multiHeight="100px"
         placeholderText={`Eg. 
@@ -52,7 +62,7 @@ function NicknameChanger({ state, onRefresh, ...props }) {
         jack344`}
       />
     </React.Fragment>
-  );
+  )
 }
 
-export default NicknameChanger;
+export default NicknameChanger

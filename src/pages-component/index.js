@@ -1,13 +1,3 @@
-export { default as LinkOpenerSetting } from "./linkopner-component/settings/Settings";
-export { default as LinkOpenerTopSection } from "./linkopner-component/top-section/TopSection";
-export { default as LinkOpenerLeftSection } from "./linkopner-component/left-section/LeftSection";
-export { default as LinkOpenerAdditionalSetting } from "./linkopner-component/additional-setting/AdditionalSetting";
-
-// invite joiner
-export { default as InviteJoinerLeftSection } from "./invitejoiner-component/left-section/LeftSection";
-export { default as InviteJoinerSettingSection } from "./invitejoiner-component/setting/Settings";
-export { default as InviteJoinerTopSection } from "./invitejoiner-component/top-section/TopSection";
-
 // TWITTER PAGE COMPONENT EXPORT
 export { default as TwitterTopLeftSection } from "./twitter-component/left-top-section/TopLeftSection";
 export { default as TwitterUserListSection } from "./twitter-component/user-list/UserScrollList";
@@ -40,3 +30,9 @@ export { default as ChartLabel } from "./dashboard-components/chart-label/ChartL
 export { default as AccountChangerTopSection } from "./account-changer-component/top-section/TopSection";
 export { default as AccountChangerTopBtnsWrapper } from "./account-changer-component/top-btns-wrapper/TopBtnsWrapper";
 export { default as AccountChangerTableSection } from "./account-changer-component/table-section/TableSection";
+
+// ETH Minter COMPONENT
+export { default as EthMinterLeftSection } from "./ethMinter-components/leftSection/LeftSection";
+export { default as EthMinterRightSection } from "./ethMinter-components/rightSection/RightSection";
+export { default as EthMinterTableSection } from "./ethMinter-components/tableSection/TableSection";
+export { default as WalletTable } from "./ethMinter-components/walletSectionTable/WalletTable";
