@@ -1,16 +1,18 @@
 import axios from "axios";
 
 async function xpFarmer(proxy, channelID, token) {
+  const json = JSON.stringify({
+    token: token,
+    channel_id: channelID,
+    proxy: proxy,
+  });
   try {
-    const res = await axios.post(`http://192.168.29.101:5000/get-response`, {
-      token: token,
-      proxy: proxy,
-      channel_id: channelID,
-    });
-    console.log(res);
+    const res = await axios.post(
+      `http://192.168.29.117:5000/get-response`,
+      json
+    );
     return res;
   } catch (error) {
-    console.log(error);
     return error;
   }
 }

@@ -50,9 +50,7 @@
 - Changed alignment of export button.
 - Fix the import proxy issue in proxy page
 
-
 # V0.8.7
-
 
 - Add export proxy in .txt format
 - Add Import-Export functionality in token group section in Setting page
@@ -66,3 +64,4 @@
 # V0.8.8
 
 -Added functionality of Direct Join.
+-Added functionality of XP-Farmer.

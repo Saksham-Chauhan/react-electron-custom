@@ -163,7 +163,9 @@ function TableSection({ list }) {
                     ind = ind + 1;
                   }
                 } else {
-                  dispatch(updateStatusOfTableRow(tempObj, "Completed"));
+                  if (!type === "xpFarmer") {
+                    dispatch(updateStatusOfTableRow(tempObj, "Completed"));
+                  }
                 }
                 break;
               }
@@ -393,16 +395,15 @@ export const callApis = async (proxy, channelID, token, delay = "") => {
   let response = null;
   let delayTime = delay ? delay : 1000;
   response = await xpFarmer(proxy, channelID, token);
-  console.log(response);
   await sleep(delayTime);
   if (status) {
-    callApis(proxy, channelID, token, (delay = ""));
+    callApis(proxy, channelID, token, delayTime);
   }
   if (response.status === 200) {
     return response;
   } else {
     status = false;
-    toastWarning("error in calling");
+    toastWarning(response.response.data.result.error);
     return null;
   }
 };
