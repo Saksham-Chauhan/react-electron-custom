@@ -77,7 +77,7 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
     }
   }
   const btnClass = appTheme
-    ? 'icon-btn-wrapper btn lightBg'
+    ? 'icon-btn-wrapper btn light-bg'
     : 'icon-btn-wrapper btn'
   return (
     <div className="page-top-btns-wrapper">
@@ -85,7 +85,7 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
         <div
           className={
             appTheme
-              ? 'page-top-search-container lightBg '
+              ? 'page-top-search-container light-bg'
               : 'page-top-search-container'
           }
         >
@@ -98,7 +98,7 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
             onChange={handleSearching}
             placeholder="Search"
             type="search"
-            className={appTheme ? 'lightModeInput' : ''}
+            className={appTheme ? 'light-mode-input' : ''}
           />
         </div>
         <div onClick={handleAdd} className={btnClass}>

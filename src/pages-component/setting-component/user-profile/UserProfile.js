@@ -60,7 +60,7 @@ function UserProfile({ userDetails }) {
           onClick={handleLogout}
           className={
             appTheme
-              ? 'LightMode-LogOutBtn user-logout-btn btn'
+              ? 'Light-mode-logoutbtn user-logout-btn btn'
               : 'user-logout-btn btn'
           }
         >

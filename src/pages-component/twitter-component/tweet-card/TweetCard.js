@@ -16,7 +16,7 @@ function TweetCard({
   return (
     <div
       className={
-        appTheme ? 'tweet-card-outer lightModeSidebar' : ' tweet-card-outer'
+        appTheme ? 'tweet-card-outer light-mode-sidebar' : ' tweet-card-outer'
       }
     >
       <div className="tweet-card-top-section">

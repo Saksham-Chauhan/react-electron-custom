@@ -109,7 +109,7 @@ function SettingScreen({
           onClick={handleScreen}
           className={
             appTheme
-              ? 'twitter-setting-page-back btn lightModeSidebar'
+              ? 'twitter-setting-page-back btn light-mode-sidebar'
               : 'twitter-setting-page-back btn'
           }
         >
@@ -151,7 +151,7 @@ function SettingScreen({
             <div className="setting-twitter-flex full">
               <div
                 onClick={handleSubmit}
-                className={appTheme ? 'btn lightModeSidebar' : ''}
+                className={appTheme ? 'btn light-mode-sidebar' : ''}
               >
                 <span>Save Token</span>
               </div>
@@ -160,7 +160,7 @@ function SettingScreen({
             <div
               className={
                 appTheme
-                  ? 'api-keys-scroll-acrea lightModeSidebar'
+                  ? 'api-keys-scroll-acrea light-mode-sidebar'
                   : 'api-keys-scroll-acrea'
               }
             >

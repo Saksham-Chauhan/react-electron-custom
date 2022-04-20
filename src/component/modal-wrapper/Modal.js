@@ -11,7 +11,7 @@ function Modal({ children, bgImageURL, ...props }) {
     <div className="modal-wrapper">
       <div
         {...props}
-        className={appTheme ? 'modal-inner lightBg_Modal ' : 'modal-inner'}
+        className={appTheme ? 'modal-inner light-bg-modal  ' : 'modal-inner'}
       >
         <div className="server-img">
           <img src={bgImageURL ? bgImageURL : small_bot} alt="Server Logo" />

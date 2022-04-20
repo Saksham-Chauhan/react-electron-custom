@@ -12,7 +12,7 @@ const WalletTable = () => {
         <div
           className={
             appTheme
-              ? 'acc-chnager-page-table-header activeLink'
+              ? 'acc-chnager-page-table-header light-mode-active-link'
               : 'acc-chnager-page-table-header'
           }
         >

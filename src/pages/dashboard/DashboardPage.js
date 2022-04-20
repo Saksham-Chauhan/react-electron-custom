@@ -110,7 +110,9 @@ const DashboardPage = () => {
   ]
 
   return (
-    <div className={appTheme ? 'dashboard lightModePage-section' : 'dashboard'}>
+    <div
+      className={appTheme ? 'dashboard light-mode-page-section' : 'dashboard'}
+    >
       <TopWrapper>
         <GroupStatusCard title="Dashboard" isHide={true} />
       </TopWrapper>

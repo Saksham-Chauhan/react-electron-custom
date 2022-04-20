@@ -25,7 +25,7 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
     <div
       className={
         appTheme
-          ? 'acc-chnager-page-table-header body  lightBg lightMode_tableColor'
+          ? 'acc-chnager-page-table-header body  light-bg light-mode_table-color'
           : 'acc-chnager-page-table-header body'
       }
     >

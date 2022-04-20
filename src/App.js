@@ -168,14 +168,14 @@ function App() {
       {accountChangerModalState && <AccountChangerModal />}
       {inviteSettigModalState && <InviteJoinerSettingModal />}
       <div
-        className={appTheme ? 'app sidebar lightModeSidebar' : 'app sidebar'}
+        className={appTheme ? 'app sidebar light-mode-sidebar' : 'app sidebar'}
       >
         <AppSidebar />
       </div>
       <div
         className={
           appTheme
-            ? 'app page-section lightModePage-section'
+            ? 'app page-section light-mode-page-section'
             : 'app page-section '
         }
       >

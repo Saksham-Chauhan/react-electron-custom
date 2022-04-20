@@ -7,7 +7,7 @@ import EthMinterSetting from '../../../assests/images/EthMinterSetting.svg'
 import leftAero from '../../../assests/images/leftAero.svg'
 import UseAnimations from 'react-useanimations'
 import add from '../../../assests/images/plus.svg'
-import play from '../../../assests/images/play.svg'
+import processingIcon from '../../../assests/images/processingIcon.svg'
 import trash2 from 'react-useanimations/lib/trash2'
 import searchIcon from '../../../assests/images/search.svg'
 import lightModeplush from '../../../assests/images/lightModeplus.svg'
@@ -17,7 +17,7 @@ import { WalletTable } from '../../../pages-component'
 const WalletScreen = ({ setwalletScreen }) => {
   const appTheme = useSelector(fetchThemsState)
   const btnClass = appTheme
-    ? 'icon-btn-wrapper btn lightBg'
+    ? 'icon-btn-wrapper btn light-bg'
     : 'icon-btn-wrapper btn'
   return (
     <>
@@ -31,7 +31,7 @@ const WalletScreen = ({ setwalletScreen }) => {
           <div
             className={
               appTheme
-                ? 'page-top-search-container lightBg '
+                ? 'page-top-search-container light-bg '
                 : 'page-top-search-container'
             }
           >
@@ -42,14 +42,14 @@ const WalletScreen = ({ setwalletScreen }) => {
             <input
               placeholder="Search"
               type="search"
-              className={appTheme ? 'lightModeInput' : ''}
+              className={appTheme ? 'light-mode-input' : ''}
             />
           </div>
           <div className={btnClass}>
             <img src={appTheme ? lightModeplush : add} alt="" />
           </div>
           <div className={btnClass}>
-            <img src={play} alt="" />
+            <img src={processingIcon} alt="" />
           </div>
           <div className={btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
@@ -61,7 +61,7 @@ const WalletScreen = ({ setwalletScreen }) => {
             style={{ padding: '0.8em 1em' }}
             className={
               appTheme
-                ? 'switch-with-text with-no-toggle btn lightModeSidebar'
+                ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
                 : 'switch-with-text with-no-toggle btn'
             }
             onClick={() => setwalletScreen(false)}

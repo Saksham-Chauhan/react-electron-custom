@@ -14,7 +14,11 @@ const TableSection = () => {
   return (
     <>
       <div className="minter-table">
-        <div className="table-header">
+        <div
+          className={
+            appTheme ? 'light-mode_table-color table-header' : 'table-header'
+          }
+        >
           <div>#</div>
           <div>Contract</div>
           <div>Mode</div>
@@ -23,12 +27,12 @@ const TableSection = () => {
           <div> Action </div>
         </div>
 
-        <div className="table-body">
-          <div>#</div>
-          <div>Contract</div>
-          <div>Mode</div>
-          <div>Wallet</div>
-          <div> Status </div>
+        <div className={appTheme ? 'table-body light-bg ' : 'table-body'}>
+          <div className={appTheme ? 'lightMode_color' : ''}>#</div>
+          <div className={appTheme ? 'lightMode_color' : ''}>Contract</div>
+          <div className={appTheme ? 'lightMode_color' : ''}>Mode</div>
+          <div className={appTheme ? 'lightMode_color' : ''}>Wallet</div>
+          <div className={appTheme ? 'lightMode_color' : ''}> Status </div>
           <div>
             <img src={play} alt="" />
             <img src={edit} alt="" />

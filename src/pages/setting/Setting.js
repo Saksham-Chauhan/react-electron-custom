@@ -22,7 +22,7 @@ function Setting() {
     <div
       className={
         appTheme
-          ? 'setting-page-outer lightModePage-section'
+          ? 'setting-page-outer light-mode-page-section'
           : 'setting-page-outer'
       }
     >

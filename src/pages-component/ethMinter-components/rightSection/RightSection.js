@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux'
 const RightSection = ({ setwalletScreen }) => {
   const appTheme = useSelector(fetchThemsState)
   const btnClass = appTheme
-    ? 'icon-btn-wrapper btn lightBg'
+    ? 'icon-btn-wrapper btn light-bg'
     : 'icon-btn-wrapper btn'
   return (
     <>
@@ -29,7 +29,7 @@ const RightSection = ({ setwalletScreen }) => {
           <div
             className={
               appTheme
-                ? 'page-top-search-container lightBg '
+                ? 'page-top-search-container light-bg '
                 : 'page-top-search-container'
             }
           >
@@ -40,7 +40,7 @@ const RightSection = ({ setwalletScreen }) => {
             <input
               placeholder="Search"
               type="search"
-              className={appTheme ? 'lightModeInput' : ''}
+              className={appTheme ? 'light-mode-input' : ''}
             />
           </div>
           <div className={btnClass}>
@@ -59,7 +59,7 @@ const RightSection = ({ setwalletScreen }) => {
             style={{ padding: '0.8em 1em' }}
             className={
               appTheme
-                ? 'switch-with-text with-no-toggle btn lightModeSidebar'
+                ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
                 : 'switch-with-text with-no-toggle btn'
             }
             onClick={() => setwalletScreen(true)}

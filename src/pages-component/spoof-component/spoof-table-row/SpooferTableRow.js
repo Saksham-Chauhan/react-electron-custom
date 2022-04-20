@@ -25,7 +25,7 @@ function SpooferTableRow({
     }
   }, [spoof])
   const lightModeClass = appTheme
-    ? 'spoofer-page-table-header tbody lightBg lightMode_tableColor'
+    ? 'spoofer-page-table-header tbody light-bg light-mode_table-color'
     : 'spoofer-page-table-header tbody'
 
   return (

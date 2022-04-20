@@ -4,11 +4,12 @@ import wifi from '../../assests/images/wifi.svg'
 import decline from '../../assests/images/decline.svg'
 import inProcess from '../../assests/images/inProcess.svg'
 import success from '../../assests/images/success.svg'
-
-const StatusIcons = ({ Icon }) => (
+import { fetchThemsState } from '../../features/counterSlice'
+import { useSelector } from 'react-redux'
+const StatusIcons = ({ Icon, appTheme }) => (
   <div className="stausIcons">
     <img src={Icon} alt="" />
-    <span>10</span>
+    <span className={appTheme ? 'lightMode_color ' : ''}>10</span>
   </div>
 )
 
@@ -22,18 +23,24 @@ function GroupCard({
   actionColumn,
   ...props
 }) {
+  const appTheme = useSelector(fetchThemsState)
+
   return (
     <div {...props} className="group-card">
-      <div className="group-card-inner ">
+      <div
+        className={
+          appTheme ? 'group-card-inner light-mode-card' : 'group-card-inner'
+        }
+      >
         <div className="groupCard_heading">
           <img src={cardIcon} alt="" />
-          <h5>{cardTitle}</h5>
+          <h5 className={appTheme ? 'lightMode_color ' : ''}>{cardTitle}</h5>
         </div>
 
         <div className="groupCard_Status">
-          <StatusIcons Icon={inProcess} />
-          <StatusIcons Icon={success} />
-          <StatusIcons Icon={decline} />
+          <StatusIcons Icon={inProcess} {...{ appTheme }} />
+          <StatusIcons Icon={success} {...{ appTheme }} />
+          <StatusIcons Icon={decline} {...{ appTheme }} />
         </div>
       </div>
     </div>

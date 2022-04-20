@@ -12,7 +12,9 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
         <div
           style={{ padding: '0.8em' }}
           className={
-            appTheme ? 'switch-with-text lightModeSidebar' : 'switch-with-text'
+            appTheme
+              ? 'switch-with-text light-mode-sidebar'
+              : 'switch-with-text'
           }
         >
           <AppToggler
@@ -30,7 +32,7 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
           onClick={handleScreen}
           className={
             appTheme
-              ? 'switch-with-text with-no-toggle btn lightModeSidebar'
+              ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
               : 'switch-with-text with-no-toggle btn'
           }
         >
@@ -49,7 +51,7 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
           <div
             className={
               appTheme
-                ? 'switch-with-text lightModeSidebar'
+                ? 'switch-with-text light-mode-sidebar'
                 : 'switch-with-text'
             }
           >
@@ -67,7 +69,7 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
           <div
             className={
               appTheme
-                ? 'switch-with-text lightModeSidebar'
+                ? 'switch-with-text light-mode-sidebar'
                 : 'switch-with-text'
             }
           >
