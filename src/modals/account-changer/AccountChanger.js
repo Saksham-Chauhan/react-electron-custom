@@ -228,7 +228,7 @@ function AccountChanger() {
   }
 
   return (
-    <ModalWrapper onClick={handleIsEmoji}>
+    <ModalWrapper handleIsEmoji={handleIsEmoji}>
       <div className="modal-tilte">
         <h2>Create Task</h2>
       </div>
