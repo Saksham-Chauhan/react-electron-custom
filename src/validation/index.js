@@ -1,43 +1,5 @@
 import joi from "joi";
 
-export const oneClickAddGmailSchema = joi.object({
-  email: joi
-    .string()
-    .required()
-    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-    .label("Enter email address"),
-  password: joi
-    .string()
-    .required()
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
-    .label("Enter password"),
-  recoveryEmail: joi
-    .string()
-    .required()
-    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-    .label("Enter Recovery email address"),
-  securityAnswer: joi.string().required().label("Enter security answer"),
-  proxy: joi.optional(),
-  status: joi.optional(),
-  score: joi.optional(),
-  id: joi.optional(),
-  createdAt: joi.optional(),
-});
-
-export const genNewAcccountSchema = joi.object({
-  site: joi.string().required().label("Select site"),
-  proxy: joi.string().required().label("Select proxy"),
-  amount: joi
-    .string()
-    .required()
-    .pattern(new RegExp("^[0-9]{1,30}$"))
-    .label("Enter account number"),
-  mobile: joi.optional(),
-  profile: joi.string().required().label("Select profile"),
-  id: joi.optional(),
-  createdAt: joi.optional(),
-});
-
 export const addProxyGroupSchema = joi.object({
   id: joi.optional(),
   proxyList: joi.array(),
@@ -80,21 +42,37 @@ export const claimerGroupSchema = joi.object({
   createdAt: joi.optional(),
 });
 
-export const inviteJoinerdirectJoineSchema = joi.object({
-  inviteCode: joi
+export const nftGroupSchema = joi.object({
+  minterTitle: joi.string().required().label("Enter group name"),
+  minterType: joi.string().required().label("Select type"),
+  minterList: joi.optional(),
+  id: joi.optional(),
+});
+
+export const nftTaskSchema = joi.object({
+  wallet: joi.string().required().label("Select wallet"),
+  transactionCost: joi.number().required().label("Enter transaction cost"),
+  contractAddress: joi.string().required().label("Enter contract address"),
+  functionName: joi.string().required().label("Enter function name"),
+  functionParam: joi.string().required().label("Enter function param"),
+  gasPriceMethod: joi
     .string()
     .required()
-    .pattern(new RegExp("/.+[a-z|A-Z|0-9]/"))
-    .label("Enter valid Invite Code"),
-  isReact: false,
-  reactSetting: {
-    channelId: "",
-    messageId: "",
-    emojiHexValue: "",
-  },
-  isAcceptRule: false,
-  acceptRule: {
-    acceptRuleValue: "",
-  },
-  createdAt: joi.optional(),
+    .valid("rapidPrice", "manualPrice")
+    .label("Select gas method"),
+  maxPriorityFee: joi.alternatives().conditional("gasPriceMethod", {
+    is: "manualPrice",
+    then: joi.number().required().label("Enter max priority Fee"),
+  }),
+  maxFee: joi.alternatives().conditional("gasPriceMethod", {
+    is: "manualPrice",
+    then: joi.number().required().label("Enter max fee"),
+  }),
+});
+
+export const nftWalletSchema = joi.object({
+  walletNickName: joi.string().required().label("Enter nick name"),
+  walletPrivateKey: joi.string().required().label("Enter wallet private key"),
+  walletPublicKey: joi.string().required().label("Enter wallet public key"),
+  walletBalance: joi.optional(),
 });

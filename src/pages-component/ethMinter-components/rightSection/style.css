@@ -1,12 +1,29 @@
 .walletBtn {
-  width: 50%;
   display: flex;
-  justify-content: flex-end;
-  padding-right: 80px;
 }
-
-.walletBtnImg {
-  margin: 10px;
-  width: 15px;
+.eth-minter-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sidebar-bg);
+  padding: 0px 1em;
+  border-radius: 6px;
+}
+.eth-minter-section > img {
   height: 15px;
+  object-fit: contain;
+}
+.eth-minter-section > span {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--primary);
+  margin-right: 1em;
+}
+.eth-minter-section > span.no-margin {
+  margin-right: 0em;
+  margin-left: 0.5em;
+}
+.padding-horizontal {
+  padding: 0px 1em;
 }
