@@ -1,19 +1,19 @@
-import React from "react";
-import "./styles.css";
-import { AppSpacer } from "../../../component";
-import bird from "../../../assests/images/bird.svg";
+import React from 'react'
+import './styles.css'
+import { AppSpacer } from '../../../component'
+import bird from '../../../assests/images/bird.svg'
 
 function TweetCard({
-  cardTitle = "New Tweet",
-  tweetTime = "Fri Feb 21 12:07:35 +0000 2022",
-  tweetUser = "KodersHQ",
-  tweetMsgLink = "https://t.co/uxttXwyy4F",
-  tweetLink = "",
-  tweetUserProfileLink = "",
-  tweetUserFollowing = "",
+  cardTitle = 'New Tweet',
+  tweetTime = 'Fri Feb 21 12:07:35 +0000 2022',
+  tweetUser = 'KodersHQ',
+  tweetMsgLink = 'https://t.co/uxttXwyy4F',
+  tweetLink = '',
+  tweetUserProfileLink = '',
+  tweetUserFollowing = '',
 }) {
   return (
-    <div className="tweet-card-outer">
+    <div className=" tweet-card-outer">
       <div className="tweet-card-top-section">
         <span id="cardtitle">{cardTitle}</span>
         <span id="tweetTime">{tweetTime}</span>
@@ -37,7 +37,7 @@ function TweetCard({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default TweetCard;
+export default TweetCard

@@ -2,8 +2,8 @@ import React from 'react'
 import './dashboard.css'
 import {
   ChartLabel,
-  DashboardChart,
   DashboardButton,
+  DashboardChart,
 } from '../../pages-component'
 import {
   fetchProxyGroupList,
@@ -45,7 +45,6 @@ const DashboardPage = () => {
     }
     return totalProxy
   }
-
   const buttonsData = [
     {
       to: RoutePath.proxy,
@@ -102,13 +101,13 @@ const DashboardPage = () => {
       <TopWrapper>
         <GroupStatusCard title="Dashboard" isHide={true} />
       </TopWrapper>
-      {/* <div className="dashboard-buttons">
+      <div className="dashboard-buttons">
         {buttonsData.map((item, i) => {
           return <DashboardButton {...item} key={i} />
         })}
-      </div> */}
+      </div>
       <div className="dashboard-chart">
-        {/* <DashboardChart /> */}
+        <DashboardChart />
         <ChartLabel />
       </div>
     </div>

@@ -1,0 +1,12 @@
+.walletBtn {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 80px;
+}
+
+.walletBtnImg {
+  margin: 10px;
+  width: 15px;
+  height: 15px;
+}

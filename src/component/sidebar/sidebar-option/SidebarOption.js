@@ -1,7 +1,8 @@
-import React from "react";
-import "./styles.css";
-import { NavLink as Link } from "react-router-dom";
-
+import React from 'react'
+import './styles.css'
+import { NavLink as Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { fetchThemsState } from '../../../features/counterSlice'
 const SideBarOption = ({
   activeIcon,
   defaultIcon,
@@ -10,11 +11,16 @@ const SideBarOption = ({
   isLink = true,
   ...props
 }) => {
+  const appTheme = useSelector(fetchThemsState)
   return isLink ? (
     <Link
       to={pageTo}
-      className={({ isActive }) =>
-        !isActive ? `sidebar-option ` : `sidebar-option active-link `
+      className={
+        appTheme
+          ? ({ isActive }) =>
+              !isActive ? `sidebar-option ` : `sidebar-option activeLink`
+          : ({ isActive }) =>
+              !isActive ? `sidebar-option ` : `sidebar-option active-link `
       }
     >
       <div className={`sidebar-option-inner bg-animation-css  ${activeClass} `}>
@@ -30,7 +36,7 @@ const SideBarOption = ({
         <img src={activeIcon} alt="active-sidebar-icon" />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SideBarOption;
+export default SideBarOption

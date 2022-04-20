@@ -1,12 +1,17 @@
-import React from "react";
-import { AppInputField, AppSpacer, AppToggler } from "../../../component";
+import React from 'react'
+import { AppInputField, AppSpacer, AppToggler } from '../../../component'
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
-} from "../../../component/modal-wrapper/Modal";
-import "./style.css";
+} from '../../../component/modal-wrapper/Modal'
+import { fetchThemsState } from '../../../features/counterSlice'
+import { useSelector } from 'react-redux'
+import './style.css'
 
 function ServerLeaver({ ...props }) {
+  const appTheme = useSelector(fetchThemsState)
+  const textClass = appTheme ? 'lightMode_color' : ''
+
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -23,7 +28,7 @@ function ServerLeaver({ ...props }) {
 
       <AppSpacer spacer={20} />
       <div className="servre-leaver-toggler">
-        <span>Server ID[s]</span>
+        <span className={textClass}>Server ID[s]</span>
         <span className="all">All</span>
         <AppToggler />
       </div>
@@ -39,7 +44,7 @@ function ServerLeaver({ ...props }) {
         936538800027467344`}
       />
     </React.Fragment>
-  );
+  )
 }
 
-export default ServerLeaver;
+export default ServerLeaver

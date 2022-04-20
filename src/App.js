@@ -12,6 +12,7 @@ import {
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
+  fetchThemsState,
   fetchInviteJoinerSettingModalState,
 } from './features/counterSlice'
 import {
@@ -30,6 +31,7 @@ import {
   SpooferPage,
   DashboardPage,
   AccountChangerPage,
+  ETHminter,
 } from './pages'
 import {
   sendLogs,
@@ -63,7 +65,6 @@ import { interceptorWebhook, loggedUserWebhook } from './helper/webhook'
 import { AppController, DragBar, AppFooter, AppSidebar } from './component'
 import { resetTaskState, updateTaskState } from './features/logic/acc-changer'
 import { webhookNotifier } from './features/logic/setting'
-
 function App() {
   const dispatch = useDispatch()
   const location = useLocation()
@@ -90,7 +91,6 @@ function App() {
         dispatch(updateSpooferStatus(data))
       }
     })
-
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user)
@@ -142,20 +142,20 @@ function App() {
   }, [location.pathname])
 
   // check is user log in or not
-  // if (Object.keys(logggedUserDetails).length === 0) {
-  //   return (
-  //     <React.Fragment>
-  //       <Login />
-  //       <ToastContainer />
-  //     </React.Fragment>
-  //   );
-  // }
+  if (Object.keys(logggedUserDetails).length !== 0) {
+    return (
+      <React.Fragment>
+        <Login />
+        <ToastContainer />
+      </React.Fragment>
+    )
+  }
 
   return (
     <div className="app">
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {!onBoardingModalState && <OnboardingModal />}
+      {onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {accountChangerModalState && <AccountChangerModal />}
@@ -164,7 +164,7 @@ function App() {
         <AppSidebar />
       </div>
       <div className="app page-section">
-        <div className="app overlay-wrapper">
+        <div className=" overlay-wrapper ">
           <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
           <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
@@ -179,6 +179,7 @@ function App() {
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />
               <Route path={RoutePath.home} element={<DashboardPage />} />
+              <Route path={RoutePath.ethMinter} element={<ETHminter />} />
             </Routes>
             <AppFooter />
           </div>
