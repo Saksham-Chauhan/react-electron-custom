@@ -16,6 +16,7 @@ import {
   fetchNftTaskModalState,
   fetchNftWalletModalState,
   fetchNftSettingModalState,
+  fetchThemsState,
 } from './features/counterSlice'
 import {
   AddSpoofModal,
@@ -67,13 +68,20 @@ import { proxyStatusUpdater } from './features/logic/proxy'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { resetTwitterMonitor } from './features/logic/twitter'
 import { interceptorWebhook, loggedUserWebhook } from './helper/webhook'
-import { AppController, DragBar, AppFooter, AppSidebar } from './component'
+import {
+  AppController,
+  DragBar,
+  AppFooter,
+  AppSidebar,
+  DarkMode,
+} from './component'
 import { resetTaskState, updateTaskState } from './features/logic/acc-changer'
 import { webhookNotifier } from './features/logic/setting'
 
 function App() {
   const dispatch = useDispatch()
   const location = useLocation()
+  const appTheme = useSelector(fetchThemsState)
   const nftSettingModalState = useSelector(fetchNftSettingModalState)
   const nftTaskModalState = useSelector(fetchNftTaskModalState)
   const spoofModalState = useSelector(fetchSpoofModalState)
@@ -167,20 +175,29 @@ function App() {
       {nftGroupModalState && <NftGroupModal />}
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {onBoardingModalState && <OnboardingModal />}
+      {!onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {accountChangerModalState && <AccountChangerModal />}
-
-      <div className="app sidebar">
+      {/* {inviteSettigModalState && <InviteJoinerSettingModal />} */}
+      <div
+        className={appTheme ? 'app sidebar light-mode-sidebar' : 'app sidebar'}
+      >
         <AppSidebar />
       </div>
-      <div className="app page-section">
-        <div className="app overlay-wrapper ">
+      <div
+        className={
+          appTheme
+            ? 'app page-section light-mode-page-section'
+            : 'app page-section '
+        }
+      >
+        <div className=" overlay-wrapper ">
           <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
           <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
             <DragBar />
+            <DarkMode />
             <AppController {...{ location }} />
             <Routes>
               <Route

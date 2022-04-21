@@ -50,7 +50,7 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
   }
 
   const btnClass = appTheme
-    ? 'icon-btn-wrapper btn lightBg'
+    ? 'icon-btn-wrapper btn light-bg'
     : 'icon-btn-wrapper btn'
 
   return (
@@ -59,7 +59,7 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
         <div
           className={
             appTheme
-              ? 'page-top-search-container lightBg '
+              ? 'page-top-search-container light-bg'
               : 'page-top-search-container'
           }
         >
@@ -72,7 +72,7 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
             onChange={handleSearching}
             placeholder="Search"
             type="search"
-            className={appTheme ? 'lightModeInput' : ''}
+            className={appTheme ? 'light-mode-input' : ''}
           />
         </div>
 
@@ -97,7 +97,7 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
           onClick={() => handleAll('LAUNCH')}
           className={
             appTheme
-              ? 'btn-with-no-icon btn remove-btn lightBg'
+              ? 'btn-with-no-icon btn remove-btn light-bg'
               : 'btn-with-no-icon btn remove-btn'
           }
         >

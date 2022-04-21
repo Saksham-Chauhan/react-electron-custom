@@ -25,7 +25,7 @@ function InputWithList({
       <div
         className={
           appTheme
-            ? 'input-field-with-scroll-inner lightBg'
+            ? 'input-field-with-scroll-inner light-bg'
             : 'input-field-with-scroll-inner'
         }
       >
@@ -46,7 +46,7 @@ function InputWithList({
                   {...btnProps}
                   className={
                     appTheme
-                      ? 'plus-icon-btn btn lightModeSidebar'
+                      ? 'plus-icon-btn btn light-mode-sidebar'
                       : 'plus-icon-btn btn'
                   }
                 >

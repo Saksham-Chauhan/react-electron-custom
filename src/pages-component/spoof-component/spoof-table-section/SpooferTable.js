@@ -42,7 +42,7 @@ function SpooferTable({ tableList }) {
       <div
         className={
           appTheme
-            ? 'spoofer-page-table-header activeLink'
+            ? 'spoofer-page-table-header light-mode-active-link'
             : 'spoofer-page-table-header'
         }
       >

@@ -13,7 +13,11 @@ function TweetCard({
   tweetUserFollowing = '',
 }) {
   return (
-    <div className=" tweet-card-outer">
+    <div
+      className={
+        appTheme ? 'tweet-card-outer light-mode-sidebar' : ' tweet-card-outer'
+      }
+    >
       <div className="tweet-card-top-section">
         <span id="cardtitle">{cardTitle}</span>
         <span id="tweetTime">{tweetTime}</span>

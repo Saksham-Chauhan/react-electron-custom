@@ -1,66 +1,66 @@
-import React, { useEffect, useState } from "react";
-import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
+import React, { useEffect, useState } from 'react'
+import { AppSpacer, GroupStatusCard, TopWrapper } from '../../../component'
 import {
   fetchNftWalletListState,
   fetchThemsState,
   setModalState,
   setNftWalletList,
-} from "../../../features/counterSlice";
-import { useDispatch, useSelector } from "react-redux";
+} from '../../../features/counterSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
-import EthMinterSetting from "../../../assests/images/EthMinterSetting.svg";
-import leftAero from "../../../assests/images/leftAero.svg";
-import UseAnimations from "react-useanimations";
-import add from "../../../assests/images/plus.svg";
-import processIcon from "../../../assests/images/process.svg";
-import trash2 from "react-useanimations/lib/trash2";
-import searchIcon from "../../../assests/images/search.svg";
-import lightModeplush from "../../../assests/images/lightModeplus.svg";
-import lightModesearch from "../../../assests/images/lightModesearch.svg";
+import EthMinterSetting from '../../../assests/images/EthMinterSetting.svg'
+import leftAero from '../../../assests/images/leftAero.svg'
+import UseAnimations from 'react-useanimations'
+import add from '../../../assests/images/plus.svg'
+import processIcon from '../../../assests/images/process.svg'
+import trash2 from 'react-useanimations/lib/trash2'
+import searchIcon from '../../../assests/images/search.svg'
+import lightModeplush from '../../../assests/images/lightModeplus.svg'
+import lightModesearch from '../../../assests/images/lightModesearch.svg'
 
-import { WalletTable } from "../../../pages-component";
-import { searchingFunction } from "../../../hooks/searchFunction";
-import { sendLogs } from "../../../helper/electron-bridge";
+import { WalletTable } from '../../../pages-component'
+import { searchingFunction } from '../../../hooks/searchFunction'
+import { sendLogs } from '../../../helper/electron-bridge'
 const WalletScreen = ({ setwalletScreen }) => {
-  const [tempList, setTempList] = useState([]);
-  const appTheme = useSelector(fetchThemsState);
-  const walletList = useSelector(fetchNftWalletListState);
-  const [search, setSearch] = useState("");
-  const dispatch = useDispatch();
+  const [tempList, setTempList] = useState([])
+  const appTheme = useSelector(fetchThemsState)
+  const walletList = useSelector(fetchNftWalletListState)
+  const [search, setSearch] = useState('')
+  const dispatch = useDispatch()
   const btnClass = appTheme
-    ? "icon-btn-wrapper btn lightBg"
-    : "icon-btn-wrapper btn";
+    ? 'icon-btn-wrapper btn lightBg'
+    : 'icon-btn-wrapper btn'
 
   useEffect(() => {
     if (walletList?.length > 0) {
-      setTempList([...walletList]);
-    } else setTempList([]);
-  }, [walletList]);
+      setTempList([...walletList])
+    } else setTempList([])
+  }, [walletList])
 
   const handleOpenModal = () => {
-    dispatch(setModalState("nftWalletModal"));
-  };
+    dispatch(setModalState('nftWalletModal'))
+  }
 
   const handleDeleteAll = () => {
-    const log = `All ${walletList.length} wallet is deleted`;
-    sendLogs(log);
-    dispatch(setNftWalletList([]));
-  };
+    const log = `All ${walletList.length} wallet is deleted`
+    sendLogs(log)
+    dispatch(setNftWalletList([]))
+  }
 
   const handleSettingModal = () => {
-    dispatch(setModalState("nftSettingModal"));
-  };
+    dispatch(setModalState('nftSettingModal'))
+  }
 
   const handleSearching = (e) => {
-    const { value } = e.target;
-    setSearch(value);
+    const { value } = e.target
+    setSearch(value)
     if (value.length > 0) {
-      const result = searchingFunction(value, walletList, "NFT_WALLET");
+      const result = searchingFunction(value, walletList, 'NFT_WALLET')
       if (result.length > 0) {
-        setTempList([...result]);
-      } else setTempList([]);
-    } else setTempList([...walletList]);
-  };
+        setTempList([...result])
+      } else setTempList([])
+    } else setTempList([...walletList])
+  }
 
   return (
     <>
@@ -73,8 +73,8 @@ const WalletScreen = ({ setwalletScreen }) => {
           <div
             className={
               appTheme
-                ? "page-top-search-container lightBg "
-                : "page-top-search-container"
+                ? 'page-top-search-container lightBg '
+                : 'page-top-search-container'
             }
           >
             <img
@@ -86,7 +86,7 @@ const WalletScreen = ({ setwalletScreen }) => {
               onChange={handleSearching}
               value={search}
               type="search"
-              className={appTheme ? "lightModeInput" : ""}
+              className={appTheme ? 'lightModeInput' : ''}
             />
           </div>
           <div onClick={handleOpenModal} className={btnClass}>
@@ -104,8 +104,8 @@ const WalletScreen = ({ setwalletScreen }) => {
           <div
             className={
               appTheme
-                ? "eth-minter-section with-no-toggle btn lightModeSidebar"
-                : "eth-minter-section with-no-toggle btn"
+                ? 'eth-minter-section with-no-toggle btn lightModeSidebar'
+                : 'eth-minter-section with-no-toggle btn'
             }
             onClick={() => setwalletScreen(false)}
           >
@@ -122,7 +122,7 @@ const WalletScreen = ({ setwalletScreen }) => {
         <WalletTable walletList={tempList} />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default WalletScreen;
+export default WalletScreen

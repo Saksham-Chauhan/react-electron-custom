@@ -1,38 +1,39 @@
-import React from "react";
-import "./style.css";
-import play from "../../../assests/images/play.svg";
-import trash2 from "react-useanimations/lib/trash2";
-import edit from "../../../assests/images/edit.svg";
-import UseAnimations from "react-useanimations";
+import React from 'react'
+import './style.css'
+import play from '../../../assests/images/play.svg'
+import trash2 from 'react-useanimations/lib/trash2'
+import edit from '../../../assests/images/edit.svg'
+import UseAnimations from 'react-useanimations'
 import {
   fetchNftWalletListState,
+  fetchThemsState,
   setEditStorage,
   setModalState,
-} from "../../../features/counterSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { removeTaskFromList } from "../../../features/logic/nft";
-import { sendLogs } from "../../../helper/electron-bridge";
+} from '../../../features/counterSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeTaskFromList } from '../../../features/logic/nft'
+import { sendLogs } from '../../../helper/electron-bridge'
 
 const TableSection = ({ list = [] }) => {
-  const dispatch = useDispatch();
-  const walletList = useSelector(fetchNftWalletListState);
-
+  const dispatch = useDispatch()
+  const walletList = useSelector(fetchNftWalletListState)
+  const appTheme = useSelector(fetchThemsState)
   const handleDeleteTask = (task) => {
-    const log = `Delete the Minter task with id -> ${task.id}`;
-    sendLogs(log);
-    dispatch(removeTaskFromList(task));
-  };
+    const log = `Delete the Minter task with id -> ${task.id}`
+    sendLogs(log)
+    dispatch(removeTaskFromList(task))
+  }
 
   const handleTaskPlay = (task) => {
-    const log = `Start minting the task with id -> ${task.id}`;
-    sendLogs(log);
-    console.log(task);
-  };
+    const log = `Start minting the task with id -> ${task.id}`
+    sendLogs(log)
+    console.log(task)
+  }
 
   const handleTaskEdit = (task) => {
-    dispatch(setEditStorage(task));
-    dispatch(setModalState("nftTaskModal"));
-  };
+    dispatch(setEditStorage(task))
+    dispatch(setModalState('nftTaskModal'))
+  }
 
   return (
     <div className="minter-table padding-horizontal">
@@ -51,20 +52,20 @@ const TableSection = ({ list = [] }) => {
           return (
             <MinterTableRow
               onDelete={handleDeleteTask}
-              key={row["id"]}
+              key={row['id']}
               onEdit={handleTaskEdit}
               {...{ row, index }}
               onPlay={handleTaskPlay}
               wallet={walletList?.filter((w) => w.id === row?.walletID)}
             />
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TableSection;
+export default TableSection
 
 const MinterTableRow = ({
   row,
@@ -95,7 +96,7 @@ const MinterTableRow = ({
         />
         <img onClick={() => onEdit(row)} src={edit} alt="" />
         <UseAnimations
-          wrapperStyle={{ cursor: "pointer" }}
+          wrapperStyle={{ cursor: 'pointer' }}
           animation={trash2}
           strokeColor="#B60E0E"
           size={25}
@@ -103,5 +104,5 @@ const MinterTableRow = ({
         />
       </div>
     </div>
-  );
-};
+  )
+}

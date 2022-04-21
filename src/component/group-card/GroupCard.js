@@ -1,16 +1,25 @@
-import React from "react";
-import "./styles.css";
-import { AppSpacer } from "..";
-import wifi from "../../assests/images/wifi.svg";
-import success from "../../assests/images/success.svg";
-import decline from "../../assests/images/decline.svg";
-import inProcess from "../../assests/images/inProcess.svg";
+import React from 'react'
+import './styles.css'
+import wifi from '../../assests/images/wifi.svg'
+import decline from '../../assests/images/decline.svg'
+import inProcess from '../../assests/images/inProcess.svg'
+import success from '../../assests/images/success.svg'
+import { fetchThemsState } from '../../features/counterSlice'
+import { useSelector } from 'react-redux'
+import { AppSpacer } from '..'
+
+const StatusIcons = ({ Icon, appTheme }) => (
+  <div className="stausIcons">
+    <img src={Icon} alt="" />
+    <span className={appTheme ? 'lightMode_color ' : ''}>10</span>
+  </div>
+)
 
 function GroupCard({
   cardIcon = wifi,
-  cardTitle = "",
-  cardSubtitle = "",
-  activeClass = "",
+  cardTitle = '',
+  cardSubtitle = '',
+  activeClass = '',
   hideSubText = false,
   isCustomAction = false,
   actionColumn,
@@ -19,31 +28,28 @@ function GroupCard({
   totalInProgress = 0,
   ...props
 }) {
+  const appTheme = useSelector(fetchThemsState)
+
   return (
     <div {...props} className="group-card">
-      <div className={`group-card-inner ${activeClass} `}>
+      <div
+        className={
+          appTheme ? 'group-card-inner light-mode-card' : 'group-card-inner'
+        }
+      >
         <div className="groupCard_heading">
           <img src={cardIcon} alt="" />
-          <h5>{cardTitle}</h5>
+          <h5 className={appTheme ? 'lightMode_color ' : ''}>{cardTitle}</h5>
         </div>
         <AppSpacer spacer={13} />
         <div className="groupCard_Status">
-          <div className="stausIcons">
-            <img src={inProcess} alt="" />
-            <span>{totalInProgress}</span>
-          </div>
-          <div className="stausIcons">
-            <img src={success} alt="" />
-            <span>{totalSuccess}</span>
-          </div>
-          <div className="stausIcons">
-            <img src={decline} alt="" />
-            <span>{totalDecline}</span>
-          </div>
+          <StatusIcons Icon={inProcess} {...{ appTheme }} />
+          <StatusIcons Icon={success} {...{ appTheme }} />
+          <StatusIcons Icon={decline} {...{ appTheme }} />
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default GroupCard;
+export default GroupCard

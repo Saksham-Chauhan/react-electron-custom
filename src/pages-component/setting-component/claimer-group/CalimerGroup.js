@@ -57,7 +57,7 @@ function CalimerGroup() {
     } else toastWarning('No token group to export!!')
   }
   const btnClass = appTheme
-    ? 'import-file-btn btn lightModeSidebar '
+    ? 'import-file-btn btn light-mode-sidebar '
     : 'import-file-btn btn'
 
   return (
@@ -87,7 +87,7 @@ function CalimerGroup() {
       <div
         className={
           appTheme
-            ? 'claimer-group-list-scroll-list lightBg'
+            ? 'claimer-group-list-scroll-list light-bg'
             : 'claimer-group-list-scroll-list'
         }
       >
