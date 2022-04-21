@@ -14,9 +14,22 @@ import { fetchThemsState } from '../../../features/counterSlice'
 import { useSelector } from 'react-redux'
 const RightSection = ({ setwalletScreen }) => {
   const appTheme = useSelector(fetchThemsState)
-  const btnClass = appTheme
-    ? 'icon-btn-wrapper btn light-bg'
-    : 'icon-btn-wrapper btn'
+
+  const lightTheme = {
+    btnClass: appTheme
+      ? 'icon-btn-wrapper btn light-bg'
+      : 'icon-btn-wrapper btn',
+    linkClass: appTheme
+      ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
+      : 'switch-with-text with-no-toggle btn',
+    inputContainer: appTheme
+      ? 'page-top-search-container light-bg '
+      : 'page-top-search-container',
+    searchIcon: appTheme ? lightModesearch : searchIcon,
+    inputClass: appTheme ? 'light-mode-input' : '',
+    plusBtn: appTheme ? lightModeplush : add,
+  }
+
   return (
     <>
       <TopWrapper>
@@ -26,30 +39,21 @@ const RightSection = ({ setwalletScreen }) => {
 
       <div className="page-top-btns-wrapper">
         <div className="page-left-container" style={{ paddingLeft: '15px' }}>
-          <div
-            className={
-              appTheme
-                ? 'page-top-search-container light-bg '
-                : 'page-top-search-container'
-            }
-          >
-            <img
-              src={appTheme ? lightModesearch : searchIcon}
-              alt="search-icon"
-            />
+          <div className={lightTheme.inputContainer}>
+            <img src={lightTheme.searchIcon} alt="search-icon" />
             <input
               placeholder="Search"
               type="search"
-              className={appTheme ? 'light-mode-input' : ''}
+              className={lightTheme.inputClass}
             />
           </div>
-          <div className={btnClass}>
-            <img src={appTheme ? lightModeplush : add} alt="" />
+          <div className={lightTheme.btnClass}>
+            <img src={lightTheme.plusBtn} alt="" />
           </div>
-          <div className={btnClass}>
+          <div className={lightTheme.btnClass}>
             <img src={play} alt="" />
           </div>
-          <div className={btnClass}>
+          <div className={lightTheme.btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
           </div>
         </div>
@@ -57,17 +61,13 @@ const RightSection = ({ setwalletScreen }) => {
         <div className="walletBtn">
           <div
             style={{ padding: '0.8em 1em' }}
-            className={
-              appTheme
-                ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
-                : 'switch-with-text with-no-toggle btn'
-            }
+            className={lightTheme.linkClass}
             onClick={() => setwalletScreen(true)}
           >
             <span>Wallet Page</span>
             <img src={rightAero} alt="" className="walletBtnImg" />
           </div>
-          <div className={btnClass}>
+          <div className={lightTheme.linkClass}>
             <img src={EthMinterSetting} alt="" />
           </div>
         </div>

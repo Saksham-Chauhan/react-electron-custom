@@ -8,6 +8,7 @@ import leftAero from '../../../assests/images/leftAero.svg'
 import UseAnimations from 'react-useanimations'
 import add from '../../../assests/images/plus.svg'
 import processingIcon from '../../../assests/images/processingIcon.svg'
+import lightModeProcess from '../../../assests/images/lightModeProcess.svg'
 import trash2 from 'react-useanimations/lib/trash2'
 import searchIcon from '../../../assests/images/search.svg'
 import lightModeplush from '../../../assests/images/lightModeplus.svg'
@@ -16,9 +17,22 @@ import lightModesearch from '../../../assests/images/lightModesearch.svg'
 import { WalletTable } from '../../../pages-component'
 const WalletScreen = ({ setwalletScreen }) => {
   const appTheme = useSelector(fetchThemsState)
-  const btnClass = appTheme
-    ? 'icon-btn-wrapper btn light-bg'
-    : 'icon-btn-wrapper btn'
+  const lightTheme = {
+    btnClass: appTheme
+      ? 'icon-btn-wrapper btn light-bg'
+      : 'icon-btn-wrapper btn',
+    linkClass: appTheme
+      ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
+      : 'switch-with-text with-no-toggle btn',
+    plusbtn: appTheme ? lightModeplush : add,
+    inputContainer: appTheme
+      ? 'page-top-search-container light-bg '
+      : 'page-top-search-container',
+    searchIcon: appTheme ? lightModesearch : searchIcon,
+    inputClass: appTheme ? 'light-mode-input' : '',
+    processIcon: appTheme ? processingIcon : lightModeProcess,
+  }
+
   return (
     <>
       <TopWrapper>
@@ -28,30 +42,21 @@ const WalletScreen = ({ setwalletScreen }) => {
 
       <div className="page-top-btns-wrapper">
         <div className="page-left-container" style={{ paddingLeft: '15px' }}>
-          <div
-            className={
-              appTheme
-                ? 'page-top-search-container light-bg '
-                : 'page-top-search-container'
-            }
-          >
-            <img
-              src={appTheme ? lightModesearch : searchIcon}
-              alt="search-icon"
-            />
+          <div className={lightTheme.inputContainer}>
+            <img src={lightTheme.searchIcon} alt="search-icon" />
             <input
               placeholder="Search"
               type="search"
-              className={appTheme ? 'light-mode-input' : ''}
+              className={lightTheme.inputClass}
             />
           </div>
-          <div className={btnClass}>
-            <img src={appTheme ? lightModeplush : add} alt="" />
+          <div className={lightTheme.btnClass}>
+            <img src={lightTheme.plusbtn} alt="" />
           </div>
-          <div className={btnClass}>
-            <img src={processingIcon} alt="" />
+          <div className={lightTheme.btnClass}>
+            <img src={lightTheme.processIcon} alt="" />
           </div>
-          <div className={btnClass}>
+          <div className={lightTheme.btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
           </div>
         </div>
@@ -59,17 +64,13 @@ const WalletScreen = ({ setwalletScreen }) => {
         <div className="walletBtn">
           <div
             style={{ padding: '0.8em 1em' }}
-            className={
-              appTheme
-                ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
-                : 'switch-with-text with-no-toggle btn'
-            }
+            className={lightTheme.linkClass}
             onClick={() => setwalletScreen(false)}
           >
             <img src={leftAero} alt="" className="walletBtnImg" />
             <span>Task Page</span>
           </div>
-          <div className={btnClass}>
+          <div className={lightTheme.linkClass}>
             <img src={EthMinterSetting} alt="" />
           </div>
         </div>

@@ -20,6 +20,8 @@ import defaultSettings from '../../assests/activeDefault/settings-default.svg'
 import defaultSpoof from '../../assests/activeDefault/spoof-default.svg'
 import defaultUpdate from '../../assests/activeDefault/update-default.svg'
 import activeDefault from '../../assests//activeDefault/profile-default.svg'
+import defaultNFT from '../../assests//activeDefault/nft-default.svg'
+
 import { checkForUpdates } from '../../helper/electron-bridge'
 
 const pjson = require('../../../package.json')
@@ -34,8 +36,8 @@ const iconData = [
   {
     to: RoutePath.ethMinter,
     activeIcon: activeEthminter,
-    activeClass: '',
-    defaultIcon: activeEthminter,
+    activeClass: 'NFTminter',
+    defaultIcon: defaultNFT,
   },
   {
     to: RoutePath.accountChanger,

@@ -161,7 +161,7 @@ function App() {
     <div className="app">
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {onBoardingModalState && <OnboardingModal />}
+      {!onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {proxyEditModalState && <EditProxySingleModal />}
