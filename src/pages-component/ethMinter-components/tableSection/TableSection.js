@@ -11,16 +11,21 @@ import {
 } from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { removeTaskFromList } from "../../../features/logic/nft";
+import { sendLogs } from "../../../helper/electron-bridge";
 
 const TableSection = ({ list = [] }) => {
   const dispatch = useDispatch();
   const walletList = useSelector(fetchNftWalletListState);
 
   const handleDeleteTask = (task) => {
+    const log = `Delete the Minter task with id -> ${task.id}`;
+    sendLogs(log);
     dispatch(removeTaskFromList(task));
   };
 
   const handleTaskPlay = (task) => {
+    const log = `Start minting the task with id -> ${task.id}`;
+    sendLogs(log);
     console.log(task);
   };
 

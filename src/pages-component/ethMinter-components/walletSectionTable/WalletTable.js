@@ -6,12 +6,15 @@ import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import refreshWallet from "../../../assests/images/refreshWallet.svg";
 import { removeNftWalletFromList } from "../../../features/logic/nft";
+import { sendLogs } from "../../../helper/electron-bridge";
 
 const WalletTable = ({ walletList = [] }) => {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
 
   const handleDeleteRow = (row) => {
+    const log = `${row?.walletNickName} Wallet id deleted`;
+    sendLogs(log);
     dispatch(removeNftWalletFromList(row));
   };
 

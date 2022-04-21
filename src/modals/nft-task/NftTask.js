@@ -13,6 +13,7 @@ import {
   setModalState,
 } from "../../features/counterSlice";
 import { addTaskInGroup, editTaskInGroup } from "../../features/logic/nft";
+import { sendLogs } from "../../helper/electron-bridge";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftTaskSchema } from "../../validation";
 
@@ -93,6 +94,8 @@ function NftTask() {
     );
     if (validationresult) {
       if (Object.keys(editState).length === 0) {
+        const log = `new Minter task is created with contract address ${task.contractAddress}`;
+        sendLogs(log);
         dispatch(addTaskInGroup(task));
       } else {
         dispatch(editTaskInGroup(task));

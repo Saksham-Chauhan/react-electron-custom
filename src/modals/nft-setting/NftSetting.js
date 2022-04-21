@@ -10,6 +10,7 @@ import {
   setModalState,
   setNftSetting,
 } from "../../features/counterSlice";
+import { sendLogs } from "../../helper/electron-bridge";
 import "./styles.css";
 function NftSetting() {
   const dispatch = useDispatch();
@@ -40,15 +41,23 @@ function NftSetting() {
   };
 
   const handleSave = (key) => {
+    let log;
     if (key === "RPC") {
+      log = `RPC is updated to ${setting.rpcURL}`;
       dispatch(setNftSetting({ key: "rpcURL", value: setting.rpcURL }));
     } else if (key === "API") {
+      log = `EtherScan Api is updated to ${setting.etherScanAPI.substring(
+        0,
+        4
+      )}`;
       dispatch(
         setNftSetting({ key: "etherScanAPI", value: setting.etherScanAPI })
       );
     } else {
+      log = `Retry Delay value is updated to ${setting.retryDelay}`;
       dispatch(setNftSetting({ key: "retryDelay", value: setting.retryDelay }));
     }
+    sendLogs(log);
   };
 
   const handleChange = (event) => {

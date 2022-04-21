@@ -20,6 +20,7 @@ import lightModesearch from "../../../assests/images/lightModesearch.svg";
 
 import { WalletTable } from "../../../pages-component";
 import { searchingFunction } from "../../../hooks/searchFunction";
+import { sendLogs } from "../../../helper/electron-bridge";
 const WalletScreen = ({ setwalletScreen }) => {
   const [tempList, setTempList] = useState([]);
   const appTheme = useSelector(fetchThemsState);
@@ -41,6 +42,8 @@ const WalletScreen = ({ setwalletScreen }) => {
   };
 
   const handleDeleteAll = () => {
+    const log = `All ${walletList.length} wallet is deleted`;
+    sendLogs(log);
     dispatch(setNftWalletList([]));
   };
 
