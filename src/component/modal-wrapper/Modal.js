@@ -4,7 +4,14 @@ import "./styles.css";
 
 function Modal({ children, bgImageURL, handleIsEmoji, ...props }) {
   return (
-    <div className="modal-wrapper" onClick={() => handleIsEmoji(false)}>
+    <div
+      className="modal-wrapper"
+      onClick={() => {
+        if (props.flag) {
+          handleIsEmoji(false);
+        }
+      }}
+    >
       <div {...props} className="modal-inner">
         <div className="server-img">
           <img src={bgImageURL ? bgImageURL : small_bot} alt="Server Logo" />

@@ -26,22 +26,27 @@ const MassjoinerSlideTwo = ({
   return (
     <>
       <div className="mj-slide">
+        {pageState.emoji && (
+          <div className="emoji-tray-picker">
+            <Picker onSelect={addEmoji} />
+          </div>
+        )}
         {true && (
           <>
             <div className="toggler-btn-label">
               <label>React</label>
               <AppSpacer spacer={5} />
-              <div className="joiner-custom-toggle">
+              <div className="d-flex custom-toggler-btn">
                 <AppToggler
                   id="invite-joiner-react-setting-mode"
                   checked={pageState.isReact}
                   onChange={handleToggler}
                   name="isReact"
                 />
-                <label>Turn {!true ? "ON" : "OFF"}</label>
+                <label>Turn {pageState.isReact ? "ON" : "OFF"}</label>
               </div>
             </div>
-            <div className={`react-joiner-setting-section`}>
+            <div className="d-flex react-fields">
               {pageState.isReact && (
                 <>
                   <div>
@@ -64,7 +69,6 @@ const MassjoinerSlideTwo = ({
                     <AppInputField
                       fieldTitle="Emoji"
                       placeholderText="Enter Emoji"
-                      // onCopy={handleReactChange}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleIsEmoji(!pageState.emoji);
@@ -73,17 +77,12 @@ const MassjoinerSlideTwo = ({
                       value={pageState.emojiValue}
                       onChange={onChange}
                     />
-                    {pageState.emoji && (
-                      <div className="emoji-tray-picker">
-                        <Picker onSelect={addEmoji} />
-                      </div>
-                    )}
                   </div>
                 </>
               )}
             </div>
             <AppSpacer spacer={10} />
-            <div className="joiner-custom-input">
+            <div className="toggler-btn-label">
               <LabelWithToolTip
                 delayHide={1500}
                 isCustomToolTip={true}
@@ -102,14 +101,14 @@ const MassjoinerSlideTwo = ({
                 </p>
               </LabelWithToolTip>
               <AppSpacer spacer={10} />
-              <div className="joiner-custom-toggle">
+              <div className="d-flex custom-toggler-btn">
                 <AppToggler
                   id="invite-joiner-accept-rule"
                   checked={pageState.isAcceptRule}
                   onChange={handleToggler}
                   name="isAcceptRule"
                 />
-                <label>Turn {!pageState.isAcceptRule ? "ON" : "OFF"}</label>
+                <label>Turn {pageState.isAcceptRule ? "ON" : "OFF"}</label>
               </div>
               <AppSpacer spacer={10} />
               {pageState.isAcceptRule && (
