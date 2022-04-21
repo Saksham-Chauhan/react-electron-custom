@@ -69,4 +69,4 @@
 - Adde the Wallet, Setting handlers with their modals
 - Added the edit functionality in minter table row
 - Fix the sidebar NFT active, default, animation issue
-- Add te log in wallet, minter section and their modals
+- Add the send log in wallet, minter section and their modals
