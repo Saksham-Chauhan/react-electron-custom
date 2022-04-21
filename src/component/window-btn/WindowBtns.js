@@ -1,45 +1,52 @@
-import React from "react";
-import "./styles.css";
+import React from 'react'
+import './styles.css'
 import {
   closeApp,
   minimizeApp,
   maximizeApp,
-} from "../../helper/electron-bridge";
-import { DocsEndPoint } from "../../constant";
-
+} from '../../helper/electron-bridge'
+import { DocsEndPoint } from '../../constant'
+import lightModehelp from '../../assests/images/lightModehelp.svg'
+import { fetchThemsState } from '../../features/counterSlice'
+import { useSelector } from 'react-redux'
 function WindowBtns({ location }) {
+  const appTheme = useSelector(fetchThemsState)
   return (
     <div className="window-buttons" id="window-buttons">
       <div
         onClick={() => window.open(DocsEndPoint[location.pathname])}
         className="window-button help"
       >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M7.00008 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.7783 10.2217 1.16663 7.00008 1.16663C3.77842 1.16663 1.16675 3.7783 1.16675 6.99996C1.16675 10.2216 3.77842 12.8333 7.00008 12.8333Z"
-            stroke="white"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M5.30249 5.24997C5.43963 4.86011 5.71033 4.53136 6.06663 4.32196C6.42293 4.11256 6.84185 4.03601 7.24918 4.10588C7.65651 4.17575 8.02597 4.38752 8.29212 4.70369C8.55827 5.01986 8.70394 5.42002 8.70332 5.8333C8.70332 6.99997 6.95332 7.5833 6.95332 7.5833"
-            stroke="white"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M7 9.91663H7.00583"
-            stroke="white"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        {appTheme ? (
+          <img src={lightModehelp} alt="" className="helpImg" />
+        ) : (
+          <svg
+            width="18px"
+            height="18px"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.00008 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.7783 10.2217 1.16663 7.00008 1.16663C3.77842 1.16663 1.16675 3.7783 1.16675 6.99996C1.16675 10.2216 3.77842 12.8333 7.00008 12.8333Z"
+              stroke="white"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M5.30249 5.24997C5.43963 4.86011 5.71033 4.53136 6.06663 4.32196C6.42293 4.11256 6.84185 4.03601 7.24918 4.10588C7.65651 4.17575 8.02597 4.38752 8.29212 4.70369C8.55827 5.01986 8.70394 5.42002 8.70332 5.8333C8.70332 6.99997 6.95332 7.5833 6.95332 7.5833"
+              stroke="white"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M7 9.91663H7.00583"
+              stroke="white"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
       </div>
       <div onClick={minimizeApp} className="window-button yellow">
         <svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
@@ -74,7 +81,7 @@ function WindowBtns({ location }) {
         </svg>
       </div>
     </div>
-  );
+  )
 }
 
-export default WindowBtns;
+export default WindowBtns

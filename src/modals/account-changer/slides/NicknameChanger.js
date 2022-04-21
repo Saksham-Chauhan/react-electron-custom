@@ -1,37 +1,51 @@
-import React from "react";
-import { AppSpacer, LabelWithToolTip, AppInputField } from "../../../component";
-import refresh from "../../../assests/images/refresh.svg";
-import "./style.css";
-
+import React from 'react'
+import { AppSpacer, LabelWithToolTip, AppInputField } from '../../../component'
+import refresh from '../../../assests/images/refresh.svg'
+import './style.css'
+import {
+  ModalFlexInnerRow,
+  ModalFlexOuterRow,
+} from '../../../component/modal-wrapper/Modal'
+import { fetchThemsState } from '../../../features/counterSlice'
+import { useSelector } from 'react-redux'
 function NicknameChanger({ state, onRefresh, ...props }) {
+  const appTheme = useSelector(fetchThemsState)
+
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
-      <div className="modal-flex-field-wrapper">
-        <div className="half-flex-field">
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
           <AppInputField
             name="delay"
             {...props}
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
           />
-        </div>
-        <div className="half-flex-field">
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
           <AppInputField
             {...props}
             fieldTitle="Server ID[s]"
             placeholderText="Eg. 936538800027467123"
             name="serverIDs"
           />
-        </div>
-      </div>
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
       <AppSpacer spacer={20} />
       <div className="nickname-row">
         <LabelWithToolTip
           toolTopText="Enter your server nick name"
           labelText="Nicknames"
         />
-        <div onClick={onRefresh} className="group-title btn refresh">
+        <div
+          onClick={onRefresh}
+          className={
+            appTheme
+              ? 'group-title btn refresh lightModeSidebar'
+              : 'group-title btn refresh'
+          }
+        >
           <img src={refresh} alt="ref" />
         </div>
       </div>
@@ -39,16 +53,16 @@ function NicknameChanger({ state, onRefresh, ...props }) {
         hideLabel={true}
         isMulti={true}
         {...props}
-        value={state["nicknameGenerate"]}
+        value={state['nicknameGenerate']}
         name="nicknameGenerate"
         multiHeight="100px"
-        placeholderText="Eg. 
-      jack123
-      jack234
-      jack344"
+        placeholderText={`Eg. 
+        jack123
+        jack234
+        jack344`}
       />
     </React.Fragment>
-  );
+  )
 }
 
-export default NicknameChanger;
+export default NicknameChanger

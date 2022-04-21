@@ -53,6 +53,7 @@ export const discordServerInviteReactAPI = async (
           "Content-Type": "application/json",
         },
       });
+
       if (response.status === 204) {
         return response;
       }
@@ -103,66 +104,65 @@ export const discordServerAcceptRuleAPI = async (
 };
 
 export const directDiscordJoinAPI = async (
-  proxyGroup,
+  proxy,
   inviteCode,
   token,
   settingObj
 ) => {
   try {
-    const proxyArr = proxyGroup["value"]?.split("\n");
-    for (let index = 0; index < proxyArr.length; index++) {
-      const proxy = getProxy(proxyArr);
-      const inviteResponse = await discordServerInviteAPI(
-        inviteCode,
-        token,
-        proxy
-      );
-      if (inviteResponse.status === 200) {
-        const tkn = token.substring(0, 4) + "## ##";
-        toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
-        const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
-        sendLogs(log);
-        if (!settingObj.isReact && !settingObj.isAcceptRule) break;
-        if (settingObj.isReact) {
-          const serverReactResponse = await axios({
-            url: `${BASE_URL}channels/${settingObj.reactSetting.channelId}/messages/${settingObj.reactSetting.messageId}/reactions/${settingObj.reactSetting.emojiValue}/%40me`,
-            method: "put",
-            proxy,
-            headers: {
-              authorization: token,
-              "Content-Type": "application/json",
-            },
-          });
-          if (serverReactResponse.status === 201) {
-            const log = `Direct join Reaction added successfully  with ${tkn}`;
-            sendLogs(log);
-            toastSuccess("Reaction added successfully");
-          }
+    const inviteResponse = await discordServerInviteAPI(
+      inviteCode,
+      token,
+      proxy
+    );
+    if (inviteResponse.status === 200) {
+      const tkn =
+        token.substring(0, 4) + "## ##" + token.charAt(token.length - 1);
+      toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
+      const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
+      sendLogs(log);
+
+      if (settingObj.isReact) {
+        const serverReactResponse = await axios({
+          url: `${BASE_URL}channels/${settingObj.channelId}/messages/${settingObj.messageId}/reactions/${settingObj.emojiValue}/%40me`,
+          method: "put",
+          proxy,
+          headers: {
+            authorization: token,
+            "Content-Type": "application/json",
+          },
+        });
+        if (serverReactResponse.status === 201) {
+          const log = `Direct join Reaction added successfully  with ${tkn}`;
+          sendLogs(log);
+          toastSuccess("Reaction added successfully");
         }
-        if (settingObj.isAcceptRule) {
-          const acceptServerRulResponse = await axios({
-            url: `${BASE_URL}guilds/${settingObj.acceptRule.guildID}/requests/@me`,
-            method: "put",
-            headers: {
-              Authorization: token,
-              "Content-Type": "application/json",
-            },
-            data: settingObj.acceptRule.acceptRuleValue,
-            proxy,
-          });
-          if (
-            acceptServerRulResponse !== null &&
-            acceptServerRulResponse === 201
-          ) {
-            const log = `Direct join Rules accepted successfully ${tkn}`;
-            sendLogs(log);
-            toastSuccess("Rules accepted successfully");
-          }
-        }
-      } else {
-        toastWarning("Something went wrong while accepting rules");
       }
+
+      if (settingObj.isAcceptRule) {
+        const acceptServerRulResponse = await axios({
+          url: `${BASE_URL}guilds/${inviteResponse.data.guild.id}/requests/@me`,
+          method: "put",
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+          data: settingObj.rules,
+          proxy,
+        });
+        if (
+          acceptServerRulResponse !== null &&
+          acceptServerRulResponse === 201
+        ) {
+          const log = `Direct join Rules accepted successfully ${tkn}`;
+          sendLogs(log);
+          toastSuccess("Rules accepted successfully");
+        }
+      }
+    } else {
+      toastWarning("Something went wrong while accepting rules");
     }
+    return inviteResponse;
   } catch (error) {
     return null;
   }

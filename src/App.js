@@ -4,17 +4,17 @@ import bot from "./assests/images/bot.svg";
 import chip from "./assests/images/chip.svg";
 import {
   setUserDetails,
-  resetIJMonitor,
   fetchSpoofModalState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
   fetchDashboardModalState,
   fetchWebhookSettingState,
-  fetchEditProxyModalState,
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
-  fetchInviteJoinerSettingModalState,
+  fetchNftGroupModalState,
+  fetchNftTaskModalState,
+  fetchNftWalletModalState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
@@ -23,21 +23,18 @@ import {
   ClaimerGroupModal,
   AccountChangerModal,
   DiscordAccountModal,
-  EditProxySingleModal,
-  InviteJoinerSettingModal,
+  NftGroupModal,
+  NftTaskModal,
+  NftWalletModal,
 } from "./modals";
 import {
   Login,
-  ProxyPage,
   TwitterPage,
   SettingPage,
   SpooferPage,
-  MinitingPage,
   DashboardPage,
-  AccountGenPage,
-  LinkOpenerPage,
-  InviteJoinerPage,
   AccountChangerPage,
+  ETHminterPage,
 } from "./pages";
 import {
   sendLogs,
@@ -50,6 +47,8 @@ import {
   downloadingStart,
   updateNotAvailable,
   proxyTestResultListener,
+  updateStatusLOmonitor,
+  webhookNotificationListener,
 } from "./helper/electron-bridge";
 import {
   resetSpooferStatus,
@@ -69,40 +68,37 @@ import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
 import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
-import { closelinkOpenerMonitor } from "./features/logic/discord-account";
 import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
+import { resetTaskState, updateTaskState } from "./features/logic/acc-changer";
+import { webhookNotifier } from "./features/logic/setting";
 
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const nftTaskModalState = useSelector(fetchNftTaskModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
   const discordModalState = useSelector(fetchDiscordModalState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
   const proxyModalState = useSelector(fetchProxyGroupModalState);
-  const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const onBoardingModalState = useSelector(fetchDashboardModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const accountChangerModalState = useSelector(fetchAccountChangerModalState);
-  const inviteSettigModalState = useSelector(
-    fetchInviteJoinerSettingModalState
-  );
-
+  const nftGroupModalState = useSelector(fetchNftGroupModalState);
+  const nftWalletModalState = useSelector(fetchNftWalletModalState);
   const animClass = !globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
 
   useEffect(() => {
-    dispatch(resetIJMonitor());
+    dispatch(resetTaskState());
     dispatch(resetSpooferStatus());
     dispatch(resetTwitterMonitor());
-    dispatch(closelinkOpenerMonitor());
     spooferToaster((data) => {
       if (Object.keys(data).length > 0) {
         dispatch(updateSpooferStatus(data));
       }
     });
-
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
@@ -119,7 +115,7 @@ function App() {
             sendLogs(log);
           }
           dispatch(setUserDetails(decode));
-        } else toastWarning("Sorry, you don't have required role  😭");
+        } else toastWarning("Sorry, you don't have required role");
       }
     });
     proxyTestResultListener((res) => {
@@ -139,13 +135,16 @@ function App() {
       progressDiv.innerHTML = percent;
     });
     errorToaster((err) => toastWarning(err));
+    // LO IPC
+    updateStatusLOmonitor((res) => dispatch(updateTaskState(res)));
+    webhookNotificationListener((res) => dispatch(webhookNotifier(res)));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
 
   // Route Navigation Listener
   useEffect(() => {
-    const currentPage = EndPointToPage[location.pathname];
+    const currentPage = EndPointToPage[location?.pathname];
     const log = `Navigate to ${currentPage}`;
     sendLogs(log);
   }, [location.pathname]);
@@ -162,19 +161,21 @@ function App() {
 
   return (
     <div className="app">
+      {nftWalletModalState && <NftWalletModal />}
+      {nftTaskModalState && <NftTaskModal />}
+      {nftGroupModalState && <NftGroupModal />}
       {spoofModalState && <AddSpoofModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {!onBoardingModalState && <OnboardingModal />}
+      {onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
-      {proxyEditModalState && <EditProxySingleModal />}
       {accountChangerModalState && <AccountChangerModal />}
-      {inviteSettigModalState && <InviteJoinerSettingModal />}
+
       <div className="app sidebar">
         <AppSidebar />
       </div>
       <div className="app page-section">
-        <div className="app overlay-wrapper">
+        <div className="app overlay-wrapper ">
           <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
           <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
@@ -185,17 +186,10 @@ function App() {
                 path={RoutePath.accountChanger}
                 element={<AccountChangerPage />}
               />
-              <Route path={RoutePath.accountGen} element={<AccountGenPage />} />
+              <Route path={RoutePath.ethMinter} element={<ETHminterPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />
-              <Route
-                path={RoutePath.inviteJoiner}
-                element={<InviteJoinerPage />}
-              />
-              <Route path={RoutePath.linkOpener} element={<LinkOpenerPage />} />
-              <Route path={RoutePath.proxy} element={<ProxyPage />} />
-              <Route path={RoutePath.oneclick} element={<MinitingPage />} />
               <Route path={RoutePath.home} element={<DashboardPage />} />
             </Routes>
             <AppFooter />

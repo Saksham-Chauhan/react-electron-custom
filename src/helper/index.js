@@ -33,7 +33,7 @@ export const makeLogText = (msg) => {
   const d = new Date();
   return `[${DAYS[d.getDay()]}, ${d.getDate()} ${
     MONTHS[d.getMonth()]
-  } ${d.getFullYear()}  ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}] - ${msg}`;
+  } ${d.getFullYear()}  ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}] - ${msg}-id${generateId()}`;
 };
 
 export const generateId = () => uuid();
@@ -48,6 +48,17 @@ export const downloadLogs = (content, title) => {
       for (let j = 0; j < tokenList.length; j++) {
         const token = tokenList[j];
         tempData.push(token);
+      }
+    }
+    data = tempData.map((tkn) => tkn).join("\n");
+  } else if (title === "proxy") {
+    let tempData = [];
+    for (let i = 0; i < content.length; i++) {
+      const proxyGroup = content[i];
+      let proxyList = [...proxyGroup["proxyList"]];
+      for (let j = 0; j < proxyList.length; j++) {
+        const proxy = proxyList[j]["proxy"];
+        tempData.push(proxy);
       }
     }
     data = tempData.map((tkn) => tkn).join("\n");
@@ -97,12 +108,11 @@ export const makeProxyOptions = (proxyGroupList = []) => {
   let arr = [];
   if (proxyGroupList.length > 0) {
     for (let i = 0; i < proxyGroupList.length; i++) {
-      let group = proxyGroupList[i];
-      if (group["proxyList"].length > 0) {
+      if (proxyGroupList[i]["proxyList"].length > 0) {
         let obj = {};
-        obj["label"] = group["groupName"];
-        obj["value"] = group["proxies"];
-        obj["id"] = group["id"];
+        obj["label"] = proxyGroupList[i]["groupName"];
+        obj["value"] = proxyGroupList[i]["proxies"];
+        obj["id"] = proxyGroupList[i]["id"];
         arr.push(obj);
       }
     }

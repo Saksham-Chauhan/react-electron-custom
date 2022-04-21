@@ -19,3 +19,30 @@
   right: 0;
   top: -0.5em;
 }
+.flex-col {
+  flex-direction: column;
+}
+.refresh > img {
+  position: absolute;
+  left: 5px;
+}
+.custom-btn-right {
+  position: absolute;
+  right: 0;
+  bottom: -18%;
+  z-index: 2;
+}
+.custom-btn-left {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  bottom: -18%;
+}
+/* DIRECT JOIN AND MASS JOIN */
+.toogler-group-dj {
+  width: 70%;
+  justify-content: space-between;
+}
+.toggler-btn-label {
+  color: var(--primary);
+}

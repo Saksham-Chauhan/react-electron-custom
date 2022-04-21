@@ -1,12 +1,16 @@
 import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
+import {
+  ModalFlexInnerRow,
+  ModalFlexOuterRow,
+} from "../../../component/modal-wrapper/Modal";
 
 function ActivityChanger({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
-      <div className="modal-flex-field-wrapper">
-        <div className="half-flex-field">
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Delay (Optional)"
@@ -15,16 +19,16 @@ function ActivityChanger({ ...props }) {
             min={0}
             {...props}
           />
-        </div>
-        <div className="half-flex-field">
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Activity Details"
             placeholderText="Eg. Playing Kyro Tools"
             name="activityDetails"
             {...props}
           />
-        </div>
-      </div>
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
     </React.Fragment>
   );
 }

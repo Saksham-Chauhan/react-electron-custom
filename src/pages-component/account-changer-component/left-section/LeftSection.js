@@ -13,11 +13,13 @@ import tokenChecker from "../../../assests/images/token-checker.svg";
 import nicknameChanger from "../../../assests/images/nickname-changer.svg";
 import passwordChanger from "../../../assests/images/password-changer.svg";
 import massInviter from "../../../assests/images/mass-inviter.svg";
+import tokenRetrieve from "../../../assests/images/token-retrieve.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAccChangerListState,
   setSelctedAccChangerCard,
 } from "../../../features/counterSlice";
+import "./style.css";
 
 function LeftSection({ selectedCard }) {
   const accountList = useSelector(fetchAccChangerListState);
@@ -30,26 +32,28 @@ function LeftSection({ selectedCard }) {
   return (
     <>
       <TopWrapper>
-        <GroupTitle hideBtn={true} title="Acc Changer" />
+        <GroupTitle hideBtn={true} title="Discord" />
       </TopWrapper>
-      <AppSpacer spacer={20} />
-      <div className="group-card-scroll">
-        {accountList.map((option) => {
-          return (
-            <GroupCard
-              onClick={() => handleSelectedCard(option)}
-              key={option["changerType"]}
-              hideSubText={true}
-              cardIcon={getIcon(option["changerType"])}
-              cardTitle={option["cardTitle"]}
-              activeClass={
-                selectedCard["changerType"] === option["changerType"]
-                  ? "active-card"
-                  : ""
-              }
-            />
-          );
-        })}
+      <div className="account-changer-buttons-list">
+        <AppSpacer spacer={20} />
+        <div className="group-card-scroll">
+          {accountList.map((option) => {
+            return (
+              <GroupCard
+                onClick={() => handleSelectedCard(option)}
+                key={option["changerType"]}
+                hideSubText={true}
+                cardIcon={getIcon(option["changerType"])}
+                cardTitle={option["cardTitle"]}
+                activeClass={
+                  selectedCard["changerType"] === option["changerType"]
+                    ? "active-card"
+                    : ""
+                }
+              />
+            );
+          })}
+        </div>
       </div>
     </>
   );
@@ -75,6 +79,10 @@ const getIcon = (type) => {
       return tokenChecker;
     case "massInviter":
       return massInviter;
+    case "tokenRetrieve":
+      return tokenRetrieve;
+    case "giveawayJoiner":
+      return tokenRetrieve;
     default:
       return usernameChanger;
   }

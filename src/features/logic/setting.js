@@ -11,8 +11,11 @@ import {
   fetchChromeUserListState,
   fetchTwitterClaimerGroupState,
   fetchSelectedClaimerGroupState,
+  fetchLoggedUserDetails,
 } from "../counterSlice";
 import { generateId } from "../../helper";
+import { sendLogs } from "../../helper/electron-bridge";
+import { inviteJoinerTest, linkOpenerWebhook } from "../../helper/webhook";
 
 export const addGroupInClaimerList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
@@ -111,6 +114,34 @@ export const readTokenGroupFromFile = (data) => (dispatch, getState) => {
   obj["claimerList"] = [];
   obj["claimerToken"] = valid.map((tkn) => tkn).join("\n");
   obj["createdAt"] = new Date().toUTCString();
+  const log = `New Token Group is created ${obj["name"]}`;
+  sendLogs(log);
   let combiner = [obj, ...currentList];
   dispatch(appendClaimerGroupInList(combiner));
+};
+
+export const webhookNotifier = (payload) => async (dispatch, getState) => {
+  const { status, type } = payload;
+  const setting = fetchWebhookSettingState(getState());
+  const user = fetchLoggedUserDetails(getState());
+  const webhookList = fetchWebhookListState(getState());
+  if (webhookList.length > 0) {
+    if (type === "IJ") {
+      await inviteJoinerTest(
+        webhookList[0],
+        user.username,
+        user.avatar,
+        status,
+        setting?.inviteJoiner
+      );
+    } else {
+      await linkOpenerWebhook(
+        status,
+        user.username,
+        user.avatar,
+        webhookList[0],
+        setting?.linkOpener
+      );
+    }
+  }
 };

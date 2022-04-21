@@ -5,8 +5,8 @@ import "./styles.css";
 function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
   return (
     <div>
-      <div className="flex-btn-row">
-        <div style={{ padding: "0.8em" }} className="switch-with-text">
+      <div className="flex-btn-row page-handlers">
+        <div className="switch-with-text switch-monitor">
           <AppToggler
             checked={twitterSetting?.twitterMonitor}
             id="turn-twitter-monitor"
@@ -18,7 +18,6 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
           </span>
         </div>
         <div
-          style={{ padding: "0.8em 1em" }}
           onClick={handleScreen}
           className="switch-with-text with-no-toggle btn"
         >

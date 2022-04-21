@@ -1,79 +1,40 @@
 import React from "react";
+import "./dashboard.css";
 import {
   ChartLabel,
   DashboardButton,
   DashboardChart,
 } from "../../pages-component";
-import "./dashboard.css";
-import { TopWrapper, GroupStatusCard } from "../../component";
-
-//IMPORT ROUTES
-import { RoutePath } from "../../constant/index";
-
-// IMPORT ICONS
-import linkOpner from "../../assests/activeDefault/link-default.svg";
-import twitter from "../../assests/activeDefault/twitter-default.svg";
-import spoof from "../../assests/activeDefault/spoof-default.svg";
-import proxy from "../../assests/activeDefault/proxy-default.svg";
-import settings from "../../assests/activeDefault/settings-default.svg";
-import accgen from "../../assests/activeDefault/accgen-default.svg";
-import oneclick from "../../assests/activeDefault/nft-default.svg";
-import invite from "../../assests/images/discord-dash.svg";
-import { useSelector } from "react-redux";
 import {
-  fetchInviteJoinerLogState,
-  fetchLinkOpenerLogState,
-  fetchProxyGroupList,
   fetchSpoofTableList,
   fetchLatestTweetList,
 } from "../../features/counterSlice";
+import { useSelector } from "react-redux";
+import { RoutePath } from "../../constant/index";
+import { TopWrapper, GroupStatusCard } from "../../component";
+import spoof from "../../assests/activeDefault/spoof-default.svg";
+import oneclick from "../../assests/activeDefault/nft-default.svg";
+import accChanger from "../../assests/activeDefault/profile-default.svg";
+import twitter from "../../assests/activeDefault/twitter-default.svg";
+import settings from "../../assests/activeDefault/settings-default.svg";
 
 const DashboardPage = () => {
-  //GET PROXY LIST
-  const proxyList = useSelector(fetchProxyGroupList);
-
-  //GET STATE OF LINK OPNER
-  let linkData = useSelector(fetchLinkOpenerLogState);
-  const linkOpnerList = Object.keys(linkData).length;
-
-  //GET STATE OF INVITE JOINER
-  let inviteData = useSelector(fetchInviteJoinerLogState);
-  const inviteJoinerList = Object.keys(inviteData).length;
-
-  //GET STATE OF TWITTER
-  let tweetsData = useSelector(fetchLatestTweetList);
-  let twitterList = Object.keys(tweetsData).length;
-
-  //GET STATE OF SPOOFER
   const spoofList = useSelector(fetchSpoofTableList);
+  const tweetsData = useSelector(fetchLatestTweetList);
+  let twitterList = tweetsData ? Object.keys(tweetsData).length : null;
 
-  //RETURN THE TOTAL PROXIES
-  const getTotalProxy = () => {
-    let totalProxy = 0;
-    for (let i = 0; i < proxyList.length; i++) {
-      totalProxy += proxyList[i].proxyList.length;
-    }
-    return totalProxy;
-  };
-  //BUTTONS DATA
   const buttonsData = [
     {
-      to: RoutePath.proxy,
-      image: proxy,
-      text: "Proxies",
-      value: getTotalProxy() ? getTotalProxy() : "0",
+      to: RoutePath.ethMinter,
+      image: oneclick,
+      text: "NFT Minter",
+      value: "",
     },
     {
-      to: RoutePath.linkOpener,
-      image: linkOpner,
-      text: "Link Opener",
-      value: linkOpnerList ? linkOpnerList : "0",
-    },
-    {
-      to: RoutePath.inviteJoiner,
-      image: invite,
-      text: "Invite Joiner",
-      value: inviteJoinerList ? inviteJoinerList : "0",
+      to: RoutePath.accountChanger,
+      image: accChanger,
+      text: "Tasks",
+      value: "",
     },
     {
       to: RoutePath.spoofer,
@@ -87,18 +48,7 @@ const DashboardPage = () => {
       text: "Twitter Monitor",
       value: twitterList ? twitterList : "0",
     },
-    {
-      to: RoutePath.oneclick,
-      image: oneclick,
-      text: "NFT Minter",
-      value: "Coming Soon",
-    },
-    {
-      to: RoutePath.accountGen,
-      image: accgen,
-      text: "Account Gen",
-      value: "Coming Soon",
-    },
+
     {
       to: RoutePath.setting,
       image: settings,

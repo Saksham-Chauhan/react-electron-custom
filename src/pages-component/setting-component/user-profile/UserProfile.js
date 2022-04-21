@@ -2,9 +2,9 @@ import React from "react";
 import "./styles.css";
 import {
   setUserDetails,
-  resetUserLoggedState,
   fetchWebhookListState,
   fetchWebhookSettingState,
+  fetchThemsState,
 } from "../../../features/counterSlice";
 import { MONTHS } from "../../../helper";
 import user from "../../../assests/images/user.svg";
@@ -17,6 +17,7 @@ function UserProfile({ userDetails }) {
   const dispatch = useDispatch();
   const webhookList = useSelector(fetchWebhookListState);
   const option = useSelector(fetchWebhookSettingState);
+  const appTheme = useSelector(fetchThemsState);
 
   const makeDate = (str = "") => {
     let date = str.match(discordJoinedAtRegex);
@@ -36,9 +37,9 @@ function UserProfile({ userDetails }) {
       // console.log(e);
     }
     dispatch(setUserDetails({}));
-    dispatch(resetUserLoggedState());
   };
 
+  const textClass = appTheme ? "lightMode_color" : "";
   return (
     <div className="flex-right-align">
       <div className="user-profile-section">
@@ -46,12 +47,21 @@ function UserProfile({ userDetails }) {
           <img src={userDetails?.avatar || user} alt="" />
         </div>
         <div className="user-profile-details">
-          <h3>
+          <h3 className={textClass}>
             {userDetails?.username}#{userDetails?.discriminator}
           </h3>
-          <p>User since {makeDate(userDetails?.joined_at)}</p>
+          <p className={textClass}>
+            User since {makeDate(userDetails?.joined_at)}
+          </p>
         </div>
-        <div onClick={handleLogout} className="user-logout-btn btn">
+        <div
+          onClick={handleLogout}
+          className={
+            appTheme
+              ? "LightMode-LogOutBtn user-logout-btn btn"
+              : "user-logout-btn btn"
+          }
+        >
           <img src={logout} alt="" />
           <span>logout</span>
         </div>
