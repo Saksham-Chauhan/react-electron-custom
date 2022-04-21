@@ -1,17 +1,10 @@
 import React from "react";
 import "./styles.css";
+import { AppSpacer } from "..";
 import wifi from "../../assests/images/wifi.svg";
+import success from "../../assests/images/success.svg";
 import decline from "../../assests/images/decline.svg";
 import inProcess from "../../assests/images/inProcess.svg";
-import success from "../../assests/images/success.svg";
-import { AppSpacer } from "..";
-
-const StatusIcons = ({ icon }) => (
-  <div className="stausIcons">
-    <img src={icon} alt="" />
-    <span>10</span>
-  </div>
-);
 
 function GroupCard({
   cardIcon = wifi,
@@ -21,6 +14,9 @@ function GroupCard({
   hideSubText = false,
   isCustomAction = false,
   actionColumn,
+  totalDecline = 0,
+  totalSuccess = 0,
+  totalInProgress = 0,
   ...props
 }) {
   return (
@@ -32,9 +28,18 @@ function GroupCard({
         </div>
         <AppSpacer spacer={13} />
         <div className="groupCard_Status">
-          <StatusIcons icon={inProcess} />
-          <StatusIcons icon={success} />
-          <StatusIcons icon={decline} />
+          <div className="stausIcons">
+            <img src={inProcess} alt="" />
+            <span>{totalInProgress}</span>
+          </div>
+          <div className="stausIcons">
+            <img src={success} alt="" />
+            <span>{totalSuccess}</span>
+          </div>
+          <div className="stausIcons">
+            <img src={decline} alt="" />
+            <span>{totalDecline}</span>
+          </div>
         </div>
       </div>
     </div>

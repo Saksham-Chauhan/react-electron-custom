@@ -42,7 +42,7 @@ function NftTask() {
     return () => {
       dispatch(setEditStorage({}));
     };
-  }, [editState]);
+  }, [editState, dispatch]);
 
   const handleCloseModal = () => {
     dispatch(setModalState("nftTaskModal"));
@@ -115,7 +115,6 @@ function NftTask() {
             isSelect={true}
             placeholderText="Select Wallet"
             selectOptions={makeWalletOption()}
-            // value={makeWalletOption()}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
