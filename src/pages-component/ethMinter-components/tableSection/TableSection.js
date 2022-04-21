@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import play from '../../../assests/images/play.svg'
 import trash2 from 'react-useanimations/lib/trash2'
 import edit from '../../../assests/images/edit.svg'
-import stop from '../../../assests/images/stop.svg'
+import lightModeEditbtn from '../../../assests/images/lightModeEditbtn.svg'
 import UseAnimations from 'react-useanimations'
 const TableSection = () => {
   const appTheme = useSelector(fetchThemsState)
@@ -33,9 +33,9 @@ const TableSection = () => {
           <div className={appTheme ? 'lightMode_color' : ''}>Mode</div>
           <div className={appTheme ? 'lightMode_color' : ''}>Wallet</div>
           <div className={appTheme ? 'lightMode_color' : ''}> Status </div>
-          <div>
+          <div className="action-icon">
             <img src={play} alt="" />
-            <img src={edit} alt="" />
+            <img src={appTheme ? lightModeEditbtn : edit} alt="" />
 
             <UseAnimations
               wrapperStyle={{ cursor: 'pointer' }}

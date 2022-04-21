@@ -10,7 +10,7 @@ import lightModeplush from '../../../assests/images/lightModeplus.svg'
 import EthMinterSetting from '../../../assests/images/EthMinterSetting.svg'
 import rightAero from '../../../assests/images/rightAeroImg.svg'
 import lightModesearch from '../../../assests/images/lightModesearch.svg'
-import { fetchThemsState, setModalState } from '../../../features/counterSlice'
+import { fetchThemsState } from '../../../features/counterSlice'
 import { useSelector } from 'react-redux'
 const RightSection = ({ setwalletScreen }) => {
   const appTheme = useSelector(fetchThemsState)

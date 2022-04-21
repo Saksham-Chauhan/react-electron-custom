@@ -47,7 +47,10 @@
   background: var(--table-row);
   margin-top: 10px;
 }
-
+.action-icon img {
+  height: 18px;
+  width: 18px;
+}
 .table-body > div {
   color: var(--primary);
   text-align: center;
