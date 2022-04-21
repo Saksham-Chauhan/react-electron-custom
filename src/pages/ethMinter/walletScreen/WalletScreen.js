@@ -28,7 +28,7 @@ const WalletScreen = ({ setwalletScreen }) => {
   const [search, setSearch] = useState('')
   const dispatch = useDispatch()
   const btnClass = appTheme
-    ? 'icon-btn-wrapper btn lightBg'
+    ? 'icon-btn-wrapper btn light-bg'
     : 'icon-btn-wrapper btn'
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const WalletScreen = ({ setwalletScreen }) => {
           <div
             className={
               appTheme
-                ? 'page-top-search-container lightBg '
+                ? 'page-top-search-container light-bg '
                 : 'page-top-search-container'
             }
           >
@@ -86,7 +86,7 @@ const WalletScreen = ({ setwalletScreen }) => {
               onChange={handleSearching}
               value={search}
               type="search"
-              className={appTheme ? 'lightModeInput' : ''}
+              className={appTheme ? 'light-mode-input' : ''}
             />
           </div>
           <div onClick={handleOpenModal} className={btnClass}>
@@ -104,7 +104,7 @@ const WalletScreen = ({ setwalletScreen }) => {
           <div
             className={
               appTheme
-                ? 'eth-minter-section with-no-toggle btn lightModeSidebar'
+                ? 'eth-minter-section with-no-toggle btn light-mode-sidebar'
                 : 'eth-minter-section with-no-toggle btn'
             }
             onClick={() => setwalletScreen(false)}
@@ -112,7 +112,15 @@ const WalletScreen = ({ setwalletScreen }) => {
             <img src={leftAero} alt="" className="walletBtnImg" />
             <span className="no-margin">Task Page</span>
           </div>
-          <div onClick={handleSettingModal} className={btnClass}>
+          <div
+            onClick={handleSettingModal}
+            style={{ marginLeft: '20px' }}
+            className={
+              appTheme
+                ? 'eth-minter-section  btn light-mode-sidebar'
+                : 'eth-minter-section   btn'
+            }
+          >
             <img src={EthMinterSetting} alt="" />
           </div>
         </div>

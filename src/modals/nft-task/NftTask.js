@@ -1,112 +1,115 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppInputField, AppSpacer, ModalWrapper } from '../../component'
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
-} from "../../component/modal-wrapper/Modal";
+} from '../../component/modal-wrapper/Modal'
 import {
   fetchEditStorageState,
   fetchNftWalletListState,
   fetchThemsState,
   setEditStorage,
   setModalState,
-} from "../../features/counterSlice";
-import { addTaskInGroup, editTaskInGroup } from "../../features/logic/nft";
-import { sendLogs } from "../../helper/electron-bridge";
-import { validationChecker } from "../../hooks/validationChecker";
-import { nftTaskSchema } from "../../validation";
+} from '../../features/counterSlice'
+import { addTaskInGroup, editTaskInGroup } from '../../features/logic/nft'
+import { sendLogs } from '../../helper/electron-bridge'
+import { validationChecker } from '../../hooks/validationChecker'
+import { nftTaskSchema } from '../../validation'
 
 function NftTask() {
-  const dispatch = useDispatch();
-  const appTheme = useSelector(fetchThemsState);
-  const editState = useSelector(fetchEditStorageState);
-  const walletList = useSelector(fetchNftWalletListState);
-  const textClass = appTheme ? "lightMode_color" : "";
+  const dispatch = useDispatch()
+  const appTheme = useSelector(fetchThemsState)
+  const editState = useSelector(fetchEditStorageState)
+  const walletList = useSelector(fetchNftWalletListState)
+  const textClass = appTheme ? 'lightMode_color' : ''
   const [task, setTask] = useState({
-    walletID: "",
-    transactionCost: "",
-    contractAddress: "",
-    functionName: "",
-    functionParam: "",
-    gasPriceMethod: "",
-    status: "Idle",
-    walletName: "",
-  });
+    walletID: '',
+    transactionCost: '',
+    contractAddress: '',
+    functionName: '',
+    functionParam: '',
+    gasPriceMethod: '',
+    status: 'Idle',
+    walletName: '',
+  })
 
   useEffect(() => {
     if (Object.keys(editState).length > 0) {
       setTask((pre) => {
-        return { ...editState };
-      });
+        return { ...editState }
+      })
     }
     return () => {
-      dispatch(setEditStorage({}));
-    };
-  }, [editState, dispatch]);
+      dispatch(setEditStorage({}))
+    }
+  }, [editState, dispatch])
 
   const handleCloseModal = () => {
-    dispatch(setModalState("nftTaskModal"));
-  };
+    dispatch(setModalState('nftTaskModal'))
+  }
 
   const handleGasMethod = ({ value }) => {
     setTask((pre) => {
-      return { ...pre, gasPriceMethod: value };
-    });
-  };
+      return { ...pre, gasPriceMethod: value }
+    })
+  }
 
   const handleWalletMethod = ({ value, label }) => {
     setTask((pre) => {
-      return { ...pre, walletID: value, walletName: label };
-    });
-  };
+      return { ...pre, walletID: value, walletName: label }
+    })
+  }
 
   const handleChange = (event) => {
     const {
       target: { value, name },
-    } = event;
+    } = event
     setTask((pre) => {
-      return { ...pre, [name]: value };
-    });
-  };
+      return { ...pre, [name]: value }
+    })
+  }
 
   const makeWalletOption = () => {
     return walletList.map((wallet) => {
-      return { label: wallet.walletNickName, value: wallet.id };
-    });
-  };
+      return { label: wallet.walletNickName, value: wallet.id }
+    })
+  }
 
   const getWalletOption = () => {
     if (walletList.length > 0) {
       for (let i = 0; i < walletList.length; i++) {
-        const wallet = walletList[i];
+        const wallet = walletList[i]
         if (wallet?.id === task.walletID) {
-          return [{ label: task.walletName, value: task.walletID }];
+          return [{ label: task.walletName, value: task.walletID }]
         }
       }
-    } else return [];
-  };
+    } else return []
+  }
 
   const handleSubmit = () => {
     const validationresult = validationChecker(
-      nftTaskSchema(task.gasPriceMethod === "manualPrice"),
-      task
-    );
+      nftTaskSchema(task.gasPriceMethod === 'manualPrice'),
+      task,
+    )
     if (validationresult) {
       if (Object.keys(editState).length === 0) {
-        const log = `new Minter task is created with contract address ${task.contractAddress}`;
-        sendLogs(log);
-        dispatch(addTaskInGroup(task));
+        const log = `new Minter task is created with contract address ${task.contractAddress}`
+        sendLogs(log)
+        dispatch(addTaskInGroup(task))
       } else {
-        dispatch(editTaskInGroup(task));
+        dispatch(editTaskInGroup(task))
       }
-      handleCloseModal();
+      handleCloseModal()
     }
-  };
+  }
+
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>{Object.keys(editState).length > 0 ? "Edit" : "Create"} Task</h2>
+        <h2 className={textClass}>
+          {Object.keys(editState).length > 0 ? 'Edit' : 'Create'} Task
+        </h2>
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
@@ -174,13 +177,13 @@ function NftTask() {
             selectOptions={GAS_OPTION}
             onChange={handleGasMethod}
             value={GAS_OPTION.filter(
-              (opt) => opt["value"] === task.gasPriceMethod
+              (opt) => opt['value'] === task.gasPriceMethod,
             )}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
       <AppSpacer spacer={10} />
-      {task["gasPriceMethod"] === "manualPrice" && (
+      {task['gasPriceMethod'] === 'manualPrice' && (
         <ModalFlexOuterRow>
           <ModalFlexInnerRow>
             <AppInputField
@@ -211,8 +214,8 @@ function NftTask() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? "modal-cancel-btn btn lightMode-modalBtn "
-              : "modal-cancel-btn btn"
+              ? 'modal-cancel-btn btn light-mode-modalbtn '
+              : 'modal-cancel-btn btn'
           }
         >
           <span className={textClass}>Cancel</span>
@@ -221,20 +224,20 @@ function NftTask() {
           onClick={handleSubmit}
           className={
             appTheme
-              ? "modal-cancel-btn submit btn btn_shadow "
-              : " modal-cancel-btn submit btn"
+              ? 'modal-cancel-btn submit btn btn-shadow '
+              : ' modal-cancel-btn submit btn'
           }
         >
-          <span>{Object.keys(editState).length > 0 ? "Save" : "Create"}</span>
+          <span>{Object.keys(editState).length > 0 ? 'Save' : 'Create'}</span>
         </div>
       </div>
     </ModalWrapper>
-  );
+  )
 }
 
-export default NftTask;
+export default NftTask
 
 const GAS_OPTION = [
-  { label: "Rapid Price", value: "rapidPrice" },
-  { label: "Manual Price", value: "manualPrice" },
-];
+  { label: 'Rapid Price', value: 'rapidPrice' },
+  { label: 'Manual Price', value: 'manualPrice' },
+]

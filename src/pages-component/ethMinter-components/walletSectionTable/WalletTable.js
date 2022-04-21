@@ -18,18 +18,20 @@ const WalletTable = ({ walletList = [] }) => {
     dispatch(removeNftWalletFromList(row))
   }
 
+  const textClass = appTheme ? 'light-mode_table-color' : ''
+
   const WalletTableRow = ({ wallet, index, onDelete }) => (
     <div
-      className={`   ${
+      className={`${
         appTheme
-          ? 'acc-chnager-page-table-header body activeLink'
+          ? 'acc-chnager-page-table-header body light-bg'
           : 'acc-chnager-page-table-header body'
       } `}
     >
-      <div>{index}</div>
-      <div>{wallet?.walletNickName}</div>
-      <div>{wallet?.walletPublicKey}</div>
-      <div>{wallet?.walletBalance}</div>
+      <div className={textClass}>{index}</div>
+      <div className={textClass}>{wallet?.walletNickName}</div>
+      <div className={textClass}>{wallet?.walletPublicKey}</div>
+      <div className={textClass}>{wallet?.walletBalance}</div>
       <div>
         <div
           style={{ alignItems: 'center' }}

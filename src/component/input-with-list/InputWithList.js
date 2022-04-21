@@ -5,6 +5,8 @@ import plus from '../../assests/images/plus.svg'
 import exportIcon from '../../assests/images/export.svg'
 import UseAnimations from 'react-useanimations'
 import trash2 from 'react-useanimations/lib/trash2'
+import { useSelector } from 'react-redux'
+import { fetchThemsState } from '../../features/counterSlice'
 
 function InputWithList({
   title = 'Channel ID[s]',
@@ -15,9 +17,9 @@ function InputWithList({
   inputProps,
   logAction,
   onDelete,
-  appTheme,
   isComingSoon = false,
 }) {
+  const appTheme = useSelector(fetchThemsState)
   return (
     <div className="input-field-with-scroll-outer">
       <h4 className={appTheme ? 'lightMode_color' : ''}>{title}</h4>
@@ -99,7 +101,13 @@ function InputWithList({
                     </div>
                   ))}
               {!isLogs && list.length === 0 && (
-                <p className="blank-text">Leave Blank For All.</p>
+                <p
+                  className={
+                    appTheme ? 'blank-text lightMode_color' : 'blank-text'
+                  }
+                >
+                  Leave Blank For All.
+                </p>
               )}
             </div>
           </React.Fragment>

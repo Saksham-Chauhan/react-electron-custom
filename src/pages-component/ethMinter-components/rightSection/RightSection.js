@@ -26,7 +26,7 @@ const RightSection = ({
   const dispatch = useDispatch()
   const appTheme = useSelector(fetchThemsState)
   const btnClass = appTheme
-    ? 'icon-btn-wrapper btn lightBg'
+    ? 'icon-btn-wrapper btn light-bg'
     : 'icon-btn-wrapper btn'
 
   const handleOpenModal = () => {
@@ -65,7 +65,7 @@ const RightSection = ({
           <div
             className={
               appTheme
-                ? 'page-top-search-container lightBg '
+                ? 'page-top-search-container light-bg '
                 : 'page-top-search-container'
             }
           >
@@ -79,7 +79,7 @@ const RightSection = ({
               onChange={handleSearching}
               placeholder="Search"
               type="search"
-              className={appTheme ? 'lightModeInput' : ''}
+              className={appTheme ? 'light-mode-input' : ''}
             />
           </div>
           <div onClick={handleOpenModal} className={btnClass}>
@@ -102,7 +102,7 @@ const RightSection = ({
           <div
             className={
               appTheme
-                ? 'eth-minter-section  btn lightModeSidebar'
+                ? 'eth-minter-section  btn light-mode-sidebar'
                 : 'eth-minter-section   btn'
             }
             onClick={() => setwalletScreen(true)}
@@ -110,7 +110,15 @@ const RightSection = ({
             <span>Wallet Page</span>
             <img src={rightAero} alt="" className="walletBtnImg" />
           </div>
-          <div onClick={handleSettingModal} className={btnClass}>
+          <div
+            onClick={handleSettingModal}
+            style={{ marginLeft: '20px' }}
+            className={
+              appTheme
+                ? 'eth-minter-section  btn light-mode-sidebar'
+                : 'eth-minter-section   btn'
+            }
+          >
             <img src={EthMinterSetting} alt="" />
           </div>
         </div>

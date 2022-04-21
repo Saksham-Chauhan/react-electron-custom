@@ -29,6 +29,7 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
         </div>
         <div
           onClick={handleScreen}
+          style={{ marginLeft: '20px ', paddingRight: '10px' }}
           className={
             appTheme
               ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
