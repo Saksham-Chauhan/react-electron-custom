@@ -1,30 +1,30 @@
-import React from "react";
+import React from 'react'
 import {
   GroupCard,
   AppSpacer,
   TopWrapper,
   GroupTitle,
-} from "../../../component";
+} from '../../../component'
 import {
   setModalState,
   fetchNftGroupListState,
   setActiveNftGroup,
-} from "../../../features/counterSlice";
-import { useDispatch, useSelector } from "react-redux";
-import solanaSol from "../../../assests/images/solanaSol.svg";
-import { NoAccountAlertModal } from "../../../modals";
+} from '../../../features/counterSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import solanaSol from '../../../assests/images/solanaSol.svg'
+import { NoAccountAlertModal } from '../../../modals'
 
 const LeftSection = ({ activeNftGroup }) => {
-  const dispatch = useDispatch();
-  const list = useSelector(fetchNftGroupListState);
+  const dispatch = useDispatch()
+  const list = useSelector(fetchNftGroupListState)
 
   const handleOpenModal = () => {
-    dispatch(setModalState("nftGroupModal"));
-  };
+    dispatch(setModalState('nftGroupModal'))
+  }
 
   const handleGroupSelect = (group) => {
-    dispatch(setActiveNftGroup(group));
-  };
+    dispatch(setActiveNftGroup(group))
+  }
 
   return (
     <React.Fragment>
@@ -48,15 +48,15 @@ const LeftSection = ({ activeNftGroup }) => {
           <GroupCard
             onClick={() => handleGroupSelect(group)}
             cardIcon={solanaSol}
-            key={group["id"]}
+            key={group['id']}
             hideSubText={true}
-            activeClass={group["id"] === activeNftGroup["id"] && "activeNft"}
-            cardTitle={group["minterTitle"] || "Group 1"}
+            activeClass={group['id'] === activeNftGroup['id'] && 'activeNft'}
+            cardTitle={group['minterTitle'] || 'Group 1'}
           />
         ))}
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default LeftSection;
+export default LeftSection

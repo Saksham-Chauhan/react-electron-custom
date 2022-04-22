@@ -27,9 +27,21 @@ const WalletScreen = ({ setwalletScreen }) => {
   const walletList = useSelector(fetchNftWalletListState)
   const [search, setSearch] = useState('')
   const dispatch = useDispatch()
-  const btnClass = appTheme
-    ? 'icon-btn-wrapper btn light-bg'
-    : 'icon-btn-wrapper btn'
+
+  const theme = {
+    btnClass: appTheme
+      ? 'icon-btn-wrapper btn light-bg'
+      : 'icon-btn-wrapper btn',
+    inputContainer: appTheme
+      ? 'page-top-search-container light-bg '
+      : 'page-top-search-container',
+    inputClass: appTheme ? 'light-mode-input' : '',
+    minterSection: appTheme
+      ? 'eth-minter-section with-no-toggle btn light-mode-sidebar'
+      : 'eth-minter-section with-no-toggle btn',
+    searchIcon: appTheme ? lightModesearch : searchIcon,
+    plusIcon: appTheme ? lightModeplush : add,
+  }
 
   useEffect(() => {
     if (walletList?.length > 0) {
@@ -70,43 +82,30 @@ const WalletScreen = ({ setwalletScreen }) => {
       <AppSpacer spacer={30} />
       <div className="page-top-btns-wrapper padding-horizontal">
         <div className="page-left-container ">
-          <div
-            className={
-              appTheme
-                ? 'page-top-search-container light-bg '
-                : 'page-top-search-container'
-            }
-          >
-            <img
-              src={appTheme ? lightModesearch : searchIcon}
-              alt="search-icon"
-            />
+          <div className={theme.inputContainer}>
+            <img src={theme.searchIcon} alt="search-icon" />
             <input
               placeholder="Search"
               onChange={handleSearching}
               value={search}
               type="search"
-              className={appTheme ? 'light-mode-input' : ''}
+              className={theme.inputClass}
             />
           </div>
-          <div onClick={handleOpenModal} className={btnClass}>
-            <img src={appTheme ? lightModeplush : add} alt="" />
+          <div onClick={handleOpenModal} className={theme.btnClass}>
+            <img src={theme.plusIcon} alt="" />
           </div>
-          <div className={btnClass}>
+          <div className={theme.btnClass}>
             <img src={processIcon} alt="" />
           </div>
-          <div onClick={handleDeleteAll} className={btnClass}>
+          <div onClick={handleDeleteAll} className={theme.btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
           </div>
         </div>
 
         <div className="walletBtn">
           <div
-            className={
-              appTheme
-                ? 'eth-minter-section with-no-toggle btn light-mode-sidebar'
-                : 'eth-minter-section with-no-toggle btn'
-            }
+            className={theme.minterSection}
             onClick={() => setwalletScreen(false)}
           >
             <img src={leftAero} alt="" className="walletBtnImg" />
@@ -115,11 +114,7 @@ const WalletScreen = ({ setwalletScreen }) => {
           <div
             onClick={handleSettingModal}
             style={{ marginLeft: '20px' }}
-            className={
-              appTheme
-                ? 'eth-minter-section  btn light-mode-sidebar'
-                : 'eth-minter-section   btn'
-            }
+            className={theme.minterSection}
           >
             <img src={EthMinterSetting} alt="" />
           </div>

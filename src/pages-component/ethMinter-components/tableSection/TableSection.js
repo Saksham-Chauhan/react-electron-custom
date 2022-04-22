@@ -1,6 +1,9 @@
 import React from 'react'
 import './style.css'
 import play from '../../../assests/images/play.svg'
+import lightModeplay from '../../../assests/images/lightMode_play.svg'
+import lightModeEditbtn from '../../../assests/images/lightModeEditbtn.svg'
+
 import trash2 from 'react-useanimations/lib/trash2'
 import edit from '../../../assests/images/edit.svg'
 import UseAnimations from 'react-useanimations'
@@ -17,7 +20,6 @@ import { sendLogs } from '../../../helper/electron-bridge'
 const TableSection = ({ list = [] }) => {
   const dispatch = useDispatch()
   const walletList = useSelector(fetchNftWalletListState)
-  const appTheme = useSelector(fetchThemsState)
   const handleDeleteTask = (task) => {
     const log = `Delete the Minter task with id -> ${task.id}`
     sendLogs(log)
@@ -76,16 +78,25 @@ const MinterTableRow = ({
   onEdit,
   wallet,
 }) => {
+  const appTheme = useSelector(fetchThemsState)
+
+  const theme = {
+    tableBg: appTheme ? 'table-header body light-bg ' : 'table-header body ',
+    tableData: appTheme ? 'lightMode_color' : '',
+    playBtn: appTheme ? lightModeplay : play,
+    editBtn: appTheme ? lightModeEditbtn : edit,
+  }
+
   return (
-    <div className="table-header body">
-      <div>{index + 1}</div>
-      <div>{row?.contractAddress}</div>
-      <div>{row?.gasPriceMethod}</div>
-      <div>{row?.walletName} </div>
-      <div>{row?.status}</div>
+    <div className={theme.tableBg}>
+      <div className={theme.tableData}>{index + 1}</div>
+      <div className={theme.tableData}>{row?.contractAddress}</div>
+      <div className={theme.tableData}>{row?.gasPriceMethod}</div>
+      <div className={theme.tableData}>{row?.walletName} </div>
+      <div className={theme.tableData}>{row?.status}</div>
       <div>
         <img
-          src={play}
+          src={theme.playBtn}
           onClick={() =>
             onPlay({
               ...row,
@@ -94,7 +105,7 @@ const MinterTableRow = ({
           }
           alt=""
         />
-        <img onClick={() => onEdit(row)} src={edit} alt="" />
+        <img onClick={() => onEdit(row)} src={theme.editBtn} alt="" />
         <UseAnimations
           wrapperStyle={{ cursor: 'pointer' }}
           animation={trash2}

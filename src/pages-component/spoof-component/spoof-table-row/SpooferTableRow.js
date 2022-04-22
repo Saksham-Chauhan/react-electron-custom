@@ -24,12 +24,13 @@ function SpooferTableRow({
       setIsStart(true)
     }
   }, [spoof])
-  const lightModeClass = appTheme
-    ? 'spoofer-page-table-header tbody light-bg light-mode_table-color'
-    : 'spoofer-page-table-header tbody'
-
+  const theme = {
+    tableHeader: appTheme
+      ? 'spoofer-page-table-header tbody light-bg light-mode-table-color'
+      : 'spoofer-page-table-header tbody',
+  }
   return (
-    <div className={lightModeClass}>
+    <div className={theme.tableHeader}>
       <div>{index}</div>
       <div>{spoof['url']}</div>
       <div>{spoof['proxyName']}</div>

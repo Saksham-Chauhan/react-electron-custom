@@ -16,7 +16,7 @@
   color: var(--lightMode-text-color) !important;
 }
 
-.light-mode_table-color {
+.light-mode-table-color {
   color: var(--lightMode-tableColor) !important;
 }
 

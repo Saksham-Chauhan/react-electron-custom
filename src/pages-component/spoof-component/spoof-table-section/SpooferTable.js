@@ -15,6 +15,12 @@ import { fetchThemsState } from '../../../features/counterSlice'
 function SpooferTable({ tableList }) {
   const dispatch = useDispatch()
   const appTheme = useSelector(fetchThemsState)
+  const Theme = {
+    tableHeader: appTheme
+      ? 'spoofer-page-table-header light-mode-active-link'
+      : 'spoofer-page-table-header',
+  }
+
   const handleStart = (spoof, setValue) => {
     if (!tableList.proxyValue) {
       toastWarning('No proxy found. Using system proxy.')
@@ -39,13 +45,7 @@ function SpooferTable({ tableList }) {
 
   return (
     <div className="spoofer-page-table-section">
-      <div
-        className={
-          appTheme
-            ? 'spoofer-page-table-header light-mode-active-link'
-            : 'spoofer-page-table-header'
-        }
-      >
+      <div className={Theme.tableHeader}>
         <div>#</div>
         <div>URL</div>
         <div>Proxy</div>

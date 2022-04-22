@@ -4,6 +4,8 @@ import { AppSpacer, GroupStatusCard, TopWrapper } from '../../../component'
 import UseAnimations from 'react-useanimations'
 import add from '../../../assests/images/plus.svg'
 import play from '../../../assests/images/play.svg'
+import lightModeplay from '../../../assests/images/lightMode_play.svg'
+
 import trash2 from 'react-useanimations/lib/trash2'
 import searchIcon from '../../../assests/images/search.svg'
 import lightModeplush from '../../../assests/images/lightModeplus.svg'
@@ -25,9 +27,20 @@ const RightSection = ({
 }) => {
   const dispatch = useDispatch()
   const appTheme = useSelector(fetchThemsState)
-  const btnClass = appTheme
-    ? 'icon-btn-wrapper btn light-bg'
-    : 'icon-btn-wrapper btn'
+  const theme = {
+    btnClass: appTheme
+      ? 'icon-btn-wrapper btn light-bg'
+      : 'icon-btn-wrapper btn',
+    searchContainer: appTheme
+      ? 'page-top-search-container light-bg '
+      : 'page-top-search-container',
+    inputClass: appTheme ? 'light-mode-input' : '',
+    minterSection: appTheme
+      ? 'eth-minter-section  btn light-mode-sidebar'
+      : 'eth-minter-section   btn',
+    playIcon: appTheme ? lightModeplay : play,
+    searchIcon: appTheme ? lightModesearch : searchIcon,
+  }
 
   const handleOpenModal = () => {
     if (Object.keys(activeNftGroup).length > 0) {
@@ -62,33 +75,24 @@ const RightSection = ({
 
       <div className="page-top-btns-wrapper padding-horizontal">
         <div className="page-left-container">
-          <div
-            className={
-              appTheme
-                ? 'page-top-search-container light-bg '
-                : 'page-top-search-container'
-            }
-          >
-            <img
-              src={appTheme ? lightModesearch : searchIcon}
-              alt="search-icon"
-            />
+          <div className={theme.searchContainer}>
+            <img src={theme.searchIcon} alt="search-icon" />
             <input
               disabled={Object.keys(activeNftGroup).length === 0}
               value={search}
               onChange={handleSearching}
               placeholder="Search"
               type="search"
-              className={appTheme ? 'light-mode-input' : ''}
+              className={theme.inputClass}
             />
           </div>
-          <div onClick={handleOpenModal} className={btnClass}>
+          <div onClick={handleOpenModal} className={theme.btnClass}>
             <img src={appTheme ? lightModeplush : add} alt="" />
           </div>
-          <div className={btnClass}>
-            <img src={play} alt="" />
+          <div className={theme.btnClass}>
+            <img src={theme.playIcon} alt="" />
           </div>
-          <div className={btnClass}>
+          <div className={theme.btnClass}>
             <UseAnimations
               onClick={handleDeleteGroup}
               animation={trash2}
@@ -100,11 +104,7 @@ const RightSection = ({
 
         <div className="walletBtn">
           <div
-            className={
-              appTheme
-                ? 'eth-minter-section  btn light-mode-sidebar'
-                : 'eth-minter-section   btn'
-            }
+            className={theme.minterSection}
             onClick={() => setwalletScreen(true)}
           >
             <span>Wallet Page</span>
@@ -113,11 +113,7 @@ const RightSection = ({
           <div
             onClick={handleSettingModal}
             style={{ marginLeft: '20px' }}
-            className={
-              appTheme
-                ? 'eth-minter-section  btn light-mode-sidebar'
-                : 'eth-minter-section   btn'
-            }
+            className={theme.minterSection}
           >
             <img src={EthMinterSetting} alt="" />
           </div>

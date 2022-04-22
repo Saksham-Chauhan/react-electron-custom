@@ -10,15 +10,13 @@ import { fetchThemsState } from '../../../features/counterSlice'
 
 function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
   const appTheme = useSelector(fetchThemsState)
-
+  const theme = {
+    tableBody: appTheme
+      ? 'acc-chnager-page-table-header body  light-bg light-mode-table-color'
+      : 'acc-chnager-page-table-header body',
+  }
   return (
-    <div
-      className={
-        appTheme
-          ? 'acc-chnager-page-table-header body  light-bg light-mode_table-color'
-          : 'acc-chnager-page-table-header body'
-      }
-    >
+    <div className={theme.tableBody}>
       <div>{index}</div>
       <div style={{ display: 'flex' }}>
         <div style={{ width: '70%', overflow: 'hidden' }}>

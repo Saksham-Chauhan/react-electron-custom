@@ -22,6 +22,21 @@ function WebhookSetting({ userDetails }) {
   const webhookList = useSelector(fetchWebhookListState)
   const appTheme = useSelector(fetchThemsState)
 
+  const theme = {
+    webhookSettingInner: appTheme
+      ? 'webhook-setting-inner light-bg '
+      : 'webhook-setting-inner',
+    inputStyle: {
+      background: appTheme ? 'none' : '',
+      color: appTheme ? '#706A6A' : '',
+      border: appTheme ? '1px solid #0D0027' : '',
+    },
+    webhookTestBtn: appTheme
+      ? 'webhook-test btn light-mode-sidebar'
+      : 'webhook-test btn ',
+    textClass: appTheme ? ' lightMode_color ' : '',
+  }
+
   useEffect(() => {
     if (webhookList?.length > 0) {
       setWebhook(webhookList[0])
@@ -70,36 +85,20 @@ function WebhookSetting({ userDetails }) {
     exportLogs()
   }
 
-  const textClass = appTheme ? ' lightMode_color ' : ''
   return (
     <div className="webhook-setting-outer">
-      <h2 className={textClass}>Webhook</h2>
+      <h2 className={theme.textClass}>Webhook</h2>
       <AppSpacer spacer={14} />
-      <div
-        className={
-          appTheme ? 'webhook-setting-inner light-bg ' : 'webhook-setting-inner'
-        }
-      >
+      <div className={theme.webhookSettingInner}>
         <div className="webhook-input-section ">
           <input
             onChange={handleChange}
             value={webhook}
             placeholder="Enter Webhook"
             type="text"
-            style={{
-              background: appTheme ? 'none' : '',
-              color: appTheme ? '#706A6A' : '',
-              border: appTheme ? '1px solid #0D0027' : '',
-            }}
+            style={theme.inputStyle}
           />
-          <div
-            onClick={handleWebhook}
-            className={
-              appTheme
-                ? 'webhook-test btn light-mode-sidebar'
-                : 'webhook-test btn '
-            }
-          >
+          <div onClick={handleWebhook} className={theme.webhookTestBtn}>
             <span>Test</span>
           </div>
         </div>
@@ -111,7 +110,7 @@ function WebhookSetting({ userDetails }) {
               checked={option?.linkOpener || false}
               id="link-opener"
             />
-            <span className={textClass}>Link Opener</span>
+            <span className={theme.textClass}>Link Opener</span>
           </div>
           <div className="setting-toggle-with-label">
             <AppToggler
@@ -119,7 +118,7 @@ function WebhookSetting({ userDetails }) {
               checked={option?.inviteJoiner || false}
               id="invite-joiner"
             />
-            <span className={textClass}>Invite Joiner</span>
+            <span className={theme.textClass}>Invite Joiner</span>
           </div>
           <div className="setting-toggle-with-label">
             <AppToggler
@@ -127,7 +126,7 @@ function WebhookSetting({ userDetails }) {
               checked={option?.twitterMonitor || false}
               id="twitter-monitor"
             />
-            <span className={textClass}>Twitter Monitor</span>
+            <span className={theme.textClass}>Twitter Monitor</span>
           </div>
           <div className="setting-toggle-with-label">
             <AppToggler
@@ -135,13 +134,13 @@ function WebhookSetting({ userDetails }) {
               checked={option?.logOnOff || false}
               id="log-on/off"
             />
-            <span className={textClass}>Log On/Off</span>
+            <span className={theme.textClass}>Log On/Off</span>
           </div>
         </div>
         <AppSpacer spacer={40} />
         <div className="setting-system-control">
           <div className="system-setting">
-            <label className={textClass}>System Toggle</label>
+            <label className={theme.textClass}>System Toggle</label>
             <AppSpacer spacer={10} />
             <div className="setting-toggle-with-label">
               <AppToggler
@@ -149,13 +148,13 @@ function WebhookSetting({ userDetails }) {
                 checked={option?.bgAnimation || false}
                 id="background-animation"
               />
-              <span className={textClass}>Background Animation</span>
+              <span className={theme.textClass}>Background Animation</span>
             </div>
           </div>
         </div>
         <AppSpacer spacer={18} />
         <div className="system-setting log-report">
-          <label className={textClass}>Export logs</label>
+          <label className={theme.textClass}>Export logs</label>
           <svg
             onClick={handleExportLog}
             viewBox="0 0 12 12"

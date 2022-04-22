@@ -18,14 +18,14 @@ import {
 function Setting() {
   const userDetails = useSelector(fetchLoggedUserDetails)
   const appTheme = useSelector(fetchThemsState)
+  const theme = {
+    settingPageOuter: appTheme
+      ? 'setting-page-outer light-mode-page-section'
+      : 'setting-page-outer',
+  }
+
   return (
-    <div
-      className={
-        appTheme
-          ? 'setting-page-outer light-mode-page-section'
-          : 'setting-page-outer'
-      }
-    >
+    <div className={theme.settingPageOuter}>
       <SettingTopSection />
       <div className="setting-page-padding">
         <AppSpacer spacer={10} />

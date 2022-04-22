@@ -39,6 +39,18 @@ function SettingScreen({
   const selectedChrome = useSelector(fetchTwitterChromeUserState)
   const selectedClaimer = useSelector(fetchTwitterClaimerGroupState)
   const appTheme = useSelector(fetchThemsState)
+
+  const theme = {
+    textClass: appTheme ? 'lightMode_color' : '',
+    settingPageBack: appTheme
+      ? 'twitter-setting-page-back btn light-mode-sidebar'
+      : 'twitter-setting-page-back btn',
+    apiScrollArea: appTheme
+      ? 'api-keys-scroll-acrea light-mode-sidebar'
+      : 'api-keys-scroll-acrea',
+    backGrounnd: appTheme ? 'btn light-mode-sidebar' : '',
+  }
+
   let navigate = useNavigate()
   const [twitterApi, setTwitterApi] = useState({
     apiName: '',
@@ -95,8 +107,6 @@ function SettingScreen({
     }
   }
 
-  const textClass = appTheme ? 'lightMode_color' : ''
-
   return (
     <div>
       <TwitterPageTopSection
@@ -105,21 +115,14 @@ function SettingScreen({
       />
       <AppSpacer spacer={20} />
       <div className="twitter-setting-page-inner">
-        <div
-          onClick={handleScreen}
-          className={
-            appTheme
-              ? 'twitter-setting-page-back btn light-mode-sidebar'
-              : 'twitter-setting-page-back btn'
-          }
-        >
+        <div onClick={handleScreen} className={theme.settingPageBack}>
           <img src={back} alt="" />
           <span>Twitter Page</span>
         </div>
         <AppSpacer spacer={30} />
         <div className="twitter-secting-col">
           <div>
-            <h3 className={textClass}>Keys</h3>
+            <h3 className={theme.textClass}>Keys</h3>
             <AppInputField
               hideLabel={true}
               isCustomLabel={true}
@@ -149,21 +152,12 @@ function SettingScreen({
             />
             <AppSpacer spacer={15} />
             <div className="setting-twitter-flex full">
-              <div
-                onClick={handleSubmit}
-                className={appTheme ? 'btn light-mode-sidebar' : ''}
-              >
+              <div onClick={handleSubmit} className={theme.backGrounnd}>
                 <span>Save Token</span>
               </div>
             </div>
             <AppSpacer spacer={15} />
-            <div
-              className={
-                appTheme
-                  ? 'api-keys-scroll-acrea light-mode-sidebar'
-                  : 'api-keys-scroll-acrea'
-              }
-            >
+            <div className={theme.apiScrollArea}>
               {apiList.map((api, index) => (
                 <div key={api['id']} className="api-list-item">
                   <span>{api['apiName']}</span>
@@ -179,7 +173,7 @@ function SettingScreen({
             </div>
           </div>
           <div>
-            <h3 className={textClass}>Claimer</h3>
+            <h3 className={theme.textClass}>Claimer</h3>
             <AppInputField
               fieldTitle=""
               hideLabel={true}
@@ -201,7 +195,7 @@ function SettingScreen({
             />
           </div>
           <div>
-            <h3 className={textClass}>Chrome User</h3>
+            <h3 className={theme.textClass}>Chrome User</h3>
             <AppInputField
               fieldTitle=""
               hideLabel={true}

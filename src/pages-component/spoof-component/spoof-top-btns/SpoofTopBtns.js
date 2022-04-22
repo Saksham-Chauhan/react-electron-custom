@@ -28,6 +28,20 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
     dispatch(setModalState('spoofModal'))
   }
   const appTheme = useSelector(fetchThemsState)
+  const theme = {
+    btnClass: appTheme
+      ? 'icon-btn-wrapper btn light-bg'
+      : 'icon-btn-wrapper btn',
+    searchContainer: appTheme
+      ? 'page-top-search-container light-bg'
+      : 'page-top-search-container',
+    inputClass: appTheme ? 'light-mode-input' : '',
+    removeBtnIcon: appTheme
+      ? 'btn-with-no-icon btn remove-btn light-bg'
+      : 'btn-with-no-icon btn remove-btn',
+    spanStyle: { color: appTheme ? '#076366' : '' },
+    searchIcon: appTheme ? lightModesearch : searchIcon,
+  }
 
   const handleAll = (key) => {
     if (tableList.length > 0) {
@@ -49,43 +63,30 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
     } else toastWarning('Create some spoof')
   }
 
-  const btnClass = appTheme
-    ? 'icon-btn-wrapper btn light-bg'
-    : 'icon-btn-wrapper btn'
-
   return (
     <div className="page-top-btns-wrapper">
       <div className="page-left-container spoofer-page">
-        <div
-          className={
-            appTheme
-              ? 'page-top-search-container light-bg'
-              : 'page-top-search-container'
-          }
-        >
-          <img
-            src={appTheme ? lightModesearch : searchIcon}
-            alt="search-icon"
-          />
+        <div className={theme.searchContainer}>
+          <img src={theme.searchIcon} alt="search-icon" />
           <input
             value={search}
             onChange={handleSearching}
             placeholder="Search"
             type="search"
-            className={appTheme ? 'light-mode-input' : ''}
+            className={theme.inputClass}
           />
         </div>
 
-        <div onClick={handleOpenModal} className={btnClass}>
+        <div onClick={handleOpenModal} className={theme.btnClass}>
           <img src={appTheme ? lightModeplush : plus} alt="" />
         </div>
-        <div onClick={() => handleAll('START')} className={btnClass}>
+        <div onClick={() => handleAll('START')} className={theme.btnClass}>
           <img src={play} alt="" />
         </div>
-        <div onClick={() => handleAll('STOP')} className={btnClass}>
+        <div onClick={() => handleAll('STOP')} className={theme.btnClass}>
           <img src={stop} alt="" />
         </div>
-        <div onClick={() => handleAll('DELETE')} className={btnClass}>
+        <div onClick={() => handleAll('DELETE')} className={theme.btnClass}>
           <UseAnimations
             animation={trash2}
             strokeColor="#B60E0E"
@@ -95,13 +96,9 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
         </div>
         <div
           onClick={() => handleAll('LAUNCH')}
-          className={
-            appTheme
-              ? 'btn-with-no-icon btn remove-btn light-bg'
-              : 'btn-with-no-icon btn remove-btn'
-          }
+          className={theme.removeBtnIcon}
         >
-          <span style={{ color: appTheme ? '#076366' : '' }}>Launch All</span>
+          <span style={theme.spanStyle}>Launch All</span>
         </div>
       </div>
     </div>

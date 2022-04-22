@@ -39,6 +39,12 @@ function TableSection({ list }) {
   let flag = useRef(false)
   const dispatch = useDispatch()
   const appTheme = useSelector(fetchThemsState)
+  const theme = {
+    tableHeader: appTheme
+      ? 'acc-chnager-page-table-header light-mode-active-link'
+      : 'acc-chnager-page-table-header',
+  }
+
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj))
   }
@@ -223,13 +229,7 @@ function TableSection({ list }) {
   return (
     <div className="acc-changer-page-table-section">
       <div className="acc-chnager-table-header-parent">
-        <div
-          className={
-            appTheme
-              ? 'acc-chnager-page-table-header light-mode-active-link'
-              : 'acc-chnager-page-table-header'
-          }
-        >
+        <div className={theme.tableHeader}>
           <div>#</div>
           <div>{'Token Group'}</div>
           <div>Type</div>
