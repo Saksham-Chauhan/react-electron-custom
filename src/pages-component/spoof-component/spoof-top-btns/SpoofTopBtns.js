@@ -8,6 +8,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { toastWarning } from '../../../toaster'
 import play from '../../../assests/images/play.svg'
+import lightModePlay from '../../../assests/images/lightMode_play.svg'
 import plus from '../../../assests/images/plus.svg'
 import stop from '../../../assests/images/stop.svg'
 import searchIcon from '../../../assests/images/search.svg'
@@ -41,6 +42,8 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
       : 'btn-with-no-icon btn remove-btn',
     spanStyle: { color: appTheme ? '#076366' : '' },
     searchIcon: appTheme ? lightModesearch : searchIcon,
+    playIcon: appTheme ? lightModePlay : play,
+    plusIcon: appTheme ? lightModeplush : plus,
   }
 
   const handleAll = (key) => {
@@ -78,10 +81,10 @@ function SpoofTopBtns({ tableList, search, handleSearching }) {
         </div>
 
         <div onClick={handleOpenModal} className={theme.btnClass}>
-          <img src={appTheme ? lightModeplush : plus} alt="" />
+          <img src={theme.plusIcon} alt="" />
         </div>
         <div onClick={() => handleAll('START')} className={theme.btnClass}>
-          <img src={play} alt="" />
+          <img src={theme.playIcon} alt="" />
         </div>
         <div onClick={() => handleAll('STOP')} className={theme.btnClass}>
           <img src={stop} alt="" />

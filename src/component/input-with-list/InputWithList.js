@@ -29,10 +29,10 @@ function InputWithList({
       background: appTheme ? 'none ' : '',
       color: appTheme ? '#706A6A' : '',
       border: appTheme ? ' 1px solid #0D0027' : '',
-      plusIconBtn: appTheme
-        ? 'plus-icon-btn btn light-mode-sidebar'
-        : 'plus-icon-btn btn',
     },
+    plusIconBtn: appTheme
+      ? 'plus-icon-btn btn light-mode-sidebar'
+      : 'plus-icon-btn btn',
     blankText: appTheme ? 'blank-text lightMode_color' : 'blank-text',
     spanText: {
       color: appTheme ? '#0D0027' : '',

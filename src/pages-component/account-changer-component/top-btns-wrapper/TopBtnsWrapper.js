@@ -8,6 +8,7 @@ import {
 import UseAnimations from 'react-useanimations'
 import add from '../../../assests/images/plus.svg'
 import play from '../../../assests/images/play.svg'
+import lightModePlay from '../../../assests/images/lightMode_play.svg'
 import trash2 from 'react-useanimations/lib/trash2'
 import searchIcon from '../../../assests/images/search.svg'
 import lightModeplush from '../../../assests/images/lightModeplus.svg'
@@ -29,6 +30,7 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
     searchIcon: appTheme ? lightModesearch : searchIcon,
     inputClass: appTheme ? 'light-mode-input' : '',
     plusIcon: appTheme ? lightModeplush : add,
+    playIcon: appTheme ? lightModePlay : play,
   }
 
   const handleAdd = () => {
@@ -106,7 +108,7 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
           <img src={theme.plusIcon} alt="" />
         </div>
         <div onClick={handlePlayAll} className={theme.btnClass}>
-          <img src={play} alt="" />
+          <img src={theme.playIcon} alt="" />
         </div>
         <div onClick={handleDeleteAll} className={theme.btnClass}>
           <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />

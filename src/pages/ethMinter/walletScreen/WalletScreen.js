@@ -12,7 +12,9 @@ import EthMinterSetting from '../../../assests/images/EthMinterSetting.svg'
 import leftAero from '../../../assests/images/leftAero.svg'
 import UseAnimations from 'react-useanimations'
 import add from '../../../assests/images/plus.svg'
-import processIcon from '../../../assests/images/process.svg'
+import refreshIcon from '../../../assests/images/process.svg'
+import lightrefreshWallet from '../../../assests/images/lightrefreshWallet.svg'
+
 import trash2 from 'react-useanimations/lib/trash2'
 import searchIcon from '../../../assests/images/search.svg'
 import lightModeplush from '../../../assests/images/lightModeplus.svg'
@@ -41,6 +43,7 @@ const WalletScreen = ({ setwalletScreen }) => {
       : 'eth-minter-section with-no-toggle btn',
     searchIcon: appTheme ? lightModesearch : searchIcon,
     plusIcon: appTheme ? lightModeplush : add,
+    refreshbtn: appTheme ? refreshIcon : lightrefreshWallet,
   }
 
   useEffect(() => {
@@ -96,7 +99,7 @@ const WalletScreen = ({ setwalletScreen }) => {
             <img src={theme.plusIcon} alt="" />
           </div>
           <div className={theme.btnClass}>
-            <img src={processIcon} alt="" />
+            <img src={theme.refreshbtn} alt="" />
           </div>
           <div onClick={handleDeleteAll} className={theme.btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
