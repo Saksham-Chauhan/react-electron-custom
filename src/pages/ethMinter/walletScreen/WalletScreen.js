@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
 import {
+  fetchNftSettingRPCState,
   fetchNftWalletListState,
   fetchThemsState,
   setModalState,
@@ -21,10 +22,13 @@ import lightModesearch from "../../../assests/images/lightModesearch.svg";
 import { WalletTable } from "../../../pages-component";
 import { searchingFunction } from "../../../hooks/searchFunction";
 import { sendLogs } from "../../../helper/electron-bridge";
+import { editNftWalletList } from "../../../features/logic/nft";
+import { handleFetchWallet } from "../../../helper/nft-minter";
 const WalletScreen = ({ setwalletScreen }) => {
   const [tempList, setTempList] = useState([]);
   const appTheme = useSelector(fetchThemsState);
   const walletList = useSelector(fetchNftWalletListState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const btnClass = appTheme
@@ -62,6 +66,28 @@ const WalletScreen = ({ setwalletScreen }) => {
     } else setTempList([...walletList]);
   };
 
+  const handleDispatchWallet = (wallet) => {
+    dispatch(editNftWalletList(wallet));
+  };
+
+  const onRefreshAll = async () => {
+    let log;
+    for (let i = 0; i < walletList.length; i++) {
+      try {
+        const res = await handleFetchWallet(
+          walletList[i],
+          rpcURL,
+          handleDispatchWallet
+        );
+        if (res) {
+          log = `${walletList[i]?.walletNickName} Wallet id refreshed`;
+        }
+      } catch (e) {
+        log = `${walletList[i]?.walletNickName} Wallet id can't refreshed`;
+      }
+      sendLogs(log);
+    }
+  };
   return (
     <>
       <TopWrapper>
@@ -93,7 +119,7 @@ const WalletScreen = ({ setwalletScreen }) => {
             <img src={appTheme ? lightModeplush : add} alt="" />
           </div>
           <div className={btnClass}>
-            <img src={processIcon} alt="" />
+            <img src={processIcon} alt="refresh" onClick={onRefreshAll} />
           </div>
           <div onClick={handleDeleteAll} className={btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />

@@ -7,6 +7,8 @@ import {
 } from "../../component/modal-wrapper/Modal";
 import {
   fetchEditStorageState,
+  fetchNftSettingEhterAPIState,
+  fetchNftSettingRPCState,
   fetchNftWalletListState,
   fetchThemsState,
   setEditStorage,
@@ -14,6 +16,7 @@ import {
 } from "../../features/counterSlice";
 import { addTaskInGroup, editTaskInGroup } from "../../features/logic/nft";
 import { sendLogs } from "../../helper/electron-bridge";
+import { handleGetMintdata } from "../../helper/nft-minter";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftTaskSchema } from "../../validation";
 
@@ -22,6 +25,8 @@ function NftTask() {
   const appTheme = useSelector(fetchThemsState);
   const editState = useSelector(fetchEditStorageState);
   const walletList = useSelector(fetchNftWalletListState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
+  const apiKey = useSelector(fetchNftSettingEhterAPIState);
   const textClass = appTheme ? "lightMode_color" : "";
   const [task, setTask] = useState({
     walletID: "",
@@ -33,19 +38,24 @@ function NftTask() {
     status: "Idle",
     walletName: "",
   });
+  const [tempVar, setTempVar] = useState();
 
   useEffect(() => {
-    if (Object.keys(editState).length > 0) {
-      setTask((pre) => {
-        return { ...editState };
-      });
-    }
-    return () => {
-      dispatch(setEditStorage({}));
+    const setData = () => {
+      if (Object.keys(editState).length > 0) {
+        setTask((pre) => {
+          return { ...editState };
+        });
+      }
     };
+    setData();
+    // return () => {
+    //   dispatch(setEditStorage({}));
+    // };
   }, [editState, dispatch]);
 
   const handleCloseModal = () => {
+    dispatch(setEditStorage({}));
     dispatch(setModalState("nftTaskModal"));
   };
 
@@ -55,10 +65,8 @@ function NftTask() {
     });
   };
 
-  const handleWalletMethod = ({ value, label }) => {
-    setTask((pre) => {
-      return { ...pre, walletID: value, walletName: label };
-    });
+  const handleWalletMethod = (wallets) => {
+    setTempVar([...wallets]);
   };
 
   const handleChange = (event) => {
@@ -70,37 +78,48 @@ function NftTask() {
     });
   };
 
-  const makeWalletOption = () => {
-    return walletList.map((wallet) => {
-      return { label: wallet.walletNickName, value: wallet.id };
-    });
-  };
-
   const getWalletOption = () => {
-    if (walletList.length > 0) {
+    let obj = [];
+    if (walletList.length) {
       for (let i = 0; i < walletList.length; i++) {
-        const wallet = walletList[i];
-        if (wallet?.id === task.walletID) {
-          return [{ label: task.walletName, value: task.walletID }];
-        }
+        obj = [
+          {
+            label: walletList[i].walletNickName,
+            value: walletList[i].id,
+          },
+          ...obj,
+        ];
       }
-    } else return [];
+    }
+    return obj;
+  };
+  const handleDispatchTask = (data) => {
+    dispatch(addTaskInGroup(data));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    let log;
     const validationresult = validationChecker(
       nftTaskSchema(task.gasPriceMethod === "manualPrice"),
       task
     );
     if (validationresult) {
       if (Object.keys(editState).length === 0) {
-        const log = `new Minter task is created with contract address ${task.contractAddress}`;
-        sendLogs(log);
-        dispatch(addTaskInGroup(task));
+        for (let i = 0; i < tempVar.length; i++) {
+          log = `new Minter task is created with contract address ${task.contractAddress}`;
+          task.walletID = tempVar[i].value;
+          task.walletName = tempVar[i].label;
+          try {
+            handleGetMintdata(task, rpcURL, apiKey, handleDispatchTask);
+          } catch (e) {
+            log = `Can't create new task with ${task.contractAddress}`;
+          }
+          sendLogs(log);
+        }
+        handleCloseModal();
       } else {
         dispatch(editTaskInGroup(task));
       }
-      handleCloseModal();
     }
   };
   return (
@@ -110,16 +129,12 @@ function NftTask() {
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
-        <ModalFlexInnerRow>
-          <AppInputField
-            value={getWalletOption()}
-            onChange={handleWalletMethod}
-            fieldTitle="Wallet"
-            isSelect={true}
-            placeholderText="Select Wallet"
-            selectOptions={makeWalletOption()}
-          />
-        </ModalFlexInnerRow>
+        <AppInputField
+          isSelect={true}
+          isMulti
+          selectOptions={getWalletOption()}
+          onChange={handleWalletMethod}
+        />
       </ModalFlexOuterRow>
       <AppSpacer spacer={10} />
       <ModalFlexOuterRow>
@@ -235,6 +250,6 @@ function NftTask() {
 export default NftTask;
 
 const GAS_OPTION = [
-  { label: "Rapid Price", value: "rapidPrice" },
-  { label: "Manual Price", value: "manualPrice" },
+  { label: "Rapid Price", value: "rapid" },
+  { label: "Manual Price", value: "manual" },
 ];

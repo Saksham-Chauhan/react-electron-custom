@@ -1,16 +1,24 @@
 import React from "react";
 import "./style.css";
-import { fetchThemsState } from "../../../features/counterSlice";
+import {
+  fetchNftSettingRPCState,
+  fetchThemsState,
+} from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import refreshWallet from "../../../assests/images/refreshWallet.svg";
-import { removeNftWalletFromList } from "../../../features/logic/nft";
+import {
+  editNftWalletList,
+  removeNftWalletFromList,
+} from "../../../features/logic/nft";
 import { sendLogs } from "../../../helper/electron-bridge";
+import { handleFetchWallet } from "../../../helper/nft-minter";
 
 const WalletTable = ({ walletList = [] }) => {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
 
   const handleDeleteRow = (row) => {
     const log = `${row?.walletNickName} Wallet id deleted`;
@@ -18,7 +26,24 @@ const WalletTable = ({ walletList = [] }) => {
     dispatch(removeNftWalletFromList(row));
   };
 
-  const WalletTableRow = ({ wallet, index, onDelete }) => (
+  const handleDispatchWallet = (wallet) => {
+    dispatch(editNftWalletList(wallet));
+  };
+
+  const handleRefreshWallet = async (row) => {
+    let log;
+    try {
+      const res = await handleFetchWallet(row, rpcURL, handleDispatchWallet);
+      if (res) {
+        log = `${row?.walletNickName} Wallet id refreshed`;
+      }
+    } catch (e) {
+      log = `${row?.walletNickName} Wallet id can't refreshed`;
+    }
+    sendLogs(log);
+  };
+
+  const WalletTableRow = ({ wallet, index, onDelete, onRefresh }) => (
     <div
       className={`   ${
         appTheme
@@ -28,14 +53,20 @@ const WalletTable = ({ walletList = [] }) => {
     >
       <div>{index}</div>
       <div>{wallet?.walletNickName}</div>
-      <div>{wallet?.walletPublicKey}</div>
-      <div>{wallet?.walletBalance}</div>
+      <div className="d-flex">
+        <div className="wallet-balance">{wallet?.walletPublicKey}</div>...
+      </div>
+      <div>{wallet?.walletBalance} </div>
       <div>
         <div
           style={{ alignItems: "center" }}
           className="acc-changer-table-row-action-column"
         >
-          <img src={refreshWallet} alt="" />
+          <img
+            src={refreshWallet}
+            alt="reftesh"
+            onClick={() => onRefresh(wallet)}
+          />
           <UseAnimations
             wrapperStyle={{ cursor: "pointer" }}
             animation={trash2}
@@ -69,6 +100,7 @@ const WalletTable = ({ walletList = [] }) => {
         {walletList.map((wallet, index) => (
           <WalletTableRow
             onDelete={handleDeleteRow}
+            onRefresh={handleRefreshWallet}
             index={index + 1}
             {...{ wallet }}
             key={wallet["id"] || `wallet-table-item-${index}`}

@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { connectToBlockchain } from "../../api/eth-minter";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import {
   fetchNftSettingDelaytate,
   fetchNftSettingEhterAPIState,
   fetchNftSettingRPCState,
-  fetchNftSettingState,
   fetchThemsState,
   setModalState,
   setNftSetting,
 } from "../../features/counterSlice";
 import { sendLogs } from "../../helper/electron-bridge";
+import { getConnectFormData } from "../../helper/nft-minter";
+import { toastSuccess, toastWarning } from "../../toaster";
 import "./styles.css";
 function NftSetting() {
   const dispatch = useDispatch();
@@ -40,11 +42,24 @@ function NftSetting() {
     dispatch(setModalState("nftSettingModal"));
   };
 
-  const handleSave = (key) => {
+  const handleSave = async (key) => {
     let log;
     if (key === "RPC") {
-      log = `RPC is updated to ${setting.rpcURL}`;
-      dispatch(setNftSetting({ key: "rpcURL", value: setting.rpcURL }));
+      const formData = getConnectFormData(setting.rpcURL);
+      try {
+        const res = await connectToBlockchain(formData);
+        if (res.status === 200) {
+          log = `RPC is updated to ${setting.rpcURL}`;
+          dispatch(setNftSetting({ key: "rpcURL", value: setting.rpcURL }));
+          toastSuccess("Connected Succesfully.");
+        } else {
+          log = `Error in connection. ${setting.rpcURL}`;
+          toastWarning(res.response.data.error);
+        }
+      } catch (e) {
+        log = `Error in connection. ${setting.rpcURL}`;
+        toastWarning(e.res.data.error);
+      }
     } else if (key === "API") {
       log = `EtherScan Api is updated to ${setting.etherScanAPI.substring(
         0,

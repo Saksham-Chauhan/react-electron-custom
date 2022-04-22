@@ -4,18 +4,27 @@ import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import edit from "../../../assests/images/edit.svg";
 import UseAnimations from "react-useanimations";
+import stop from "../../../assests/images/stop.svg";
 import {
+  fetchNftSettingDelaytate,
+  fetchNftSettingRPCState,
   fetchNftWalletListState,
   setEditStorage,
   setModalState,
 } from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { removeTaskFromList } from "../../../features/logic/nft";
+import {
+  editTaskInGroup,
+  removeTaskFromList,
+} from "../../../features/logic/nft";
 import { sendLogs } from "../../../helper/electron-bridge";
+import { handleMinting } from "../../../helper/nft-minter";
 
 const TableSection = ({ list = [] }) => {
   const dispatch = useDispatch();
   const walletList = useSelector(fetchNftWalletListState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
+  const delay = useSelector(fetchNftSettingDelaytate);
 
   const handleDeleteTask = (task) => {
     const log = `Delete the Minter task with id -> ${task.id}`;
@@ -23,10 +32,21 @@ const TableSection = ({ list = [] }) => {
     dispatch(removeTaskFromList(task));
   };
 
+  const handleEditTaskStatus = (task) => {
+    dispatch(editTaskInGroup(task));
+  };
+
   const handleTaskPlay = (task) => {
-    const log = `Start minting the task with id -> ${task.id}`;
-    sendLogs(log);
-    console.log(task);
+    if (task.status !== "success" && task.status !== "running") {
+      let log;
+      try {
+        handleMinting(task, rpcURL, handleEditTaskStatus, true, delay);
+        log = `Start minting the task with id -> ${task.id}`;
+      } catch (e) {
+        log = `Error in minting the task with id -> ${task.id}`;
+      }
+      sendLogs(log);
+    }
   };
 
   const handleTaskEdit = (task) => {
@@ -66,33 +86,33 @@ const TableSection = ({ list = [] }) => {
 
 export default TableSection;
 
-const MinterTableRow = ({
-  row,
-  index,
-
-  onDelete,
-  onPlay,
-  onEdit,
-  wallet,
-}) => {
+const MinterTableRow = ({ row, index, onDelete, onPlay, onEdit, wallet }) => {
   return (
     <div className="table-header body">
       <div>{index + 1}</div>
-      <div>{row?.contractAddress}</div>
+      <div className="d-flex">
+        <div className="task-address">{row?.contractAddress}</div>...
+      </div>
       <div>{row?.gasPriceMethod}</div>
       <div>{row?.walletName} </div>
-      <div>{row?.status}</div>
+      <div style={{ color: getTaskStatusColor(row?.status) }}>
+        {row?.status}
+      </div>
       <div>
-        <img
-          src={play}
-          onClick={() =>
-            onPlay({
-              ...row,
-              wallet: wallet.length > 0 ? { ...wallet[0] } : {},
-            })
-          }
-          alt=""
-        />
+        {row?.status === "running" || row?.status === "pending" ? (
+          <img src={stop} alt="stop" />
+        ) : (
+          <img
+            src={play}
+            onClick={() =>
+              onPlay({
+                ...row,
+                wallet: wallet.length > 0 ? { ...wallet[0] } : {},
+              })
+            }
+            alt=""
+          />
+        )}
         <img onClick={() => onEdit(row)} src={edit} alt="" />
         <UseAnimations
           wrapperStyle={{ cursor: "pointer" }}
@@ -104,4 +124,21 @@ const MinterTableRow = ({
       </div>
     </div>
   );
+};
+
+const getTaskStatusColor = (status, appTheme) => {
+  switch (status) {
+    case "running":
+      return appTheme ? "var(--lightMode-status)" : "var(--status)";
+    case "pending":
+      return "var(--delete)";
+    case "error":
+      return "var(--delete)";
+    case "Idle":
+      return appTheme ? "var(--lightMode-text-color)" : "";
+    case "success":
+      return appTheme ? "var(--lightMode-complete)" : "#1186db";
+    default:
+      return "var(--primary)";
+  }
 };

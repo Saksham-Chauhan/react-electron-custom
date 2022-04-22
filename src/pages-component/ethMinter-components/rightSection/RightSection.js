@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
 import UseAnimations from "react-useanimations";
@@ -10,10 +10,24 @@ import lightModeplush from "../../../assests/images/lightModeplus.svg";
 import EthMinterSetting from "../../../assests/images/EthMinterSetting.svg";
 import rightAero from "../../../assests/images/rightAeroImg.svg";
 import lightModesearch from "../../../assests/images/lightModesearch.svg";
-import { fetchThemsState, setModalState } from "../../../features/counterSlice";
+import stop from "../../../assests/images/stop.svg";
+import {
+  fetchActiveNftGroupState,
+  fetchNftSettingDelaytate,
+  fetchNftSettingRPCState,
+  fetchNftWalletListState,
+  fetchThemsState,
+  setModalState,
+} from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteMinterGroup } from "../../../features/logic/nft";
+import {
+  deleteMinterGroup,
+  editTaskInGroup,
+} from "../../../features/logic/nft";
 import { toastWarning } from "../../../toaster";
+import { handleMinting } from "../../../helper/nft-minter";
+import { sendLogs } from "../../../helper/electron-bridge";
+import { sleep } from "../../../helper";
 
 const IS_RUNNING = ["Running"];
 
@@ -23,8 +37,15 @@ const RightSection = ({
   handleSearching,
   search,
 }) => {
+  const [flag, setFlag] = useState(true);
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
+  const activeGroup = useSelector(fetchActiveNftGroupState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
+  const delay = useSelector(fetchNftSettingDelaytate);
+  const walletList = useSelector(fetchNftWalletListState);
+
+  // minterList
   const btnClass = appTheme
     ? "icon-btn-wrapper btn lightBg"
     : "icon-btn-wrapper btn";
@@ -43,6 +64,38 @@ const RightSection = ({
     if (Object.keys(activeNftGroup).length > 0) {
       dispatch(deleteMinterGroup());
     } else toastWarning("Select Group");
+  };
+
+  const handleEditTaskStatus = (task) => {
+    dispatch(editTaskInGroup(task));
+  };
+
+  const onPlayAll = async () => {
+    setFlag(false);
+    let taskList = activeGroup.minterList;
+    let tempObj = {};
+    for (let i = 0; i < taskList.length; i++) {
+      tempObj = { ...taskList[i] };
+      tempObj["wallet"] = {};
+      if (tempObj.status !== "success" && tempObj.status !== "running") {
+        for (let j = 0; j < walletList.length; j++) {
+          if (walletList[j].id === tempObj.walletID) {
+            tempObj.wallet["walletPublicKey"] = walletList[j].walletPublicKey;
+            tempObj.wallet["walletPrivateKey"] = walletList[j].walletPrivateKey;
+          }
+        }
+        let log;
+        try {
+          handleMinting(tempObj, rpcURL, handleEditTaskStatus, true, delay);
+          log = `Start minting the task with id -> ${tempObj.id}`;
+        } catch (e) {
+          log = `Error in minting the task with id -> ${tempObj.id}`;
+        }
+        sendLogs(log);
+        await sleep(delay);
+      }
+    }
+    setFlag(true);
   };
 
   return (
@@ -86,7 +139,7 @@ const RightSection = ({
             <img src={appTheme ? lightModeplush : add} alt="" />
           </div>
           <div className={btnClass}>
-            <img src={play} alt="" />
+            <img src={flag ? play : stop} alt="refresh" onClick={onPlayAll} />
           </div>
           <div className={btnClass}>
             <UseAnimations

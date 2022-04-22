@@ -62,3 +62,7 @@
   border-radius: 10px;
   background: var(--scrollbar-bg);
 }
+.task-address {
+  width: 150px !important;
+  overflow: hidden;
+}

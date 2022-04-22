@@ -54,7 +54,7 @@ export const nftTaskSchema = (isRequired) => {
     id: joi.optional(),
     status: joi.optional(),
     walletName: joi.optional(),
-    walletID: joi.string().required().label("Select wallet"),
+    walletID: joi.optional(),
     gasPriceMethod: joi.string().required().label("Select gas method"),
     functionName: joi.string().required().label("Enter function name"),
     functionParam: joi.string().required().label("Enter function param"),

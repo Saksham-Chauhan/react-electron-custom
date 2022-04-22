@@ -40,7 +40,7 @@ const MinterScreen = ({ setwalletScreen, activeNftGroup }) => {
   return (
     <div className="page-section">
       <div className="left-container">
-        <EthMinterLeftSection {...{ activeNftGroup }} />
+        <EthMinterLeftSection {...{ activeNftGroup, tempList }} />
       </div>
       <div className="right-container">
         <EthMinterRightSection
