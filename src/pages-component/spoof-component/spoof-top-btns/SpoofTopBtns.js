@@ -24,7 +24,6 @@ import {
 
 function SpoofTopBtns({ tableList, search, handleSearching }) {
   const dispatch = useDispatch()
-
   const handleOpenModal = () => {
     dispatch(setModalState('spoofModal'))
   }

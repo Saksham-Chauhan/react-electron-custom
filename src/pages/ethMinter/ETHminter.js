@@ -7,12 +7,21 @@ import {
 } from '../../pages-component'
 import { AppSpacer } from '../../component'
 import { useSelector } from 'react-redux'
-import { fetchActiveNftGroupState } from '../../features/counterSlice'
+import {
+  fetchActiveNftGroupState,
+  fetchThemsState,
+} from '../../features/counterSlice'
 import { searchingFunction } from '../../hooks/searchFunction'
 
 const MinterScreen = ({ setwalletScreen, activeNftGroup }) => {
   const [tempList, setTempList] = useState([])
   const [search, setSearch] = useState('')
+  const appTheme = useSelector(fetchThemsState)
+  const theme = {
+    leftContainer: appTheme
+      ? 'left-container light-mode-left-border'
+      : 'left-container',
+  }
 
   useEffect(() => {
     if (Object.keys(activeNftGroup).length > 0) {
@@ -39,7 +48,7 @@ const MinterScreen = ({ setwalletScreen, activeNftGroup }) => {
 
   return (
     <div className="page-section">
-      <div className="left-container">
+      <div className={theme.leftContainer}>
         <EthMinterLeftSection {...{ activeNftGroup }} />
       </div>
       <div className="right-container">
