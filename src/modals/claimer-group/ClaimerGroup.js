@@ -59,9 +59,14 @@ function ClaimerGroup() {
     let obj = { ...claimer };
     const result = validationChecker(claimerGroupSchema, obj);
     obj.claimerToken.split("\n").forEach((t) => {
-      let str = t?.split(":");
-      if (str.length === 3) {
-        valid.push(t);
+      if (!t.includes(":")) {
+        const tempStr = `::${t}`;
+        valid.push(tempStr);
+      } else {
+        let str = t?.split(":");
+        if (str.length === 3) {
+          valid.push(t);
+        }
       }
     });
     obj["claimerToken"] = valid.map((v) => v).join("\n");
