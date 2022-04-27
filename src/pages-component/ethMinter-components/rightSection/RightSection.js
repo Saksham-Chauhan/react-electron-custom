@@ -29,7 +29,7 @@ import { handleMinting } from "../../../helper/nft-minter";
 import { sendLogs } from "../../../helper/electron-bridge";
 import { sleep } from "../../../helper";
 
-const IS_RUNNING = ["Running"];
+const IS_RUNNING = ["running"];
 
 const RightSection = ({
   setwalletScreen,

@@ -130,6 +130,7 @@ export const basicAccChangerValidation = (obj) => {
 };
 
 export const makeGroupOptions = (list = []) => {
+  console.log(list);
   let groupArray = [];
   for (let i = 0; i < list.length; i++) {
     let obj = {};
@@ -139,7 +140,7 @@ export const makeGroupOptions = (list = []) => {
     obj["label"] = group["name"];
     for (let j = 0; j < tokenList.length; j++) {
       let tempObj = {};
-      tempObj["label"] = tokenList[j].split(":")[3];
+      tempObj["label"] = tokenList[j].split(":")[2];
       tempObj["value"] = tokenList[j];
       arr.push(tempObj);
     }

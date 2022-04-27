@@ -101,19 +101,19 @@ function TableSection({ list }) {
               },
             };
             dispatch(updateStatusOfTableRow(obj, "Running"));
+            await sleep(obj.delay);
             const apiResponse = await apiCallToDiscord({
               type,
-              token: tokenArr[3],
+              token: tokenArr[2],
               proxy,
               username: obj.username,
-              password: tokenArr[2],
+              password: tokenArr[1],
               guildId: obj.serverIDs,
               activityDetail: obj.activityDetails,
               nickName: obj.nicknameGenerate,
-              currentPass: tokenArr[2],
               newPass: obj.commonPassword,
               invideCodes: obj.inviteCodes,
-              avatarAPI: obj.url,
+              avatarAPI: obj.apiInfo,
               email: tokenArr[0],
               channelID: obj.channelId,
               delay: obj.delay,
@@ -163,16 +163,13 @@ function TableSection({ list }) {
                     ind = ind + 1;
                   }
                 } else {
-                  if (!type === "xpFarmer") {
-                    dispatch(updateStatusOfTableRow(tempObj, "Completed"));
-                  }
+                  dispatch(updateStatusOfTableRow(tempObj, "Completed"));
                 }
                 break;
               }
             } else {
               dispatch(updateStatusOfTableRow(obj, "Stopped"));
             }
-            await sleep(Number(obj.delay) || 3000);
           }
         }
       }
@@ -211,7 +208,12 @@ function TableSection({ list }) {
   };
 
   const handleStop = (obj) => {
+    flag.current = !flag.current;
+    status = flag.current;
     const type = obj["changerType"];
+    if (type === "xpFarmer") {
+      dispatch(updateStatusOfTableRow(obj, "Stopped"));
+    }
     if (type === "linkOpener") {
       stopLinkOpenerMonitor(obj.id);
     } else if (type === "inviteJoiner") {
@@ -258,7 +260,6 @@ export const apiCallToDiscord = async ({
   password,
   activityDetail,
   nickName,
-  currentPass,
   newPass,
   username,
   invideCodes,
@@ -268,29 +269,50 @@ export const apiCallToDiscord = async ({
   delay,
   settingObj,
 }) => {
+  const tokenMsg = "Invalid format, token not found in Token Group.";
+  const passMsg = "Invalid format, password not found.";
+  const emailMsg = "Invalid format, email not found.";
   if (type === "avatarChanger") {
     let response;
     let randomImage;
-    if (avatarAPI === "customAPI") {
-      randomImage = await generateRandomAvatar(avatarAPI);
-    } else {
+    if (avatarAPI.label === "Default API") {
       randomImage = await generateRandomAvatar();
+    } else {
+      randomImage = await generateRandomAvatar(avatarAPI.value);
     }
     response = await avatarChangeAPI(token, randomImage, proxy);
     if (response.status === 200) {
       return response;
     } else {
+      if (!token) {
+        toastWarning(tokenMsg);
+        return null;
+      }
+      if (!randomImage) {
+        toastWarning("Invalid format, please select api.");
+        return null;
+      }
       toastWarning(response.response.data.message);
       return null;
     }
   } else if (type === "serverLeaver") {
-    let serverIdArray = guildId.split("\n");
+    let serverIdArray;
+    try {
+      serverIdArray = guildId.split("\n");
+    } catch (e) {
+      toastWarning("Server id is blank.");
+      return null;
+    }
     for (let i = 0; i < serverIdArray.length; i++) {
       const response = await serverLeaverAPI(token, serverIdArray[i], proxy);
       if (response.status === 200 || response.status === 204) {
         return response;
       } else {
-        toastWarning(response.response.data.message);
+        if (!token) {
+          toastWarning(tokenMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
         return null;
       }
     }
@@ -304,7 +326,13 @@ export const apiCallToDiscord = async ({
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!token) {
+        toastWarning(tokenMsg);
+      } else {
+        if (password) {
+          toastWarning(passMsg);
+        } else toastWarning(response.response.data.message);
+      }
       return null;
     }
   } else if (type === "activityChanger") {
@@ -312,7 +340,11 @@ export const apiCallToDiscord = async ({
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!token) {
+        toastWarning(tokenMsg);
+      } else {
+        toastWarning(response.response.data.message);
+      }
       return null;
     }
   } else if (type === "nicknameChanger") {
@@ -328,7 +360,11 @@ export const apiCallToDiscord = async ({
       if (response.status === 200) {
         return response;
       } else {
-        toastWarning(response.response.data.message);
+        if (!token) {
+          toastWarning(tokenMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
         return null;
       }
     }
@@ -343,11 +379,19 @@ export const apiCallToDiscord = async ({
         length: 18,
       });
     }
-    const response = await passwordChangerAPI(token, currentPass, pass, proxy);
+    const response = await passwordChangerAPI(token, password, pass, proxy);
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!token) {
+        toastWarning(tokenMsg);
+      } else {
+        if (!password) {
+          toastWarning(passMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
+      }
       return null;
     }
   } else if (type === "tokenChecker") {
@@ -355,7 +399,11 @@ export const apiCallToDiscord = async ({
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!token) {
+        toastWarning(tokenMsg);
+      } else {
+        toastWarning(response.response.data.message);
+      }
       return null;
     }
   } else if (type === "massInviter") {
@@ -368,11 +416,14 @@ export const apiCallToDiscord = async ({
         token,
         settingObj
       );
-
       if (response.status === 200) {
         return response;
       } else {
-        toastWarning(response.response.data.message);
+        if (!token) {
+          toastWarning(tokenMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
         return null;
       }
     }
@@ -381,12 +432,21 @@ export const apiCallToDiscord = async ({
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!email) {
+        toastWarning(emailMsg);
+      } else {
+        if (!password) {
+          toastWarning(passMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
+      }
       return null;
     }
   } else if (type === "xpFarmer") {
     if (status) {
-      return await callApis(proxy, channelID, token, delay);
+      const res = await callApis(proxy, channelID, token, delay);
+      return res;
     } else return null;
   }
 };
@@ -402,8 +462,12 @@ export const callApis = async (proxy, channelID, token, delay = "") => {
   if (response.status === 200) {
     return response;
   } else {
+    if (!token) {
+      toastWarning("Invalid format, token not found in Token Group.");
+    } else {
+      toastWarning(response.response.data.message);
+    }
     status = false;
-    toastWarning(response.response.data.result.error);
-    return null;
   }
+  return null;
 };

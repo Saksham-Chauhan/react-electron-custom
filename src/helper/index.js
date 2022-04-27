@@ -39,36 +39,26 @@ export const makeLogText = (msg) => {
 export const generateId = () => uuid();
 
 export const downloadLogs = (content, title) => {
-  let data;
+  // let data;
+  let tempData = {};
   if (title === "token") {
-    let tempData = [];
     for (let i = 0; i < content.length; i++) {
-      const tokenGroup = content[i];
-      let tokenList = [...tokenGroup["claimerToken"].split("\n")];
-      for (let j = 0; j < tokenList.length; j++) {
-        const token = tokenList[j];
-        tempData.push(token);
-      }
+      tempData[content[i].name] = [...content[i].claimerToken.split("\n")];
     }
-    data = tempData.map((tkn) => tkn).join("\n");
   } else if (title === "proxy") {
-    let tempData = [];
     for (let i = 0; i < content.length; i++) {
-      const proxyGroup = content[i];
-      let proxyList = [...proxyGroup["proxyList"]];
-      for (let j = 0; j < proxyList.length; j++) {
-        const proxy = proxyList[j]["proxy"];
-        tempData.push(proxy);
-      }
+      tempData[content[i].groupName] = [
+        ...content[i].proxyList.map((item) => item.proxy),
+      ];
     }
-    data = tempData.map((tkn) => tkn).join("\n");
   } else {
-    data = content.map((v) => v["proxy"]).join("\n");
+    // data = content.map((v) => v["proxy"]).join("\n");
   }
-  const d = new Date();
-  const fileName = `${title}_${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
+  const fileName = `${title}`;
   const a = document.createElement("a");
-  const file = new Blob([data], { type: "text/plain" });
+  const file = new Blob([JSON.stringify(tempData)], {
+    type: "application/json",
+  });
   a.href = URL.createObjectURL(file);
   a.download = fileName;
   a.click();
@@ -122,7 +112,7 @@ export const makeProxyOptions = (proxyGroupList = []) => {
 
 export const sleep = (time) => {
   return new Promise((resolve) => {
-    setTimeout(resolve, time);
+    setTimeout(resolve, time * 1000);
   });
 };
 

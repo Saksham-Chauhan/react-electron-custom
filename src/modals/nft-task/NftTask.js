@@ -131,6 +131,7 @@ function NftTask() {
       <ModalFlexOuterRow>
         <AppInputField
           isSelect={true}
+          autoClose={false}
           isMulti
           selectOptions={getWalletOption()}
           onChange={handleWalletMethod}

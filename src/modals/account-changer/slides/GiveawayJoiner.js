@@ -8,8 +8,8 @@ function GiveawayJoiner({ selectToken, ...props }) {
     let arrofTokens = [];
     for (let i = 0; i < arr.length; i++) {
       arrofTokens.push({
-        label: arr[i].split(":")[3],
-        value: arr[i].split(":")[3],
+        label: arr[i].split(":")[2],
+        value: arr[i].split(":")[2],
       });
     }
     return arrofTokens;

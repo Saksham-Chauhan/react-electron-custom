@@ -36,7 +36,7 @@ export const twiiterApiSchema = joi.object({
 
 export const claimerGroupSchema = joi.object({
   name: joi.string().required().label("Enter Name"),
-  claimerToken: joi.string().required().label("email:username:password:token"),
+  claimerToken: joi.string().required().label("email:password:token"),
   claimerList: joi.array(),
   id: joi.optional(),
   createdAt: joi.optional(),

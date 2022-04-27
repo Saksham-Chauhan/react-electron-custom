@@ -41,7 +41,6 @@ function NftWallet() {
   };
 
   const handleDispatchWallet = (wallet) => {
-    console.log("called");
     dispatch(appendNftWalletInList(wallet));
   };
 

@@ -98,7 +98,17 @@ const updateStatusLOmonitor = (callback) =>
 const webhookNotificationListener = (callback) =>
   ipcRenderer.on("webhook-status", (_, status) => callback(status));
 
+// XP-FARMER
+const startXpFarmer = (value) => {
+  ipcRenderer.send("run-xp-server", value);
+};
+const stopXpFarmer = (value) => {
+  ipcRenderer.send("stop-xp-server", value);
+};
+
 module.exports = {
+  stopXpFarmer,
+  startXpFarmer,
   getURL,
   checkForURL,
   interceptorFound,

@@ -15,6 +15,7 @@ const linkOpernerManager = require("./script/manager/linkOpener-manager");
 const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
+var exec = require("child_process").execFile;
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -73,14 +74,7 @@ function createAuthWindow() {
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-      const options = {
-        type: "question",
-        defaultId: 2,
-        title: "Login Error",
-        message: "Login Failed",
-        detail: "You are not allowed to login",
-      };
-      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+      console.log(error);
     }
   });
   win.on("authenticated", () => {
@@ -595,3 +589,42 @@ ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
 ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
   InviteJoinerManager.stopMonitor(id);
 });
+
+//RUN LOCAL SERVER
+ipcMain.on("run-xp-server", (_, data) => {
+  xpFarmerStart();
+});
+
+ipcMain.on("stop-xp-server", (_, data) => {
+  stopXpfarmer();
+});
+
+let xpProcess = currentProcesses.execFile;
+
+let xpFarmerStart = function () {
+  console.log("called start");
+  // const exePath = isDev
+  //   ? `file://${path.join(__dirname, "../windows/xpfarmer.exe")}`
+  //   : `file://${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
+  const exePath = `file://${path.join(__dirname, "../windows/xpfarmer.exe")}`;
+  try {
+    exec(exePath, [8883], function (err, data) {
+      console.log(err);
+      console.log(data.toString());
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+function stopXpfarmer() {
+  console.log("called stop");
+  currentProcesses.get((err, processes) => {
+    const sorted = _.sortBy(processes, "cpu");
+    for (let i = 0; i < sorted.length; i += 1) {
+      if ("xpfarmer" === sorted[i].name.toLowerCase()) {
+        process.kill(sorted[i].pid);
+      }
+    }
+  });
+}

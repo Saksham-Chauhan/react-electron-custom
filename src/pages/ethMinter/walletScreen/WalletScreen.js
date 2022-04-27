@@ -91,7 +91,10 @@ const WalletScreen = ({ setwalletScreen }) => {
   return (
     <>
       <TopWrapper>
-        <GroupStatusCard subText="10 Wallets Connected" title="Wallet" />
+        <GroupStatusCard
+          subText={`${walletList.length} Wallets Connected`}
+          title="Wallet"
+        />
       </TopWrapper>
       <AppSpacer spacer={30} />
       <div className="page-top-btns-wrapper padding-horizontal">

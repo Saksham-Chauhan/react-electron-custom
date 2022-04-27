@@ -63,7 +63,7 @@ function UserProfile({ userDetails }) {
           }
         >
           <img src={logout} alt="" />
-          <span>logout</span>
+          <span>Logout</span>
         </div>
       </div>
     </div>

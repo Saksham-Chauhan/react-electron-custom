@@ -27,6 +27,7 @@ function InputField({
   multiHeight = "150px",
   selectOptions = DefaultOptions,
   isCustomLabel = false,
+  autoClose = true,
   ...props
 }) {
   const appTheme = useSelector(fetchThemsState);
@@ -83,7 +84,7 @@ function InputField({
           <Select
             {...props}
             isMulti={isMulti}
-            closeMenuOnSelect={false}
+            closeMenuOnSelect={autoClose}
             components={animatedComponents}
             placeholder={placeholderText}
             isOptionSelected={true}
