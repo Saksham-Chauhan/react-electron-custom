@@ -16,6 +16,7 @@ import {
   fetchNftTaskModalState,
   fetchNftWalletModalState,
   fetchNftSettingModalState,
+  fetchClamerOnbordingState,
 } from "./features/counterSlice";
 import {
   AddSpoofModal,
@@ -28,6 +29,7 @@ import {
   NftTaskModal,
   NftWalletModal,
   NftSettingModal,
+  ClamerOnboarding,
 } from "./modals";
 import {
   Login,
@@ -89,6 +91,7 @@ function App() {
   const accountChangerModalState = useSelector(fetchAccountChangerModalState);
   const nftGroupModalState = useSelector(fetchNftGroupModalState);
   const nftWalletModalState = useSelector(fetchNftWalletModalState);
+  const settingOnboardingh = useSelector(fetchClamerOnbordingState);
   const animClass = !globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
@@ -174,6 +177,7 @@ function App() {
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {accountChangerModalState && <AccountChangerModal />}
+      {settingOnboardingh && <ClamerOnboarding />}
 
       <div className="app sidebar">
         <AppSidebar />

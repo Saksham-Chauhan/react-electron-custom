@@ -15,7 +15,7 @@ const linkOpernerManager = require("./script/manager/linkOpener-manager");
 const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
-var exec = require("child_process").execFile;
+var { execFile } = require("child_process");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -599,21 +599,34 @@ ipcMain.on("stop-xp-server", (_, data) => {
   stopXpfarmer();
 });
 
-let xpProcess = currentProcesses.execFile;
+// let xpProcess = currentProcesses.execFile;
 
 let xpFarmerStart = function () {
   console.log("called start");
-  // const exePath = isDev
-  //   ? `file://${path.join(__dirname, "../windows/xpfarmer.exe")}`
-  //   : `file://${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
-  const exePath = `file://${path.join(__dirname, "../windows/xpfarmer.exe")}`;
+  const exePath = isDev
+    ? `file://${path.join(__dirname, "../windows/xpfarmer.exe")}`
+    : `file://${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
   try {
-    exec(exePath, [8883], function (err, data) {
-      console.log(err);
-      console.log(data.toString());
-    });
+    const child = execFile(
+      "python",
+      { cwd: exePath },
+      (error, stdout, stderr) => {
+        if (error) {
+          throw error;
+        }
+        console.log(stdout);
+      }
+    );
+    // exec(exePath, [3001], function (err, data) {
+    //   console.log("err in func", err);
+    //   console.log("data is", data.toString());
+    // });
+    // exec(exePath, [3001], function (err, data) {
+    //   console.log("err in func", err);
+    //   console.log("data is", data.toString());
+    // });
   } catch (e) {
-    console.log(e);
+    console.log("this is error", e);
   }
 };
 

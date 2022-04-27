@@ -29,12 +29,12 @@ function CalimerGroup() {
   const usedGroup = useSelector(fetchTwitterClaimerGroupState);
 
   const handleOpenModal = () => {
-    dispatch(setModalState("claimerGroup"));
+    dispatch(setModalState("clamerOnboardingScreen"));
   };
 
   const handleEdit = (group) => {
     dispatch(setEditStorage(group));
-    handleOpenModal();
+    dispatch(setModalState("claimerGroup"));
   };
 
   const handleDelete = (group) => {
