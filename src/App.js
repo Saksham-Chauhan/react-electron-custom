@@ -7,27 +7,27 @@ import {
   fetchSpoofModalState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
+  fetchNftTaskModalState,
+  fetchNftGroupModalState,
   fetchDashboardModalState,
   fetchWebhookSettingState,
+  fetchNftWalletModalState,
+  fetchNftSettingModalState,
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
-  fetchNftGroupModalState,
-  fetchNftTaskModalState,
-  fetchNftWalletModalState,
-  fetchNftSettingModalState,
 } from "./features/counterSlice";
 import {
+  NftTaskModal,
+  NftGroupModal,
   AddSpoofModal,
+  NftWalletModal,
+  NftSettingModal,
   OnboardingModal,
   ProxyGroupModal,
   ClaimerGroupModal,
   AccountChangerModal,
   DiscordAccountModal,
-  NftGroupModal,
-  NftTaskModal,
-  NftWalletModal,
-  NftSettingModal,
 } from "./modals";
 import {
   Login,
@@ -35,8 +35,8 @@ import {
   SettingPage,
   SpooferPage,
   DashboardPage,
-  AccountChangerPage,
   ETHminterPage,
+  AccountChangerPage,
 } from "./pages";
 import {
   sendLogs,
@@ -48,8 +48,8 @@ import {
   interceptorFound,
   downloadingStart,
   updateNotAvailable,
-  proxyTestResultListener,
   updateStatusLOmonitor,
+  proxyTestResultListener,
   webhookNotificationListener,
 } from "./helper/electron-bridge";
 import {
@@ -66,29 +66,29 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { EndPointToPage, RoutePath } from "./constant";
 import { useDispatch, useSelector } from "react-redux";
+import { webhookNotifier } from "./features/logic/setting";
 import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
 import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
 import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
 import { resetTaskState, updateTaskState } from "./features/logic/acc-changer";
-import { webhookNotifier } from "./features/logic/setting";
 
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const nftSettingModalState = useSelector(fetchNftSettingModalState);
-  const nftTaskModalState = useSelector(fetchNftTaskModalState);
   const spoofModalState = useSelector(fetchSpoofModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
+  const nftTaskModalState = useSelector(fetchNftTaskModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
   const proxyModalState = useSelector(fetchProxyGroupModalState);
-  const onBoardingModalState = useSelector(fetchDashboardModalState);
-  const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
-  const accountChangerModalState = useSelector(fetchAccountChangerModalState);
   const nftGroupModalState = useSelector(fetchNftGroupModalState);
   const nftWalletModalState = useSelector(fetchNftWalletModalState);
+  const onBoardingModalState = useSelector(fetchDashboardModalState);
+  const nftSettingModalState = useSelector(fetchNftSettingModalState);
+  const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
+  const accountChangerModalState = useSelector(fetchAccountChangerModalState);
   const animClass = !globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
@@ -128,7 +128,7 @@ function App() {
       interceptorWebhook(`${res} Tool found.`);
     });
     updateNotAvailable(() =>
-      toastInfo("Update not available or You are already to update 😍 🤩")
+      toastInfo("Update not available or You are already up to date 😍 🤩")
     );
     downloadingStart(() => {
       progressToast();
