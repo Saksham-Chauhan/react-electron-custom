@@ -118,6 +118,10 @@ function ClaimerGroup() {
         onChange={handleChange}
         value={claimer.claimerToken}
         placeholderText=""
+        tooltipText="How to find my token?"
+        labelId="token"
+        tooltip={true}
+        isClickable={true}
       />
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">

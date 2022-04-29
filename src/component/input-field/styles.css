@@ -7,6 +7,12 @@
   line-height: 20px;
   color: var(--primary);
 }
+.input-field-container > div > label {
+  font-weight: 500;
+  font-size: 13.149px;
+  line-height: 20px;
+  color: var(--primary);
+}
 .input-field-container > .custom-label {
   color: var(--primary);
   font-weight: 500;

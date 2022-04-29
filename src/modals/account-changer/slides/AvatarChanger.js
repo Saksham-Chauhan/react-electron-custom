@@ -15,7 +15,7 @@ const api = [
     value: "https://picsum.photos/v2/list",
   },
   {
-    label: "Catboy API",
+    label: "Rick and Morty API",
     value: `https://rickandmortyapi.com/api/character/avatar/${getRandomNum()}.jpeg`,
   },
 ];

@@ -202,35 +202,43 @@ function Twitter() {
    * function handle start stop switch btn
    **/
   const handleToggle = (event) => {
+    console.log(selectedChrome);
     let prevState = { ...twitterSetting };
     const { name, checked } = event.target;
     prevState[name] = checked;
     if (name === "twitterMonitor") {
-      if (apiList.length > 0) {
-        if (userList.length > 0) {
-          if (!prevState["twitterMonitor"]) {
-            prevState["monitorStartDate"] = "";
+      if (Object.keys(selectedChrome).length) {
+        if (Object.keys(selectedClaimer).length) {
+          if (apiList.length > 0) {
+            if (userList.length > 0) {
+              if (!prevState["twitterMonitor"]) {
+                prevState["monitorStartDate"] = "";
+              } else {
+                prevState["monitorStartDate"] = new Date().toUTCString();
+              }
+              const maskedKey = apiList[rotaterIndex]?.apiKey.substring(0, 4);
+              const maskedSecret = apiList[rotaterIndex]?.apiSecret.substring(
+                0,
+                4
+              );
+              const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
+              let log = `Twitter  monitor start with ${token}`;
+              sendLogs(log);
+              if (checked === false) {
+                prevState["startAutoInviteJoiner"] = false;
+                prevState["startAutoLinkOpener"] = false;
+                dispatch(setTwitterSetting(prevState));
+              } else {
+                prevState["startAutoInviteJoiner"] = true;
+                prevState["startAutoLinkOpener"] = true;
+                dispatch(setTwitterSetting(prevState));
+              }
+            } else toastWarning("Enter some Twitter handlers");
           } else {
-            prevState["monitorStartDate"] = new Date().toUTCString();
+            toastWarning("Add some API keys");
           }
-          const maskedKey = apiList[rotaterIndex]?.apiKey.substring(0, 4);
-          const maskedSecret = apiList[rotaterIndex]?.apiSecret.substring(0, 4);
-          const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
-          let log = `Twitter  monitor start with ${token}`;
-          sendLogs(log);
-          if (checked === false) {
-            prevState["startAutoInviteJoiner"] = false;
-            prevState["startAutoLinkOpener"] = false;
-            dispatch(setTwitterSetting(prevState));
-          } else {
-            prevState["startAutoInviteJoiner"] = true;
-            prevState["startAutoLinkOpener"] = true;
-            dispatch(setTwitterSetting(prevState));
-          }
-        } else toastWarning("Enter some Twitter handlers");
-      } else {
-        toastWarning("Add some API keys");
-      }
+        } else toastWarning("Please select discord tokens group");
+      } else toastWarning("Please select chrome user");
     } else {
       if (twitterSetting.twitterMonitor) {
         if (name === "startAutoInviteJoiner") {

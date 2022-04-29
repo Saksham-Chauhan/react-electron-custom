@@ -24,13 +24,12 @@ function ProxyGroup() {
   const appTheme = useSelector(fetchThemsState);
 
   const handleOpenModal = () => {
-    // dispatch(setModalState("proxyGroup"));
     dispatch(setModalState("proxyOnboardingScreen"));
   };
 
   const handleEditGroup = (group) => {
     dispatch(setEditStorage(group));
-    handleOpenModal();
+    dispatch(setModalState("proxyGroup"));
   };
   const handleImportProxy = (e) => {
     const json = window.require(e.target.files[0].path);

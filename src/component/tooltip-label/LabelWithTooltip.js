@@ -11,17 +11,27 @@ function LabelWithTooltip({
   isCustomToolTip = false,
   parentStyle,
   children,
+  text = true,
+  click = false,
   ...props
 }) {
   const appTheme = useSelector(fetchThemsState);
   return (
     <div {...parentStyle} className="label-with-tooltip ">
-      <label className={appTheme ? "lightMode_color" : ""}>{labelText}</label>
+      <label className={appTheme ? "lightMode_color" : ""}>
+        {text ? labelText : ""}
+      </label>
       <img
         data-tip
         data-for={labelText}
         src={appTheme ? lightModehelp : help}
         alt="help-icon"
+        onClick={() => {
+          console.log(click);
+          if (click) {
+            window.open("https://www.youtube.com/watch?v=YEgFvgg7ZPI");
+          }
+        }}
       />
       <ReactTooltip
         {...props}
@@ -35,7 +45,12 @@ function LabelWithTooltip({
         {isCustomToolTip ? (
           children
         ) : (
-          <p id="custom-tooltip-text">{toolTopText}</p>
+          <p
+            id="custom-tooltip-text"
+            style={{ cursor: click ? "pointer" : "" }}
+          >
+            {toolTopText}
+          </p>
         )}
       </ReactTooltip>
     </div>

@@ -415,26 +415,27 @@ ipcMain.handle(
   }
 );
 ipcMain.handle("imageText", async (event, url) => {
-  // const {
-  //   data: { text },
-  // } = await Tesseract.recognize(url, "eng");
-  const folderPath = app.getPath("userData");
-  const worker = Tesseract.createWorker({
-    cachePath: path.join(folderPath, "/tesseract"),
-    // logger: (m) => console.log("Log", m),
-  });
-  const getText = async () => {
-    await worker.load();
-    await worker.loadLanguage("eng");
-    await worker.initialize("eng");
-    const {
-      data: { text },
-    } = await worker.recognize(url);
-    await worker.terminate();
-    return text;
-  };
+  const {
+    data: { text },
+  } = await Tesseract.recognize(url, "eng");
+  // const folderPath = app.getPath("userData");
+  // const worker = Tesseract.createWorker({
+  //   cachePath: path.join(folderPath, "/tesseract"),
+  //   // logger: (m) => console.log("Log", m),
+  // });
+  // const getText = async () => {
+  //   await worker.load();
+  //   await worker.loadLanguage("eng");
+  //   await worker.initialize("eng");
+  //   const {
+  //     data: { text },
+  //   } = await worker.recognize(url);
+  //   await worker.terminate();
+  //   return text;
+  // };
 
-  return await getText();
+  // return await getText();
+  return text;
 });
 
 // Spoofer IPC

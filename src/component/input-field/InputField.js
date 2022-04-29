@@ -11,6 +11,7 @@ import "./styles.css";
 import { useSelector } from "react-redux";
 import { fetchThemsState } from "../../features/counterSlice";
 import makeAnimated from "react-select/animated";
+import LabelWithTooltip from "../tooltip-label/LabelWithTooltip";
 const animatedComponents = makeAnimated();
 
 const DefaultOptions = [];
@@ -39,7 +40,21 @@ function InputField({
   return (
     <div className="input-field-container" onClick={props.navigate}>
       {isCustomLabel && <label className="custom-label ">{fieldTitle}</label>}
-      {!hideLabel && <label className={textClass}>{fieldTitle}</label>}
+      {!hideLabel && (
+        <div className="d-flex">
+          <label className={textClass} data-tip data-for={props.labelId}>
+            {fieldTitle}
+          </label>
+          {props.tooltip && (
+            <LabelWithTooltip
+              toolTopText={props.tooltipText}
+              labelText={props.labelId}
+              text={false}
+              click={props.isClickable}
+            />
+          )}
+        </div>
+      )}
       {!isSelect ? (
         <div className="input-field-box">
           {!isMulti ? (
