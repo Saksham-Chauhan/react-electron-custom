@@ -5,14 +5,20 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
-import { fetchThemsState, setModalState } from "../../features/counterSlice";
+import {
+  fetchNftSettingRPCState,
+  fetchThemsState,
+  setModalState,
+} from "../../features/counterSlice";
 import { appendNftWalletInList } from "../../features/logic/nft";
+import { handleFetchWallet } from "../../helper/nft-minter";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftWalletSchema } from "../../validation";
 
 function NftWallet() {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
   const textClass = appTheme ? "lightMode_color" : "";
   const [wallet, setWallet] = useState({
     walletNickName: "",
@@ -34,11 +40,15 @@ function NftWallet() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleDispatchWallet = (wallet) => {
+    dispatch(appendNftWalletInList(wallet));
+  };
+
+  const handleSubmit = async () => {
     const validationResult = validationChecker(nftWalletSchema, wallet);
     if (validationResult) {
-      dispatch(appendNftWalletInList(wallet));
-      handleCloseModal();
+      const res = await handleFetchWallet(wallet, rpcURL, handleDispatchWallet);
+      if (res) handleCloseModal();
     }
   };
 

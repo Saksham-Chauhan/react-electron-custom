@@ -39,10 +39,22 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
           (obj?.changerType === "passwordChanger" ||
             obj?.changerType === "tokenRetrieve") ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
-          ) : obj["active"] ? (
-            <img src={stop} alt="" onClick={() => onStop(obj)} />
+          ) : obj["status"] === "Running" ? (
+            <img
+              src={stop}
+              alt=""
+              onClick={() => {
+                onStop(obj);
+              }}
+            />
           ) : (
-            <img src={play} alt="" onClick={() => onPlay(obj)} />
+            <img
+              src={play}
+              alt=""
+              onClick={() => {
+                onPlay(obj);
+              }}
+            />
           )}
           <UseAnimations
             wrapperStyle={{ cursor: "pointer" }}

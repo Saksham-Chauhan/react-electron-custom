@@ -135,7 +135,6 @@ export const readProxyFromFile = (data) => (dispatch, getState) => {
   const proxyList = [...obj["proxies"].split("\n")];
   for (let i = 0; i < proxyList.length; i++) {
     let len = proxyList[i]?.split(":")?.length;
-    console.log(proxyList[i], len);
     if (ProxyRegExp.test(proxyList[i]) || len === 2) {
       let tempObj = {};
       tempObj["id"] = generateId();

@@ -5,16 +5,18 @@ import {
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
 
+const getRandomNum = () => {
+  const num = Math.floor(Math.random() * 800 + 1);
+  return num;
+};
 const api = [
   {
     label: "Default API",
     value: "https://picsum.photos/v2/list",
-    key: "defaultAPI",
   },
   {
-    label: "Custom API",
-    value: "https://picsum.photos/v2/list",
-    key: "customAPI",
+    label: "Catboy API",
+    value: `https://rickandmortyapi.com/api/character/avatar/${getRandomNum()}.jpeg`,
   },
 ];
 

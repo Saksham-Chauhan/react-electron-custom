@@ -1,32 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
 import {
-  fetchNftWalletListState,
-  fetchThemsState,
   setModalState,
+  fetchThemsState,
   setNftWalletList,
+  fetchNftSettingRPCState,
+  fetchNftWalletListState,
 } from "../../../features/counterSlice";
-import { useDispatch, useSelector } from "react-redux";
-
-import EthMinterSetting from "../../../assests/images/EthMinterSetting.svg";
-import leftAero from "../../../assests/images/leftAero.svg";
 import UseAnimations from "react-useanimations";
 import add from "../../../assests/images/plus.svg";
-import processIcon from "../../../assests/images/process.svg";
 import trash2 from "react-useanimations/lib/trash2";
+import { useDispatch, useSelector } from "react-redux";
+import { WalletTable } from "../../../pages-component";
+import { sendLogs } from "../../../helper/electron-bridge";
+import leftAero from "../../../assests/images/leftAero.svg";
 import searchIcon from "../../../assests/images/search.svg";
+import processIcon from "../../../assests/images/process.svg";
+import { editNftWalletList } from "../../../features/logic/nft";
+import { handleFetchWallet } from "../../../helper/nft-minter";
+import { searchingFunction } from "../../../hooks/searchFunction";
 import lightModeplush from "../../../assests/images/lightModeplus.svg";
 import lightModesearch from "../../../assests/images/lightModesearch.svg";
+import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
+import EthMinterSetting from "../../../assests/images/EthMinterSetting.svg";
 
-import { WalletTable } from "../../../pages-component";
-import { searchingFunction } from "../../../hooks/searchFunction";
-import { sendLogs } from "../../../helper/electron-bridge";
 const WalletScreen = ({ setwalletScreen }) => {
+  const dispatch = useDispatch();
+  const [search, setSearch] = useState("");
   const [tempList, setTempList] = useState([]);
   const appTheme = useSelector(fetchThemsState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
   const walletList = useSelector(fetchNftWalletListState);
-  const [search, setSearch] = useState("");
-  const dispatch = useDispatch();
   const btnClass = appTheme
     ? "icon-btn-wrapper btn lightBg"
     : "icon-btn-wrapper btn";
@@ -62,10 +65,35 @@ const WalletScreen = ({ setwalletScreen }) => {
     } else setTempList([...walletList]);
   };
 
+  const handleDispatchWallet = (wallet) => {
+    dispatch(editNftWalletList(wallet));
+  };
+
+  const onRefreshAll = async () => {
+    let log;
+    for (let i = 0; i < walletList.length; i++) {
+      try {
+        const res = await handleFetchWallet(
+          walletList[i],
+          rpcURL,
+          handleDispatchWallet
+        );
+        if (res) {
+          log = `${walletList[i]?.walletNickName} Wallet id refreshed`;
+        }
+      } catch (e) {
+        log = `${walletList[i]?.walletNickName} Wallet id can't refreshed`;
+      }
+      sendLogs(log);
+    }
+  };
   return (
     <>
       <TopWrapper>
-        <GroupStatusCard subText="10 Wallets Connected" title="Wallet" />
+        <GroupStatusCard
+          subText={`${walletList.length} Wallets Connected`}
+          title="Wallet"
+        />
       </TopWrapper>
       <AppSpacer spacer={30} />
       <div className="page-top-btns-wrapper padding-horizontal">
@@ -93,7 +121,7 @@ const WalletScreen = ({ setwalletScreen }) => {
             <img src={appTheme ? lightModeplush : add} alt="" />
           </div>
           <div className={btnClass}>
-            <img src={processIcon} alt="" />
+            <img src={processIcon} alt="refresh" onClick={onRefreshAll} />
           </div>
           <div onClick={handleDeleteAll} className={btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />

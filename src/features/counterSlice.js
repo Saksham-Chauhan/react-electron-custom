@@ -34,6 +34,7 @@ const initialState = {
     nftTaskModal: false,
     nftWalletModal: false,
     nftSettingModal: false,
+    clamerOnboardingScreen: false,
   },
   themes: {
     lightMode: false,
@@ -334,6 +335,8 @@ export const fetchWebhookSettingState = (state) =>
   state[STATE_KEY].webhookSetting;
 export const fetchWebhookListState = (state) =>
   state[STATE_KEY].webhookSetting.webhookList;
+export const fetchClamerOnbordingState = (state) =>
+  state[STATE_KEY].modals.clamerOnboardingScreen;
 
 // LOGIN
 export const fetchLoggedUserDetails = (state) => state[STATE_KEY].userDetails;

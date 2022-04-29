@@ -10,6 +10,7 @@ import { makeGroupOptions } from "../helper";
 
 function InviteJoiner({ handleMonitorToken, state, ...props }) {
   const claimerGroupList = useSelector(fetchClaimerGroupList);
+  // console.log(claimerGroupList);
 
   return (
     <React.Fragment>

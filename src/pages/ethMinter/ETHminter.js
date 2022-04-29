@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import WalletScreen from "./walletScreen/WalletScreen";
 import {
   EthMinterLeftSection,
   EthMinterRightSection,
   EthMinterTableSection,
 } from "../../pages-component";
-import { AppSpacer } from "../../component";
 import { useSelector } from "react-redux";
-import { fetchActiveNftGroupState } from "../../features/counterSlice";
+import { AppSpacer } from "../../component";
+import WalletScreen from "./walletScreen/WalletScreen";
 import { searchingFunction } from "../../hooks/searchFunction";
+import { fetchActiveNftGroupState } from "../../features/counterSlice";
 
 const MinterScreen = ({ setwalletScreen, activeNftGroup }) => {
-  const [tempList, setTempList] = useState([]);
   const [search, setSearch] = useState("");
+  const [tempList, setTempList] = useState([]);
 
   useEffect(() => {
     if (Object.keys(activeNftGroup).length > 0) {
@@ -40,7 +40,7 @@ const MinterScreen = ({ setwalletScreen, activeNftGroup }) => {
   return (
     <div className="page-section">
       <div className="left-container">
-        <EthMinterLeftSection {...{ activeNftGroup }} />
+        <EthMinterLeftSection {...{ activeNftGroup, tempList }} />
       </div>
       <div className="right-container">
         <EthMinterRightSection

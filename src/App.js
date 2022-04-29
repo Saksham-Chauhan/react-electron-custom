@@ -13,6 +13,7 @@ import {
   fetchWebhookSettingState,
   fetchNftWalletModalState,
   fetchNftSettingModalState,
+  fetchClamerOnbordingState,
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
@@ -25,6 +26,7 @@ import {
   NftSettingModal,
   OnboardingModal,
   ProxyGroupModal,
+  ClamerOnboarding,
   ClaimerGroupModal,
   AccountChangerModal,
   DiscordAccountModal,
@@ -84,6 +86,7 @@ function App() {
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
   const proxyModalState = useSelector(fetchProxyGroupModalState);
   const nftGroupModalState = useSelector(fetchNftGroupModalState);
+  const settingOnboardingh = useSelector(fetchClamerOnbordingState);
   const nftWalletModalState = useSelector(fetchNftWalletModalState);
   const onBoardingModalState = useSelector(fetchDashboardModalState);
   const nftSettingModalState = useSelector(fetchNftSettingModalState);
@@ -164,17 +167,17 @@ function App() {
 
   return (
     <div className="app">
-      {nftSettingModalState && <NftSettingModal />}
-      {nftWalletModalState && <NftWalletModal />}
-      {nftTaskModalState && <NftTaskModal />}
-      {nftGroupModalState && <NftGroupModal />}
       {spoofModalState && <AddSpoofModal />}
+      {nftTaskModalState && <NftTaskModal />}
       {proxyModalState && <ProxyGroupModal />}
+      {nftGroupModalState && <NftGroupModal />}
+      {nftWalletModalState && <NftWalletModal />}
+      {settingOnboardingh && <ClamerOnboarding />}
+      {nftSettingModalState && <NftSettingModal />}
       {onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {accountChangerModalState && <AccountChangerModal />}
-
       <div className="app sidebar">
         <AppSidebar />
       </div>

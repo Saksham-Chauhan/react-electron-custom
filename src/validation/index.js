@@ -36,7 +36,7 @@ export const twiiterApiSchema = joi.object({
 
 export const claimerGroupSchema = joi.object({
   name: joi.string().required().label("Enter Name"),
-  claimerToken: joi.string().required().label("email:username:password:token"),
+  claimerToken: joi.string().required().label("email:password:token"),
   claimerList: joi.array(),
   id: joi.optional(),
   createdAt: joi.optional(),
@@ -54,7 +54,7 @@ export const nftTaskSchema = (isRequired) => {
     id: joi.optional(),
     status: joi.optional(),
     walletName: joi.optional(),
-    walletID: joi.string().required().label("Select wallet"),
+    walletID: joi.optional(),
     gasPriceMethod: joi.string().required().label("Select gas method"),
     functionName: joi.string().required().label("Enter function name"),
     functionParam: joi.string().required().label("Enter function param"),

@@ -42,7 +42,7 @@ export const DISCORD_MASS_OPTIONS = [
   },
   {
     value: "activityChanger",
-    label: "Activity Changer",
+    label: "Status Changer",
   },
   {
     value: "serverLeaver",
