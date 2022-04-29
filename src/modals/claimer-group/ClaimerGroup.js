@@ -17,6 +17,7 @@ import {
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import { toastWarning } from "../../toaster";
 import { sendLogs } from "../../helper/electron-bridge";
+import discord from "../../assests/images/discord.svg";
 
 function ClaimerGroup() {
   const dispatch = useDispatch();
@@ -90,13 +91,15 @@ function ClaimerGroup() {
       } else toastWarning("Enter some valid token");
     }
   };
-  const textClass = appTheme ? "lightMode_color" : "";
+  const textClass = appTheme ? "lightMode_color" : "clamer-title";
 
   return (
     <ModalWrapper>
       <div className="modal-tilte">
         <h2 className={textClass}>
-          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Token Group
+          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Discord
+          Accounts
+          <img src={discord} alt="discord" style={{ marginLeft: "10px" }} />
         </h2>
       </div>
       <AppSpacer spacer={30} />
@@ -114,7 +117,7 @@ function ClaimerGroup() {
         isMulti={true}
         onChange={handleChange}
         value={claimer.claimerToken}
-        placeholderText="email:password:token"
+        placeholderText=""
       />
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">

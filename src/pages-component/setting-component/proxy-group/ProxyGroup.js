@@ -24,21 +24,30 @@ function ProxyGroup() {
   const appTheme = useSelector(fetchThemsState);
 
   const handleOpenModal = () => {
-    dispatch(setModalState("proxyGroup"));
+    // dispatch(setModalState("proxyGroup"));
+    dispatch(setModalState("proxyOnboardingScreen"));
   };
 
   const handleEditGroup = (group) => {
     dispatch(setEditStorage(group));
     handleOpenModal();
   };
-
   const handleImportProxy = (e) => {
     const json = window.require(e.target.files[0].path);
     const groups = Object.keys(json);
     const proxies = Object.values(json);
     for (let i = 0; i < groups.length; i++) {
       const tempStr = proxies[i].join("\n");
-      dispatch(readProxyFromFile({ name: groups[i], tokenArr: tempStr }));
+      let flag = true;
+      for (let j = 0; j < proxyList.length; j++) {
+        if (proxyList[j].groupName === groups[i]) {
+          flag = false;
+          break;
+        }
+      }
+      if (flag) {
+        dispatch(readProxyFromFile({ name: groups[i], tokenArr: tempStr }));
+      }
     }
   };
 
@@ -56,9 +65,9 @@ function ProxyGroup() {
   return (
     <div className="claimer-group-outer">
       <div className="claimer-flex">
-        <Tooltip {...{ id: "export-proxy", text: "Export Proxies groups" }} />
+        <Tooltip {...{ id: "export-proxy", text: "Export Proxy Groups" }} />
         <h3 className={appTheme ? "lightMode_color" : ""}>Proxies</h3>
-        <Tooltip {...{ id: "import-proxy", text: "Import Proxies groups" }} />
+        <Tooltip {...{ id: "import-proxy", text: "Import Proxy Groups" }} />
         <div className="claimer-btns">
           <div className={btnClass} data-tip data-for="import-proxy">
             <img src={importIcon} alt="" />

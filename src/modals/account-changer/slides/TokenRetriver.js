@@ -11,7 +11,7 @@ function TokenRetriver({ ...props }) {
             {...props}
             name="delayInToken"
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
           />
         </div>
       </div>

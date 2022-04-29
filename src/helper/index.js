@@ -54,9 +54,9 @@ export const downloadLogs = (content, title) => {
   } else {
     // data = content.map((v) => v["proxy"]).join("\n");
   }
-  const fileName = `${title}`;
+  const fileName = `${title}s`;
   const a = document.createElement("a");
-  const file = new Blob([JSON.stringify(tempData)], {
+  const file = new Blob([JSON.stringify(tempData, null, 4)], {
     type: "application/json",
   });
   a.href = URL.createObjectURL(file);

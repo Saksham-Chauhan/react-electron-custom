@@ -54,7 +54,7 @@ function AccountChanger() {
   const [accountChanger, setAccountChanger] = useState({
     proxyGroup: {},
     claimerGroup: {},
-    status: "idle",
+    status: "Idle",
     createdAt: new Date().toUTCString(),
     changerType: "",
     active: false,
@@ -175,7 +175,6 @@ function AccountChanger() {
         valid = true;
       }
       if (valid) {
-        console.log(accountChanger);
         dispatch(addDataInTableList(accountChanger));
         handleCloseModal();
       }

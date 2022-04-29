@@ -2,16 +2,15 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { ModalWrapper } from "../../component";
 import { setModalState } from "../../features/counterSlice";
-import video from "../../assests/video/onBoardinScreen.mp4";
 
-const ClamerOnboarding = () => {
+const ProxyOnboarding = () => {
   const dispatch = useDispatch();
   const handleCloseModal = () => {
-    dispatch(setModalState("clamerOnboardingScreen"));
+    dispatch(setModalState("proxyOnboardingScreen"));
   };
   const handleOpenClamerModal = () => {
-    dispatch(setModalState("clamerOnboardingScreen"));
-    dispatch(setModalState("claimerGroup"));
+    dispatch(setModalState("proxyOnboardingScreen"));
+    dispatch(setModalState("proxyGroup"));
   };
   return (
     <ModalWrapper>
@@ -63,4 +62,4 @@ const ClamerOnboarding = () => {
   );
 };
 
-export default ClamerOnboarding;
+export default ProxyOnboarding;

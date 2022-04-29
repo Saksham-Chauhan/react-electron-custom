@@ -54,7 +54,7 @@ function GiveawayJoiner({ selectToken, ...props }) {
             {...props}
             name="delay"
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
           />
         </div>
       </div>

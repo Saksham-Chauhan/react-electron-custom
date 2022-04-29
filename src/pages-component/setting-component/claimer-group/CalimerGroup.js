@@ -51,7 +51,18 @@ function CalimerGroup() {
     const Tokens = Object.values(json);
     for (let i = 0; i < groups.length; i++) {
       const tempStr = Tokens[i].join("\n");
-      dispatch(readTokenGroupFromFile({ name: groups[i], tokenArr: tempStr }));
+      let flag = true;
+      for (let j = 0; j < list.length; j++) {
+        if (list[j].name === groups[i]) {
+          flag = false;
+          break;
+        }
+      }
+      if (flag) {
+        dispatch(
+          readTokenGroupFromFile({ name: groups[i], tokenArr: tempStr })
+        );
+      }
     }
   };
   const handleExportTokenGroup = () => {
@@ -66,8 +77,12 @@ function CalimerGroup() {
   return (
     <div className=" claimer-group-outer ">
       <div className="claimer-flex">
-        <Tooltip {...{ id: "import", text: "Import Token groups" }} />
-        <Tooltip {...{ id: "export", text: "Export Token groups" }} />
+        <Tooltip
+          {...{ id: "import", text: "Import Discord Accounts/Tokens" }}
+        />
+        <Tooltip
+          {...{ id: "export", text: "Export Discord Accounts/Tokens" }}
+        />
         <h3 className={appTheme ? "lightMode_color" : ""}>Discord Tokens</h3>
         <div className="claimer-btns">
           <div className={btnClass} data-tip data-for="import">

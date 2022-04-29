@@ -13,19 +13,6 @@ function TweetCard({
   tweetUserFollowing = "",
   isFeatureCard = false,
 }) {
-  const getTitle = () => {
-    if (tweetMsgLink.includes("discord")) {
-      return "Invite Link Found";
-    }
-    if (
-      tweetMsgLink.includes("https") ||
-      tweetMsgLink.includes("http") ||
-      tweetMsgLink.includes(".com")
-    ) {
-      return "Link Found";
-    }
-    return "Tweet";
-  };
   return (
     <div className=" tweet-card-outer">
       <div className="tweet-card-top-section">

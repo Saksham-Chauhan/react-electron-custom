@@ -15,8 +15,10 @@ import {
   readArrayOfJson,
   startInviteJoinerMonitor,
   startLinkOpenerMonitor,
+  startXpFarmer,
   stopInviteJoinerMonitor,
   stopLinkOpenerMonitor,
+  stopXpFarmer,
 } from "../../../helper/electron-bridge";
 import serverLeaverAPI from "../../../api/account-changer/leave-server";
 import tokenCheckerAPI from "../../../api/account-changer/token-checker";
@@ -85,6 +87,10 @@ function TableSection({ list }) {
         startLinkOpenerMonitor(obj);
       } else if (type === "inviteJoiner") {
         startInviteJoinerMonitor(obj);
+      }
+      if (type === "xpFarmer") {
+        startXpFarmer();
+        console.log("started");
       } else {
         for (let index = 0; index < tokenArray.length; index++) {
           const token = tokenArray[index];
@@ -212,6 +218,7 @@ function TableSection({ list }) {
     status = flag.current;
     const type = obj["changerType"];
     if (type === "xpFarmer") {
+      stopXpFarmer();
       dispatch(updateStatusOfTableRow(obj, "Stopped"));
     }
     if (type === "linkOpener") {
@@ -329,7 +336,7 @@ export const apiCallToDiscord = async ({
       if (!token) {
         toastWarning(tokenMsg);
       } else {
-        if (password) {
+        if (!password) {
           toastWarning(passMsg);
         } else toastWarning(response.response.data.message);
       }

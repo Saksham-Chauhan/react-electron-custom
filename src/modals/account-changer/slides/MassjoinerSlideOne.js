@@ -18,7 +18,7 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
           <ModalFlexInnerRow>
             <AppInputField
               fieldTitle="Delay (Optional)"
-              placeholderText="Enter Delay (in ms)"
+              placeholderText="Enter Delay (in seconds)"
               name="delay"
               min={0}
               onChange={onChange}

@@ -1,83 +1,83 @@
-import React, { useEffect, useState } from 'react'
-import './styles.css'
+import React, { useEffect, useState } from "react";
+import "./styles.css";
 import {
   appendWebhookInList,
   fetchThemsState,
   fetchWebhookListState,
   fetchWebhookSettingState,
-} from '../../../features/counterSlice'
+} from "../../../features/counterSlice";
 
-import { useDispatch, useSelector } from 'react-redux'
-import { webhookTest } from '../../../helper/webhook'
-import { webhoookRegExp } from '../../../constant/regex'
-import { AppSpacer, AppToggler } from '../../../component'
-import { exportLogs } from '../../../helper/electron-bridge'
-import { toastSuccess, toastWarning } from '../../../toaster'
-import { toggleSettingSwitch } from '../../../features/logic/setting'
+import { useDispatch, useSelector } from "react-redux";
+import { webhookTest } from "../../../helper/webhook";
+import { webhoookRegExp } from "../../../constant/regex";
+import { AppSpacer, AppToggler } from "../../../component";
+import { exportLogs } from "../../../helper/electron-bridge";
+import { toastSuccess, toastWarning } from "../../../toaster";
+import { toggleSettingSwitch } from "../../../features/logic/setting";
 
 function WebhookSetting({ userDetails }) {
-  const dispatch = useDispatch()
-  const [webhook, setWebhook] = useState('')
-  const option = useSelector(fetchWebhookSettingState)
-  const webhookList = useSelector(fetchWebhookListState)
-  const appTheme = useSelector(fetchThemsState)
+  const dispatch = useDispatch();
+  const [webhook, setWebhook] = useState("");
+  const option = useSelector(fetchWebhookSettingState);
+  const webhookList = useSelector(fetchWebhookListState);
+  const appTheme = useSelector(fetchThemsState);
 
   useEffect(() => {
     if (webhookList?.length > 0) {
-      setWebhook(webhookList[0])
+      setWebhook(webhookList[0]);
     }
-  }, [webhookList])
+  }, [webhookList]);
 
   const handleToggle = (e) => {
-    const { checked, id } = e.target
-    if (id !== 'background-animation') {
+    const { checked, id } = e.target;
+    if (id !== "background-animation") {
       if (webhookList.length > 0 && webhookList[0].length > 0) {
-        if (id === 'link-opener') {
-          dispatch(toggleSettingSwitch({ key: 'LO', checked }))
-        } else if (id === 'invite-joiner') {
-          dispatch(toggleSettingSwitch({ key: 'IJ', checked }))
-        } else if (id === 'twitter-monitor') {
-          dispatch(toggleSettingSwitch({ key: 'TWITTER', checked }))
-        } else if (id === 'log-on/off') {
-          dispatch(toggleSettingSwitch({ key: 'LOG', checked }))
+        if (id === "link-opener") {
+          dispatch(toggleSettingSwitch({ key: "LO", checked }));
+        } else if (id === "invite-joiner") {
+          dispatch(toggleSettingSwitch({ key: "IJ", checked }));
+        } else if (id === "twitter-monitor") {
+          dispatch(toggleSettingSwitch({ key: "TWITTER", checked }));
+        } else if (id === "log-on/off") {
+          dispatch(toggleSettingSwitch({ key: "LOG", checked }));
         }
-      } else toastWarning('Enter webhook!!')
+      } else toastWarning("Enter webhook!!");
     } else {
-      dispatch(toggleSettingSwitch({ key: 'ANIMATION', checked }))
+      dispatch(toggleSettingSwitch({ key: "ANIMATION", checked }));
     }
-  }
+  };
 
   const handleChange = (e) => {
-    const { value } = e.target
-    setWebhook(value)
-    dispatch(appendWebhookInList(value))
-  }
+    const { value } = e.target;
+    setWebhook(value);
+    dispatch(appendWebhookInList(value));
+  };
 
   const handleWebhook = async () => {
     if (webhoookRegExp.test(webhook)) {
       const webhookResponse = await webhookTest(
         webhook,
         userDetails?.username,
-        userDetails?.avatar,
-      )
+        userDetails?.avatar
+      );
       if (webhookResponse.status === 204) {
-        toastSuccess('Webhook tested successfully 🥳')
+        toastSuccess("Webhook tested successfully 🥳");
       }
-    } else toastWarning('Enter valid Discord webhook')
-  }
+    } else toastWarning("Enter valid Discord webhook");
+  };
 
   const handleExportLog = () => {
-    exportLogs()
-  }
+    exportLogs();
+  };
 
-  const textClass = appTheme ? ' lightMode_color ' : ''
+  const textClass = appTheme ? " lightMode_color " : "";
   return (
     <div className="webhook-setting-outer">
       <h2 className={textClass}>Webhook</h2>
       <AppSpacer spacer={14} />
       <div
         className={
-          appTheme ? 'webhook-setting-inner lightBg ' : 'webhook-setting-inner'
+          appTheme ? "webhook-setting-inner lightBg " : "webhook-setting-inner"
         }
       >
         <div className="webhook-input-section ">
@@ -87,17 +87,17 @@ function WebhookSetting({ userDetails }) {
             placeholder="Enter Webhook"
             type="text"
             style={{
-              background: appTheme ? 'none' : '',
-              color: appTheme ? '#706A6A' : '',
-              border: appTheme ? '1px solid #0D0027' : '',
+              background: appTheme ? "none" : "",
+              color: appTheme ? "#706A6A" : "",
+              border: appTheme ? "1px solid #0D0027" : "",
             }}
           />
           <div
             onClick={handleWebhook}
             className={
               appTheme
-                ? 'webhook-test btn lightModeSidebar'
-                : 'webhook-test btn '
+                ? "webhook-test btn lightModeSidebar"
+                : "webhook-test btn "
             }
           >
             <span>Test</span>
@@ -168,7 +168,7 @@ function WebhookSetting({ userDetails }) {
         <AppSpacer spacer={10} />
       </div>
     </div>
-  )
+  );
 }
 
-export default WebhookSetting
+export default WebhookSetting;

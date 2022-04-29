@@ -9,7 +9,7 @@ function PasswordChnager({ ...props }) {
         <div className="half-flex-field">
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
             {...props}
             name="delayInPassword"
           />

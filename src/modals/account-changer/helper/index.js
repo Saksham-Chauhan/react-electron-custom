@@ -27,13 +27,33 @@ export const nicknameChangerValidation = (obj) => {
 };
 
 export const userNameChangerValidation = (obj) => {
-  if (obj.username.length > 0) {
-    return true;
-  } else {
-    toastWarning("Enter Invite code ");
-    return false;
+  let flag = true;
+  const credentials = obj.claimerGroup.value.split("\n");
+  for (let i = 0; i < credentials.length; i++) {
+    const tokenArray = credentials[i].split(":");
+    console.log(tokenArray);
+    if (tokenArray[1] && tokenArray[2]) {
+      console.log("first");
+      flag = false;
+      toastWarning(
+        tokenArray[2]
+          ? "Invalid format password is required"
+          : "Invalid format token is required"
+      );
+    }
   }
+  if (obj.username.length <= 0) {
+    flag = false;
+  }
+  if (flag) {
+    return true;
+  }
+  // else {
+  //   toastWarning("Enter Invite code ");
+  //   return false;
+  // }
 };
+
 export const giveawayJoinerValidation = (obj) => {
   const { botid, serverid, token } = obj;
   if (botid && serverid && token) {

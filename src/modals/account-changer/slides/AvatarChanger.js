@@ -28,7 +28,7 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
             name="delay"
             type="number"
             min={0}

@@ -14,6 +14,7 @@ import {
   fetchNftWalletModalState,
   fetchNftSettingModalState,
   fetchClamerOnbordingState,
+  fetchProxyOnbordingState,
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
@@ -30,6 +31,7 @@ import {
   ClaimerGroupModal,
   AccountChangerModal,
   DiscordAccountModal,
+  ProxyOnboarding,
 } from "./modals";
 import {
   Login,
@@ -85,14 +87,16 @@ function App() {
   const discordModalState = useSelector(fetchDiscordModalState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
   const proxyModalState = useSelector(fetchProxyGroupModalState);
-  const nftGroupModalState = useSelector(fetchNftGroupModalState);
-  const settingOnboardingh = useSelector(fetchClamerOnbordingState);
-  const nftWalletModalState = useSelector(fetchNftWalletModalState);
   const onBoardingModalState = useSelector(fetchDashboardModalState);
   const nftSettingModalState = useSelector(fetchNftSettingModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const accountChangerModalState = useSelector(fetchAccountChangerModalState);
-  const animClass = !globalSetting.bgAnimation
+  const nftGroupModalState = useSelector(fetchNftGroupModalState);
+  const nftWalletModalState = useSelector(fetchNftWalletModalState);
+  const settingOnboardingh = useSelector(fetchClamerOnbordingState);
+  const settingOnboardinghProxy = useSelector(fetchProxyOnbordingState);
+
+  const animClass = globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
 
@@ -121,7 +125,7 @@ function App() {
             sendLogs(log);
           }
           dispatch(setUserDetails(decode));
-        } else toastWarning("Sorry, you don't have required role");
+        } else toastWarning("You're not a Beta tester ");
       }
     });
     proxyTestResultListener((res) => {
@@ -178,6 +182,9 @@ function App() {
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {accountChangerModalState && <AccountChangerModal />}
+      {settingOnboardingh && <ClamerOnboarding />}
+      {settingOnboardinghProxy && <ProxyOnboarding />}
+
       <div className="app sidebar">
         <AppSidebar />
       </div>

@@ -615,24 +615,19 @@ ipcMain.on("stop-xp-server", (_, data) => {
   stopXpfarmer();
 });
 
-// let xpProcess = currentProcesses.execFile;
-
-let xpFarmerStart = function () {
+async function xpFarmerStart() {
   console.log("called start");
   const exePath = isDev
     ? `file://${path.join(__dirname, "../windows/xpfarmer.exe")}`
     : `file://${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
   try {
-    const child = execFile(
-      "python",
-      { cwd: exePath },
-      (error, stdout, stderr) => {
-        if (error) {
-          throw error;
-        }
-        console.log(stdout);
+    execFile(exePath, [3001], { cwd: "." }, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(data);
       }
-    );
+    });
     // exec(exePath, [3001], function (err, data) {
     //   console.log("err in func", err);
     //   console.log("data is", data.toString());
@@ -644,7 +639,7 @@ let xpFarmerStart = function () {
   } catch (e) {
     console.log("this is error", e);
   }
-};
+}
 
 function stopXpfarmer() {
   console.log("called stop");
