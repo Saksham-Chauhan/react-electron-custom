@@ -2,7 +2,6 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { ModalWrapper } from "../../component";
 import { setModalState } from "../../features/counterSlice";
-import video from "../../assests/video/onBoardinScreen.mp4";
 
 const ClamerOnboarding = () => {
   const dispatch = useDispatch();
@@ -25,28 +24,27 @@ const ClamerOnboarding = () => {
           overflow: "hidden",
         }}
       >
-        <br /> <br /> <br />
+        {/* <br /> <br /> <br />
         We can enter tokens in this format like:- email:password:token <br />
         All requirments are not required. <br /> We can enter token group like:-
         <br /> 1. example@gmail.com:mypasswoRd_0:OD5HJGFYTUR6_JKHGJKH
         VBHUGKJUHJy_2 <br /> 2. :mypasswoRd_0: <br /> 3. example@gmail.com::
         <br /> 4. example@gmail.com:mypasswoRd_0:
         <br /> 5. :mypasswoRd_0:OD5HJGFYTUR6_JKHGJKH VBHUGKJUHJy_2 etc.
-        <br /> <br /> <br />
-        {/* <video
+        <br /> <br /> <br /> */}
+        <video
           style={{
             width: "100%",
             height: "350px",
           }}
-          // src={video}
           autoPlay={true}
-          // controls={false}
+          loop={true}
         >
           <source
             src={require("../../assests/video/onBoardinScreen.mp4")}
             type="video/mp4"
           />
-        </video> */}
+        </video>
       </div>
       <div className="modal-control-btns">
         <div className="modal-cancel-btn btn" onClick={handleCloseModal}>

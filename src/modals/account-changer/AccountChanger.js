@@ -45,6 +45,7 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
+
 function AccountChanger() {
   const navigate = useNavigate();
   const chromeList = useSelector(fetchChromeUserListState);
@@ -175,6 +176,7 @@ function AccountChanger() {
         valid = true;
       }
       if (valid) {
+        console.log(accountChanger);
         dispatch(addDataInTableList(accountChanger));
         handleCloseModal();
       }

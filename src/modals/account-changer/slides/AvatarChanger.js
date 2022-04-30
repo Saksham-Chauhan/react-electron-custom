@@ -11,16 +11,16 @@ const getRandomNum = () => {
 };
 const api = [
   {
-    label: "Default API",
-    value: "https://picsum.photos/v2/list",
-  },
-  {
-    label: "Rick and Morty API",
+    label: "Catboy API",
     value: `https://rickandmortyapi.com/api/character/avatar/${getRandomNum()}.jpeg`,
   },
 ];
 
 function AvatarChanger({ handleSelectAPI, ...props }) {
+  const defApi = {
+    label: "Default API",
+    value: "https://picsum.photos/v2/list",
+  };
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -42,6 +42,7 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
             selectOptions={api}
             isSelect={true}
             onChange={handleSelectAPI}
+            defaultValue={defApi}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>

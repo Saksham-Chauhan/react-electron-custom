@@ -112,6 +112,7 @@ function InputField({
                 : selectStyles
             }
             isSearchable={false}
+            defaultValue={defaultValue}
           />
         </div>
       )}

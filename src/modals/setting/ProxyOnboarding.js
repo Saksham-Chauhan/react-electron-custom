@@ -25,12 +25,11 @@ const ProxyOnboarding = () => {
         }}
       >
         <br /> <br /> <br />
-        We can enter tokens in this format like:- email:password:token <br />
-        All requirments are not required. <br /> We can enter token group like:-
-        <br /> 1. example@gmail.com:mypasswoRd_0:OD5HJGFYTUR6_JKHGJKH
-        VBHUGKJUHJy_2 <br /> 2. :mypasswoRd_0: <br /> 3. example@gmail.com::
-        <br /> 4. example@gmail.com:mypasswoRd_0:
-        <br /> 5. :mypasswoRd_0:OD5HJGFYTUR6_JKHGJKH VBHUGKJUHJy_2 etc.
+        We can enter proxies in this format like:- ip:port:username:password{" "}
+        <br />
+        All requirments are not required. <br /> We can enter proxies like:-
+        <br />
+        1:- 1.1.1.1:9090 <br /> 2:- 1.1.1.1:9090:mypasswoRd_0:username etc.
         <br /> <br /> <br />
         {/* <video
           style={{
