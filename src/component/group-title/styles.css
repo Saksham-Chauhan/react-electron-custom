@@ -1,3 +1,8 @@
+.group-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .group-title-card {
   display: flex;
   align-items: center;
@@ -25,3 +30,7 @@
   height: 16px;
   object-fit: contain;
 }
+/* .group-btn {
+  cursor: pointer;
+  z-index: 4;
+} */

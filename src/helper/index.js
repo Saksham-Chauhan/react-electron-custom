@@ -45,7 +45,7 @@ export const downloadLogs = (content, title) => {
     for (let i = 0; i < content.length; i++) {
       tempData[content[i].name] = [...content[i].claimerToken.split("\n")];
     }
-  } else if (title === "proxy") {
+  } else if (title === "proxie") {
     for (let i = 0; i < content.length; i++) {
       tempData[content[i].groupName] = [
         ...content[i].proxyList.map((item) => item.proxy),

@@ -43,8 +43,8 @@ function KeywordScrollList({ keyWordList, appTheme }) {
         onDelete={handleDeleteKeyword}
         appTheme={appTheme}
       >
-        <LabelWithToolTip delayHide={1000} isCustomToolTip={true}>
-          <p className="custom-tooltip-text">Enter Keywors here</p>
+        <LabelWithToolTip delayHide={500} isCustomToolTip={true}>
+          <p className="custom-tooltip-text">Leave blank for all keywords</p>
         </LabelWithToolTip>
       </InputFieldWithScrollList>
     </div>

@@ -42,7 +42,7 @@ function NicknameChanger({ state, onRefresh, ...props }) {
           onClick={onRefresh}
           className={
             appTheme
-              ? "group-title btn refresh lightModeSidebar"
+              ? "group-title btn refresh light-mode-sidebar"
               : "group-title btn refresh"
           }
         >

@@ -65,7 +65,7 @@ export const DISCORD_MASS_OPTIONS = [
   { value: "linkOpener", label: "Link Opener" },
   { value: "tokenRetrieve", label: "Token Retriever" },
   { value: "giveawayJoiner", label: "Giveaway Joiner" },
-  { value: "xpFarmer", label: "XP Farmer" },
+  // { value: "xpFarmer", label: "XP Farmer" },
 ];
 
 export const replyList = [
@@ -82,3 +82,5 @@ export const replyList = [
 ];
 
 export const nftOptionsList = [{ label: "Eth", value: "eth" }];
+
+export const defaultChromeUser = { label: "Default", value: "default" };

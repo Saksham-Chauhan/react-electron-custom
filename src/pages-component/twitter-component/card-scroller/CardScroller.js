@@ -18,7 +18,9 @@ function CardScroller({
       <AppSpacer spacer={10} />
       <div
         className={
-          appTheme ? "twitter-scroller-inner lightBg" : "twitter-scroller-inner"
+          appTheme
+            ? "twitter-scroller-inner light-bg"
+            : "twitter-scroller-inner"
         }
       >
         <div

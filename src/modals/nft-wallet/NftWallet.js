@@ -55,7 +55,7 @@ function NftWallet() {
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Create Wallet</h2>
+        <h2 className={textClass}>Create Wallet</h2>
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
@@ -93,7 +93,7 @@ function NftWallet() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? "modal-cancel-btn btn lightMode-modalBtn "
+              ? "modal-cancel-btn btn light-mode-modalbtn"
               : "modal-cancel-btn btn"
           }
         >
@@ -103,7 +103,7 @@ function NftWallet() {
           onClick={handleSubmit}
           className={
             appTheme
-              ? "modal-cancel-btn submit btn btn_shadow "
+              ? "modal-cancel-btn submit btn btn-shadow "
               : " modal-cancel-btn submit btn"
           }
         >

@@ -97,7 +97,7 @@ export const editTaskInGroup = (task) => (dispatch, getState) => {
   dispatch(
     appendGroupInNftList(
       groupList.map((d) => {
-        if (d["id"] === task["id"]) return newTask;
+        if (d["id"] === newTask["id"]) return newTask;
         return d;
       })
     )

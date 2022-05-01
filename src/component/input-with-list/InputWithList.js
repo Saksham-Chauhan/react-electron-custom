@@ -5,6 +5,8 @@ import plus from "../../assests/images/plus.svg";
 import exportIcon from "../../assests/images/export.svg";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../features/counterSlice";
 
 function InputWithList({
   title = "Channel ID[s]",
@@ -15,10 +17,29 @@ function InputWithList({
   inputProps,
   logAction,
   onDelete,
-  appTheme,
   isComingSoon = false,
   children,
 }) {
+  const appTheme = useSelector(fetchThemsState);
+
+  const theme = {
+    inputInnerScroll: appTheme
+      ? "input-field-with-scroll-inner light-bg"
+      : "input-field-with-scroll-inner",
+    inputStyle: {
+      background: appTheme ? "none " : "",
+      color: appTheme ? "#706A6A" : "",
+      border: appTheme ? " 1px solid #0D0027" : "",
+    },
+    plusIconBtn: appTheme
+      ? "plus-icon-btn btn light-mode-sidebar"
+      : "plus-icon-btn btn",
+    blankText: appTheme ? "blank-text lightMode_color" : "blank-text",
+    spanText: {
+      color: appTheme ? "#0D0027" : "",
+    },
+  };
+
   return (
     <div className="input-field-with-scroll-outer">
       <div className="d-flex flex-with-tooltip">
@@ -26,13 +47,7 @@ function InputWithList({
         {children}
       </div>
       <AppSpacer spacer={15} />
-      <div
-        className={
-          appTheme
-            ? "input-field-with-scroll-inner lightBg"
-            : "input-field-with-scroll-inner"
-        }
-      >
+      <div className={theme.inputInnerScroll}>
         {!isComingSoon ? (
           <React.Fragment>
             {!isLogs ? (
@@ -40,20 +55,9 @@ function InputWithList({
                 <input
                   {...inputProps}
                   placeholder={placeHolder}
-                  style={{
-                    background: appTheme ? "none " : "",
-                    color: appTheme ? "#706A6A" : "",
-                    border: appTheme ? " 1px solid #0D0027" : "",
-                  }}
+                  style={theme.inputStyle}
                 />
-                <div
-                  {...btnProps}
-                  className={
-                    appTheme
-                      ? "plus-icon-btn btn lightModeSidebar"
-                      : "plus-icon-btn btn"
-                  }
-                >
+                <div {...btnProps} className={theme.plusIconBtn}>
                   <img src={plus} alt="" />
                 </div>
               </div>
@@ -81,13 +85,7 @@ function InputWithList({
               {!isLogs
                 ? list?.map((data, index) => (
                     <div key={data["id"] || index} className="scroll-list-item">
-                      <span
-                        style={{
-                          color: appTheme ? "#0D0027" : "",
-                        }}
-                      >
-                        {data["label"]}
-                      </span>
+                      <span style={theme.spanText}>{data["label"]}</span>
                       <UseAnimations
                         onClick={() => onDelete(data)}
                         animation={trash2}
@@ -102,16 +100,11 @@ function InputWithList({
                       <span>{data}</span>
                     </div>
                   ))}
-              {/* {!isLogs && <p className="blank-text">Leave Blank For All.</p>} */}
             </div>
           </React.Fragment>
         ) : (
           <div className="coming-soon-feature">
-            <p
-              className={appTheme ? "blank-text lightMode_color" : "blank-text"}
-            >
-              Coming Soon !!
-            </p>
+            <p className={theme.blankText}>Coming Soon !!</p>
           </div>
         )}
       </div>

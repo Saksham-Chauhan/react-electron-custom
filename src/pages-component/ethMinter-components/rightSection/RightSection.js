@@ -10,7 +10,10 @@ import lightModeplush from "../../../assests/images/lightModeplus.svg";
 import EthMinterSetting from "../../../assests/images/EthMinterSetting.svg";
 import rightAero from "../../../assests/images/rightAeroImg.svg";
 import lightModesearch from "../../../assests/images/lightModesearch.svg";
+import lightModeplay from "../../../assests/images/lightMode_play.svg";
 import stop from "../../../assests/images/stop.svg";
+
+// import stop from "../../../assests/images/stop.svg";
 import {
   fetchActiveNftGroupState,
   fetchNftSettingDelaytate,
@@ -29,7 +32,7 @@ import { handleMinting } from "../../../helper/nft-minter";
 import { sendLogs } from "../../../helper/electron-bridge";
 import { sleep } from "../../../helper";
 
-const IS_RUNNING = ["running"];
+const IS_RUNNING = ["Monitoring"];
 
 const RightSection = ({
   setwalletScreen,
@@ -46,9 +49,20 @@ const RightSection = ({
   const walletList = useSelector(fetchNftWalletListState);
 
   // minterList
-  const btnClass = appTheme
-    ? "icon-btn-wrapper btn lightBg"
-    : "icon-btn-wrapper btn";
+  const theme = {
+    btnClass: appTheme
+      ? "icon-btn-wrapper btn light-bg"
+      : "icon-btn-wrapper btn",
+    searchContainer: appTheme
+      ? "page-top-search-container light-bg "
+      : "page-top-search-container",
+    inputClass: appTheme ? "light-mode-input" : "",
+    minterSection: appTheme
+      ? "eth-minter-section  btn light-mode-sidebar"
+      : "eth-minter-section   btn",
+    playIcon: appTheme ? lightModeplay : play,
+    searchIcon: appTheme ? lightModesearch : searchIcon,
+  };
 
   const handleOpenModal = () => {
     if (Object.keys(activeNftGroup).length > 0) {
@@ -77,7 +91,7 @@ const RightSection = ({
     for (let i = 0; i < taskList.length; i++) {
       tempObj = { ...taskList[i] };
       tempObj["wallet"] = {};
-      if (tempObj.status !== "success" && tempObj.status !== "running") {
+      if (tempObj.status !== "Success" && tempObj.status !== "Monitoring") {
         for (let j = 0; j < walletList.length; j++) {
           if (walletList[j].id === tempObj.walletID) {
             tempObj.wallet["walletPublicKey"] = walletList[j].walletPublicKey;
@@ -86,13 +100,13 @@ const RightSection = ({
         }
         let log;
         try {
+          await sleep(delay);
           handleMinting(tempObj, rpcURL, handleEditTaskStatus, true, delay);
           log = `Start minting the task with id -> ${tempObj.id}`;
         } catch (e) {
           log = `Error in minting the task with id -> ${tempObj.id}`;
         }
         sendLogs(log);
-        await sleep(delay);
       }
     }
     setFlag(true);
@@ -115,33 +129,28 @@ const RightSection = ({
 
       <div className="page-top-btns-wrapper padding-horizontal">
         <div className="page-left-container">
-          <div
-            className={
-              appTheme
-                ? "page-top-search-container lightBg "
-                : "page-top-search-container"
-            }
-          >
-            <img
-              src={appTheme ? lightModesearch : searchIcon}
-              alt="search-icon"
-            />
+          <div className={theme.searchContainer}>
+            <img src={theme.searchIcon} alt="search-icon" />
             <input
               disabled={Object.keys(activeNftGroup).length === 0}
               value={search}
               onChange={handleSearching}
               placeholder="Search"
               type="search"
-              className={appTheme ? "lightModeInput" : ""}
+              className={theme.inputClass}
             />
           </div>
-          <div onClick={handleOpenModal} className={btnClass}>
+          <div onClick={handleOpenModal} className={theme.btnClass}>
             <img src={appTheme ? lightModeplush : add} alt="" />
           </div>
-          <div className={btnClass}>
-            <img src={flag ? play : stop} alt="refresh" onClick={onPlayAll} />
+          <div className={theme.btnClass}>
+            <img
+              src={flag ? theme.playIcon : stop}
+              alt=""
+              onClick={onPlayAll}
+            />
           </div>
-          <div className={btnClass}>
+          <div className={theme.btnClass}>
             <UseAnimations
               onClick={handleDeleteGroup}
               animation={trash2}
@@ -153,17 +162,17 @@ const RightSection = ({
 
         <div className="walletBtn">
           <div
-            className={
-              appTheme
-                ? "eth-minter-section  btn lightModeSidebar"
-                : "eth-minter-section   btn"
-            }
+            className={theme.minterSection}
             onClick={() => setwalletScreen(true)}
           >
             <span>Wallet Page</span>
             <img src={rightAero} alt="" className="walletBtnImg" />
           </div>
-          <div onClick={handleSettingModal} className={btnClass}>
+          <div
+            onClick={handleSettingModal}
+            style={{ marginLeft: "20px" }}
+            className={theme.minterSection}
+          >
             <img src={EthMinterSetting} alt="" />
           </div>
         </div>

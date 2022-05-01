@@ -43,11 +43,13 @@
 .table-header.body > div:nth-child(6) {
   display: flex;
   align-items: center;
+  height: 20.5px;
+  overflow: hidden;
 }
 
 .table-header.body > div:nth-child(6) > img {
   object-fit: contain;
-  height: 16px;
+  height: 100%;
   margin-right: 0.5em;
   cursor: pointer;
 }

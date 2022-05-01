@@ -5,10 +5,18 @@ import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
 import { DISCORD_MASS_OPTIONS } from "../../../constant";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../../features/counterSlice";
 
 function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
+  const appTheme = useSelector(fetchThemsState);
+  const theme = {
+    tableBody: appTheme
+      ? "acc-chnager-page-table-header body  light-bg light-mode-table-color"
+      : "acc-chnager-page-table-header body",
+  };
   return (
-    <div className="acc-chnager-page-table-header body">
+    <div className={theme.tableBody}>
       <div>{index}</div>
       <div style={{ display: "flex" }}>
         <div style={{ width: "70%", overflow: "hidden" }}>

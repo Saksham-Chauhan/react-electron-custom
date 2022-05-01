@@ -1,10 +1,11 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ModalWrapper } from "../../component";
-import { setModalState } from "../../features/counterSlice";
+import { fetchThemsState, setModalState } from "../../features/counterSlice";
 
 const ClamerOnboarding = () => {
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
   const handleCloseModal = () => {
     dispatch(setModalState("clamerOnboardingScreen"));
   };
@@ -12,10 +13,11 @@ const ClamerOnboarding = () => {
     dispatch(setModalState("clamerOnboardingScreen"));
     dispatch(setModalState("claimerGroup"));
   };
+  const textClass = appTheme ? "lightMode_color" : "clamer-title";
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Discord Tokens</h2>
+        <h2 className={textClass}>Discord Tokens</h2>
       </div>
       <div
         style={{
@@ -24,35 +26,43 @@ const ClamerOnboarding = () => {
           overflow: "hidden",
         }}
       >
-        {/* <br /> <br /> <br />
-        We can enter tokens in this format like:- email:password:token <br />
-        All requirments are not required. <br /> We can enter token group like:-
-        <br /> 1. example@gmail.com:mypasswoRd_0:OD5HJGFYTUR6_JKHGJKH
-        VBHUGKJUHJy_2 <br /> 2. :mypasswoRd_0: <br /> 3. example@gmail.com::
-        <br /> 4. example@gmail.com:mypasswoRd_0:
-        <br /> 5. :mypasswoRd_0:OD5HJGFYTUR6_JKHGJKH VBHUGKJUHJy_2 etc.
-        <br /> <br /> <br /> */}
-        <video
-          style={{
-            width: "100%",
-            height: "350px",
-          }}
-          autoPlay={true}
-          loop={true}
-        >
-          <source
-            src={require("../../assests/video/onBoardinScreen.mp4")}
-            type="video/mp4"
-          />
-        </video>
+        <p className={textClass}>
+          <br />
+          <br />
+          Account Format : <br />
+          You can enter your account in the following format: <br />
+          <br />
+          Format 1- email:password:token <br />
+          E.g.: harry12@gmail.com:password_7:ODY5AKGBJJ6VDREFGYgjhut667xy_z
+          <br />
+          jhone@gmail.com:jhonePass*4:ODY5AKGBJJ6VDREFGYgjhut667xyhhx
+          <br />
+          <br />
+          Format 2- token <br /> E.g.: <br />
+          ODY4FGHjhfjht567fgtyr76fggy6redf5ur-A7Yz <br />
+          OD74FGHjhfjht567fgtyr76fggy6redf5uratzy1_a
+          <br />
+          <br />
+        </p>
       </div>
       <div className="modal-control-btns">
-        <div className="modal-cancel-btn btn" onClick={handleCloseModal}>
-          <span>Cancel</span>
+        <div
+          className={
+            appTheme
+              ? "modal-cancel-btn btn light-mode-modalbtn"
+              : "modal-cancel-btn btn"
+          }
+          onClick={handleCloseModal}
+        >
+          <span className={textClass}>Cancel</span>
         </div>
         <div
-          className="modal-cancel-btn submit btn"
           onClick={handleOpenClamerModal}
+          className={
+            appTheme
+              ? "modal-cancel-btn submit btn btn-shadow "
+              : " modal-cancel-btn submit btn"
+          }
         >
           <span>Got it</span>
         </div>

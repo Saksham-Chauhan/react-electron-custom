@@ -14,6 +14,7 @@ import { sendLogs } from "../../helper/electron-bridge";
 import { getConnectFormData } from "../../helper/nft-minter";
 import { toastSuccess, toastWarning } from "../../toaster";
 import "./styles.css";
+
 function NftSetting() {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
@@ -85,7 +86,7 @@ function NftSetting() {
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Settings</h2>
+        <h2 className={textClass}>Settings</h2>
       </div>
       <AppSpacer spacer={30} />
       <div className="nft-setting-flex">
@@ -141,7 +142,7 @@ function NftSetting() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? "modal-cancel-btn btn lightMode-modalBtn "
+              ? "modal-cancel-btn btn light-mode-modalbtn "
               : "modal-cancel-btn btn"
           }
         >

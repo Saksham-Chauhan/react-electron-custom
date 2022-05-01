@@ -134,7 +134,7 @@ export const basicAccChangerValidation = (obj) => {
       valid = true;
     } else {
       valid = false;
-      toastWarning("Select Token group");
+      toastWarning("Select Discord Accounts");
       return valid;
     }
     if (Object.keys(obj.proxyGroup).length > 0) {

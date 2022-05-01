@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   GroupCard,
   AppSpacer,
@@ -14,11 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import solanaSol from "../../../assests/images/solanaSol.svg";
 import { NoAccountAlertModal } from "../../../modals";
 
-const LeftSection = ({ activeNftGroup, tempList }) => {
-  const [status, setStatus] = useState({
-    idleTasks: 0,
-    failedTasks: 0,
-  });
+const LeftSection = ({ activeNftGroup }) => {
   const dispatch = useDispatch();
   const list = useSelector(fetchNftGroupListState);
 
@@ -30,28 +26,6 @@ const LeftSection = ({ activeNftGroup, tempList }) => {
     dispatch(setActiveNftGroup(group));
   };
 
-  useEffect(() => {
-    let idleTasks = 0;
-    let failedTasks = 0;
-    const getTasksStatus = () => {
-      tempList.map((item) => {
-        if (item.status === "success") {
-          idleTasks++;
-        }
-        if (item.status === "failed" || item.status === "error") {
-          failedTasks++;
-        }
-        return null;
-      });
-      setStatus(() => {
-        return {
-          idleTasks,
-          failedTasks,
-        };
-      });
-    };
-    getTasksStatus();
-  }, [tempList]);
   return (
     <React.Fragment>
       {list.length === 0 ? (
@@ -78,9 +52,7 @@ const LeftSection = ({ activeNftGroup, tempList }) => {
             hideSubText={true}
             activeClass={group["id"] === activeNftGroup["id"] && "activeNft"}
             cardTitle={group["minterTitle"] || "Group 1"}
-            totalInProgress={tempList.length}
-            totalSuccess={status.idleTasks}
-            totalDecline={status.failedTasks}
+            group={group}
           />
         ))}
       </div>

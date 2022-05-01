@@ -14,7 +14,7 @@ function NftGroup() {
   const textClass = appTheme ? "lightMode_color" : "";
   const [group, setGroup] = useState({
     minterTitle: "",
-    minterType: "",
+    minterType: "ETH",
     minterList: [],
   });
 
@@ -63,7 +63,8 @@ function NftGroup() {
         fieldTitle="Type"
         isSelect={true}
         onChange={handleSelect}
-        placeholderText="Select Type"
+        // placeholderText="Select Type"
+        defaultValue={{ label: "ETH", value: "eth" }}
         selectOptions={nftOptionsList}
       />
       <AppSpacer spacer={25} />

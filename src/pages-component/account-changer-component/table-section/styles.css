@@ -2,8 +2,6 @@
   height: calc(100% - 90px);
 }
 
-
-
 .acc-chnager-table-header-parent {
   background: var(--sidebar-bg);
   border-radius: 5px;
@@ -15,6 +13,7 @@
   align-items: center;
   color: var(--scrollbar-bg);
   margin-bottom: 0.5em;
+  border-radius: 5px;
 }
 .acc-chnager-page-table-header.body {
   color: var(--primary);
@@ -37,6 +36,7 @@
 .acc-changer-table-row-action-column {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .acc-changer-table-row-action-column > img:first-of-type {
   margin-right: 1em;
@@ -50,14 +50,13 @@
 .acc-changer-table-scroller::-webkit-scrollbar {
   width: 10px;
 }
- 
+
 .acc-changer-table-scroller::-webkit-scrollbar-track {
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
 }
- 
+
 .acc-changer-table-scroller::-webkit-scrollbar-thumb {
   background-color: var(--sidebar-bg);
   outline: none;
   border-radius: 9px;
 }
-

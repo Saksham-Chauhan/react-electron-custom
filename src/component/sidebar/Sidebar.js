@@ -22,6 +22,8 @@ import defaultUpdate from "../../assests/activeDefault/update-default.svg";
 import defaultNft from "../../assests//activeDefault/nft-default.svg";
 import defaultProfile from "../../assests//activeDefault/profile-default.svg";
 import { checkForUpdates } from "../../helper/electron-bridge";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../features/counterSlice";
 
 const pjson = require("../../../package.json");
 
@@ -65,8 +67,12 @@ const iconData = [
 ];
 
 const Sidebar = () => {
+  const appTheme = useSelector(fetchThemsState);
+
   return (
-    <div className="sidebarMain">
+    <div
+      className={appTheme ? "sidebarMain light-mode-sidebar" : "sidebarMain"}
+    >
       <div className="sidebarMain--logo-wrapper">
         <img src={logo} alt="logo" />
       </div>

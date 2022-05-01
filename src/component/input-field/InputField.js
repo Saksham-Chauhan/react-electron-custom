@@ -11,7 +11,7 @@ import "./styles.css";
 import { useSelector } from "react-redux";
 import { fetchThemsState } from "../../features/counterSlice";
 import makeAnimated from "react-select/animated";
-import LabelWithTooltip from "../tooltip-label/LabelWithTooltip";
+// import LabelWithTooltip from "../tooltip-label/LabelWithTooltip";
 const animatedComponents = makeAnimated();
 
 const DefaultOptions = [];
@@ -29,6 +29,7 @@ function InputField({
   selectOptions = DefaultOptions,
   isCustomLabel = false,
   autoClose = true,
+  tooltip = false,
   ...props
 }) {
   const appTheme = useSelector(fetchThemsState);
@@ -45,14 +46,23 @@ function InputField({
           <label className={textClass} data-tip data-for={props.labelId}>
             {fieldTitle}
           </label>
-          {props.tooltip && (
-            <LabelWithTooltip
-              toolTopText={props.tooltipText}
-              labelText={props.labelId}
-              text={false}
-              click={props.isClickable}
-            />
+          {props.hyperLink && (
+            <label
+              className={textClass}
+              style={{
+                marginLeft: "10px",
+                cursor: "pointer",
+                color: "#7878e9",
+                textDecorationLine: "underline",
+              }}
+              onClick={() =>
+                window.open("https://www.youtube.com/watch?v=YEgFvgg7ZPI")
+              }
+            >
+              Need help with find your Discord Token?
+            </label>
           )}
+          {/* {tooltip && <LabelWithTooltip toolTopText={props.toolTipText} />} */}
         </div>
       )}
       {!isSelect ? (
@@ -90,7 +100,7 @@ function InputField({
               }}
               {...props}
               placeholder={placeholderText}
-              className={appTheme ? "lightModeInput " : ""}
+              className={appTheme ? "light-mode-input " : ""}
             ></textarea>
           )}
         </div>

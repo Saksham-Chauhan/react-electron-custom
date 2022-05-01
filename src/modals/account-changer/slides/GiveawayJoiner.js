@@ -3,50 +3,49 @@ import { AppInputField, AppSpacer } from "../../../component";
 
 function GiveawayJoiner({ selectToken, ...props }) {
   const { pageState } = props;
-  const getTokensList = () => {
-    let arr = pageState.claimerGroup.value.split("\n");
-    let arrofTokens = [];
-    for (let i = 0; i < arr.length; i++) {
-      arrofTokens.push({
-        label: arr[i].split(":")[2],
-        value: arr[i].split(":")[2],
-      });
-    }
-    return arrofTokens;
-  };
+  // const getTokensList = () => {
+  //   let arr = pageState.claimerGroup.value.split("\n");
+  //   let arrofTokens = [];
+  //   for (let i = 0; i < arr.length; i++) {
+  //     arrofTokens.push({
+  //       label: arr[i].split(":")[2],
+  //       value: arr[i].split(":")[2],
+  //     });
+  //   }
+  //   return arrofTokens;
+  // };
 
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
       <div className="modal-flex-field-wrapper flex-col">
         <div className="half-flex-field">
-          {Object.keys(pageState.claimerGroup).length && (
-            <>
-              <AppInputField
-                fieldTitle="Select token"
-                placeholderText="Add token"
-                selectOptions={getTokensList()}
-                isSelect={true}
-                onChange={selectToken}
-              />
-              <AppSpacer spacer={10} />
-            </>
-          )}
+          <AppInputField
+            fieldTitle="Monitor Token"
+            placeholderText="Enter Token"
+            // selectOptions={getTokensList()}
+            // isSelect={true}
+            onChange={selectToken}
+          />
         </div>
         <AppSpacer spacer={10} />
         <div className=" modal-flex-field-wrapper">
-          <AppInputField
-            {...props}
-            name="botid"
-            fieldTitle="Enter bot id"
-            placeholderText="enter bot id"
-          />
-          <AppInputField
-            {...props}
-            name="serverid"
-            fieldTitle="Enter server id"
-            placeholderText="enter server id"
-          />
+          <div style={{ width: "48%" }}>
+            <AppInputField
+              {...props}
+              name="botid"
+              fieldTitle="Enter Bot Id"
+              placeholderText="Enter Bot Id"
+            />
+          </div>
+          <div style={{ width: "49%" }}>
+            <AppInputField
+              {...props}
+              name="serverid"
+              fieldTitle="Enter Server Id"
+              placeholderText="Enter Server Id"
+            />
+          </div>
         </div>
         <AppSpacer spacer={10} />
         <div className="half-flex-field">

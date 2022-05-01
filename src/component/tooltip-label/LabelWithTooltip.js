@@ -27,7 +27,6 @@ function LabelWithTooltip({
         src={appTheme ? lightModehelp : help}
         alt="help-icon"
         onClick={() => {
-          console.log(click);
           if (click) {
             window.open("https://www.youtube.com/watch?v=YEgFvgg7ZPI");
           }

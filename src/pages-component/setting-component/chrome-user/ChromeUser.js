@@ -12,7 +12,6 @@ import { toastWarning } from "../../../toaster";
 function ChromeUser() {
   const dispatch = useDispatch();
   const chromeList = useSelector(fetchChromeUserListState);
-
   const [chrome, setChrome] = useState("");
 
   const handleChange = (e) => {

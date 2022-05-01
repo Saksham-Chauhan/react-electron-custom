@@ -6,6 +6,7 @@ import {
   fetchClaimerGroupList,
   fetchThemsState,
   fetchTwitterClaimerGroupState,
+  fetchTwitterSettingState,
 } from "../../../features/counterSlice";
 import {
   readTokenGroupFromFile,
@@ -27,7 +28,18 @@ function CalimerGroup() {
   const list = useSelector(fetchClaimerGroupList);
   const appTheme = useSelector(fetchThemsState);
   const usedGroup = useSelector(fetchTwitterClaimerGroupState);
+  const twitterSetting = useSelector(fetchTwitterSettingState);
 
+  const theme = {
+    btnClass: appTheme
+      ? "import-file-btn btn light-mode-sidebar "
+      : "import-file-btn btn",
+    claimerGroupScroll: appTheme
+      ? "claimer-group-list-scroll-list light-bg"
+      : "claimer-group-list-scroll-list",
+
+    textColor: appTheme ? "lightMode_color" : "",
+  };
   const handleOpenModal = () => {
     dispatch(setModalState("clamerOnboardingScreen"));
   };
@@ -38,7 +50,7 @@ function CalimerGroup() {
   };
 
   const handleDelete = (group) => {
-    if (usedGroup.id === group.id) {
+    if (usedGroup.id === group.id && twitterSetting.startAutoInviteJoiner) {
       toastWarning("Token in use on Twitter Page");
     } else {
       dispatch(deleteClaimerGroupFromList(group));
@@ -68,11 +80,8 @@ function CalimerGroup() {
   const handleExportTokenGroup = () => {
     if (list.length > 0) {
       downloadLogs(list, "token");
-    } else toastWarning("No token group to export!!");
+    } else toastWarning("No discord accounts to export!!");
   };
-  const btnClass = appTheme
-    ? "import-file-btn btn lightModeSidebar "
-    : "import-file-btn btn";
 
   return (
     <div className=" claimer-group-outer ">
@@ -85,7 +94,7 @@ function CalimerGroup() {
         />
         <h3 className={appTheme ? "lightMode_color" : ""}>Discord Tokens</h3>
         <div className="claimer-btns">
-          <div className={btnClass} data-tip data-for="import">
+          <div className={theme.btnClass} data-tip data-for="import">
             <img src={importIcon} alt="imp" />
             <input
               onChange={handleImportTokenGroup}
@@ -97,30 +106,22 @@ function CalimerGroup() {
           </div>
           <div
             onClick={handleExportTokenGroup}
-            className={btnClass}
+            className={theme.btnClass}
             data-tip
             data-for="export"
           >
             <img src={exportIcon} alt="" />
           </div>
-          <div onClick={handleOpenModal} className={btnClass}>
+          <div onClick={handleOpenModal} className={theme.btnClass}>
             <img src={plus} alt="" />
           </div>
         </div>
       </div>
       <AppSpacer spacer={14} />
-      <div
-        className={
-          appTheme
-            ? "claimer-group-list-scroll-list lightBg"
-            : "claimer-group-list-scroll-list"
-        }
-      >
+      <div className={theme.claimerGroupScroll}>
         {list.map((group) => (
           <div key={group["id"]} className="claimer-group-list-item">
-            <span className={appTheme ? "lightMode_color" : ""}>
-              {group["name"]}
-            </span>
+            <span className={theme.textColor}>{group["name"]}</span>
             <div className="claimer-group-item-action">
               <img src={edit} alt="edit" onClick={() => handleEdit(group)} />
               <UseAnimations

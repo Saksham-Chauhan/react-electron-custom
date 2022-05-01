@@ -7,7 +7,7 @@ function TopSection({ tableList }) {
   return (
     <TopWrapper>
       <GroupStatusCard
-        title="Spoofer"
+        title="Spoof Browser"
         subText={`${
           tableList.filter((spoof) => STATUS_MATCH.includes(spoof["status"]))
             .length

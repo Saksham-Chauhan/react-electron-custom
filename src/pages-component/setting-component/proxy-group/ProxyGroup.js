@@ -23,6 +23,16 @@ function ProxyGroup() {
   const proxyList = useSelector(fetchProxyGroupList);
   const appTheme = useSelector(fetchThemsState);
 
+  const theme = {
+    btnClass: appTheme
+      ? "import-file-btn btn light-mode-sidebar"
+      : "import-file-btn btn",
+    textColor: appTheme ? "lightMode_color" : "",
+    claimerGropScroll: appTheme
+      ? "claimer-group-list-scroll-list light-bg"
+      : "claimer-group-list-scroll-list",
+  };
+
   const handleOpenModal = () => {
     dispatch(setModalState("proxyOnboardingScreen"));
   };
@@ -51,24 +61,21 @@ function ProxyGroup() {
   };
 
   const handleExportProxy = () => {
-    downloadLogs(proxyList, "proxy");
+    downloadLogs(proxyList, "proxie");
   };
 
   const handleDeleteGroup = (group) => {
     dispatch(deleteProxyGroup(group));
   };
-  const btnClass = appTheme
-    ? "import-file-btn btn lightModeSidebar "
-    : "import-file-btn btn";
 
   return (
     <div className="claimer-group-outer">
       <div className="claimer-flex">
         <Tooltip {...{ id: "export-proxy", text: "Export Proxy Groups" }} />
-        <h3 className={appTheme ? "lightMode_color" : ""}>Proxies</h3>
+        <h3 className={theme.textColor}>Proxy Group</h3>
         <Tooltip {...{ id: "import-proxy", text: "Import Proxy Groups" }} />
         <div className="claimer-btns">
-          <div className={btnClass} data-tip data-for="import-proxy">
+          <div className={theme.btnClass} data-tip data-for="import-proxy">
             <img src={importIcon} alt="" />
             <input
               onChange={handleImportProxy}
@@ -80,30 +87,22 @@ function ProxyGroup() {
           </div>
           <div
             onClick={handleExportProxy}
-            className={btnClass}
+            className={theme.btnClass}
             data-tip
             data-for="export-proxy"
           >
             <img src={exportIcon} alt="" />
           </div>
-          <div onClick={handleOpenModal} className={btnClass}>
+          <div onClick={handleOpenModal} className={theme.btnClass}>
             <img src={plus} alt="" />
           </div>
         </div>
       </div>
       <AppSpacer spacer={14} />
-      <div
-        className={
-          appTheme
-            ? "claimer-group-list-scroll-list lightBg"
-            : "claimer-group-list-scroll-list"
-        }
-      >
+      <div className={theme.claimerGropScroll}>
         {proxyList.map((group) => (
           <div key={group["id"]} className="claimer-group-list-item">
-            <span className={appTheme ? "lightMode_color" : ""}>
-              {group["groupName"]}
-            </span>
+            <span className={theme.textColor}>{group["groupName"]}</span>
             <div className="claimer-group-item-action">
               <img
                 src={edit}

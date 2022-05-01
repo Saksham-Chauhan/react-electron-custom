@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import "./styles.css";
 import Chance from "chance";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   updateStatusOfTableRow,
   deleteDataFromTableList,
@@ -31,6 +31,7 @@ import tokenChanger from "../../../api/account-changer/token-changer";
 import { toastInfo } from "../../../toaster";
 import { replyList } from "../../../constant";
 import xpFarmer from "../../../api/account-changer/xp-farmer";
+import { fetchThemsState } from "../../../features/counterSlice";
 
 const { Client } = window.require("discord.js-selfbot");
 
@@ -39,11 +40,22 @@ let status = false;
 function TableSection({ list }) {
   let flag = useRef(false);
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
+  const theme = {
+    tableHeader: appTheme
+      ? "acc-chnager-page-table-header light-mode-sidebar"
+      : "acc-chnager-page-table-header",
+  };
 
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
   };
   const handlePlay = async (obj) => {
+    if (
+      obj.claimerGroup.value.split("\n").length >
+      obj.proxyGroup.value.split("\n").length
+    )
+      toastWarning("You are might banned because proxy is less than tokens");
     flag.current = !flag.current;
     status = flag.current;
     const type = obj["changerType"];
@@ -90,7 +102,6 @@ function TableSection({ list }) {
       }
       if (type === "xpFarmer") {
         startXpFarmer();
-        console.log("started");
       } else {
         for (let index = 0; index < tokenArray.length; index++) {
           const token = tokenArray[index];
@@ -231,9 +242,9 @@ function TableSection({ list }) {
   return (
     <div className="acc-changer-page-table-section">
       <div className="acc-chnager-table-header-parent">
-        <div className="acc-chnager-page-table-header">
+        <div className={theme.tableHeader}>
           <div>#</div>
-          <div>{"Token Group"}</div>
+          <div>{"Discord Accounts"}</div>
           <div>Type</div>
           <div>Status</div>
           <div>Actions</div>
@@ -276,7 +287,7 @@ export const apiCallToDiscord = async ({
   delay,
   settingObj,
 }) => {
-  const tokenMsg = "Invalid format, token not found in Token Group.";
+  const tokenMsg = "Invalid format, token not found in Discord Accounts.";
   const passMsg = "Invalid format, password not found.";
   const emailMsg = "Invalid format, email not found.";
   if (type === "avatarChanger") {
@@ -470,7 +481,7 @@ export const callApis = async (proxy, channelID, token, delay = "") => {
     return response;
   } else {
     if (!token) {
-      toastWarning("Invalid format, token not found in Token Group.");
+      toastWarning("Invalid format, token not found in Discord Accounts");
     } else {
       toastWarning(response.response.data.message);
     }

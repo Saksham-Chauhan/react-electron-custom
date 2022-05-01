@@ -1,10 +1,11 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ModalWrapper } from "../../component";
-import { setModalState } from "../../features/counterSlice";
+import { fetchThemsState, setModalState } from "../../features/counterSlice";
 
 const ProxyOnboarding = () => {
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
   const handleCloseModal = () => {
     dispatch(setModalState("proxyOnboardingScreen"));
   };
@@ -12,47 +13,55 @@ const ProxyOnboarding = () => {
     dispatch(setModalState("proxyOnboardingScreen"));
     dispatch(setModalState("proxyGroup"));
   };
+
+  const textClass = appTheme ? "lightMode_color" : "clamer-title";
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Discord Tokens</h2>
+        <h2 className={textClass}>Discord Tokens</h2>
       </div>
       <div
         style={{
-          color: "var(--primary)",
-
           overflow: "hidden",
+          color: appTheme ? "var(--app-bg)" : "var( --scrollbar-bg)",
         }}
       >
-        <br /> <br /> <br />
-        We can enter proxies in this format like:- ip:port:username:password{" "}
-        <br />
-        All requirments are not required. <br /> We can enter proxies like:-
-        <br />
-        1:- 1.1.1.1:9090 <br /> 2:- 1.1.1.1:9090:mypasswoRd_0:username etc.
-        <br /> <br /> <br />
-        {/* <video
-          style={{
-            width: "100%",
-            height: "350px",
-          }}
-          // src={video}
-          autoPlay={true}
-          // controls={false}
-        >
-          <source
-            src={require("../../assests/video/onBoardinScreen.mp4")}
-            type="video/mp4"
-          />
-        </video> */}
+        <p className={textClass}>
+          <br />
+          <br />
+          Proxy Format : <br />
+          You can enter your proxies in the following two format: <br />
+          <br />
+          Format 1:- ip:port:username:password <br />
+          E.g.: <br /> 1.1.1.1:9090:username:password <br />
+          121.122.11.213:1300:username:password
+          <br />
+          <br />
+          Format 2:- ip:port <br />
+          E.g.: <br /> 1.1.1.1:9090 <br />
+          121.122.11.213:1300
+          <br />
+          <br />
+        </p>
       </div>
       <div className="modal-control-btns">
-        <div className="modal-cancel-btn btn" onClick={handleCloseModal}>
-          <span>Cancel</span>
+        <div
+          className={
+            appTheme
+              ? "modal-cancel-btn btn light-mode-modalbtn"
+              : "modal-cancel-btn btn"
+          }
+          onClick={handleCloseModal}
+        >
+          <span className={textClass}>Cancel</span>
         </div>
         <div
-          className="modal-cancel-btn submit btn"
           onClick={handleOpenClamerModal}
+          className={
+            appTheme
+              ? "modal-cancel-btn submit btn btn-shadow "
+              : " modal-cancel-btn submit btn"
+          }
         >
           <span>Got it</span>
         </div>

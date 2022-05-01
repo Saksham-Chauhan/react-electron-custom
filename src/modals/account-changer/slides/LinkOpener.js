@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { AppInputField, AppSpacer } from "../../../component";
+import { AppInputField, AppSpacer, LabelWithToolTip } from "../../../component";
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
@@ -16,18 +16,18 @@ function LinkOpener({ handleMonitorToken, state, ...props }) {
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
-            isSelect={true}
+            // isSelect={true}
             isCustomSelect={true}
             onChange={handleMonitorToken}
             fieldTitle="Monitor Token"
-            placeholderText="Select Monitor token"
+            placeholderText="Enter Monitor token"
             selectOptions={makeGroupOptions(claimerGroupList)}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Delay (Optional)"
+            placeholderText="Delay (in seconds)"
             name="delay"
             type="number"
             min={0}
@@ -51,9 +51,14 @@ function LinkOpener({ handleMonitorToken, state, ...props }) {
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
+          <LabelWithToolTip
+            toolTopText="Leave Blank For All Keywords"
+            labelText="Keyword [s] (optional)"
+            parentStyle={{ style: { marginBottom: "10px" } }}
+          />
           <AppInputField
             {...props}
-            fieldTitle="Keyword [s]"
+            hideLabel={true}
             name="keywords"
             isMulti={true}
             multiHeight="100px"

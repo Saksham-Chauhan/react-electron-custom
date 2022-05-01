@@ -3,11 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
-import { DISCORD_MASS_OPTIONS, RoutePath } from "../../constant";
+import {
+  defaultChromeUser,
+  DISCORD_MASS_OPTIONS,
+  RoutePath,
+} from "../../constant";
 import {
   fetchChromeUserListState,
   fetchClaimerGroupList,
   fetchProxyGroupList,
+  fetchThemsState,
   setModalState,
 } from "../../features/counterSlice";
 import { addDataInTableList } from "../../features/logic/acc-changer";
@@ -48,6 +53,8 @@ import {
 
 function AccountChanger() {
   const navigate = useNavigate();
+
+  const appTheme = useSelector(fetchThemsState);
   const chromeList = useSelector(fetchChromeUserListState);
   const proxyGroupList = useSelector(fetchProxyGroupList);
   const claimerGroupList = useSelector(fetchClaimerGroupList);
@@ -60,7 +67,7 @@ function AccountChanger() {
     changerType: "",
     active: false,
     render: false,
-    delay: 2,
+    delay: 1,
   });
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
@@ -176,7 +183,6 @@ function AccountChanger() {
         valid = true;
       }
       if (valid) {
-        console.log(accountChanger);
         dispatch(addDataInTableList(accountChanger));
         handleCloseModal();
       }
@@ -230,10 +236,12 @@ function AccountChanger() {
     });
   };
 
+  const textClass = appTheme ? "lightMode_color" : "";
+
   return (
-    <ModalWrapper handleIsEmoji={handleIsEmoji}>
+    <ModalWrapper handleIsEmoji={handleIsEmoji} flag={true}>
       <div className="modal-tilte">
-        <h2>Create Task</h2>
+        <h2 className={textClass}>Create Task</h2>
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
@@ -253,14 +261,11 @@ function AccountChanger() {
           {accountChanger["changerType"] === "linkOpener" && (
             <AppInputField
               onChange={handleChromeUser}
-              placeholderText={
-                chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
-              }
               selectOptions={chromeList}
               fieldTitle="Chrome User"
-              isSelect={chromeList.length > 0}
-              disabled={chromeList.length > 0}
+              isSelect={true}
               navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
+              defaultValue={defaultChromeUser}
             />
           )}
         </ModalFlexInnerRow>
@@ -270,11 +275,11 @@ function AccountChanger() {
         <ModalFlexOuterRow>
           <ModalFlexInnerRow>
             <AppInputField
-              fieldTitle="Token Group"
+              fieldTitle="Discord Accounts"
               placeholderText={
                 claimerGroupList.length > 0
-                  ? "Select Token Group"
-                  : "Add Token Group"
+                  ? "Select Discord Accounts"
+                  : "Add Discord Accounts"
               }
               onMenuOpen={handleClaimerMenuOpen}
               selectOptions={makeClaimerSelectOption(claimerGroupList)}
@@ -288,6 +293,8 @@ function AccountChanger() {
               navigate={
                 claimerGroupList.length > 0 ? () => {} : handleProxyMenuOpen
               }
+              tooltip={true}
+              toolTipText="Select Discord Accounts"
             />
           </ModalFlexInnerRow>
           <ModalFlexInnerRow>
@@ -307,6 +314,8 @@ function AccountChanger() {
               navigate={
                 proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
               }
+              tooltip={true}
+              toolTipText="Select proxy group"
             />
           </ModalFlexInnerRow>
         </ModalFlexOuterRow>
@@ -333,21 +342,41 @@ function AccountChanger() {
           ""
         ) : (
           <div className="modal-control-btns">
-            <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-              <span>Cancel</span>
+            <div
+              onClick={handleCloseModal}
+              className={
+                appTheme
+                  ? "modal-cancel-btn btn light-mode-modalbtn"
+                  : "modal-cancel-btn btn"
+              }
+            >
+              <span className={textClass}>Cancel</span>
             </div>
-            <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-              <span>Create</span>
+            <div
+              onClick={handleSubmit}
+              className="modal-cancel-btn submit btn btn-shadow  "
+            >
+              <span className={textClass}>Create</span>
             </div>
           </div>
         )
       ) : (
         <div className="modal-control-btns">
-          <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-            <span>Cancel</span>
+          <div
+            onClick={handleCloseModal}
+            className={
+              appTheme
+                ? "modal-cancel-btn btn light-mode-modalbtn"
+                : "modal-cancel-btn btn"
+            }
+          >
+            <span className={textClass}>Cancel</span>
           </div>
-          <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-            <span>Create</span>
+          <div
+            onClick={handleSubmit}
+            className="modal-cancel-btn submit btn btn-shadow  "
+          >
+            <span className={textClass}>Create</span>
           </div>
         </div>
       )}

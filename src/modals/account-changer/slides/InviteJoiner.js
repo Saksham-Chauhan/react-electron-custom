@@ -10,25 +10,24 @@ import { makeGroupOptions } from "../helper";
 
 function InviteJoiner({ handleMonitorToken, state, ...props }) {
   const claimerGroupList = useSelector(fetchClaimerGroupList);
-  // console.log(claimerGroupList);
 
   return (
     <React.Fragment>
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
-            isSelect={true}
+            // isSelect={true}
             isCustomSelect={true}
             onChange={handleMonitorToken}
             fieldTitle="Monitor Token"
-            placeholderText="Select Monitor token"
+            placeholderText="Enter Monitor token"
             selectOptions={makeGroupOptions(claimerGroupList)}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Delay (Optional)"
+            placeholderText="Delay (in seconds)"
             name="delay"
             type="number"
             min={0}

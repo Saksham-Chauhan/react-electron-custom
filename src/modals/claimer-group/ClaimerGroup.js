@@ -83,7 +83,7 @@ function ClaimerGroup() {
             dispatch(setSelectedClaimerGroup(objClaimer));
           }
         } else {
-          const log = `New Token Group is created ${obj["name"]}`;
+          const log = `New Discord Accounts is created ${obj["name"]}`;
           sendLogs(log);
           dispatch(addGroupInClaimerList(obj));
         }
@@ -97,8 +97,7 @@ function ClaimerGroup() {
     <ModalWrapper>
       <div className="modal-tilte">
         <h2 className={textClass}>
-          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Discord
-          Accounts
+          {Object.keys(editState).length > 0 ? "Edit" : "Save"} Discord Accounts
           <img src={discord} alt="discord" style={{ marginLeft: "10px" }} />
         </h2>
       </div>
@@ -118,10 +117,8 @@ function ClaimerGroup() {
         onChange={handleChange}
         value={claimer.claimerToken}
         placeholderText=""
-        tooltipText="How to find my token?"
         labelId="token"
-        tooltip={true}
-        isClickable={true}
+        hyperLink={true}
       />
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
@@ -129,7 +126,7 @@ function ClaimerGroup() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? "modal-cancel-btn btn lightMode-modalBtn "
+              ? "modal-cancel-btn btn light-mode-modalbtn"
               : "modal-cancel-btn btn"
           }
         >
@@ -139,11 +136,11 @@ function ClaimerGroup() {
           onClick={handleSubmit}
           className={
             appTheme
-              ? "modal-cancel-btn submit btn btn_shadow "
+              ? "modal-cancel-btn submit btn btn-shadow "
               : " modal-cancel-btn submit btn"
           }
         >
-          <span>{Object.keys(editState).length > 0 ? "Save" : "Create"}</span>
+          <span>Save</span>
         </div>
       </div>
     </ModalWrapper>

@@ -2,7 +2,10 @@ import React from "react";
 import "./styles.css";
 import { AppSpacer } from "../../../component";
 import bird from "../../../assests/images/bird.svg";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../../features/counterSlice";
 import helper from "../../../pages/twitter/utils//feature-tweets/helper";
+
 function TweetCard({
   cardTitle = "Tweet",
   tweetTime = "Fri Feb 21 12:07:35 +0000 2022",
@@ -13,8 +16,13 @@ function TweetCard({
   tweetUserFollowing = "",
   isFeatureCard = false,
 }) {
+  const appTheme = useSelector(fetchThemsState);
   return (
-    <div className=" tweet-card-outer">
+    <div
+      className={
+        appTheme ? "tweet-card-outer light-mode-sidebar" : " tweet-card-outer"
+      }
+    >
       <div className="tweet-card-top-section">
         <span id="cardtitle">
           {cardTitle === "URLs extracted Found"

@@ -39,7 +39,7 @@ function NftTask() {
     walletName: "",
   });
   const [tempVar, setTempVar] = useState();
-
+  console.log(task);
   useEffect(() => {
     const setData = () => {
       if (Object.keys(editState).length > 0) {
@@ -96,40 +96,68 @@ function NftTask() {
   const handleDispatchTask = (data) => {
     dispatch(addTaskInGroup(data));
   };
+  const handleDispatchEditTask = (data) => {
+    dispatch(editTaskInGroup(data));
+  };
 
   const handleSubmit = async () => {
     let log;
     const validationresult = validationChecker(
-      nftTaskSchema(task.gasPriceMethod === "manualPrice"),
+      nftTaskSchema(task.gasPriceMethod === "manual"),
       task
     );
-    if (validationresult) {
-      if (Object.keys(editState).length === 0) {
+    if (Object.keys(editState).length === 0) {
+      if (validationresult) {
         for (let i = 0; i < tempVar.length; i++) {
           log = `new Minter task is created with contract address ${task.contractAddress}`;
           task.walletID = tempVar[i].value;
           task.walletName = tempVar[i].label;
           try {
-            handleGetMintdata(task, rpcURL, apiKey, handleDispatchTask);
+            const res = await handleGetMintdata(
+              task,
+              rpcURL,
+              apiKey,
+              handleDispatchTask
+            );
+            if (res.status === 200) handleCloseModal();
           } catch (e) {
             log = `Can't create new task with ${task.contractAddress}`;
           }
           sendLogs(log);
         }
-        handleCloseModal();
-      } else {
-        dispatch(editTaskInGroup(task));
       }
+    } else {
+      setTask({ ...editState });
+      try {
+        const res = await handleGetMintdata(
+          task,
+          rpcURL,
+          apiKey,
+          handleDispatchEditTask
+        );
+        if (res.status === 200) {
+          dispatch(setEditStorage({}));
+          handleCloseModal();
+        }
+      } catch (e) {
+        log = `Can't create new task with ${task.contractAddress}`;
+      }
+      sendLogs(log);
     }
   };
+
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>{Object.keys(editState).length > 0 ? "Edit" : "Create"} Task</h2>
+        <h2 className={textClass}>
+          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Task
+        </h2>
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
         <AppInputField
+          fieldTitle="Select Wallets"
+          placeholderText="Select Wallets"
           isSelect={true}
           autoClose={false}
           isMulti
@@ -196,7 +224,7 @@ function NftTask() {
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
       <AppSpacer spacer={10} />
-      {task["gasPriceMethod"] === "manualPrice" && (
+      {task["gasPriceMethod"] === "manual" && (
         <ModalFlexOuterRow>
           <ModalFlexInnerRow>
             <AppInputField
@@ -227,7 +255,7 @@ function NftTask() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? "modal-cancel-btn btn lightMode-modalBtn "
+              ? "modal-cancel-btn btn light-mode-modalbtn "
               : "modal-cancel-btn btn"
           }
         >
@@ -237,7 +265,7 @@ function NftTask() {
           onClick={handleSubmit}
           className={
             appTheme
-              ? "modal-cancel-btn submit btn btn_shadow "
+              ? "modal-cancel-btn submit btn btn-shadow "
               : " modal-cancel-btn submit btn"
           }
         >

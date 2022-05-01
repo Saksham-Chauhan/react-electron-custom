@@ -97,15 +97,16 @@ export const handleGetMintdata = async (
       dispatchResponse(data);
     } else {
       toastWarning(res.response.data.error);
-      return false;
+      return res;
     }
   } catch (e) {
     if (!e?.response?.data?.error) {
       toastWarning("Can't create task.");
     }
     toastWarning(e.response.data.error);
-    return false;
+    return e;
   }
+  return res;
 };
 
 export const getStatus = async (
@@ -121,7 +122,7 @@ export const getStatus = async (
     const res = await getTransactionStatus(formData);
     if (res.status === 200) {
       const mintStatus = res.data.result.status;
-      if (mintStatus === "pending") {
+      if (mintStatus === "Pending") {
         let obj = { ...task };
         obj["status"] = mintStatus;
         if (flag) dispatchResponse(obj);
@@ -149,7 +150,7 @@ export const handleMinting = async (
 ) => {
   await sleep(delay);
   let obj = { ...data };
-  obj["status"] = "running";
+  obj["status"] = "Monitoring";
   if (flag) dispatchResponse(obj);
   const formData = getTransactionMintingFormData(data, url);
   try {

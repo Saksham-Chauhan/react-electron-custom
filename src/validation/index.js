@@ -60,6 +60,8 @@ export const nftTaskSchema = (isRequired) => {
     functionParam: joi.string().required().label("Enter function param"),
     transactionCost: joi.number().required().label("Enter transaction cost"),
     contractAddress: joi.string().required().label("Enter contract address"),
+    re_data: joi.optional(),
+    wallet: joi.optional(),
   };
   if (isRequired) {
     userSchemaKeys.maxPriorityFee = joi

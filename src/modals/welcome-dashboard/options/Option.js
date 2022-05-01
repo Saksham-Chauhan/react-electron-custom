@@ -10,7 +10,7 @@ const Option = ({ logo, text, ...props }) => {
   const appTheme = useSelector(fetchThemsState)
   const textClass = appTheme ? 'lightMode_color' : ''
   return (
-    <div {...props} className={appTheme ? 'options lightBg ' : 'options'}>
+    <div {...props} className={appTheme ? 'options light-bg ' : 'options'}>
       <img src={logo} alt="logo" />
       <p className={textClass}>{text}</p>
       <img src={appTheme ? lighMode_Arrow : rightAero} alt="aero" />

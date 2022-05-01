@@ -55,6 +55,8 @@ function Twitter() {
   const selectedChrome = useSelector(fetchTwitterChromeUserState);
   const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
 
+  // console.log(twitterSetting);
+
   useEffect(() => {
     let timer = null;
     const fetchTweets = () => {
@@ -202,43 +204,37 @@ function Twitter() {
    * function handle start stop switch btn
    **/
   const handleToggle = (event) => {
-    console.log(selectedChrome);
     let prevState = { ...twitterSetting };
     const { name, checked } = event.target;
     prevState[name] = checked;
     if (name === "twitterMonitor") {
-      if (Object.keys(selectedChrome).length) {
-        if (Object.keys(selectedClaimer).length) {
-          if (apiList.length > 0) {
-            if (userList.length > 0) {
-              if (!prevState["twitterMonitor"]) {
-                prevState["monitorStartDate"] = "";
-              } else {
-                prevState["monitorStartDate"] = new Date().toUTCString();
-              }
-              const maskedKey = apiList[rotaterIndex]?.apiKey.substring(0, 4);
-              const maskedSecret = apiList[rotaterIndex]?.apiSecret.substring(
-                0,
-                4
-              );
-              const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
-              let log = `Twitter  monitor start with ${token}`;
-              sendLogs(log);
-              if (checked === false) {
-                prevState["startAutoInviteJoiner"] = false;
-                prevState["startAutoLinkOpener"] = false;
-                dispatch(setTwitterSetting(prevState));
-              } else {
-                prevState["startAutoInviteJoiner"] = true;
-                prevState["startAutoLinkOpener"] = true;
-                dispatch(setTwitterSetting(prevState));
-              }
-            } else toastWarning("Enter some Twitter handlers");
+      // if (Object.keys(selectedChrome).length) {
+      // if (Object.keys(selectedClaimer).length) {
+      if (apiList.length > 0) {
+        if (userList.length > 0) {
+          if (!prevState["twitterMonitor"]) {
+            prevState["monitorStartDate"] = "";
           } else {
-            toastWarning("Add some API keys");
+            prevState["monitorStartDate"] = new Date().toUTCString();
           }
-        } else toastWarning("Please select discord tokens group");
-      } else toastWarning("Please select chrome user");
+          const maskedKey = apiList[rotaterIndex]?.apiKey.substring(0, 4);
+          const maskedSecret = apiList[rotaterIndex]?.apiSecret.substring(0, 4);
+          const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
+          let log = `Twitter  monitor start with ${token}`;
+          sendLogs(log);
+          if (checked === false) {
+            prevState["startAutoInviteJoiner"] = false;
+            prevState["startAutoLinkOpener"] = false;
+            dispatch(setTwitterSetting(prevState));
+          } else {
+            dispatch(setTwitterSetting(prevState));
+          }
+        } else toastWarning("Enter Username");
+      } else {
+        toastWarning("Enter API keys under Twitter Setting");
+      }
+      // } else toastWarning("Please select discord tokens group");
+      // } else toastWarning("Please select chrome user");
     } else {
       if (twitterSetting.twitterMonitor) {
         if (name === "startAutoInviteJoiner") {
@@ -247,7 +243,7 @@ function Twitter() {
               let log = `Twitter  monitor IJ start ${selectedClaimer["value"]}`;
               sendLogs(log);
               dispatch(setTwitterSetting(prevState));
-            } else toastWarning("Select Token Group");
+            } else toastWarning("Select Discord Accounts");
           }
         } else {
           let log = `Twitter  monitor LO start`;
@@ -279,6 +275,11 @@ function Twitter() {
     } else {
       dispatch(clearTweetsFeeder(key));
     }
+    if (
+      Object.keys(featureTweetList).length === 0 ||
+      Object.keys(latestTweetList).length === 0
+    )
+      toastWarning("Nothing to remove");
   };
 
   return (

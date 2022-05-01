@@ -115,7 +115,7 @@ export const readTokenGroupFromFile = (data) => (dispatch, getState) => {
   obj["claimerList"] = [];
   obj["claimerToken"] = valid.map((tkn) => tkn).join("\n");
   obj["createdAt"] = new Date().toUTCString();
-  const log = `New Token Group is created ${obj["name"]}`;
+  const log = `New Discord Account is created ${obj["name"]}`;
   sendLogs(log);
   let combiner = [obj, ...currentList];
   dispatch(appendClaimerGroupInList(combiner));

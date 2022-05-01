@@ -7,6 +7,8 @@ import {
 } from "../../../component";
 import { Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../../features/counterSlice";
 
 const MassjoinerSlideTwo = ({
   onChange,
@@ -23,6 +25,9 @@ const MassjoinerSlideTwo = ({
     handleUpdateObject("emojiValue", emojival);
   };
 
+  const appTheme = useSelector(fetchThemsState);
+  const textClass = appTheme ? "lightMode_color" : "";
+
   return (
     <>
       <div className="mj-slide">
@@ -31,17 +36,20 @@ const MassjoinerSlideTwo = ({
             <div className="toggler-btn-label">
               <label>React</label>
               <AppSpacer spacer={5} />
-              <div className="joiner-custom-toggle">
+              <div className="d-flex">
                 <AppToggler
                   id="invite-joiner-react-setting-mode"
                   checked={pageState.isReact}
                   onChange={handleToggler}
                   name="isReact"
                 />
-                <label>Turn {!true ? "ON" : "OFF"}</label>
+                <label style={{ marginLeft: "5px" }}>
+                  Turn {pageState.isReact ? "ON" : "OFF"}
+                </label>
               </div>
             </div>
-            <div className={`react-joiner-setting-section`}>
+            <AppSpacer spacer={10} />
+            <div className="react-joiner-setting-section">
               {pageState.isReact && (
                 <>
                   <div>
@@ -102,14 +110,19 @@ const MassjoinerSlideTwo = ({
                 </p>
               </LabelWithToolTip>
               <AppSpacer spacer={10} />
-              <div className="joiner-custom-toggle">
+              <div className="d-flex">
                 <AppToggler
                   id="invite-joiner-accept-rule"
                   checked={pageState.isAcceptRule}
                   onChange={handleToggler}
                   name="isAcceptRule"
                 />
-                <label>Turn {!pageState.isAcceptRule ? "ON" : "OFF"}</label>
+                <label
+                  className={textClass}
+                  style={{ marginLeft: "5px", color: "var(--primary)" }}
+                >
+                  Turn {pageState.isAcceptRule ? "ON" : "OFF"}
+                </label>
               </div>
               <AppSpacer spacer={10} />
               {pageState.isAcceptRule && (

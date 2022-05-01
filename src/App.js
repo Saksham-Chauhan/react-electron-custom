@@ -18,6 +18,7 @@ import {
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
+  fetchThemsState,
 } from "./features/counterSlice";
 import {
   NftTaskModal,
@@ -75,7 +76,13 @@ import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
 import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
-import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
+import {
+  AppController,
+  DragBar,
+  AppFooter,
+  AppSidebar,
+  DarkMode,
+} from "./component";
 import { resetTaskState, updateTaskState } from "./features/logic/acc-changer";
 
 function App() {
@@ -95,6 +102,7 @@ function App() {
   const nftWalletModalState = useSelector(fetchNftWalletModalState);
   const settingOnboardingh = useSelector(fetchClamerOnbordingState);
   const settingOnboardinghProxy = useSelector(fetchProxyOnbordingState);
+  const appTheme = useSelector(fetchThemsState);
 
   const animClass = globalSetting.bgAnimation
     ? "kyro-bot"
@@ -125,7 +133,7 @@ function App() {
             sendLogs(log);
           }
           dispatch(setUserDetails(decode));
-        } else toastWarning("You're not a Beta tester ");
+        } else toastWarning("You're not a Beta member");
       }
     });
     proxyTestResultListener((res) => {
@@ -188,12 +196,19 @@ function App() {
       <div className="app sidebar">
         <AppSidebar />
       </div>
-      <div className="app page-section">
-        <div className="app overlay-wrapper ">
+      <div
+        className={
+          appTheme
+            ? "app page-section light-mode-page-section"
+            : "app page-section "
+        }
+      >
+        <div className=" overlay-wrapper ">
           <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
           <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
             <DragBar />
+            <DarkMode />
             <AppController {...{ location }} />
             <Routes>
               <Route
