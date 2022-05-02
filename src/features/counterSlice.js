@@ -38,7 +38,7 @@ const initialState = {
     proxyOnboardingScreen: false,
   },
   themes: {
-    lightMode: true,
+    lightMode: false,
   },
 };
 
