@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { InputFieldWithScrollList } from "../..";
+import { InputFieldWithScrollList } from "../../../component";
 import { chromeRegExp } from "../../../constant/regex";
 import { fetchChromeUserListState } from "../../../features/counterSlice";
 import {
@@ -20,9 +20,15 @@ function ChromeUser() {
   };
 
   const handleAdd = () => {
+    let flag = true;
     if (chromeRegExp.test(chrome)) {
-      dispatch(addChromeUserInList(chrome));
-      setChrome("");
+      for (let i = 0; i < chromeList.length; i++) {
+        if (chromeList[i].value === chrome) flag = false;
+      }
+      if (flag) {
+        dispatch(addChromeUserInList(chrome));
+        setChrome("");
+      } else toastWarning("User name already exists");
     } else toastWarning("Enter valid Chrome User");
   };
 

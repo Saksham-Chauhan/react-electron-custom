@@ -1,5 +1,5 @@
-import React from "react";
-import "./styles.css";
+import React from 'react'
+import './styles.css'
 
 function Checkbox({ id, ...props }) {
   return (
@@ -7,7 +7,7 @@ function Checkbox({ id, ...props }) {
       <input {...props} id={id} type="checkbox" />
       <label htmlFor={id}></label>
     </div>
-  );
+  )
 }
 
-export default Checkbox;
+export default Checkbox

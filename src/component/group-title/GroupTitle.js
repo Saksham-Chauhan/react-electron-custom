@@ -1,14 +1,33 @@
 import React from "react";
 import "./styles.css";
 import plus from "../../assests/images/plus.svg";
+import lightModeplus from "../../assests/images/lightModeplus.svg";
+import { fetchThemsState } from "../../features/counterSlice";
+import { useSelector } from "react-redux";
 
-function GroupTitle({ title = "Proxy Group", ...props }) {
+function GroupTitle({
+  title = "Proxy Group",
+  hideBtn = false,
+  onClick,
+  ...props
+}) {
+  const appTheme = useSelector(fetchThemsState);
+
   return (
-    <div className="group-title">
-      <span>{title}</span>
-      <div {...props} className="group-title btn">
-        <img src={plus} alt="" />
-      </div>
+    <div className="group-title-card">
+      <span className={appTheme ? "lightMode_color " : ""}>{title}</span>
+      {!hideBtn && (
+        <div
+          {...props}
+          onClick={onClick}
+          className={
+            appTheme ? "lightMode_color group-title-card" : "group-title-card"
+          }
+          style={{ cursor: "pointer" }}
+        >
+          <img src={appTheme ? lightModeplus : plus} alt="" />
+        </div>
+      )}
     </div>
   );
 }

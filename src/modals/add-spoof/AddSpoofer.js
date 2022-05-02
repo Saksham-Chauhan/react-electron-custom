@@ -10,19 +10,24 @@ import {
 import {
   setModalState,
   fetchProxyGroupList,
+  fetchThemsState,
 } from "../../features/counterSlice";
 import { toastWarning } from "../../toaster";
-import { UrlRegexp } from "../../constant/regex";
 import { spooferSchema } from "../../validation";
 import { useDispatch, useSelector } from "react-redux";
 import decrement from "../../assests/images/decrement.svg";
 import increment from "../../assests/images/increment.svg";
 import { validationChecker } from "../../hooks/validationChecker";
 import { addNewSpooferInList } from "../../features/logic/spoof";
+import { useNavigate } from "react-router-dom";
+import { RoutePath } from "../../constant";
 
 function AddSpoofer() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const proxyGroupList = useSelector(fetchProxyGroupList);
+  const appTheme = useSelector(fetchThemsState);
+
   const [spoof, setSpoof] = useState({
     id: "",
     url: "",
@@ -78,7 +83,6 @@ function AddSpoofer() {
       return { ...pre, proxyName: label, proxyValue: value };
     });
   };
-
   /**
    * function make option for select
    */
@@ -98,7 +102,7 @@ function AddSpoofer() {
    * handler bind to submit btn
    */
   const handleSubmit = () => {
-    if (UrlRegexp.test(spoof.url)) {
+    if (spoof.url) {
       const result = validationChecker(spooferSchema, spoof);
       if (result) {
         for (let i = 0; i < Number(spoof.quantity); i++) {
@@ -109,13 +113,23 @@ function AddSpoofer() {
     } else toastWarning("Enter Valid URL");
   };
 
+  const handleProxyMenuOpen = () => {
+    if (proxyGroupList.length === 0) {
+      navigate(RoutePath.proxy, { replace: true });
+      handleCloseModal();
+    }
+  };
+  const textClass = appTheme ? "lightMode_color" : "";
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Create Spoofer</h2>
+        <h2 className={textClass}>Create Spoof Browser</h2>
       </div>
       <AppSpacer spacer={30} />
-      <LabelWithToolTip labelText="URL" />
+      <LabelWithToolTip
+        labelText="URL"
+        toolTopText="Enter URL you want to open"
+      />
       <AppInputField
         name="url"
         placeholderText="Enter URL"
@@ -126,26 +140,40 @@ function AddSpoofer() {
       <AppSpacer spacer={10} />
       <div className="spoof-modal-middle-section">
         <div>
-          <LabelWithToolTip labelText="Proxy" />
+          <LabelWithToolTip
+            labelText="Proxy"
+            toolTopText="Select proxy group"
+          />
           <AppInputField
             selectOptions={makeProxyOptions()}
-            isSelect={true}
             hideLabel={true}
             onChange={handleProxySelect}
+            placeholderText={
+              proxyGroupList.length > 0
+                ? "Select Proxy Group"
+                : "Add Proxy Group"
+            }
+            onMenuOpen={handleProxyMenuOpen}
+            isSelect={proxyGroupList.length > 0 ? true : false}
+            disabled={proxyGroupList.length > 0 ? false : true}
+            navigate={
+              proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+            }
           />
         </div>
         <div className="spoofer-counter">
-          <label>Quantity</label>
+          <label className={textClass}>Quantity</label>
           <div className="spoofer-counter-inner">
             <div onClick={decrementEvent}>
               <img src={decrement} alt="" />
             </div>
             <input
-              value={spoof.quantity}
-              onChange={handleChange}
-              name="quantity"
               min={1}
               type="number"
+              name="quantity"
+              value={spoof.quantity}
+              onChange={handleChange}
+              className={appTheme ? "light-mode-input" : ""}
             />
             <div onClick={incrementEvent}>
               <img src={increment} alt="" />
@@ -154,7 +182,10 @@ function AddSpoofer() {
         </div>
       </div>
       <AppSpacer spacer={10} />
-      <LabelWithToolTip labelText="Disable Images" />
+      <LabelWithToolTip
+        labelText="Disable Images"
+        toolTopText="Disable all image on loading browser"
+      />
       <AppSpacer spacer={5} />
       <div className="joiner-custom-toggle">
         <AppToggler
@@ -163,15 +194,27 @@ function AddSpoofer() {
           onChange={handleChange}
           name="isDisableImage"
         />
-        <label>Turn {!spoof?.isDisableImage ? "ON" : "OFF"}</label>
+        <label className={textClass}>
+          Turn {!spoof?.isDisableImage ? "ON" : "OFF"}
+        </label>
       </div>
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
-        <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-          <span>Cancel</span>
+        <div
+          onClick={handleCloseModal}
+          className={
+            appTheme
+              ? "modal-cancel-btn btn light-mode-modalbtn"
+              : "modal-cancel-btn btn"
+          }
+        >
+          <span className={textClass}>Cancel</span>
         </div>
-        <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>Create</span>
+        <div
+          onClick={handleSubmit}
+          className="modal-cancel-btn submit btn btn-shadow "
+        >
+          <span className={textClass}>Create</span>
         </div>
       </div>
     </ModalWrapper>

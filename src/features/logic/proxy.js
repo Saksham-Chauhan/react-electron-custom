@@ -9,7 +9,7 @@ import {
 
 export const addProxyGroupInList = (group) => (dispatch, getState) => {
   const currentList = fetchProxyGroupList(getState());
-  let combiner = [...currentList, group];
+  let combiner = [group, ...currentList];
   dispatch(appendProxyGroupInList(combiner));
 };
 
@@ -30,15 +30,11 @@ export const deleteProxyRow = (data) => (dispatch, getState) => {
   dispatch(appendProxyGroupInList(updateGroup));
 };
 
-export const deleteProxyGroup = () => (dispatch, getState) => {
+export const deleteProxyGroup = (group) => (dispatch, getState) => {
   const currentList = fetchProxyGroupList(getState());
-  const currentSelectedGroup = fetchTempStorageState(getState());
   let tempGroupList = [...currentList];
-  let updateGroup = tempGroupList.filter(
-    (data) => data["id"] !== currentSelectedGroup["id"]
-  );
+  let updateGroup = tempGroupList.filter((data) => data["id"] !== group["id"]);
   dispatch(appendProxyGroupInList(updateGroup));
-  dispatch(setTempStorage({}));
 };
 
 export const editProxyGroup = (group) => (dispatch, getState) => {
@@ -126,28 +122,87 @@ export const addProxyInList = (group) => (dispatch, getState) => {
   dispatch(appendProxyGroupInList(after));
 };
 
-export const readProxyFromFile = (proxyArr) => (dispatch, getState) => {
+export const readProxyFromFile = (data) => (dispatch, getState) => {
+  const { name, tokenArr } = data;
+  const currentList = fetchProxyGroupList(getState());
+  let tempGroupList = [...currentList];
+  let valid = [];
+  let obj = {};
+  obj["id"] = generateId();
+  obj["groupName"] = name;
+  obj["proxies"] = tokenArr;
+  obj["createdAt"] = new Date().toUTCString();
+  const proxyList = [...obj["proxies"].split("\n")];
+  for (let i = 0; i < proxyList.length; i++) {
+    let len = proxyList[i]?.split(":")?.length;
+    if (ProxyRegExp.test(proxyList[i]) || len === 2) {
+      let tempObj = {};
+      tempObj["id"] = generateId();
+      tempObj["proxy"] = proxyList[i];
+      tempObj["checked"] = false;
+      tempObj["status"] = "N/A";
+      valid.push(tempObj);
+    }
+  }
+  obj["proxyList"] = valid;
+  let combiner = [obj, ...tempGroupList];
+  dispatch(appendProxyGroupInList(combiner));
+  // for (let i = 0; i < proxyArr.length; i++) {
+  //   let len = proxyArr[i]?.split(":")?.length;
+  //   if (ProxyRegExp.test(proxyArr[i]) || len === 2) {
+  //     let obj = {};
+  //     obj["id"] = generateId();
+  //     obj["proxy"] = proxyArr[i];
+  //     obj["checked"] = false;
+  //     obj["status"] = "N/A";
+  //     valid.push(obj);
+  //   }
+  // }
+  // let preProxyList = tempSelectedObj["proxyList"];
+  // let combiner = [...preProxyList, ...valid];
+  // tempSelectedObj["proxyList"] = combiner;
+  // tempSelectedObj["proxies"] = combiner
+  //   .map((proxy) => proxy["proxy"])
+  //   .join("\n");
+  // let afterUpdateList = tempGroupList.map((d) => {
+  //   if (d["id"] === tempSelectedObj["id"]) return tempSelectedObj;
+  //   return d;
+  // });
+  // dispatch(setTempStorage(tempSelectedObj));
+  // dispatch(appendProxyGroupInList(afterUpdateList));
+};
+
+export const setStatusInProxy = () => (dispatch, getState) => {
   const currentList = fetchProxyGroupList(getState());
   const currentSelectedGroup = fetchTempStorageState(getState());
   let tempGroupList = [...currentList];
   let tempSelectedObj = { ...currentSelectedGroup };
-  let valid = [];
-  for (let i = 0; i < proxyArr.length; i++) {
-    if (ProxyRegExp.test(proxyArr[i])) {
-      let obj = {};
-      obj["id"] = generateId();
-      obj["proxy"] = proxyArr[i];
-      obj["checked"] = false;
-      obj["status"] = "N/A";
-      valid.push(obj);
+  tempSelectedObj["proxyList"] = tempSelectedObj["proxyList"].map((data) => {
+    let obj = { ...data };
+    obj["status"] = "Testing..";
+    return obj;
+  });
+  let afterUpdateList = tempGroupList.map((d) => {
+    if (d["id"] === tempSelectedObj["id"]) return tempSelectedObj;
+    return d;
+  });
+  dispatch(setTempStorage(tempSelectedObj));
+  dispatch(appendProxyGroupInList(afterUpdateList));
+};
+
+export const setStatusInSingleRow = (updateRow) => (dispatch, getState) => {
+  const currentList = fetchProxyGroupList(getState());
+  const currentSelectedGroup = fetchTempStorageState(getState());
+  let tempGroupList = [...currentList];
+  let tempSelectedObj = { ...currentSelectedGroup };
+  tempSelectedObj["proxyList"] = tempSelectedObj["proxyList"].map((data) => {
+    if (data["id"] === updateRow["id"]) {
+      let obj = { ...updateRow };
+      obj["status"] = "Testing..";
+      return obj;
     }
-  }
-  let preProxyList = tempSelectedObj["proxyList"];
-  let combiner = [...preProxyList, ...valid];
-  tempSelectedObj["proxyList"] = combiner;
-  tempSelectedObj["proxies"] = combiner
-    .map((proxy) => proxy["proxy"])
-    .join("\n");
+    return data;
+  });
   let afterUpdateList = tempGroupList.map((d) => {
     if (d["id"] === tempSelectedObj["id"]) return tempSelectedObj;
     return d;

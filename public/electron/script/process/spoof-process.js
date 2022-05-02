@@ -8,7 +8,7 @@ const BrowserWindow = electron.BrowserWindow;
 class SpooferInstance {
   constructor(id, url, proxyList, mainWin, isImage) {
     this.id = id;
-    this.proxyList = proxyList;
+    this.proxyList = proxyList || [];
     this.proxyCounter = 0;
     this.proxyHostPort = this.getProxyHostPort(this.proxyList[0]);
     this.proxy = this.getProxyData(this.proxyList[0]);
@@ -19,6 +19,8 @@ class SpooferInstance {
     this.isDeleted = false;
     this.mainWin = mainWin;
     this.isImage = isImage;
+    this.maxNumberOfRetry = 10;
+    this.numberOfRetry = 0;
     this.userAgent = new UserAgent(/Chrome/, { deviceCategory: "desktop" })
       .toString()
       .replace(/\|"/g, "");
@@ -75,8 +77,34 @@ class SpooferInstance {
     }
   }
 
+  randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  proxyRotater() {
+    this.deleteBrowser();
+    if (this.numberOfRetry < this.maxNumberOfRetry) {
+      if (this.proxyCounter < this.proxyList.length) {
+        this.proxyCounter = this.randomInt(0, this.proxyList?.length - 1 || 0);
+      } else {
+        this.proxyCounter = 0;
+      }
+      const currentProxy = this.proxyList[this.proxyCounter];
+      this.proxyHostPort = this.getProxyHostPort(currentProxy);
+      this.proxy = this.getProxyData(currentProxy);
+      console.log("Proxy rotater used new proxy", this.proxyHostPort);
+      this.numberOfRetry += 1;
+      this.launchBrowser(true);
+    } else {
+      this.deleteBrowser();
+      this.sendStatus("Stopped");
+      this.win = null;
+      console.log("Exceed the number of retry....");
+    }
+  }
+
   // LAUNCH BROWSER
-  launchBrowser() {
+  async launchBrowser(isShow = false) {
     this.isLaunched = true;
     this.win = new BrowserWindow({
       width: 500,
@@ -85,45 +113,34 @@ class SpooferInstance {
       fullscreenable: false,
       title: this.displayTitle(),
       icon: path.resolve(__dirname, "img", "icon-win.ico"),
-      show: false,
+      show: isShow,
       parent: this.mainWin,
       webPreferences: {
         nodeIntegration: true,
         webSecurity: false,
         session,
         partition: `persist:task_id_${this.id}`,
-        images: this.isImage,
+        images: !this.isImage,
       },
     });
 
     // # load using proxy or not
     if (this.proxy) {
-      this.win.webContents.session
-        .setProxy(
-          {
-            proxyRules: this.proxyHostPort,
-          },
-          () => {}
-        )
-        .then(() => {
-          this.win.loadURL(this.url, {
-            userAgent: this.userAgent,
-          });
+      this.win.webContents.session.setProxy(
+        {
+          proxyRules: this.proxyHostPort,
+        },
+        () => {}
+      );
+      const result = await this.win
+        .loadURL(this.url, {
+          userAgent: this.userAgent,
         })
-        .catch((e) => {
-          if (this.proxyCounter < this.proxyList.length) {
-            this.proxyCounter++;
-          } else {
-            this.proxyCounter = 0;
-          }
-          const currentProxy = this.proxyList[this.proxyCounter];
-          this.proxyHostPort = this.getProxyHostPort(currentProxy);
-          this.proxy = this.getProxyData(currentProxy);
-          console.log("Error In Setting Proxy", e, currentProxy);
-          this.launchBrowser();
-          return;
+        .catch((err) => {
+          this.proxyRotater();
+          return "STOP";
         });
-
+      if (typeof result === "string") return;
       this.win.webContents.on(
         "login",
         (event, authenticationResponseDetails, authInfo, callback) => {
@@ -186,10 +203,14 @@ class SpooferInstance {
 
   sendStatus(msg) {
     if (this.mainWin) {
-      this.mainWin.webContents.send("spoofer-toaster", {
-        status: msg,
-        id: this.id,
-      });
+      try {
+        this.mainWin.webContents.send("spoofer-toaster", {
+          status: msg,
+          id: this.id,
+        });
+      } catch (error) {
+        this.deleteBrowser();
+      }
     }
   }
 }

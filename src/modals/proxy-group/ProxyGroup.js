@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchEditStorageState,
   fetchIsAddnewProxyModalState,
+  fetchThemsState,
   openAddNewProxyModal,
   setEditStorage,
   setModalState,
@@ -17,11 +18,14 @@ import {
   addProxyInList,
   editProxyGroup,
 } from "../../features/logic/proxy";
+import { sendLogs } from "../../helper/electron-bridge";
 
 function ProxyGroup() {
   const dispatch = useDispatch();
   const editState = useSelector(fetchEditStorageState);
   const addProxy = useSelector(fetchIsAddnewProxyModalState);
+  const appTheme = useSelector(fetchThemsState);
+
   const [proxy, setProxy] = useState({
     groupName: "",
     proxies: "",
@@ -58,7 +62,15 @@ function ProxyGroup() {
     let valid = [];
     const proxyString = proxy.proxies.split("\n");
     for (let i = 0; i < proxyString.length; i++) {
+      let len = proxyString[i].split(":").length;
       if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
+      } else if (len === 2) {
         let obj = {};
         obj["id"] = generateId();
         obj["proxy"] = proxyString[i];
@@ -67,18 +79,30 @@ function ProxyGroup() {
         valid.push(obj);
       }
     }
+
     let proxyGroup = { ...proxy };
     proxyGroup["id"] = generateId();
     proxyGroup["proxyList"] = valid;
     proxyGroup["proxies"] = valid.map((proxy) => proxy["proxy"]).join("\n");
+    const log = `New Proxy group created ${proxyGroup["groupName"]} with ${valid.length} proxies`;
+    sendLogs(log);
     dispatch(addProxyGroupInList(proxyGroup));
   };
+
   const handleEditProxyGroup = () => {
     let valid = [];
     let proxyGroup = { ...proxy };
     const proxyString = proxy.proxies.split("\n");
     for (let i = 0; i < proxyString.length; i++) {
+      let len = proxyString[i].split(":").length;
       if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
+      } else if (len === 2) {
         let obj = {};
         obj["id"] = generateId();
         obj["proxy"] = proxyString[i];
@@ -111,7 +135,15 @@ function ProxyGroup() {
     let proxyGroup = { ...proxy };
     const proxyString = proxy.proxies.split("\n");
     for (let i = 0; i < proxyString.length; i++) {
+      let len = proxyString[i].split(":").length;
       if (ProxyRegExp.test(proxyString[i])) {
+        let obj = {};
+        obj["id"] = generateId();
+        obj["proxy"] = proxyString[i];
+        obj["checked"] = false;
+        obj["status"] = "N/A";
+        valid.push(obj);
+      } else if (len === 2) {
         let obj = {};
         obj["id"] = generateId();
         obj["proxy"] = proxyString[i];
@@ -126,11 +158,12 @@ function ProxyGroup() {
     proxyGroup["proxies"] = combiner.map((proxy) => proxy["proxy"]).join("\n");
     dispatch(addProxyInList(proxyGroup));
   };
+  const textClass = appTheme ? "lightMode_color" : "";
 
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>
+        <h2 className={textClass}>
           {Object.keys(editState).length > 0 ? "Edit" : "Create"} Proxy Group
         </h2>
       </div>
@@ -159,16 +192,30 @@ function ProxyGroup() {
         onChange={handleChange}
         fieldTitle="List Of Proxies"
         value={proxy.proxies}
-        placeholderText="IP:Port:User:Pass"
+        placeholderText=""
         isMulti={true}
         name="proxies"
       />
       <AppSpacer spacer={25} />
       <div className="modal-control-btns">
-        <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-          <span>Cancel</span>
+        <div
+          onClick={handleCloseModal}
+          className={
+            appTheme
+              ? "modal-cancel-btn btn light-mode-modalbtn"
+              : "modal-cancel-btn btn"
+          }
+        >
+          <span className={textClass}>Cancel</span>
         </div>
-        <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
+        <div
+          onClick={handleSubmit}
+          className={
+            appTheme
+              ? "modal-cancel-btn submit btn btn-shadow "
+              : " modal-cancel-btn submit btn"
+          }
+        >
           <span>{Object.keys(editState).length > 0 ? "Save" : "Create"}</span>
         </div>
       </div>

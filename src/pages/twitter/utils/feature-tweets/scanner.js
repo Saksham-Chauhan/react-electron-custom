@@ -68,7 +68,6 @@ async function ocrResolver(media) {
     }
     return ocrArr;
   } catch (error) {
-    console.log("Error in reading OCR", error.message);
     return ocrArr;
   }
 }
@@ -126,18 +125,14 @@ const pastebinParser = async (urls) => {
 
   return binArr;
 };
-const KEYWORD_FEATURE_COMING_SOON = true;
+
 // Checks URLs for given keywords
 function urlParser(urls, keywords) {
   let response = [];
   for (let url in urls) {
     const urlName = urls[url].expanded_url;
-    if (!KEYWORD_FEATURE_COMING_SOON) {
-      for (let k of keywords) {
-        if (urlName.includes(k)) response.push(urlName);
-      }
-    } else {
-      response.push(urlName);
+    for (let k of keywords) {
+      if (urlName.includes(k["value"])) response.push(urlName);
     }
   }
   filteredArray = () =>
@@ -157,7 +152,6 @@ const scanner = async (
   featureList
 ) => {
   let FTObject = Object.assign({}, tweetObject);
-
   const user = {
     name: tweetObject.user.name,
     screen_name: tweetObject.user.screen_name,

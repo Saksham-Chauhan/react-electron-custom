@@ -9,20 +9,34 @@ function CardScroller({
   title,
   list = [],
   isFeatureTweet = false,
-  onClearTweets,
+  onClearTweets = () => {},
+  appTheme,
 }) {
   return (
     <div className="twitter-scroller-outer">
-      <h3>{title}</h3>
+      <h3 className={appTheme ? "lightMode_color" : ""}>{title}</h3>
       <AppSpacer spacer={10} />
-      <div className="twitter-scroller-inner">
-        <div onClick={onClearTweets} className="twitter-scroller-del-btn btn">
+      <div
+        className={
+          appTheme
+            ? "twitter-scroller-inner light-bg"
+            : "twitter-scroller-inner"
+        }
+      >
+        <div
+          onClick={onClearTweets}
+          className="twitter-scroller-del-btn btn"
+          style={{
+            background: appTheme ? "none" : "",
+            border: appTheme ? "1px solid #0D0027" : "",
+          }}
+        >
           <UseAnimations
             animation={trash2}
             strokeColor="#B60E0E"
             size={25}
             wrapperStyle={{ cursor: "pointer" }}
-          ></UseAnimations>
+          />
         </div>
         <AppSpacer spacer={10} />
         <div className="scroll-card-content">
@@ -54,22 +68,26 @@ function CardScroller({
               return (
                 <TwitterPageTweetCard
                   tweetMsgLink={text}
-                  key={`${tweet["id"]}-${index}`}
+                  appTheme={appTheme}
+                  isFeatureCard={true}
                   tweetUser={tweet["userName"]}
-                  tweetTime={tweet["created_at"]}
                   tweetLink={tweet["tweetLink"]}
+                  key={`${tweet["id"]}-${index}`}
+                  tweetTime={new Date(tweet["created_at"]).toLocaleString()}
                   tweetUserFollowing={tweet["followingLink"]}
                   tweetUserProfileLink={tweet["profileLink"]}
+                  cardTitle={`${tweet["featured_type"]} Found`}
                 />
               );
             } else {
               return (
                 <TwitterPageTweetCard
-                  key={`${tweet["id"]}-${index}`}
+                  appTheme={appTheme}
                   tweetMsgLink={tweet["text"]}
                   tweetUser={tweet["userName"]}
-                  tweetTime={tweet["createAt"]}
+                  tweetTime={new Date(tweet["createAt"]).toLocaleString()}
                   tweetLink={tweet["tweetLink"]}
+                  key={`${tweet["id"]}-${index}`}
                   tweetUserFollowing={tweet["followingLink"]}
                   tweetUserProfileLink={tweet["profileLink"]}
                 />

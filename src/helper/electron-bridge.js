@@ -14,10 +14,20 @@ const checkForUpdates = () => {
   ipcRenderer.send("checkForUpdates");
 };
 
+const updateProgress = (callback) =>
+  ipcRenderer.on("update:pogress", (_, progress) => callback(progress));
+
+const downloadingStart = (callback) =>
+  ipcRenderer.on("update:downloading", (_, data) => callback(data));
+
+const sendLogs = (log) => ipcRenderer.send("add-log", log);
+const exportLogs = () => ipcRenderer.send("export-log-report");
+const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
+
 const updateNotAvailable = (callback) =>
   ipcRenderer.on("update:not-avail", () => callback());
 
-const fetchNetworkSpeed = () => ipcRenderer.invoke("get-speed");
+// const fetchNetworkSpeed = () => ipcRenderer.invoke("get-speed");
 
 // Spoof IPC
 const startSpoofer = (spoof) => ipcRenderer.send("start-spoofer", spoof);
@@ -55,7 +65,53 @@ const auth = () => ipcRenderer.send("auth");
 const decodeUser = (encodeString) =>
   jwt.verify(encodeString, process.env.REACT_APP_JWT_SECRET_KEY);
 
+const debuggerChannnel = () =>
+  ipcRenderer.on("debugger", (_, logs) => console.log("Logs", logs));
+
+const interceptorFound = (callback) =>
+  ipcRenderer.on("interceptor-tool-found", (_, interceptor) =>
+    callback(interceptor)
+  );
+const checkForURL = (value) => {
+  ipcRenderer.send("get-server-avatar", value);
+};
+
+const getURL = (callback) => {
+  ipcRenderer.on("url-is", (_, url) => callback(url));
+};
+
+// LO IPC
+const startLinkOpenerMonitor = (data) =>
+  ipcRenderer.send("start-linkOpener-monitor", data);
+const stopLinkOpenerMonitor = (id) =>
+  ipcRenderer.send("stop-linkOpener-monitor", id);
+
+const startInviteJoinerMonitor = (data) =>
+  ipcRenderer.send("start-inviteJoiner-monitor", data);
+
+const stopInviteJoinerMonitor = (id) =>
+  ipcRenderer.send("stop-inviteJoiner-monitor", id);
+
+const updateStatusLOmonitor = (callback) =>
+  ipcRenderer.on("lo-status", (_, res) => callback(res));
+
+const webhookNotificationListener = (callback) =>
+  ipcRenderer.on("webhook-status", (_, status) => callback(status));
+
+// XP-FARMER
+const startXpFarmer = (value) => {
+  ipcRenderer.send("run-xp-server", value);
+};
+const stopXpFarmer = (value) => {
+  ipcRenderer.send("stop-xp-server", value);
+};
+
 module.exports = {
+  stopXpFarmer,
+  startXpFarmer,
+  getURL,
+  checkForURL,
+  interceptorFound,
   minimizeApp,
   closeApp,
   maximizeApp,
@@ -71,9 +127,21 @@ module.exports = {
   proxyTestResultListener,
   updateNotAvailable,
   checkForUpdates,
-  fetchNetworkSpeed,
+  // fetchNetworkSpeed,
   decodeUser,
   authUser,
   logoutUser,
   auth,
+  readArrayOfJson,
+  debuggerChannnel,
+  updateProgress,
+  downloadingStart,
+  sendLogs,
+  exportLogs,
+  startLinkOpenerMonitor,
+  updateStatusLOmonitor,
+  stopLinkOpenerMonitor,
+  startInviteJoinerMonitor,
+  stopInviteJoinerMonitor,
+  webhookNotificationListener,
 };

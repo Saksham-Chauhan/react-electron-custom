@@ -1,16 +1,8 @@
 import {
-  appendChannelInArrayList,
   appendClaimerDiscordAccount,
   appendDiscordAccount,
-  appendKeywordInArrayList,
-  appendLogList,
   fetchClaimerDiscordAccountList,
   fetchDiscordAccountList,
-  fetchIJChannelList,
-  fetchInviteJoinerLogState,
-  fetchLinkOpenerLogState,
-  fetchLOChannelList,
-  fetchLOKeywordList,
   fetchLOSettingState,
   fetchSelectedClaimerTokenInviteJoiner,
   fetchSelectedMinitorTokenLinkOpener,
@@ -25,7 +17,7 @@ export const addDiscordAccountInList = (account) => (dispatch, getState) => {
   let tempCurrentAccount = [...currentAccountList];
   let tempAccount = { ...account };
   tempAccount["id"] = generateId();
-  let combiner = [...tempCurrentAccount, tempAccount];
+  let combiner = [tempAccount, ...tempCurrentAccount];
   dispatch(appendDiscordAccount(combiner));
 };
 
@@ -61,74 +53,12 @@ export const deleteAccountFromList =
     dispatch(setSelectedMonitorTokenLO({}));
   };
 
-export const addKeywordInList = (data) => (dispatch, getState) => {
-  const { key, word } = data;
-  if (key === "LO") {
-    const currentList = fetchLOKeywordList(getState());
-    let tempCurrentList = [...currentList];
-    let obj = {};
-    obj["id"] = generateId();
-    obj["label"] = word;
-    obj["value"] = word;
-    let combiner = [...tempCurrentList, obj];
-    dispatch(appendKeywordInArrayList({ list: combiner, key: "linkOpener" }));
-  }
-};
-
-export const deleteKeywordFromList = (data) => (dispatch, getState) => {
-  const { key, word } = data;
-  if (key === "LO") {
-    const currentList = fetchLOKeywordList(getState());
-    let tempCurrentList = [...currentList];
-    let filter = tempCurrentList.filter((data) => data.id !== word.id);
-    dispatch(appendKeywordInArrayList({ list: filter, key: "linkOpener" }));
-  }
-};
-
-export const addChannelInList = (data) => (dispatch, getState) => {
-  const { key, word } = data;
-  if (key === "LO") {
-    const currentList = fetchLOChannelList(getState());
-    let tempCurrentList = [...currentList];
-    let obj = {};
-    obj["id"] = generateId();
-    obj["label"] = word;
-    obj["value"] = word;
-    let combiner = [...tempCurrentList, obj];
-    dispatch(appendChannelInArrayList({ list: combiner, key: "linkOpener" }));
-  } else {
-    const currentList = fetchIJChannelList(getState());
-    let tempCurrentList = [...currentList];
-    let obj = {};
-    obj["id"] = generateId();
-    obj["label"] = word;
-    obj["value"] = word;
-    let combiner = [...tempCurrentList, obj];
-    dispatch(appendChannelInArrayList({ list: combiner, key: "inviteJoiner" }));
-  }
-};
-
-export const deleteChannelFromList = (data) => (dispatch, getState) => {
-  const { key, word } = data;
-  if (key === "LO") {
-    const currentList = fetchLOChannelList(getState());
-    let tempCurrentList = [...currentList];
-    let filter = tempCurrentList.filter((data) => data.id !== word.id);
-    dispatch(appendChannelInArrayList({ list: filter, key: "linkOpener" }));
-  } else {
-    const currentList = fetchIJChannelList(getState());
-    let tempCurrentList = [...currentList];
-    let filter = tempCurrentList.filter((data) => data.id !== word.id);
-    dispatch(appendChannelInArrayList({ list: filter, key: "inviteJoiner" }));
-  }
-};
-
 export const addClaimerAccountInList = (account) => (dispatch, getState) => {
   const currentAccountList = fetchClaimerDiscordAccountList(getState());
   let tempCurrentAccount = [...currentAccountList];
   let newAccount = { ...account };
   newAccount["id"] = generateId();
-  let combiner = [...tempCurrentAccount, newAccount];
+  let combiner = [newAccount, ...tempCurrentAccount];
   dispatch(appendClaimerDiscordAccount(combiner));
 };
 
@@ -167,27 +97,5 @@ export const linkOpenerSettingHandler = (data) => (dispatch, getState) => {
   } else {
     settingObj["ignoreDiscordInviteLink"] = checked;
   }
-  dispatch(setIJLOSetting({ key: "linkOpener", value: settingObj }));
-};
-
-export const addLogInList = (data) => (dispatch, getState) => {
-  const { key, log, id } = data;
-  if (key === "LO") {
-    const logList = fetchLinkOpenerLogState(getState());
-    let combiner = { ...logList };
-    combiner[id] = log;
-    dispatch(appendLogList({ key: "linkOpener", list: combiner }));
-  } else {
-    const logList = fetchInviteJoinerLogState(getState());
-    let combiner = { ...logList };
-    combiner[id] = log;
-    dispatch(appendLogList({ key: "inviteJoiner", list: combiner }));
-  }
-};
-
-export const closelinkOpenerMonitor = () => (dispatch, getState) => {
-  const settingState = fetchLOSettingState(getState());
-  let settingObj = { ...settingState };
-  settingObj["linkOpenerState"] = false;
   dispatch(setIJLOSetting({ key: "linkOpener", value: settingObj }));
 };

@@ -1,0 +1,62 @@
+.acc-changer-page-table-section {
+  height: calc(100% - 90px);
+}
+
+.acc-chnager-table-header-parent {
+  background: var(--sidebar-bg);
+  border-radius: 5px;
+}
+.acc-chnager-page-table-header {
+  display: flex;
+  padding: 0.7em 2em;
+  width: 99.5%;
+  align-items: center;
+  color: var(--scrollbar-bg);
+  margin-bottom: 0.5em;
+  border-radius: 5px;
+}
+.acc-chnager-page-table-header.body {
+  color: var(--primary);
+  background: var(--table-row);
+  width: 99.5%;
+  border-radius: 5px;
+}
+.acc-chnager-page-table-header > div:nth-child(1) {
+  width: 10%;
+}
+.acc-chnager-page-table-header > div:nth-child(2) {
+  width: 25%;
+}
+.acc-chnager-page-table-header > div:nth-child(3) {
+  width: 25%;
+}
+.acc-chnager-page-table-header > div:nth-child(4) {
+  width: 25%;
+}
+.acc-changer-table-row-action-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.acc-changer-table-row-action-column > img:first-of-type {
+  margin-right: 1em;
+  height: 15px;
+  cursor: pointer;
+}
+.acc-changer-table-scroller {
+  height: 70vh;
+  overflow-y: scroll;
+}
+.acc-changer-table-scroller::-webkit-scrollbar {
+  width: 10px;
+}
+
+.acc-changer-table-scroller::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.acc-changer-table-scroller::-webkit-scrollbar-thumb {
+  background-color: var(--sidebar-bg);
+  outline: none;
+  border-radius: 9px;
+}

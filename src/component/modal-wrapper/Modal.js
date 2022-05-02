@@ -1,26 +1,29 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import small_bot from "../../assests/images/small-bot.svg";
+import { fetchThemsState } from "../../features/counterSlice";
 import "./styles.css";
-import { motion, AnimatePresence } from "framer-motion";
-function Modal({ children, ...props }) {
-  const modalVariants = {
-    initial: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0 },
-  };
+
+function Modal({ children, bgImageURL, flag, handleIsEmoji, ...props }) {
+  const appTheme = useSelector(fetchThemsState);
 
   return (
-    <AnimatePresence exitBeforeEnter={true}>
-      <motion.div
-        initial={modalVariants.initial}
-        animate={modalVariants.initial}
-        exit={modalVariants.exit}
-        transition={{ ease: "easeOut", duration: 50 }}
-        className="modal-wrapper"
+    <div
+      className="modal-wrapper"
+      onClick={() => {
+        if (flag) handleIsEmoji(false);
+      }}
+    >
+      <div
+        {...props}
+        className={appTheme ? "modal-inner light-bg-modal  " : "modal-inner"}
       >
-        <div {...props} className="modal-inner">
-          {children}
+        <div className="server-img">
+          <img src={bgImageURL ? bgImageURL : small_bot} alt="Server Logo" />
         </div>
-      </motion.div>
-    </AnimatePresence>
+        {children}
+      </div>
+    </div>
   );
 }
 

@@ -1,0 +1,70 @@
+.table-header-parent {
+  background: var(--sidebar-bg);
+  border-radius: 5px;
+}
+.table-header {
+  display: flex;
+  align-items: center;
+  padding: 0.6em 2em;
+  width: 99%;
+  color: var(--scrollbar-bg);
+}
+
+.table-header.body > div {
+  color: var(--primary);
+}
+.table-header div:nth-child(1) {
+  width: 10%;
+}
+.table-header div:nth-child(2) {
+  width: 30%;
+}
+
+.table-header div:nth-child(3) {
+  width: 15%;
+}
+
+.table-header div:nth-child(4) {
+  width: 20%;
+}
+
+.table-header div:nth-child(5) {
+  width: 20%;
+}
+.table-header div:nth-child(6) {
+  width: 12%;
+}
+
+.table-header.body {
+  background: var(--table-row);
+  margin-top: 0.5em;
+}
+
+.table-header.body > div:nth-child(6) {
+  display: flex;
+  align-items: center;
+  height: 20.5px;
+  overflow: hidden;
+}
+
+.table-header.body > div:nth-child(6) > img {
+  object-fit: contain;
+  height: 100%;
+  margin-right: 0.5em;
+  cursor: pointer;
+}
+.minter-table-scroll {
+  height: 70vh;
+  overflow-y: scroll;
+}
+.minter-table-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.minter-table-scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--scrollbar-bg);
+}
+.task-address {
+  width: 150px !important;
+  overflow: hidden;
+}

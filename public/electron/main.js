@@ -1,21 +1,48 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const _ = require("lodash");
 const path = require("path");
 const ping = require("ping");
 const auth = require("./auth");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
 const NetworkSpeed = require("network-speed");
-const fetchTweets = require("./helper/fetchTweet");
+const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager");
+const linkOpernerManager = require("./script/manager/linkOpener-manager");
+const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
-const testNetworkSpeed = new NetworkSpeed();
-const _ = require("lodash");
+const axios = require("axios");
+var { execFile } = require("child_process");
+
+const ObjectsToCsv = require("objects-to-csv");
+const { download } = require("electron-dl");
+var str2ab = require("string-to-arraybuffer");
+
+const DEBUGGER_CHANNEL = "debugger";
+const networkSpeed = new NetworkSpeed();
+const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 
 let win = null;
 let mainWindow = null;
 let splash = null;
+
+const INTERCEPTOR_TOOLS = [
+  "charles",
+  "wireshark",
+  "fiddler",
+  "aircrack-ng",
+  "cowpatty",
+  "reaver",
+  "wifite",
+  "wepdecrypt",
+  "cloudcracker",
+  "pyrit",
+  "fern-pro",
+  "airgeddon",
+];
 
 // AUTH WINDOW CREATION
 function createAuthWindow() {
@@ -47,15 +74,7 @@ function createAuthWindow() {
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-
-      const options = {
-        type: "question",
-        defaultId: 2,
-        title: "Login Error",
-        message: "Login Failed",
-        detail: "You are not allowed to login",
-      };
-      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+      console.log(error);
     }
   });
   win.on("authenticated", () => {
@@ -97,6 +116,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1402,
     height: 800,
+    // minWidth: 1402,
+    // minHeight: 800,
     resizable: true,
     frame: false,
     show: false,
@@ -106,11 +127,12 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: !isDev ? false : true,
+      devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
   });
+
   if (isDev) {
     mainWindow.webContents.openDevTools();
   } else {
@@ -166,7 +188,7 @@ ipcMain.on("close", () => {
       tempMainWindow.close();
     }
   } catch (error) {
-    console.log("Something went wroung on minizing app", error);
+    console.log("Something went wrong on closing app", error);
   }
 });
 
@@ -181,7 +203,7 @@ ipcMain.on("minimize", () => {
       tempMainWindow.minimize();
     }
   } catch (error) {
-    console.log("Something went wroung on minizing app", error);
+    console.log("Something went wrong on minimizing app", error);
   }
 });
 
@@ -206,6 +228,7 @@ app.on("activate", () => {
 
 app.on("window-all-closed", function () {
   spooferManager.deleteAllSpoofer();
+  logManager.saveLogs();
   app.quit();
 });
 
@@ -217,6 +240,7 @@ if (!shouldNotQuit) {
 }
 app.on("ready", () => {
   createWindow();
+  logManager.initLogs();
   global.mainWin = mainWindow;
 });
 
@@ -296,11 +320,15 @@ function scanProcesses() {
   currentProcesses.get((err, processes) => {
     const sorted = _.sortBy(processes, "cpu");
     for (let i = 0; i < sorted.length; i += 1) {
-      if (
-        sorted[i].name.toLowerCase() === "charles" ||
-        sorted[i].name.toLowerCase() === "wireshark" ||
-        sorted[i].name.toLowerCase() === "fiddler"
-      ) {
+      if (INTERCEPTOR_TOOLS.includes(sorted[i].name.toLowerCase())) {
+        const win = mainWindow || global.mainWin;
+        if (win) {
+          win.webContents.send(
+            "interceptor-tool-found",
+            sorted[i].name.toLowerCase()
+          );
+        }
+        process.kill(sorted[i].pid);
         app.quit();
       }
     }
@@ -316,7 +344,7 @@ function checkProcesses(starting = false) {
     if (starting) {
       setInterval(() => {
         scanProcesses();
-      }, 3 * 60 * 1000);
+      }, SCAN_PROCESS_INTERVAL);
     } else {
       scanProcesses();
     }
@@ -390,6 +418,23 @@ ipcMain.handle("imageText", async (event, url) => {
   const {
     data: { text },
   } = await Tesseract.recognize(url, "eng");
+  // const folderPath = app.getPath("userData");
+  // const worker = Tesseract.createWorker({
+  //   cachePath: path.join(folderPath, "/tesseract"),
+  //   // logger: (m) => console.log("Log", m),
+  // });
+  // const getText = async () => {
+  //   await worker.load();
+  //   await worker.loadLanguage("eng");
+  //   await worker.initialize("eng");
+  //   const {
+  //     data: { text },
+  //   } = await worker.recognize(url);
+  //   await worker.terminate();
+  //   return text;
+  // };
+
+  // return await getText();
   return text;
 });
 
@@ -419,7 +464,7 @@ ipcMain.on("launch-spoofer", (_, data) => {
 
 // proxy IPC
 const proxyTester = async (proxy) => {
-  let res = await ping.promise.probe(proxy);
+  let res = await ping.promise.probe(proxy, { timeout: 5 });
   if (res["time"] !== "unknown") {
     return res;
   } else {
@@ -430,7 +475,7 @@ const proxyTester = async (proxy) => {
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
   let proxyArr = proxy.split(":");
-  if (proxyArr.length === 4) {
+  if (proxyArr.length === 4 || proxyArr.length === 2) {
     let proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
@@ -441,36 +486,170 @@ ipcMain.on("proxy-tester", async (event, data) => {
 });
 
 // NEWTORK SPEED
-async function getNetworkDownloadSpeed() {
-  const baseUrl = "https://eu.httpbin.org/stream-bytes/500000";
-  const fileSizeInBytes = 500000;
-  const speed = await testNetworkSpeed.checkDownloadSpeed(
-    baseUrl,
-    fileSizeInBytes
-  );
-  return speed.kbps;
-}
+// async function getNetworkDownloadSpeed() {
+//   const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
+//   const fileSizeInBytes = 5000;
+//   let speed;
+//   try {
+//     speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   if (speed) {
+//     return speed.kbps;
+//   }
+// }
 
-async function getNetworkUploadSpeed() {
-  const options = {
-    hostname: "www.google.com",
-    port: 80,
-    path: "/catchers/544b09b4599c1d0200000289",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const fileSizeInBytes = 2000000;
-  const speed = await testNetworkSpeed.checkUploadSpeed(
-    options,
-    fileSizeInBytes
-  );
-  return speed.kbps;
-}
+// async function getNetworkUploadSpeed() {
+//   const options = {
+//     hostname: "www.google.com",
+//     port: 80,
+//     path: "/catchers/544b09b4599c1d0200000289",
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   };
+//   const fileSizeInBytes = 5000;
+//   let speed;
+//   try {
+//     speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   if (speed) {
+//     return speed.kbps;
+//   }
+// }
 
-ipcMain.handle("get-speed", async () => {
-  const download = await getNetworkDownloadSpeed();
-  const upload = await getNetworkUploadSpeed();
-  return { download, upload };
+// ipcMain.handle("get-speed", async () => {
+//   const download = await getNetworkDownloadSpeed();
+//   const upload = await getNetworkUploadSpeed();
+//   return { download, upload };
+// });
+
+const debugSendToIpcRenderer = (log) => {
+  let win = mainWindow || global.mainWin;
+  if (win) {
+    win.webContents.send(DEBUGGER_CHANNEL, log);
+  }
+};
+
+ipcMain.on("read-array", async (event, array) => {
+  debugSendToIpcRenderer("Ready to read array", array);
+  const fileName = +new Date();
+  const csv = new ObjectsToCsv(array);
+  debugSendToIpcRenderer(csv);
+  const data = await csv.toString();
+  debugSendToIpcRenderer(data);
+  const str = str2ab(data);
+  debugSendToIpcRenderer(str);
+  const url = `data:text/csv;base64,${new Buffer.from(str).toString("base64")}`;
+  debugSendToIpcRenderer(url);
+  await downloadCsvFileDialog(`${fileName}.csv`, url);
 });
+
+const downloadCsvFileDialog = async (fileName, url) => {
+  const options = {
+    buttons: ["Yes", "No"],
+    defaultId: 0,
+    title: "Kyro",
+    message: `Do you want to download ${fileName}`,
+    detail: "New generated password csv along with username",
+  };
+  const dialogResult = await dialog.showMessageBox(mainWindow, options);
+  if (dialogResult.response === 0) {
+    await download(mainWindow, url, {
+      saveAs: true,
+    });
+  }
+};
+
+// LOG IPC EVENT
+ipcMain.on("add-log", (e, log) => {
+  const logMsg = log || e;
+  logManager.logMessage(logMsg);
+});
+
+ipcMain.on("export-log-report", (_, data) => {
+  logManager.sendLogs();
+});
+
+// ACC CHANGER IPC
+ipcMain.on("get-server-avatar", async (event, code) => {
+  let url;
+  qq;
+  var config = {
+    method: "get",
+    url: `https://discord.com/api/v9/invites/${code}`,
+  };
+  try {
+    let res = await axios(config);
+    url = `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
+  } catch (e) {
+    console.log(e);
+  }
+  mainWindow.webContents.send("url-is", url);
+});
+
+// LO IPC EVENTS
+ipcMain.on("start-linkOpener-monitor", (_, data) => {
+  linkOpernerManager.addMonitor(data);
+});
+ipcMain.on("stop-linkOpener-monitor", (_, id) => {
+  linkOpernerManager.stopMonitor(id);
+});
+
+ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
+  InviteJoinerManager.addMonitor(data);
+});
+ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
+  InviteJoinerManager.stopMonitor(id);
+});
+
+//RUN LOCAL SERVER
+ipcMain.on("run-xp-server", (_, data) => {
+  xpFarmerStart();
+});
+
+ipcMain.on("stop-xp-server", (_, data) => {
+  stopXpfarmer();
+});
+
+async function xpFarmerStart() {
+  console.log("called start");
+  const exePath = isDev
+    ? `file://${path.join(__dirname, "../windows/xpfarmer.exe")}`
+    : `file://${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
+  try {
+    execFile(exePath, [3001], { cwd: "." }, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(data);
+      }
+    });
+    // exec(exePath, [3001], function (err, data) {
+    //   console.log("err in func", err);
+    //   console.log("data is", data.toString());
+    // });
+    // exec(exePath, [3001], function (err, data) {
+    //   console.log("err in func", err);
+    //   console.log("data is", data.toString());
+    // });
+  } catch (e) {
+    console.log("this is error", e);
+  }
+}
+
+function stopXpfarmer() {
+  console.log("called stop");
+  currentProcesses.get((err, processes) => {
+    const sorted = _.sortBy(processes, "cpu");
+    for (let i = 0; i < sorted.length; i += 1) {
+      if ("xpfarmer" === sorted[i].name.toLowerCase()) {
+        process.kill(sorted[i].pid);
+      }
+    }
+  });
+}

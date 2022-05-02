@@ -14,6 +14,7 @@ import {
 } from "../../features/logic/discord-account";
 import { discordTokenRegExp } from "../../constant/regex";
 import { toastWarning } from "../../toaster";
+import { sendLogs } from "../../helper/electron-bridge";
 
 function DiscordAccount() {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ function DiscordAccount() {
   });
 
   useEffect(() => {
-    if (Object.keys(editState).length === 3) {
+    if (Object.keys(editState).length > 3) {
       setAccount((pre) => {
         return { ...editState };
       });
@@ -51,6 +52,9 @@ function DiscordAccount() {
       const result = validationChecker(discordAccountSchema, account);
       if (result) {
         if (Object.keys(editState).length === 0) {
+          const token = account.discordToken.substring(0, 4) + "## ##";
+          const log = `Created new Discord with account name ${account.accountName} & token ${token}  `;
+          sendLogs(log);
           dispatch(addDiscordAccountInList(account));
         } else {
           dispatch(editDiscordAccountInList(account));
@@ -64,7 +68,7 @@ function DiscordAccount() {
     <ModalWrapper>
       <div className="modal-tilte">
         <h2>
-          {Object.keys(editState).length === 3 ? "Edit" : "Create"}
+          {Object.keys(editState).length > 3 ? "Edit" : "Create"}
           {"\t"}Account
         </h2>
       </div>
@@ -90,7 +94,7 @@ function DiscordAccount() {
           <span>Cancel</span>
         </div>
         <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>{Object.keys(editState).length === 3 ? "Save" : "Create"}</span>
+          <span>{Object.keys(editState).length > 3 ? "Save" : "Create"}</span>
         </div>
       </div>
     </ModalWrapper>

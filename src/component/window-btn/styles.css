@@ -12,6 +12,21 @@
   height: 12px;
   display: block;
 }
+
+.helpImg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  margin-top: -2px;
+}
+
+.window-button.help {
+  margin-right: 0.5em;
+}
+.window-button.help > svg:first-of-type {
+  visibility: unset;
+  cursor: pointer;
+}
 .window-button {
   height: 12px;
   width: 12px;

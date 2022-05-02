@@ -18,7 +18,7 @@
 
 /* /icon animation */
 /* home_animation Icon animation  */
-
+.sidebar-option-inner.NFTminter:hover > img,
 .sidebar-option-inner.home:hover > img,
 .sidebar-option-inner.oneclick:hover > img,
 .sidebar-option-inner.profile:hover > img,
@@ -42,47 +42,52 @@
   background-size: 100% 100%;
 }
 .sidebar-option-inner.home:hover {
-  background: url("../../assests/sidebar_animation/dashboard-animation.svg");
+  background: url('../../assests/sidebar_animation/dashboard-animation.svg');
 }
 
 .sidebar-option-inner.oneclick:hover {
-  background: url("../../assests/sidebar_animation/nft-animation.svg");
+  background: url('../../assests/sidebar_animation/nft-animation.svg');
 }
 
 .sidebar-option-inner.profile:hover {
-  background-image: url("../../assests/sidebar_animation/profile-animation.svg");
+  background-image: url('../../assests/sidebar_animation/profile-animation.svg');
   width: 23px;
 }
 
 .sidebar-option-inner.proxy:hover {
-  background: url("../../assests/sidebar_animation/proxy-animation.svg");
+  background: url('../../assests/sidebar_animation/proxy-animation.svg');
 }
 
 .sidebar-option-inner.account:hover {
-  background: url("../../assests/sidebar_animation/accountgen-animation.svg");
+  background: url('../../assests/sidebar_animation/accountgen-animation.svg');
   /* width: 22px; */
 }
 
 .sidebar-option-inner.linkopener:hover {
-  background: url("../../assests/sidebar_animation/linkopener-animation.svg");
+  background: url('../../assests/sidebar_animation/linkopener-animation.svg');
 }
 
 .sidebar-option-inner.invitejoiner:hover {
-  background: url("../../assests/sidebar_animation/invitejoiner-animation.svg");
+  background: url('../../assests/sidebar_animation/invitejoiner-animation.svg');
 }
 
 .sidebar-option-inner.spoofer:hover {
-  background: url("../../assests/sidebar_animation/spoofer-animation.svg");
+  background: url('../../assests/sidebar_animation/spoofer-animation.svg');
 }
 
 .sidebar-option-inner.twitter:hover {
-  background: url("../../assests/sidebar_animation/twitter-animation.svg");
+  background: url('../../assests/sidebar_animation/twitter-animation.svg');
 }
 
 .sidebar-option-inner.setting:hover {
-  background: url("../../assests/sidebar_animation/settings-animation.svg");
+  background: url('../../assests/sidebar_animation/settings-animation.svg');
   background-size: 23px 20px;
 }
+
+.sidebar-option-inner.NFTminter:hover {
+  background: url('../../assests/sidebar_animation/nft-animation.svg');
+}
+
 .sidebar-option-inner.update {
   animation: backgroundVerticalScroll;
   animation-duration: 1s;
@@ -90,9 +95,10 @@
   animation-iteration-count: infinite;
   background-repeat: repeat-y;
   background-size: 100% 100%;
+  cursor: pointer;
 }
 .sidebar-option-inner.update:hover {
-  background: url("../../assests/sidebar_animation/updater-animation.svg");
+  background: url('../../assests/sidebar_animation/updater-animation.svg');
 }
 .sidebar-main-bottom {
   position: absolute;

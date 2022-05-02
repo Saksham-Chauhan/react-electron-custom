@@ -61,3 +61,26 @@
   margin-left: 0.5em;
   color: #dadada;
 }
+.setting-system-control {
+  display: flex;
+}
+.setting-system-control > div {
+  width: 45%;
+}
+.system-setting.log-report {
+  display: flex;
+  align-items: center;
+}
+.system-setting>label{
+  /* text-align: right; */
+  margin-right: 0.5em;
+}
+/* .system-setting.log-report > label {
+  flex: 1;
+} */
+.system-setting.log-report > svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--primary);
+  cursor: pointer;
+}

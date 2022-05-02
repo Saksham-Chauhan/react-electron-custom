@@ -6,7 +6,7 @@ export const addNewSpooferInList = (spoof) => (dispatch, getState) => {
   let templist = [...currentList];
   let obj = { ...spoof };
   obj["id"] = generateId();
-  let combiner = [...templist, obj];
+  let combiner = [obj, ...templist];
   dispatch(appendSpooferInList(combiner));
 };
 

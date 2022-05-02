@@ -1,7 +1,29 @@
 import axios from "axios";
+import { arrayBufferToString } from "../helper";
+import { sendLogs } from "../helper/electron-bridge";
 import { toastSuccess, toastWarning } from "../toaster";
 
-const BASE_URL = "https://discord.com/api/v9/";
+export const BASE_URL = "https://discord.com/api/v9/";
+export const IMAGE_API = "https://picsum.photos/50/50";
+
+function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export const getProxy = (proxyArr) => {
+  const indIndex = randomIntFromInterval(0, proxyArr?.length || 0);
+  let proxySplit = proxyArr[indIndex]?.split(":");
+  const [host, port, username, password] = proxySplit;
+  const proxy = {
+    host: host,
+    port: port,
+    auth: {
+      username: username,
+      password: password,
+    },
+  };
+  return proxy;
+};
 
 export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
   await axios({
@@ -9,65 +31,48 @@ export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
     headers: { Authorization: token },
     method: "post",
     data: JSON.stringify({}),
-    proxy: proxy,
+    proxy,
   });
 
 export const discordServerInviteReactAPI = async (
   proxyString,
-  channel_id,
-  message_id,
+  channelId,
+  messageId,
   emoji,
   token
 ) => {
   const proxyArr = proxyString["value"]?.split("\n");
   for (let index = 0; index < proxyArr.length; index++) {
-    let proxySplit = proxyArr[index]?.split(":");
     try {
       const response = await axios({
-        url: `${BASE_URL}channels/${channel_id}/messages/${message_id}/reactions/${emoji}/%40me`,
+        url: `${BASE_URL}channels/${channelId}/messages/${messageId}/reactions/${emoji}/%40me`,
         method: "put",
-        proxy: {
-          host: proxySplit[0],
-          port: proxySplit[1],
-          auth: {
-            username: proxySplit[2],
-            password: proxySplit[3],
-          },
-        },
+        proxy: getProxy(proxyArr),
         headers: {
           authorization: token,
           "Content-Type": "application/json",
         },
       });
+
       if (response.status === 204) {
-        console.log("Reacted in server");
         return response;
       }
     } catch (error) {
-      console.log("Error in reacting server invite");
       return null;
     }
   }
 };
 
 export const discordServerAcceptRuleAPI = async (
-  guild_id,
+  guildId,
   token,
-  accept_rule,
+  acceptRules,
   inviteCode,
   proxyString
 ) => {
   const proxyArr = proxyString["value"]?.split("\n");
   for (let index = 0; index < proxyArr.length; index++) {
-    let proxySplit = proxyArr[index].split(":");
-    const proxy = {
-      host: proxySplit[0],
-      port: proxySplit[1],
-      auth: {
-        username: proxySplit[2],
-        password: proxySplit[3],
-      },
-    };
+    const proxy = getProxy(proxyArr);
     try {
       const inviteResponse = await discordServerInviteAPI(
         inviteCode,
@@ -78,15 +83,14 @@ export const discordServerAcceptRuleAPI = async (
         toastSuccess(
           `${inviteResponse.data.guild.name} server joined successfully`
         );
-        console.log("Server  joined", inviteResponse.data);
         const acceptresponse = await axios({
-          url: `${BASE_URL}guilds/${guild_id}/requests/@me`,
+          url: `${BASE_URL}guilds/${guildId}/requests/@me`,
           method: "put",
           headers: {
             Authorization: token,
             "Content-Type": "application/json",
           },
-          data: accept_rule,
+          data: acceptRules,
           proxy: proxy,
         });
         if (acceptresponse.status === 201) {
@@ -94,78 +98,80 @@ export const discordServerAcceptRuleAPI = async (
         }
       }
     } catch (error) {
-      console.log("Error on accept srever rule", error.message);
       return null;
     }
   }
 };
 
-// https://discord.com/api/v9/guilds/232740312194351106/requests/@me
-//{"version":"2021-01-21T16:21:06.817000+00:00","form_fields":[{"field_type":"TERMS","label":"Read and agree to the server rules","values":["Be respectful to others, do not use homophobic language, racial slurs, and avoid doxxing or leaking personal information.","Do not post explicitly sexual, gore or otherwise disturbing content and avoid sensitive topics, such as politics or religion.","Do not impersonate anyone and do not exclude anyone. Everyone is welcome.","Respect authority, and do not troll moderators on duty.","Read the <#232740312194351106> channel. Further you acknowledge the following use of your user-data: http://radka.dev/disclaimer"],"required":true,"response":true}]}
-// k8Z4EQgz
-
 export const directDiscordJoinAPI = async (
-  proxyGroup,
+  proxy,
   inviteCode,
   token,
   settingObj
 ) => {
   try {
-    const proxyArr = proxyGroup["value"]?.split("\n");
-    for (let index = 0; index < proxyArr.length; index++) {
-      let proxySplit = proxyArr[index]?.split(":");
-      const proxy = {
-        host: proxySplit[0],
-        port: proxySplit[1],
-        auth: {
-          username: proxySplit[2],
-          password: proxySplit[3],
-        },
-      };
-      const inviteResponse = await discordServerInviteAPI(
-        inviteCode,
-        token,
-        proxy
-      );
-      if (inviteResponse.status === 200) {
-        toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
-        if (settingObj.isReact) {
-          const serverReactResponse = await axios({
-            url: `${BASE_URL}channels/${settingObj.reactSetting.channelId}/messages/${settingObj.reactSetting.messageId}/reactions/${settingObj.reactSetting.emojiValue}/%40me`,
-            method: "put",
-            proxy: proxy,
-            headers: {
-              authorization: token,
-              "Content-Type": "application/json",
-            },
-          });
-          if (serverReactResponse.status === 201) {
-            toastSuccess("Reacted to the server");
-          }
+    const inviteResponse = await discordServerInviteAPI(
+      inviteCode,
+      token,
+      proxy
+    );
+    if (inviteResponse.status === 200) {
+      const tkn =
+        token.substring(0, 4) + "## ##" + token.charAt(token.length - 1);
+      toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
+      const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
+      sendLogs(log);
+
+      if (settingObj.isReact) {
+        const serverReactResponse = await axios({
+          url: `${BASE_URL}channels/${settingObj.channelId}/messages/${settingObj.messageId}/reactions/${settingObj.emojiValue}/%40me`,
+          method: "put",
+          proxy,
+          headers: {
+            authorization: token,
+            "Content-Type": "application/json",
+          },
+        });
+        if (serverReactResponse.status === 201) {
+          const log = `Direct join Reaction added successfully  with ${tkn}`;
+          sendLogs(log);
+          toastSuccess("Reaction added successfully");
         }
-        if (settingObj.isAcceptRule) {
-          const acceptServerRulResponse = await axios({
-            url: `${BASE_URL}guilds/${settingObj.acceptRule.guildID}/requests/@me`,
-            method: "put",
-            headers: {
-              Authorization: token,
-              "Content-Type": "application/json",
-            },
-            data: settingObj.acceptRule.acceptRuleValue,
-            proxy: proxy,
-          });
-          if (
-            acceptServerRulResponse !== null &&
-            acceptServerRulResponse === 201
-          ) {
-            toastSuccess("Accept the server rule 🥳");
-          }
-        }
-      } else {
-        toastWarning("Error in joining server");
       }
+
+      if (settingObj.isAcceptRule) {
+        const acceptServerRulResponse = await axios({
+          url: `${BASE_URL}guilds/${inviteResponse.data.guild.id}/requests/@me`,
+          method: "put",
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+          data: settingObj.rules,
+          proxy,
+        });
+        if (
+          acceptServerRulResponse !== null &&
+          acceptServerRulResponse === 201
+        ) {
+          const log = `Direct join Rules accepted successfully ${tkn}`;
+          sendLogs(log);
+          toastSuccess("Rules accepted successfully");
+        }
+      }
+    } else {
+      toastWarning("Something went wrong while accepting rules");
     }
+    return inviteResponse;
   } catch (error) {
     return null;
   }
+};
+
+export const generateRandomAvatar = async (api = IMAGE_API) => {
+  const arrayBuffer = await fetch(api).then(function (response) {
+    return response.arrayBuffer();
+  });
+  const str = arrayBufferToString(arrayBuffer, "base64");
+  return "data:image/jpeg;base64," + str;
 };

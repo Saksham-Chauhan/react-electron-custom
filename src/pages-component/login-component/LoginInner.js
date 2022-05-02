@@ -10,7 +10,7 @@ const LoginInner = () => {
   return (
     <div className="logininner">
       <div>
-        <img src={logo} alt="logo" />
+        <img src={logo} alt="logo" className="login-logo-img" />
         <h1>KYRO TOOLS</h1>
         <h2>Good To See You, Come Hop In!</h2>
         <h3>

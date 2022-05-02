@@ -20,8 +20,8 @@ export const addTwitterKeywordInList = (data) => (dispatch, getState) => {
     let obj = {};
     obj["id"] = generateId();
     obj["value"] = word;
-    obj["label"] = word;
-    let combiner = [...tempCurrentList, obj];
+    obj["label"] = obj["value"];
+    let combiner = [obj, ...tempCurrentList];
     dispatch(
       appendDataInTwitterList({ key: "twitterUserNameList", data: combiner })
     );
@@ -31,8 +31,8 @@ export const addTwitterKeywordInList = (data) => (dispatch, getState) => {
     let obj = {};
     obj["id"] = generateId();
     obj["value"] = word;
-    obj["label"] = word;
-    let combiner = [...tempCurrentList, obj];
+    obj["label"] = obj["value"];
+    let combiner = [obj, ...tempCurrentList];
     dispatch(
       appendDataInTwitterList({ key: "twitterKeywordList", data: combiner })
     );
@@ -77,7 +77,7 @@ export const addNewApiInList = (apiObj) => (dispatch, getState) => {
   const currentApiList = fetchAPIlistState(getState());
   let obj = { ...apiObj };
   obj["id"] = generateId();
-  let combiner = [...currentApiList, obj];
+  let combiner = [obj, ...currentApiList];
   dispatch(appendApInList(combiner));
 };
 
@@ -91,5 +91,7 @@ export const resetTwitterMonitor = () => (dispatch, getState) => {
   const currentSetting = fetchTwitterSettingState(getState());
   let tempSetting = { ...currentSetting };
   tempSetting["twitterMonitor"] = false;
+  tempSetting["startAutoInviteJoiner"] = false;
+  tempSetting["startAutoLinkOpener"] = false;
   dispatch(setTwitterSetting(tempSetting));
 };
