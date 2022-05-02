@@ -70,3 +70,11 @@
 - Added the edit functionality in minter table row
 - Fix the sidebar NFT active, default, animation issue
 - Add the send log in wallet, minter section and their modals
+
+# V0.9.0
+
+- Changed clamer accounts to discord tokens
+- Added onboarding screens on add clamer group and proxy group.
+- Added default Chrome user in every functionality which required chrome user.
+- Added Eth Minter functionality.
+- Improved UI and UX with proper error messages.

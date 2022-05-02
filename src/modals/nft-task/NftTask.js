@@ -39,7 +39,6 @@ function NftTask() {
     walletName: "",
   });
   const [tempVar, setTempVar] = useState();
-  console.log(task);
   useEffect(() => {
     const setData = () => {
       if (Object.keys(editState).length > 0) {

@@ -16,6 +16,7 @@ const MassjoinerSlideTwo = ({
   pageState,
   handleIsEmoji,
   handleUpdateObject,
+  currentSlide,
 }) => {
   const addEmoji = (e) => {
     let sym = e.unified.split("-");
@@ -125,7 +126,7 @@ const MassjoinerSlideTwo = ({
                 </label>
               </div>
               <AppSpacer spacer={10} />
-              {pageState.isAcceptRule && (
+              {pageState.isAcceptRule && currentSlide === 1 && (
                 <div className={`accept-joiner-setting-section `}>
                   <AppInputField
                     isMulti={true}

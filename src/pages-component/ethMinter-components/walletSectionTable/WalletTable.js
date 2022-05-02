@@ -1,18 +1,27 @@
 import React from "react";
 import "./style.css";
-import { fetchThemsState } from "../../../features/counterSlice";
+import {
+  fetchNftSettingRPCState,
+  fetchThemsState,
+} from "../../../features/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
 import refreshWallet from "../../../assests/images/refreshWallet.svg";
 import lightrefreshWallet from "../../../assests/images/lightrefreshWallet.svg";
 
-import { removeNftWalletFromList } from "../../../features/logic/nft";
+import {
+  editNftWalletList,
+  removeNftWalletFromList,
+} from "../../../features/logic/nft";
 import { sendLogs } from "../../../helper/electron-bridge";
+import { handleFetchWallet } from "../../../helper/nft-minter";
+import { toastSuccess, toastWarning } from "../../../toaster";
 
 const WalletTable = ({ walletList = [] }) => {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
 
   const theme = {
     textClass: appTheme ? "light-mode-table-color" : "",
@@ -28,6 +37,21 @@ const WalletTable = ({ walletList = [] }) => {
     const log = `${row?.walletNickName} Wallet id deleted`;
     sendLogs(log);
     dispatch(removeNftWalletFromList(row));
+  };
+
+  const handleDispatchWallet = (wallet) => {
+    dispatch(editNftWalletList(wallet));
+  };
+
+  const handleRefresh = async (wallet) => {
+    try {
+      const res = await handleFetchWallet(wallet, rpcURL, handleDispatchWallet);
+      if (res.status === 200) toastSuccess("Wallet Refresh Successfully");
+    } catch (e) {
+      toastWarning("Can't Fetch Wallet");
+
+      console.log(e);
+    }
   };
 
   const WalletTableRow = ({ wallet, index, onDelete }) => (
@@ -46,7 +70,11 @@ const WalletTable = ({ walletList = [] }) => {
           style={{ alignItems: "center" }}
           className="acc-changer-table-row-action-column"
         >
-          <img src={theme.refreshIcon} alt="" />
+          <img
+            src={theme.refreshIcon}
+            alt=""
+            onClick={() => handleRefresh(wallet)}
+          />
           <UseAnimations
             wrapperStyle={{ cursor: "pointer" }}
             animation={trash2}

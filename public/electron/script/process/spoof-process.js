@@ -83,7 +83,7 @@ class SpooferInstance {
 
   proxyRotater() {
     this.deleteBrowser();
-    if (this.numberOfRetry < this.maxNumberOfRetry) {
+    if (this.numberOfRetry < this.proxyList.length) {
       if (this.proxyCounter < this.proxyList.length) {
         this.proxyCounter = this.randomInt(0, this.proxyList?.length - 1 || 0);
       } else {

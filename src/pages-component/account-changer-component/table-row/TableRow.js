@@ -22,10 +22,9 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
         <div style={{ width: "70%", overflow: "hidden" }}>
           {obj.changerType === "giveawayJoiner" ||
           obj.changerType === "linkOpener"
-            ? obj?.monitorToken?.label
+            ? obj?.token
             : obj?.claimerGroup?.label}
         </div>
-        {obj.changerType === "giveawayJoiner" && "..."}
       </div>
       <div>
         {

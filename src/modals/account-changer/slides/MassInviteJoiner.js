@@ -81,6 +81,7 @@ function MassInviteJoiner({
           pageState,
           handleIsEmoji,
           handleUpdateObject,
+          currentSlide,
         }}
       />
     </Slider>

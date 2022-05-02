@@ -1,5 +1,5 @@
 import React from "react";
-import { AppInputField, AppSpacer, AppToggler } from "../../../component";
+import { AppInputField, AppSpacer } from "../../../component";
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
@@ -29,8 +29,8 @@ function ServerLeaver({ ...props }) {
       <AppSpacer spacer={20} />
       <div className="servre-leaver-toggler">
         <span className={textClass}>Server ID[s]</span>
-        <span className="all">All</span>
-        <AppToggler />
+        {/* <span className="all">All</span>
+        <AppToggler /> */}
       </div>
       <AppInputField
         {...props}

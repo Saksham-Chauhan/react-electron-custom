@@ -229,7 +229,7 @@ function Twitter() {
           } else {
             dispatch(setTwitterSetting(prevState));
           }
-        } else toastWarning("Enter Username");
+        } else toastWarning("Enter Twitter Username");
       } else {
         toastWarning("Enter API keys under Twitter Setting");
       }

@@ -96,7 +96,6 @@ const TableSection = ({ list = [] }) => {
 export default TableSection;
 
 const MinterTableRow = ({ row, index, onDelete, onPlay, onEdit, wallet }) => {
-  console.log(row);
   const appTheme = useSelector(fetchThemsState);
   return (
     <div
