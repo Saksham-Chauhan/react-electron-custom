@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles.css";
+import "./Sidebar.css";
 import { RoutePath } from "../../constant";
 import logo from "../../assests/images/logo.svg";
 import SidebarOption from "./sidebar-option/SidebarOption";
