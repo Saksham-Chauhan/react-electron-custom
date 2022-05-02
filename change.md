@@ -73,16 +73,18 @@
 
 # V0.9.0
 
-- Changed clamer accounts to discord tokens
-- Added onboarding screens on add clamer group and proxy group.
-- Added default Chrome user in every functionality which required chrome user.
-- Added Eth Minter functionality.
-- Improved UI and UX with proper error messages.
-- Added Light and dark theme.
-- Improved error message format in case if user don'i Enter the required data.
-- Changed monitor token select box into input field in task page.
-- Improvements in token format. If the user only wants to enter the token then it will be acceptable.
-- Changed the extension of tokens and proxies files .txt to .json .
-- Fixed spoofer page issue.
-- Added tooltip on buttons and labels for better user experience.
-- Added warning toaster for user if proxies is less than tokens.
+- Added Direct Join functionality. 
+- Added NFT Minter Page and functionality. 
+- Light mode added. 
+- Added Default option for Chrome User. 
+- Import/Export format changed to .json. 
+- Claimer Group updated to Discord Accounts. 
+- Updated format for Discord Accounts and Proxies. 
+- Added Onboarding msgs for Discord Accounts and Proxies. 
+- Added keyword functionality for Twitter Monitor. 
+- Separated Featured Tweets for Twitter Monitor. 
+- Added Local Timezone for Twitter Monitor.
+- Fixed Animation Toggler. 
+- Multi wallet functionality in Tasks Page. 
+- Activity Changer updated to Status Changer. 
+- Improved UI and UX with proper toaster and tooltips.
