@@ -18,6 +18,11 @@ function ChromeUser() {
     const { value } = e.target;
     setChrome(value);
   };
+  const newList = () => {
+    return chromeList.filter((item) => {
+      return item.label !== "Default";
+    });
+  };
 
   const handleAdd = () => {
     let flag = true;
@@ -46,7 +51,7 @@ function ChromeUser() {
         }}
         onDelete={handleDelete}
         title="Chrome User"
-        list={chromeList}
+        list={newList()}
         placeHolder="Enter Chrome User (e.g. Guest)"
       />
     </div>

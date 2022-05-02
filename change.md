@@ -78,3 +78,11 @@
 - Added default Chrome user in every functionality which required chrome user.
 - Added Eth Minter functionality.
 - Improved UI and UX with proper error messages.
+- Added Light and dark theme.
+- Improved error message format in case if user don'i Enter the required data.
+- Changed monitor token select box into input field in task page.
+- Improvements in token format. If the user only wants to enter the token then it will be acceptable.
+- Changed the extension of tokens and proxies files .txt to .json .
+- Fixed spoofer page issue.
+- Added tooltip on buttons and labels for better user experience.
+- Added warning toaster for user if proxies is less than tokens.
