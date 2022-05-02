@@ -129,7 +129,7 @@ const WalletScreen = ({ setwalletScreen }) => {
             <img src={theme.plusIcon} alt="" />
           </div>
           <div className={theme.btnClass}>
-            <img src={theme.refreshbtn} alt="" />
+            <img src={theme.refreshbtn} alt="" onClick={onRefreshAll} />
           </div>
           <div onClick={handleDeleteAll} className={theme.btnClass}>
             <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
