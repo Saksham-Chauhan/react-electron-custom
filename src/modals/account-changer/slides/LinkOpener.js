@@ -1,27 +1,25 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { AppInputField, AppSpacer, LabelWithToolTip } from "../../../component";
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
-import { fetchClaimerGroupList } from "../../../features/counterSlice";
-import { makeGroupOptions } from "../helper";
 
-function LinkOpener({ handleMonitorToken, state, ...props }) {
-  const claimerGroupList = useSelector(fetchClaimerGroupList);
-
+function LinkOpener({
+  handleSelectChannel,
+  handleSelectServer,
+  state,
+  onChange,
+}) {
   return (
     <React.Fragment>
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
-            // isSelect={true}
-            isCustomSelect={true}
-            onChange={handleMonitorToken}
+            onChange={onChange}
+            name="monitorToken"
             fieldTitle="Monitor Token"
             placeholderText="Enter Monitor token"
-            selectOptions={makeGroupOptions(claimerGroupList)}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
@@ -31,44 +29,52 @@ function LinkOpener({ handleMonitorToken, state, ...props }) {
             name="delay"
             type="number"
             min={0}
-            {...props}
+            onChange={onChange}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
-      <AppSpacer spacer={10} />
+      <AppSpacer spacer={15} />
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
-            {...props}
-            fieldTitle="Channel ID[s]"
-            name="channelIDs"
-            isMulti={true}
-            multiHeight="100px"
-            placeholderText={`Eg.
-        936538800027467123
-        936534767688678923
-        936538800027467344`}
+            isSelect={true}
+            name="serverIDs"
+            fieldTitle="Server"
+            placeholderText="Select Server"
+            onChange={handleSelectServer}
+            selectOptions={state.serverIDs}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
-          <LabelWithToolTip
-            toolTopText="Leave Blank For All Keywords"
-            labelText="Keyword [s] (optional)"
-            parentStyle={{ style: { marginBottom: "10px" } }}
-          />
           <AppInputField
-            {...props}
-            hideLabel={true}
-            name="keywords"
+            isSelect={true}
             isMulti={true}
-            multiHeight="100px"
-            placeholderText={`Eg.
-        google
-        koders
-        walmart`}
+            fieldTitle="Channel[s]"
+            placeholderText="Select Channels"
+            name="channelIDs"
+            onChange={handleSelectChannel}
+            selectOptions={state.channels}
+            autoClose={false}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
+      <AppSpacer spacer={15} />
+      <LabelWithToolTip
+        toolTopText="Leave Blank For All Keywords"
+        labelText="Keyword[s] (Optional)"
+        parentStyle={{ style: { marginBottom: "10px" } }}
+      />
+      <AppInputField
+        onChange={onChange}
+        hideLabel={true}
+        name="keywords"
+        isMulti={true}
+        multiHeight="100px"
+        placeholderText={`Eg.
+        google
+        koders
+        walmart`}
+      />
     </React.Fragment>
   );
 }

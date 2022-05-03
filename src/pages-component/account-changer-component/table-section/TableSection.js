@@ -51,11 +51,6 @@ function TableSection({ list }) {
     dispatch(deleteDataFromTableList(obj));
   };
   const handlePlay = async (obj) => {
-    if (
-      obj.claimerGroup.value.split("\n").length >
-      obj.proxyGroup.value.split("\n").length
-    )
-      toastWarning("You are might banned because proxy is less than tokens");
     flag.current = !flag.current;
     status = flag.current;
     const type = obj["changerType"];
@@ -99,10 +94,18 @@ function TableSection({ list }) {
         startLinkOpenerMonitor(obj);
       } else if (type === "inviteJoiner") {
         startInviteJoinerMonitor(obj);
-      }
-      if (type === "xpFarmer") {
-        startXpFarmer();
       } else {
+        if (type === "xpFarmer") {
+          dispatch(updateStatusOfTableRow(obj, "Running"));
+          startXpFarmer();
+        }
+        if (
+          obj.claimerGroup.value.split("\n").length >
+          obj.proxyGroup.value.split("\n").length
+        )
+          toastWarning(
+            "You are might banned because proxy is less than tokens"
+          );
         for (let index = 0; index < tokenArray.length; index++) {
           const token = tokenArray[index];
           const tokenArr = token?.split(":");
@@ -216,7 +219,7 @@ function TableSection({ list }) {
       for (let i = 0; i < userNameArr.length; i++) {
         let obj = {};
         obj["token"] = tokenArr[i];
-        obj["username"] = userNameArr[i];
+        obj["password"] = userNameArr[i];
         obj["email"] = newEmail[i];
         arrOfObj.push(obj);
       }

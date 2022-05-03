@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,8 @@ import {
 import {
   activityChangerValidation,
   basicAccChangerValidation,
+  getAllChannelIds,
+  getAllServerIds,
   giveawayJoinerValidation,
   inviteJoinerValidation,
   linkOpenerValidation,
@@ -50,6 +52,7 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
+import { debounce } from "lodash";
 
 function AccountChanger() {
   const navigate = useNavigate();
@@ -68,7 +71,13 @@ function AccountChanger() {
     active: false,
     render: false,
     delay: 1,
+    chromeUser: {
+      id: "1abzsgjhgh2klghxcvbnnbvbcv12ncv3vbcc1",
+      label: "Default",
+      value: "default",
+    },
   });
+
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
       handleCloseModal();
@@ -148,11 +157,40 @@ function AccountChanger() {
     }
   };
 
+  const delayedQuery = useRef(
+    debounce(async (q) => {
+      const res = await getAllServerIds(q);
+      let obj = [];
+      for (let i = 0; i < res.data.length; i++) {
+        let tempOjb = {};
+        tempOjb["label"] = res.data[i].name;
+        tempOjb["value"] = res.data[i].id;
+        obj.push(tempOjb);
+      }
+      setAccountChanger((pre) => {
+        return {
+          ...pre,
+          serverIDs: obj,
+        };
+      });
+    }, 1000)
+  ).current;
+
   const handleChange = (e) => {
     const { value, name } = e.target;
-    setAccountChanger((pre) => {
-      return { ...pre, [name]: value };
-    });
+    if (
+      accountChanger.changerType === "linkOpener" ||
+      (accountChanger.changerType === "inviteJoiner" && name === "monitorToken")
+    ) {
+      setAccountChanger((pre) => {
+        return { ...pre, [name]: { label: value, value: `::${value}` } };
+      });
+      delayedQuery(e.target.value);
+    } else {
+      setAccountChanger((pre) => {
+        return { ...pre, [name]: value };
+      });
+    }
   };
 
   const handleRefreshName = () => {
@@ -197,6 +235,35 @@ function AccountChanger() {
   const handleSelectToken = (obj) => {
     setAccountChanger((pre) => {
       return { ...pre, token: obj.value };
+    });
+  };
+
+  const handleSelectServer = async (obj) => {
+    const res = await getAllChannelIds(
+      obj.value,
+      accountChanger.monitorToken.label
+    );
+    let channels = [];
+    for (let i = 0; i < res.data.length; i++) {
+      let tempObj = {};
+      if (res.data[i].type === 0) {
+        tempObj["label"] = res.data[i].name;
+        tempObj["value"] = res.data[i].id;
+        channels.push(tempObj);
+      }
+    }
+    setAccountChanger((pre) => {
+      return { ...pre, channels: channels };
+    });
+  };
+
+  const handleSelectChannel = (obj) => {
+    let tempArr = [];
+    for (let i = 0; i < obj.length; i++) {
+      tempArr.push(obj[i].value);
+    }
+    setAccountChanger((pre) => {
+      return { ...pre, channelIDs: tempArr.join("\n") };
     });
   };
 
@@ -334,9 +401,11 @@ function AccountChanger() {
         handleCloseModal,
         handleSubmit,
         handleIsEmoji,
-        handleUpdateObject
+        handleUpdateObject,
+        handleSelectChannel,
+        handleSelectServer
       )}
-      <AppSpacer spacer={30} />
+      <AppSpacer spacer={20} />
       {accountChanger?.changerType ? (
         accountChanger?.changerType === "massInviter" ? (
           ""
@@ -398,7 +467,9 @@ const getDynamicSlideRnder = (
   handleCloseModal,
   handleSubmit,
   handleIsEmoji,
-  handleUpdateObject
+  handleUpdateObject,
+  handleSelectChannel,
+  handleSelectServer
 ) => {
   switch (type) {
     case "avatarChanger":
@@ -452,16 +523,14 @@ const getDynamicSlideRnder = (
       return (
         <InviteJoinerSlide
           onChange={handleChange}
-          state={state}
-          handleMonitorToken={handleMonitorToken}
+          {...{ state, handleSelectChannel, handleSelectServer }}
         />
       );
     case "linkOpener":
       return (
         <LinkOpenerSlide
           onChange={handleChange}
-          state={state}
-          handleMonitorToken={handleMonitorToken}
+          {...{ state, handleSelectChannel, handleSelectServer }}
         />
       );
     case "xpFarmer":

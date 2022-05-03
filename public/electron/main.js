@@ -15,7 +15,7 @@ const linkOpernerManager = require("./script/manager/linkOpener-manager");
 const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
-var { execFile } = require("child_process");
+var { execFile, spawn } = require("child_process");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -619,24 +619,15 @@ ipcMain.on("stop-xp-server", (_, data) => {
 async function xpFarmerStart() {
   console.log("called start");
   const exePath = isDev
-    ? `file://${path.join(__dirname, "../windows/xpfarmer.exe")}`
-    : `file://${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
+    ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
+    : `xpfarmer.exe`;
   try {
-    execFile(exePath, [3001], { cwd: "." }, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(data);
+    execFile(exePath, [3001], { cwd: "." }, (error, stdout, stderr) => {
+      if (error) {
+        throw error;
       }
+      console.log(stdout);
     });
-    // exec(exePath, [3001], function (err, data) {
-    //   console.log("err in func", err);
-    //   console.log("data is", data.toString());
-    // });
-    // exec(exePath, [3001], function (err, data) {
-    //   console.log("err in func", err);
-    //   console.log("data is", data.toString());
-    // });
   } catch (e) {
     console.log("this is error", e);
   }
@@ -644,12 +635,16 @@ async function xpFarmerStart() {
 
 function stopXpfarmer() {
   console.log("called stop");
-  currentProcesses.get((err, processes) => {
-    const sorted = _.sortBy(processes, "cpu");
-    for (let i = 0; i < sorted.length; i += 1) {
-      if ("xpfarmer" === sorted[i].name.toLowerCase()) {
-        process.kill(sorted[i].pid);
+  try {
+    currentProcesses.get((err, processes) => {
+      const sorted = _.sortBy(processes, "cpu");
+      for (let i = 0; i < sorted.length; i += 1) {
+        if ("xpfarmer" === sorted[i].name.toLowerCase()) {
+          process.kill(sorted[i].pid);
+        }
       }
-    }
-  });
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }

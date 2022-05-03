@@ -15,6 +15,7 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
       ? "acc-chnager-page-table-header body  light-bg light-mode-table-color"
       : "acc-chnager-page-table-header body",
   };
+  console.log(obj);
   return (
     <div className={theme.tableBody}>
       <div>{index}</div>
@@ -22,7 +23,7 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
         <div style={{ width: "70%", overflow: "hidden" }}>
           {obj.changerType === "giveawayJoiner" ||
           obj.changerType === "linkOpener"
-            ? obj?.token
+            ? obj?.monitorToken?.label
             : obj?.claimerGroup?.label}
         </div>
       </div>
@@ -46,7 +47,9 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
           (obj?.changerType === "passwordChanger" ||
             obj?.changerType === "tokenRetrieve") ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
-          ) : obj["status"] === "Running" ? (
+          ) : obj["status"] === "Running" ||
+            obj["status"] === "Monitoring" ||
+            obj["status"] === "Monitoring..." ? (
             <img
               src={stop}
               alt=""

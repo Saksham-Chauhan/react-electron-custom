@@ -69,3 +69,16 @@
 .mj-slide {
   padding: 0 5px;
 }
+
+.css-g1d714-ValueContainer {
+  overflow-y: scroll !important;
+  height: 55px !important;
+}
+
+.css-g1d714-ValueContainer::-webkit-scrollbar {
+  width: 5px;
+}
+.css-g1d714-ValueContainer::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-bg);
+  border-radius: 10px;
+}

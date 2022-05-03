@@ -182,7 +182,7 @@ class InviteJoinerMonitor {
       headers: { Authorization: token },
       method: "post",
       data: JSON.stringify({}),
-      proxy,
+      // proxy,
     });
   }
 }

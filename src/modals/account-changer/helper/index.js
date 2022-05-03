@@ -1,3 +1,5 @@
+import axios from "axios";
+import { BASE_URL } from "../../../api";
 import { toastWarning } from "../../../toaster";
 
 export const activityChangerValidation = (obj) => {
@@ -31,9 +33,7 @@ export const userNameChangerValidation = (obj) => {
   const credentials = obj.claimerGroup.value.split("\n");
   for (let i = 0; i < credentials.length; i++) {
     const tokenArray = credentials[i].split(":");
-    console.log(tokenArray);
     if (tokenArray[1] && tokenArray[2]) {
-      console.log("first");
       flag = false;
       toastWarning(
         tokenArray[2]
@@ -88,6 +88,7 @@ export const inviteJoinerValidation = (obj) => {
 };
 
 export const linkOpenerValidation = (obj) => {
+  console.log(obj);
   let valid;
   if (Object.keys(obj?.chromeUser || {}).length > 0) {
     valid = true;
@@ -150,7 +151,6 @@ export const basicAccChangerValidation = (obj) => {
 };
 
 export const makeGroupOptions = (list = []) => {
-  console.log(list);
   let groupArray = [];
   for (let i = 0; i < list.length; i++) {
     let obj = {};
@@ -168,4 +168,32 @@ export const makeGroupOptions = (list = []) => {
     groupArray.push(obj);
   }
   return groupArray;
+};
+
+export const getAllServerIds = async (token) => {
+  try {
+    const res = await axios.get(`${BASE_URL}users/@me/guilds`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getAllChannelIds = async (id, token) => {
+  try {
+    const res = await axios.get(`${BASE_URL}guilds/${id}/channels`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    return res;
+  } catch (error) {
+    return error;
+  }
 };
