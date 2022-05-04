@@ -1,16 +1,15 @@
 import { v4 as uuid } from "uuid";
-
 export const makeStrOfArr = (arrOfObj) => arrOfObj.map((data) => data["value"]);
 
 export const isValueInUse = (arrOfObj, key, firstValue) => {
-  let valid = false;
+  let isValid = false;
   for (let i = 0; i < arrOfObj.length; i++) {
     if (arrOfObj[i][key] === firstValue[key]) {
-      valid = true;
+      isValid = true;
       break;
     }
   }
-  return valid;
+  return isValid;
 };
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -77,11 +76,7 @@ export const downloadLogs = (content, title) => {
 export const makeClaimerSelectOption = (list) => {
   if (list.length > 0) {
     return list.map((d) => {
-      let obj = {};
-      obj["label"] = d["name"];
-      obj["id"] = d["id"];
-      obj["value"] = d["claimerToken"];
-      return obj;
+      return { "label" : d["name"], "id" : d["id"], "value" : d["claimerToken"] } 
     });
   } else return [];
 };
@@ -160,7 +155,7 @@ export const generateRandomPassword = ({ lower, upper, num, sym, length }) => {
 export const arrayBufferToString = (buffer, encoding) => {
   let str;
   if (encoding == null) encoding = "utf8";
-  var uint8 = new Uint8Array(buffer);
+  let uint8 = new Uint8Array(buffer);
   if (encoding === "base64") {
     str = String.fromCharCode.apply(null, uint8);
     return btoa(str);

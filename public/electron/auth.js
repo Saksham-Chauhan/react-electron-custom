@@ -1,29 +1,31 @@
 const axios = require("axios");
 const url = require("url");
 const jwt = require("jsonwebtoken");
-// FOR PRODUCTION CREDENTIALS
-const bot_token = "OTM4MzM4NDAzMTA2MzIwNDM0.Yfo1vA.RA9WBRV-R6CpsTUqt6OVlGtUIXg";
-const client_id = "938338403106320434";
-const client_secret = "L74jCftmysbzbqpy08i8O_QegPvo8NRb";
+
+// PROD CREDS. TODO => Pass it with .env file
+const botToken = "OTM4MzM4NDAzMTA2MzIwNDM0.Yfo1vA.RA9WBRV-R6CpsTUqt6OVlGtUIXg";
+const clientId = "938338403106320434";
+const clientSecret = "L74jCftmysbzbqpy08i8O_QegPvo8NRb";
 const guildId = "936538800027467816";
-const redirect_uri = "http://localhost/callback/*";
+const redirectUrl = "http://localhost/callback/*";
 let accessToken = null;
+let user = null;
 
 function getAccessToken() {
   return accessToken;
 }
 function getAuthenticationURL() {
-  return `https://discord.com/api/oauth2/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&scope=email%20identify`;
+  return `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=code&scope=email%20identify`;
 }
 
 async function loadTokens(callbackURL) {
   const urlParts = url.parse(callbackURL, true);
   const query = urlParts.query;
   const payload = new URLSearchParams();
-  payload.append("client_id", client_id);
-  payload.append("client_secret", client_secret);
+  payload.append("client_id", clientId);
+  payload.append("client_secret", clientSecret);
   payload.append("grant_type", "authorization_code");
-  payload.append("redirect_uri", redirect_uri);
+  payload.append("redirect_uri", redirectUrl);
   payload.append("code", query.code);
   payload.append(
     "scope",
@@ -40,7 +42,6 @@ async function loadTokens(callbackURL) {
   const response = await axios(options);
   accessToken = response.data.access_token;
 }
-let user = null;
 
 function getCurrentUser() {
   if (user) {
@@ -52,52 +53,86 @@ function getCurrentUser() {
 function logout() {
   user = null;
 }
+
+async function getUserData(){
+  try {
+    const res = await axios({
+      method: "GET", 
+      url: "https://discordapp.com/api/users/@me",
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      }
+  });
+  if (res.data.id !== null || res.data.id !== undefined){
+    return res.data;
+  }
+  return res.status;
+  } catch (err){
+    console.log("Something went wrong while accessing @me library");
+  }
+}
+
+async function getUserGuildData(userData){
+  try {
+    const res = await axios({
+      method: "GET", 
+      url: `https://discordapp.com/api/guilds/${guildId}/members/${userData.id}`,
+      headers: {
+        Authorization: `Bot ${botToken}`,
+      }
+  });
+  if (res.data.roles !== null || res.data.roles !== undefined){
+    return res.data;
+  }
+  return res.status;
+  } catch (err){
+    console.log("Something went wrong while accessing member guild roles library");
+  }
+}
+
+
+async function getGuildRoles(){
+  try {
+    const res = await axios({
+      method: "GET", 
+      url: `https://discordapp.com/api/guilds/${guildId}/roles`,
+      headers: {
+        Authorization: `Bot ${botToken}`,
+      }
+  });
+  // TODO => Check what else are we taking from here?
+  if (res.data.id !== null || res.data.id !== undefined){
+    return res.data;
+  }
+  return res.status;
+  } catch (err){
+    console.log("Something went wrong while accessing guild roles library");
+  }
+}
+
 async function login() {
-  let options = {
-    method: "GET",
-    url: "https://discordapp.com/api/users/@me",
-    headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
-    },
-  };
-  let res = await axios(options);
-  const userData = res.data;
+  const userData = await getUserData();
+  const userGuildData = await getUserGuildData(userData);
+  const guildRoles = await getGuildRoles();
 
-  options = {
-    method: "GET",
-    url: `https://discordapp.com/api/guilds/${guildId}/members/${userData.id}`,
-    headers: {
-      Authorization: `Bot ${bot_token}`,
-    },
-  };
-  res = await axios(options);
-  const roles_id = res.data.roles;
-  userData.joined_at = res.data.joined_at;
-
-  options = {
-    method: "GET",
-    url: `https://discordapp.com/api/guilds/${guildId}/roles`,
-    headers: {
-      Authorization: `Bot ${bot_token}`,
-    },
-  };
-  res = await axios(options);
-  const roles = [];
-
-  for (const role of res.data) {
+  const userRoles = userGuildData.roles;
+  const roles = []
+  for (const role of guildRoles) {
     if (
-      roles_id.includes(role.id) &&
+      userRoles.includes(role.id) &&
       role.name.toLowerCase().includes("beta")
     ) {
       roles.push(role.name);
     }
   }
+  
+  userData.joined_at = userGuildData.joined_at;
   userData.roles = roles;
-
   userData.avatar = userData.avatar
     ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
     : "https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png";
-  user = userData;
+  user = userData; // TODO => Check if we can simply return object with required values
+  console.log(userData);
 }
 
 module.exports = {
@@ -107,5 +142,5 @@ module.exports = {
   login,
   getCurrentUser,
   logout,
-  redirect_uri,
+  redirectUrl,
 };
