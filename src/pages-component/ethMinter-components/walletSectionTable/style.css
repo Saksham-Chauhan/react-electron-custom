@@ -1,0 +1,15 @@
+.wallet-table-scroll {
+  height: 68vh;
+  overflow-y: scroll;
+}
+.wallet-table-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.wallet-table-scroll::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-bg);
+  border-radius: 10px;
+}
+.wallet-balance {
+  width: 150px;
+  overflow: hidden;
+}

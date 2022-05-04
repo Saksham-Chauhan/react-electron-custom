@@ -21,3 +21,15 @@
   color: var(--primary);
   margin-left: 10px;
 }
+
+.darkMode {
+  display: flex;
+  position: absolute;
+  right: 3%;
+  top: 6%;
+  color: white;
+}
+
+.darkMode p {
+  margin-left: 10px;
+}

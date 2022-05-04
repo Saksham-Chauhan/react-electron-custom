@@ -7,43 +7,61 @@ import {
   setModalState,
   setEditStorage,
   fetchProxyGroupList,
+  fetchThemsState,
 } from "../../../features/counterSlice";
 import { downloadLogs } from "../../../helper";
-import { AppSpacer } from "../../../component";
+import { AppSpacer, Tooltip } from "../../../component";
 import UseAnimations from "react-useanimations";
-import edit from "react-useanimations/lib/edit";
+import edit from "../../../assests/images/edit.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import plus from "../../../assests/images/plus.svg";
 import { useDispatch, useSelector } from "react-redux";
 import exportIcon from "../../../assests/images/export.svg";
 import importIcon from "../../../assests/images/import.svg";
-
 function ProxyGroup() {
   const dispatch = useDispatch();
   const proxyList = useSelector(fetchProxyGroupList);
+  const appTheme = useSelector(fetchThemsState);
+
+  const theme = {
+    btnClass: appTheme
+      ? "import-file-btn btn light-mode-sidebar"
+      : "import-file-btn btn",
+    textColor: appTheme ? "lightMode_color" : "",
+    claimerGropScroll: appTheme
+      ? "claimer-group-list-scroll-list light-bg"
+      : "claimer-group-list-scroll-list",
+  };
 
   const handleOpenModal = () => {
-    dispatch(setModalState("proxyGroup"));
+    dispatch(setModalState("proxyOnboardingScreen"));
   };
 
   const handleEditGroup = (group) => {
     dispatch(setEditStorage(group));
-    handleOpenModal();
+    dispatch(setModalState("proxyGroup"));
   };
-
   const handleImportProxy = (e) => {
-    const { files } = e.target;
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const proxyStr = event.target.result;
-      const fileName = files[0].name.split(".")[0];
-      dispatch(readProxyFromFile({ name: fileName, tokenArr: proxyStr }));
-    };
-    reader.readAsText(files[0]);
+    const json = window.require(e.target.files[0].path);
+    const groups = Object.keys(json);
+    const proxies = Object.values(json);
+    for (let i = 0; i < groups.length; i++) {
+      const tempStr = proxies[i].join("\n");
+      let flag = true;
+      for (let j = 0; j < proxyList.length; j++) {
+        if (proxyList[j].groupName === groups[i]) {
+          flag = false;
+          break;
+        }
+      }
+      if (flag) {
+        dispatch(readProxyFromFile({ name: groups[i], tokenArr: tempStr }));
+      }
+    }
   };
 
   const handleExportProxy = () => {
-    downloadLogs(proxyList, "proxy");
+    downloadLogs(proxyList, "proxie");
   };
 
   const handleDeleteGroup = (group) => {
@@ -53,38 +71,43 @@ function ProxyGroup() {
   return (
     <div className="claimer-group-outer">
       <div className="claimer-flex">
-        <h3>Proxy Group</h3>
+        <Tooltip {...{ id: "export-proxy", text: "Export Proxy Groups" }} />
+        <h3 className={theme.textColor}>Proxy Group</h3>
+        <Tooltip {...{ id: "import-proxy", text: "Import Proxy Groups" }} />
         <div className="claimer-btns">
-          <div className="import-file-btn btn">
+          <div className={theme.btnClass} data-tip data-for="import-proxy">
             <img src={importIcon} alt="" />
             <input
               onChange={handleImportProxy}
               id="proxy-group-import-btn"
               type="file"
-              accept=".txt"
+              accept=".json"
             />
             <label htmlFor="proxy-group-import-btn" />
           </div>
-          <div onClick={handleExportProxy} className="btn">
+          <div
+            onClick={handleExportProxy}
+            className={theme.btnClass}
+            data-tip
+            data-for="export-proxy"
+          >
             <img src={exportIcon} alt="" />
           </div>
-          <div onClick={handleOpenModal} className="btn">
+          <div onClick={handleOpenModal} className={theme.btnClass}>
             <img src={plus} alt="" />
           </div>
         </div>
       </div>
       <AppSpacer spacer={14} />
-      <div className="claimer-group-list-scroll-list">
+      <div className={theme.claimerGropScroll}>
         {proxyList.map((group) => (
           <div key={group["id"]} className="claimer-group-list-item">
-            <span>{group["groupName"]}</span>
+            <span className={theme.textColor}>{group["groupName"]}</span>
             <div className="claimer-group-item-action">
-              <UseAnimations
+              <img
+                src={edit}
+                alt="edit"
                 onClick={() => handleEditGroup(group)}
-                animation={edit}
-                strokeColor="#ffff"
-                size={20}
-                wrapperStyle={{ cursor: "pointer" }}
               />
               <UseAnimations
                 onClick={() => handleDeleteGroup(group)}

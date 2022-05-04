@@ -9,5 +9,11 @@ export const settingInitialState = {
   },
 
   claimerGroupList: [],
-  chromeUserList: [],
+  chromeUserList: [
+    {
+      label: "Default",
+      value: "default",
+      id: "1abzsgjhgh2klghxcvbnnbvbcv12ncv3vbcc1",
+    },
+  ],
 };

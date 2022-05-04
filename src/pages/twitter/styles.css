@@ -8,6 +8,7 @@
 }
 .twitter-page-left-section {
   width: 44%;
+  height: 100%;
   margin-right: 0.5em;
 }
 .twitter-page-right-section {
@@ -16,7 +17,7 @@
 .twitter-flex-list-row {
   display: flex;
   justify-content: space-between;
-  height: calc(100% - 196px);
+  height: calc(100% - 199px);
 }
 .twitter-flex-list-row > div {
   width: 49.5%;

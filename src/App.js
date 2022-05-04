@@ -7,23 +7,32 @@ import {
   fetchSpoofModalState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
+  fetchNftTaskModalState,
+  fetchNftGroupModalState,
   fetchDashboardModalState,
   fetchWebhookSettingState,
-  fetchEditProxyModalState,
+  fetchNftWalletModalState,
+  fetchNftSettingModalState,
+  fetchClamerOnbordingState,
+  fetchProxyOnbordingState,
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
-  fetchInviteJoinerSettingModalState,
+  fetchThemsState,
 } from "./features/counterSlice";
 import {
+  NftTaskModal,
+  NftGroupModal,
   AddSpoofModal,
+  NftWalletModal,
+  NftSettingModal,
   OnboardingModal,
   ProxyGroupModal,
+  ClamerOnboarding,
   ClaimerGroupModal,
   AccountChangerModal,
   DiscordAccountModal,
-  EditProxySingleModal,
-  InviteJoinerSettingModal,
+  ProxyOnboarding,
 } from "./modals";
 import {
   Login,
@@ -31,6 +40,7 @@ import {
   SettingPage,
   SpooferPage,
   DashboardPage,
+  ETHminterPage,
   AccountChangerPage,
 } from "./pages";
 import {
@@ -43,8 +53,8 @@ import {
   interceptorFound,
   downloadingStart,
   updateNotAvailable,
-  proxyTestResultListener,
   updateStatusLOmonitor,
+  proxyTestResultListener,
   webhookNotificationListener,
 } from "./helper/electron-bridge";
 import {
@@ -61,31 +71,40 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { EndPointToPage, RoutePath } from "./constant";
 import { useDispatch, useSelector } from "react-redux";
+import { webhookNotifier } from "./features/logic/setting";
 import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
 import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
-import { AppController, DragBar, AppFooter, AppSidebar } from "./component";
+import {
+  AppController,
+  DragBar,
+  AppFooter,
+  AppSidebar,
+  DarkMode,
+} from "./component";
 import { resetTaskState, updateTaskState } from "./features/logic/acc-changer";
-import { webhookNotifier } from "./features/logic/setting";
 
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
   const spoofModalState = useSelector(fetchSpoofModalState);
   const globalSetting = useSelector(fetchWebhookSettingState);
+  const nftTaskModalState = useSelector(fetchNftTaskModalState);
   const discordModalState = useSelector(fetchDiscordModalState);
   const logggedUserDetails = useSelector(fetchLoggedUserDetails);
   const proxyModalState = useSelector(fetchProxyGroupModalState);
-  const proxyEditModalState = useSelector(fetchEditProxyModalState);
   const onBoardingModalState = useSelector(fetchDashboardModalState);
+  const nftSettingModalState = useSelector(fetchNftSettingModalState);
   const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
   const accountChangerModalState = useSelector(fetchAccountChangerModalState);
-  const inviteSettigModalState = useSelector(
-    fetchInviteJoinerSettingModalState
-  );
+  const nftGroupModalState = useSelector(fetchNftGroupModalState);
+  const nftWalletModalState = useSelector(fetchNftWalletModalState);
+  const settingOnboardingh = useSelector(fetchClamerOnbordingState);
+  const settingOnboardinghProxy = useSelector(fetchProxyOnbordingState);
+  const appTheme = useSelector(fetchThemsState);
 
-  const animClass = !globalSetting.bgAnimation
+  const animClass = globalSetting.bgAnimation
     ? "kyro-bot"
     : "kyro-bot-no-animation";
 
@@ -98,13 +117,13 @@ function App() {
         dispatch(updateSpooferStatus(data));
       }
     });
-
     authUser().then(async (user) => {
       if (user !== null) {
         const decode = decodeUser(user);
         if (decode.roles.length > 0) {
           try {
             let title = `${decode?.username}#${decode?.discriminator} Just Logged In 🥰 🥳 `;
+
             await loggedUserWebhook(
               title,
               globalSetting?.webhookList[0],
@@ -115,7 +134,7 @@ function App() {
             sendLogs(log);
           }
           dispatch(setUserDetails(decode));
-        } else toastWarning("Sorry, you don't have required role  😭");
+        } else toastWarning("You're not a Beta member");
       }
     });
     proxyTestResultListener((res) => {
@@ -125,7 +144,7 @@ function App() {
       interceptorWebhook(`${res} Tool found.`);
     });
     updateNotAvailable(() =>
-      toastInfo("Update not available or You are already to update 😍 🤩")
+      toastInfo("Update not available or You are already up to date 😍 🤩")
     );
     downloadingStart(() => {
       progressToast();
@@ -144,7 +163,7 @@ function App() {
 
   // Route Navigation Listener
   useEffect(() => {
-    const currentPage = EndPointToPage[location.pathname];
+    const currentPage = EndPointToPage[location?.pathname];
     const log = `Navigate to ${currentPage}`;
     sendLogs(log);
   }, [location.pathname]);
@@ -162,28 +181,42 @@ function App() {
   return (
     <div className="app">
       {spoofModalState && <AddSpoofModal />}
+      {nftTaskModalState && <NftTaskModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {!onBoardingModalState && <OnboardingModal />}
+      {nftGroupModalState && <NftGroupModal />}
+      {nftWalletModalState && <NftWalletModal />}
+      {settingOnboardingh && <ClamerOnboarding />}
+      {nftSettingModalState && <NftSettingModal />}
+      {onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
-      {proxyEditModalState && <EditProxySingleModal />}
       {accountChangerModalState && <AccountChangerModal />}
-      {inviteSettigModalState && <InviteJoinerSettingModal />}
+      {settingOnboardingh && <ClamerOnboarding />}
+      {settingOnboardinghProxy && <ProxyOnboarding />}
+
       <div className="app sidebar">
         <AppSidebar />
       </div>
-      <div className="app page-section">
-        <div className="app overlay-wrapper">
+      <div
+        className={
+          appTheme
+            ? "app page-section light-mode-page-section"
+            : "app page-section "
+        }
+      >
+        <div className=" overlay-wrapper ">
           <img id="kyro-chip" src={chip} alt="bot-animatable-icon" />
           <img id={animClass} src={bot} alt="bot-animatable-icon" />
           <div className="page-section-overlay">
             <DragBar />
+            <DarkMode />
             <AppController {...{ location }} />
             <Routes>
               <Route
                 path={RoutePath.accountChanger}
                 element={<AccountChangerPage />}
               />
+              <Route path={RoutePath.ethMinter} element={<ETHminterPage />} />
               <Route path={RoutePath.setting} element={<SettingPage />} />
               <Route path={RoutePath.spoofer} element={<SpooferPage />} />
               <Route path={RoutePath.twitter} element={<TwitterPage />} />

@@ -1,7 +1,7 @@
 import { toastWarning } from "../toaster";
 
 /**
- * custom hook to validate object and shoe popup on validation error
+ * custom hook to validate object and show popup on validation error
  * @param {JoiValidationSchema}  schema
  * @param {object} dataTovalid
  * @return {boolean} false or true

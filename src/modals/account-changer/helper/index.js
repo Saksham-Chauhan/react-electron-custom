@@ -1,3 +1,5 @@
+import axios from "axios";
+import { BASE_URL } from "../../../api";
 import { toastWarning } from "../../../toaster";
 
 export const activityChangerValidation = (obj) => {
@@ -27,10 +29,41 @@ export const nicknameChangerValidation = (obj) => {
 };
 
 export const userNameChangerValidation = (obj) => {
-  if (obj.username.length > 0) {
+  let flag = true;
+  const credentials = obj.claimerGroup.value.split("\n");
+  for (let i = 0; i < credentials.length; i++) {
+    const tokenArray = credentials[i].split(":");
+    if (tokenArray[1] && tokenArray[2]) {
+      flag = false;
+      toastWarning(
+        tokenArray[2]
+          ? "Invalid format password is required"
+          : "Invalid format token is required"
+      );
+    }
+  }
+  if (obj.username.length <= 0) {
+    flag = false;
+  }
+  if (flag) {
+    return true;
+  }
+  // else {
+  //   toastWarning("Enter Invite code ");
+  //   return false;
+  // }
+};
+
+export const giveawayJoinerValidation = (obj) => {
+  const { botid, serverid, token } = obj;
+  if (botid && serverid && token) {
     return true;
   } else {
-    toastWarning("Enter Invite code ");
+    let message;
+    if (!botid) message = "Enter bot id";
+    if (!serverid) message = "Enter server id";
+    if (!token) message = "Select token";
+    toastWarning(message);
     return false;
   }
 };
@@ -55,6 +88,7 @@ export const inviteJoinerValidation = (obj) => {
 };
 
 export const linkOpenerValidation = (obj) => {
+  console.log(obj);
   let valid;
   if (Object.keys(obj?.chromeUser || {}).length > 0) {
     valid = true;
@@ -101,7 +135,7 @@ export const basicAccChangerValidation = (obj) => {
       valid = true;
     } else {
       valid = false;
-      toastWarning("Select Token group");
+      toastWarning("Select Discord Accounts");
       return valid;
     }
     if (Object.keys(obj.proxyGroup).length > 0) {
@@ -126,7 +160,7 @@ export const makeGroupOptions = (list = []) => {
     obj["label"] = group["name"];
     for (let j = 0; j < tokenList.length; j++) {
       let tempObj = {};
-      tempObj["label"] = tokenList[j].split(":")[3];
+      tempObj["label"] = tokenList[j].split(":")[2];
       tempObj["value"] = tokenList[j];
       arr.push(tempObj);
     }
@@ -134,4 +168,32 @@ export const makeGroupOptions = (list = []) => {
     groupArray.push(obj);
   }
   return groupArray;
+};
+
+export const getAllServerIds = async (token) => {
+  try {
+    const res = await axios.get(`${BASE_URL}users/@me/guilds`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getAllChannelIds = async (id, token) => {
+  try {
+    const res = await axios.get(`${BASE_URL}guilds/${id}/channels`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    return res;
+  } catch (error) {
+    return error;
+  }
 };

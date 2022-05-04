@@ -6,12 +6,19 @@ import {
   toggleSpoofer,
   deleteSpoofer,
 } from "../../../helper/electron-bridge";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TableRow from "../spoof-table-row/SpooferTableRow";
 import { deleteSpooferFromList } from "../../../features/logic/spoof";
+import { fetchThemsState } from "../../../features/counterSlice";
 
 function SpooferTable({ tableList }) {
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
+  const Theme = {
+    tableHeader: appTheme
+      ? "spoofer-page-table-header light-mode-sidebar"
+      : "spoofer-page-table-header",
+  };
 
   const handleStart = (spoof, setValue) => {
     startSpoofer(spoof);
@@ -34,7 +41,7 @@ function SpooferTable({ tableList }) {
 
   return (
     <div className="spoofer-page-table-section">
-      <div className="spoofer-page-table-header">
+      <div className={Theme.tableHeader}>
         <div>#</div>
         <div>URL</div>
         <div>Proxy</div>

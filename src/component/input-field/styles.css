@@ -1,8 +1,22 @@
+.input-field-container {
+  width: 100%;
+}
 .input-field-container > label {
   font-weight: 500;
   font-size: 13.149px;
   line-height: 20px;
   color: var(--primary);
+}
+.input-field-container > div > label,
+a {
+  font-weight: 500;
+  font-size: 13.149px;
+  line-height: 20px;
+  color: var(--primary);
+}
+.input-field-container > div > a {
+  color: black;
+  margin-left: 10px;
 }
 .input-field-container > .custom-label {
   color: var(--primary);

@@ -9,12 +9,13 @@ class InviteJoinerManager {
     const channelArray = data?.channelIDs?.split("\n");
     const proxyArray = data?.proxyGroup?.value?.split("\n");
     const tokenArray = data?.claimerGroup?.value?.split("\n");
-    const monitorToken = data?.monitorToken?.value?.split(":")[3];
+    const monitorToken = data?.monitorToken?.value?.split(":")[2];
     this.bots[data.id] = new inviteJoinerMonitor(
       channelArray,
       tokenArray,
       proxyArray,
       monitorToken,
+      data?.delay || 1000,
       data.id
     );
   }

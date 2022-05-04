@@ -1,16 +1,15 @@
 import { v4 as uuid } from "uuid";
-
 export const makeStrOfArr = (arrOfObj) => arrOfObj.map((data) => data["value"]);
 
 export const isValueInUse = (arrOfObj, key, firstValue) => {
-  let valid = false;
+  let isValid = false;
   for (let i = 0; i < arrOfObj.length; i++) {
     if (arrOfObj[i][key] === firstValue[key]) {
-      valid = true;
+      isValid = true;
       break;
     }
   }
-  return valid;
+  return isValid;
 };
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -33,42 +32,32 @@ export const makeLogText = (msg) => {
   const d = new Date();
   return `[${DAYS[d.getDay()]}, ${d.getDate()} ${
     MONTHS[d.getMonth()]
-  } ${d.getFullYear()}  ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}] - ${msg}`;
+  } ${d.getFullYear()}  ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}] - ${msg}-id${generateId()}`;
 };
 
 export const generateId = () => uuid();
 
 export const downloadLogs = (content, title) => {
-  let data;
+  // let data;
+  let tempData = {};
   if (title === "token") {
-    let tempData = [];
     for (let i = 0; i < content.length; i++) {
-      const tokenGroup = content[i];
-      let tokenList = [...tokenGroup["claimerToken"].split("\n")];
-      for (let j = 0; j < tokenList.length; j++) {
-        const token = tokenList[j];
-        tempData.push(token);
-      }
+      tempData[content[i].name] = [...content[i].claimerToken.split("\n")];
     }
-    data = tempData.map((tkn) => tkn).join("\n");
-  } else if (title === "proxy") {
-    let tempData = [];
+  } else if (title === "proxie") {
     for (let i = 0; i < content.length; i++) {
-      const proxyGroup = content[i];
-      let proxyList = [...proxyGroup["proxyList"]];
-      for (let j = 0; j < proxyList.length; j++) {
-        const proxy = proxyList[j]["proxy"];
-        tempData.push(proxy);
-      }
+      tempData[content[i].groupName] = [
+        ...content[i].proxyList.map((item) => item.proxy),
+      ];
     }
-    data = tempData.map((tkn) => tkn).join("\n");
   } else {
-    data = content.map((v) => v["proxy"]).join("\n");
+    // data = content.map((v) => v["proxy"]).join("\n");
   }
-  const d = new Date();
-  const fileName = `${title}_${d.getMonth()}-${d.getDay()}-${d.getFullYear()}:${d.toLocaleTimeString()}`;
+  const fileName = `${title}s`;
   const a = document.createElement("a");
-  const file = new Blob([data], { type: "text/plain" });
+  const file = new Blob([JSON.stringify(tempData, null, 4)], {
+    type: "application/json",
+  });
   a.href = URL.createObjectURL(file);
   a.download = fileName;
   a.click();
@@ -77,11 +66,7 @@ export const downloadLogs = (content, title) => {
 export const makeClaimerSelectOption = (list) => {
   if (list.length > 0) {
     return list.map((d) => {
-      let obj = {};
-      obj["label"] = d["name"];
-      obj["id"] = d["id"];
-      obj["value"] = d["claimerToken"];
-      return obj;
+      return { "label" : d["name"], "id" : d["id"], "value" : d["claimerToken"] } 
     });
   } else return [];
 };
@@ -108,12 +93,11 @@ export const makeProxyOptions = (proxyGroupList = []) => {
   let arr = [];
   if (proxyGroupList.length > 0) {
     for (let i = 0; i < proxyGroupList.length; i++) {
-      let group = proxyGroupList[i];
-      if (group["proxyList"].length > 0) {
+      if (proxyGroupList[i]["proxyList"].length > 0) {
         let obj = {};
-        obj["label"] = group["groupName"];
-        obj["value"] = group["proxies"];
-        obj["id"] = group["id"];
+        obj["label"] = proxyGroupList[i]["groupName"];
+        obj["value"] = proxyGroupList[i]["proxies"];
+        obj["id"] = proxyGroupList[i]["id"];
         arr.push(obj);
       }
     }
@@ -123,7 +107,7 @@ export const makeProxyOptions = (proxyGroupList = []) => {
 
 export const sleep = (time) => {
   return new Promise((resolve) => {
-    setTimeout(resolve, time);
+    setTimeout(resolve, time * 1000);
   });
 };
 
@@ -161,7 +145,7 @@ export const generateRandomPassword = ({ lower, upper, num, sym, length }) => {
 export const arrayBufferToString = (buffer, encoding) => {
   let str;
   if (encoding == null) encoding = "utf8";
-  var uint8 = new Uint8Array(buffer);
+  let uint8 = new Uint8Array(buffer);
   if (encoding === "base64") {
     str = String.fromCharCode.apply(null, uint8);
     return btoa(str);

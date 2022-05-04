@@ -1,33 +1,31 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { AppInputField, AppSpacer } from "../../../component";
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
-import { fetchClaimerGroupList } from "../../../features/counterSlice";
-import { makeGroupOptions } from "../helper";
 
-function InviteJoiner({ handleMonitorToken, state, ...props }) {
-  const claimerGroupList = useSelector(fetchClaimerGroupList);
-
+function InviteJoiner({
+  handleSelectChannel,
+  handleSelectServer,
+  state,
+  ...props
+}) {
   return (
     <React.Fragment>
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
-            isSelect={true}
-            isCustomSelect={true}
-            onChange={handleMonitorToken}
+            {...props}
+            name="monitorToken"
             fieldTitle="Monitor Token"
-            placeholderText="Select Monitor token"
-            selectOptions={makeGroupOptions(claimerGroupList)}
+            placeholderText="Enter Monitor token"
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Delay (Optional)"
+            placeholderText="Delay (in seconds)"
             name="delay"
             type="number"
             min={0}
@@ -35,7 +33,32 @@ function InviteJoiner({ handleMonitorToken, state, ...props }) {
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
-      <AppSpacer spacer={10} />
+      <AppSpacer spacer={15} />
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
+          <AppInputField
+            isSelect={true}
+            name="serverIDs"
+            fieldTitle="Server"
+            placeholderText="Select Server"
+            onChange={handleSelectServer}
+            selectOptions={state.serverIDs}
+          />
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
+          <AppInputField
+            isSelect={true}
+            isMulti={true}
+            fieldTitle="Channel[s]"
+            placeholderText="Select Channels"
+            name="channelIDs"
+            onChange={handleSelectChannel}
+            selectOptions={state.channels}
+            autoClose={false}
+          />
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
+      {/* <AppSpacer spacer={10} />
       <AppInputField
         {...props}
         fieldTitle="Channel ID[s]"
@@ -46,7 +69,7 @@ function InviteJoiner({ handleMonitorToken, state, ...props }) {
         936538800027467123
         936534767688678923
         936538800027467344`}
-      />
+      /> */}
     </React.Fragment>
   );
 }

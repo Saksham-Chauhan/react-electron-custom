@@ -1,5 +1,5 @@
-import React from "react";
-import "./styles.css";
+import React from 'react'
+import './styles.css'
 import {
   SettingTopSection,
   SettingUserProfile,
@@ -7,16 +7,25 @@ import {
   SettingChromeUserSection,
   SettingProxyGroupSection,
   SettingCalimerGroupSection,
-} from "../../pages-component";
-import { useSelector } from "react-redux";
-import { AppSpacer } from "../../component";
-import { fetchLoggedUserDetails } from "../../features/counterSlice";
+} from '../../pages-component'
+import { useSelector } from 'react-redux'
+import { AppSpacer } from '../../component'
+import {
+  fetchLoggedUserDetails,
+  fetchThemsState,
+} from '../../features/counterSlice'
 
 function Setting() {
-  const userDetails = useSelector(fetchLoggedUserDetails);
+  const userDetails = useSelector(fetchLoggedUserDetails)
+  const appTheme = useSelector(fetchThemsState)
+  const theme = {
+    settingPageOuter: appTheme
+      ? 'setting-page-outer light-mode-page-section'
+      : 'setting-page-outer',
+  }
 
   return (
-    <div className="setting-page-outer">
+    <div className={theme.settingPageOuter}>
       <SettingTopSection />
       <div className="setting-page-padding">
         <AppSpacer spacer={10} />
@@ -28,7 +37,7 @@ function Setting() {
             <SettingUserProfile {...{ userDetails }} />
           </div>
         </div>
-        <AppSpacer spacer={50} />
+        <AppSpacer spacer={25} />
         <div className="setting-page-section-col">
           <div className="chrome-user-section">
             <SettingChromeUserSection />
@@ -42,7 +51,7 @@ function Setting() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Setting;
+export default Setting

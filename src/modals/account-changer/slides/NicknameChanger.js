@@ -6,8 +6,11 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
-
+import { fetchThemsState } from "../../../features/counterSlice";
+import { useSelector } from "react-redux";
 function NicknameChanger({ state, onRefresh, ...props }) {
+  const appTheme = useSelector(fetchThemsState);
+
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -17,7 +20,7 @@ function NicknameChanger({ state, onRefresh, ...props }) {
             name="delay"
             {...props}
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
@@ -35,7 +38,14 @@ function NicknameChanger({ state, onRefresh, ...props }) {
           toolTopText="Enter your server nick name"
           labelText="Nicknames"
         />
-        <div onClick={onRefresh} className="group-title btn refresh">
+        <div
+          onClick={onRefresh}
+          className={
+            appTheme
+              ? "group-title btn refresh light-mode-sidebar"
+              : "group-title btn refresh"
+          }
+        >
           <img src={refresh} alt="ref" />
         </div>
       </div>

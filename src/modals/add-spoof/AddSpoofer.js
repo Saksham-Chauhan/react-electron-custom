@@ -10,9 +10,9 @@ import {
 import {
   setModalState,
   fetchProxyGroupList,
+  fetchThemsState,
 } from "../../features/counterSlice";
 import { toastWarning } from "../../toaster";
-import { UrlRegexp } from "../../constant/regex";
 import { spooferSchema } from "../../validation";
 import { useDispatch, useSelector } from "react-redux";
 import decrement from "../../assests/images/decrement.svg";
@@ -26,6 +26,8 @@ function AddSpoofer() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const proxyGroupList = useSelector(fetchProxyGroupList);
+  const appTheme = useSelector(fetchThemsState);
+
   const [spoof, setSpoof] = useState({
     id: "",
     url: "",
@@ -100,7 +102,7 @@ function AddSpoofer() {
    * handler bind to submit btn
    */
   const handleSubmit = () => {
-    if (UrlRegexp.test(spoof.url)) {
+    if (spoof.url) {
       const result = validationChecker(spooferSchema, spoof);
       if (result) {
         for (let i = 0; i < Number(spoof.quantity); i++) {
@@ -117,11 +119,11 @@ function AddSpoofer() {
       handleCloseModal();
     }
   };
-
+  const textClass = appTheme ? "lightMode_color" : "";
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Create Spoofer</h2>
+        <h2 className={textClass}>Create Spoof Browser</h2>
       </div>
       <AppSpacer spacer={30} />
       <LabelWithToolTip
@@ -160,7 +162,7 @@ function AddSpoofer() {
           />
         </div>
         <div className="spoofer-counter">
-          <label>Quantity</label>
+          <label className={textClass}>Quantity</label>
           <div className="spoofer-counter-inner">
             <div onClick={decrementEvent}>
               <img src={decrement} alt="" />
@@ -171,6 +173,7 @@ function AddSpoofer() {
               name="quantity"
               value={spoof.quantity}
               onChange={handleChange}
+              className={appTheme ? "light-mode-input" : ""}
             />
             <div onClick={incrementEvent}>
               <img src={increment} alt="" />
@@ -191,15 +194,27 @@ function AddSpoofer() {
           onChange={handleChange}
           name="isDisableImage"
         />
-        <label>Turn {!spoof?.isDisableImage ? "ON" : "OFF"}</label>
+        <label className={textClass}>
+          Turn {!spoof?.isDisableImage ? "ON" : "OFF"}
+        </label>
       </div>
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
-        <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-          <span>Cancel</span>
+        <div
+          onClick={handleCloseModal}
+          className={
+            appTheme
+              ? "modal-cancel-btn btn light-mode-modalbtn"
+              : "modal-cancel-btn btn"
+          }
+        >
+          <span className={textClass}>Cancel</span>
         </div>
-        <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>Create</span>
+        <div
+          onClick={handleSubmit}
+          className="modal-cancel-btn submit btn btn-shadow "
+        >
+          <span className={textClass}>Create</span>
         </div>
       </div>
     </ModalWrapper>

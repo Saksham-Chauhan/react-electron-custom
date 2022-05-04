@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
-import { useSelector } from "react-redux";
-import { AppSpacer } from "../../component";
 import {
   SpooferTopSection,
   SpooferTableSection,
   SpooferTopBtnsWrraper,
 } from "../../pages-component";
+import { useSelector } from "react-redux";
+import { AppSpacer } from "../../component";
 import { searchingFunction } from "../../hooks/searchFunction";
 import { fetchSpoofTableList } from "../../features/counterSlice";
 
@@ -14,7 +14,6 @@ function Spoofer() {
   const [search, setSearch] = useState("");
   const list = useSelector(fetchSpoofTableList);
   const [tableList, setTableList] = useState([]);
-
   useEffect(() => {
     if (list.length > 0) {
       setTableList([...list]);

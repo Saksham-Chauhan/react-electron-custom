@@ -1,0 +1,17 @@
+.darkMode {
+  -webkit-app-region: no-drag;
+  position: absolute;
+  top: 16px;
+  right: 105px;
+  z-index: 101;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.darkMode > div {
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

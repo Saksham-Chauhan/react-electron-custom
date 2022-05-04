@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { InputFieldWithScrollList } from "../..";
+import { InputFieldWithScrollList, LabelWithToolTip } from "../../../component";
 import {
   addTwitterKeywordInList,
   deleteTwitterDatafromList,
 } from "../../../features/logic/twitter";
+import { toastWarning } from "../../../toaster";
 
-function KeywordScrollList({ keyWordList }) {
+function KeywordScrollList({ keyWordList, appTheme }) {
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
 
@@ -16,8 +17,12 @@ function KeywordScrollList({ keyWordList }) {
   };
 
   const handleAddKeyword = () => {
-    dispatch(addTwitterKeywordInList({ key: "KEYWORD", word: keyword }));
-    setKeyword("");
+    if (keyword) {
+      dispatch(addTwitterKeywordInList({ key: "KEYWORD", word: keyword }));
+      setKeyword("");
+    } else {
+      toastWarning("Can't leave blank, enter a keyword.");
+    }
   };
 
   const handleDeleteKeyword = (word) => {
@@ -27,7 +32,6 @@ function KeywordScrollList({ keyWordList }) {
   return (
     <div>
       <InputFieldWithScrollList
-        isComingSoon={true}
         btnProps={{ onClick: handleAddKeyword }}
         inputProps={{
           value: keyword,
@@ -37,7 +41,12 @@ function KeywordScrollList({ keyWordList }) {
         title="Keywords"
         placeHolder="Enter Keywords"
         onDelete={handleDeleteKeyword}
-      />
+        appTheme={appTheme}
+      >
+        <LabelWithToolTip delayHide={500} isCustomToolTip={true}>
+          <p className="custom-tooltip-text">Leave blank for all keywords</p>
+        </LabelWithToolTip>
+      </InputFieldWithScrollList>
     </div>
   );
 }

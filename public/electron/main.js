@@ -15,6 +15,7 @@ const linkOpernerManager = require("./script/manager/linkOpener-manager");
 const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
+var { execFile, spawn } = require("child_process");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -62,25 +63,23 @@ function createAuthWindow() {
     session: { webRequest },
   } = win.webContents;
   const filter = {
-    urls: [auth.redirect_uri],
+    urls: [auth.redirectUrl],
   };
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     try {
       await auth.loadTokens(url);
+    }
+    catch(e){
+      mainWindow.reload();
+    }
+    try{
       await auth.login();
       if (!mainWindow) return;
       mainWindow.reload();
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-      const options = {
-        type: "question",
-        defaultId: 2,
-        title: "Login Error",
-        message: "Login Failed",
-        detail: "You are not allowed to login",
-      };
-      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+      console.log(error);
     }
   });
   win.on("authenticated", () => {
@@ -122,8 +121,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1402,
     height: 800,
-    minWidth: 1402,
-    minHeight: 800,
+    // minWidth: 1402,
+    // minHeight: 800,
     resizable: true,
     frame: false,
     show: false,
@@ -424,6 +423,23 @@ ipcMain.handle("imageText", async (event, url) => {
   const {
     data: { text },
   } = await Tesseract.recognize(url, "eng");
+  // const folderPath = app.getPath("userData");
+  // const worker = Tesseract.createWorker({
+  //   cachePath: path.join(folderPath, "/tesseract"),
+  //   // logger: (m) => console.log("Log", m),
+  // });
+  // const getText = async () => {
+  //   await worker.load();
+  //   await worker.loadLanguage("eng");
+  //   await worker.initialize("eng");
+  //   const {
+  //     data: { text },
+  //   } = await worker.recognize(url);
+  //   await worker.terminate();
+  //   return text;
+  // };
+
+  // return await getText();
   return text;
 });
 
@@ -463,9 +479,9 @@ const proxyTester = async (proxy) => {
 
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
-  let proxyArr = proxy.split(":");
+  const proxyArr = proxy.split(":");
   if (proxyArr.length === 4 || proxyArr.length === 2) {
-    let proxyWithPort = proxyArr[0];
+    const proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
       ...data,
@@ -475,49 +491,49 @@ ipcMain.on("proxy-tester", async (event, data) => {
 });
 
 // NEWTORK SPEED
-async function getNetworkDownloadSpeed() {
-  const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
-  const fileSizeInBytes = 5000;
-  let speed;
-  try {
-    speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
-  } catch (e) {
-    console.log(e);
-  }
-  if (speed) {
-    return speed.kbps;
-  }
-}
+// async function getNetworkDownloadSpeed() {
+//   const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
+//   const fileSizeInBytes = 5000;
+//   let speed;
+//   try {
+//     speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   if (speed) {
+//     return speed.kbps;
+//   }
+// }
 
-async function getNetworkUploadSpeed() {
-  const options = {
-    hostname: "www.google.com",
-    port: 80,
-    path: "/catchers/544b09b4599c1d0200000289",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const fileSizeInBytes = 5000;
-  let speed;
-  try {
-    speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
-  } catch (e) {
-    console.log(e);
-  }
-  if (speed) {
-    return speed.kbps;
-  }
-}
+// async function getNetworkUploadSpeed() {
+//   const options = {
+//     hostname: "www.google.com",
+//     port: 80,
+//     path: "/catchers/544b09b4599c1d0200000289",
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   };
+//   const fileSizeInBytes = 5000;
+//   let speed;
+//   try {
+//     speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   if (speed) {
+//     return speed.kbps;
+//   }
+// }
 
-ipcMain.handle("get-speed", async () => {
-  const download = await getNetworkDownloadSpeed();
-  const upload = await getNetworkUploadSpeed();
-  return { download, upload };
-});
+// ipcMain.handle("get-speed", async () => {
+//   const download = await getNetworkDownloadSpeed();
+//   const upload = await getNetworkUploadSpeed();
+//   return { download, upload };
+// });
 
-const debugSendToRendrer = (log) => {
+const debugSendToIpcRenderer = (log) => {
   let win = mainWindow || global.mainWin;
   if (win) {
     win.webContents.send(DEBUGGER_CHANNEL, log);
@@ -525,16 +541,16 @@ const debugSendToRendrer = (log) => {
 };
 
 ipcMain.on("read-array", async (event, array) => {
-  debugSendToRendrer("Ready to read array", array);
+  debugSendToIpcRenderer("Ready to read array", array);
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
-  debugSendToRendrer(csv);
+  debugSendToIpcRenderer(csv);
   const data = await csv.toString();
-  debugSendToRendrer(data);
+  debugSendToIpcRenderer(data);
   const str = str2ab(data);
-  debugSendToRendrer(str);
+  debugSendToIpcRenderer(str);
   const url = `data:text/csv;base64,${new Buffer.from(str).toString("base64")}`;
-  debugSendToRendrer(url);
+  debugSendToIpcRenderer(url);
   await downloadCsvFileDialog(`${fileName}.csv`, url);
 });
 
@@ -567,6 +583,7 @@ ipcMain.on("export-log-report", (_, data) => {
 // ACC CHANGER IPC
 ipcMain.on("get-server-avatar", async (event, code) => {
   let url;
+  qq;
   var config = {
     method: "get",
     url: `https://discord.com/api/v9/invites/${code}`,
@@ -594,3 +611,45 @@ ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
 ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
   InviteJoinerManager.stopMonitor(id);
 });
+
+//RUN LOCAL SERVER
+ipcMain.on("run-xp-server", (_, data) => {
+  xpFarmerStart();
+});
+
+ipcMain.on("stop-xp-server", (_, data) => {
+  stopXpfarmer();
+});
+
+async function xpFarmerStart() {
+  console.log("called start");
+  const exePath = isDev
+    ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
+    : `xpfarmer.exe`;
+  try {
+    execFile(exePath, [3001], { cwd: "." }, (error, stdout, stderr) => {
+      if (error) {
+        throw error;
+      }
+      console.log(stdout);
+    });
+  } catch (e) {
+    console.log("this is error", e);
+  }
+}
+
+function stopXpfarmer() {
+  console.log("called stop");
+  try {
+    currentProcesses.get((err, processes) => {
+      const sorted = _.sortBy(processes, "cpu");
+      for (let i = 0; i < sorted.length; i += 1) {
+        if ("xpfarmer" === sorted[i].name.toLowerCase()) {
+          process.kill(sorted[i].pid);
+        }
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}

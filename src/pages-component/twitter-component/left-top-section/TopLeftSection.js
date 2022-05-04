@@ -1,12 +1,22 @@
-import React from "react";
-import { AppSpacer, AppToggler } from "../../../component";
-import "./styles.css";
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { AppSpacer, AppToggler } from '../../../component'
+import { fetchThemsState } from '../../../features/counterSlice'
+import './styles.css'
 
 function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
+  const appTheme = useSelector(fetchThemsState)
   return (
     <div>
       <div className="flex-btn-row">
-        <div style={{ padding: "0.8em" }} className="switch-with-text">
+        <div
+          style={{ padding: '0.8em' }}
+          className={
+            appTheme
+              ? 'switch-with-text light-mode-sidebar'
+              : 'switch-with-text'
+          }
+        >
           <AppToggler
             checked={twitterSetting?.twitterMonitor}
             id="turn-twitter-monitor"
@@ -14,13 +24,17 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
             onChange={handleToggle}
           />
           <span>
-            Turn {twitterSetting?.twitterMonitor ? "OFF" : "ON"} Monitor
+            Turn {twitterSetting?.twitterMonitor ? 'OFF' : 'ON'} Monitor
           </span>
         </div>
         <div
-          style={{ padding: "0.8em 1em" }}
           onClick={handleScreen}
-          className="switch-with-text with-no-toggle btn"
+          style={{ marginLeft: '20px ', paddingRight: '10px' }}
+          className={
+            appTheme
+              ? 'switch-with-text with-no-toggle btn light-mode-sidebar'
+              : 'switch-with-text with-no-toggle btn'
+          }
         >
           <span>Twitter Settings</span>
         </div>
@@ -32,7 +46,13 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
         </div>
         <AppSpacer spacer={20} />
         <div className="flex-btn-row toogle-wrapper">
-          <div className="switch-with-text">
+          <div
+            className={
+              appTheme
+                ? 'switch-with-text light-mode-sidebar'
+                : 'switch-with-text'
+            }
+          >
             <AppToggler
               checked={twitterSetting?.startAutoLinkOpener}
               id="twitter-auto-link-opener"
@@ -40,11 +60,17 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
               onChange={handleToggle}
             />
             <span>
-              {twitterSetting?.startAutoLinkOpener ? "Stop" : "Start"} Auto Link
+              {twitterSetting?.startAutoLinkOpener ? 'Stop' : 'Start'} Auto Link
               Opener
             </span>
           </div>
-          <div className="switch-with-text">
+          <div
+            className={
+              appTheme
+                ? 'switch-with-text light-mode-sidebar'
+                : 'switch-with-text'
+            }
+          >
             <AppToggler
               checked={twitterSetting?.startAutoInviteJoiner}
               id="twitter-auto-invit-joiner"
@@ -52,7 +78,7 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
               onChange={handleToggle}
             />
             <span>
-              {twitterSetting?.startAutoInviteJoiner ? "Stop" : "Start"} Auto
+              {twitterSetting?.startAutoInviteJoiner ? 'Stop' : 'Start'} Auto
               Invite Joiner
             </span>
           </div>
@@ -60,7 +86,7 @@ function TopLeftSection({ handleScreen, twitterSetting, handleToggle }) {
       </div>
       <AppSpacer spacer={30} />
     </div>
-  );
+  )
 }
 
-export default TopLeftSection;
+export default TopLeftSection

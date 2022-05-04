@@ -41,7 +41,17 @@
 - Added functionality which provide protection from interceptor tools.
 - Added toaster for download progress.
 - Added functionality of download logs file.
+
+# v0.8.6
+
+- Added giveaway joiner functionality.
+- Removed upload and download speed test component.
+- Fixed bugs in dashboard page.
+- Changed alignment of export button.
 - Fix the import proxy issue in proxy page
+
+# V0.8.7
+
 - Add export proxy in .txt format
 - Add Import-Export functionality in token group section in Setting page
 - Remove the proxy page from Router and its componenets~
@@ -49,4 +59,34 @@
 - Add the proxy rotater functionality in spoofer
 - Add the LO and IJ modal slide in Task page and also add the handlers to tem on the basis of the changer type
 - Optimize the logs manager code
-- Rewrite the rntire logic for IJ & LO in main
+- Rewrite the entire logic for IJ & LO in main
+
+# V0.8.8
+
+- Added functionality of Direct Join.
+- Added functionality of XP-Farmer.
+- Added the Minter page functionality
+- Adde the Wallet, Setting handlers with their modals
+- Added the edit functionality in minter table row
+- Fix the sidebar NFT active, default, animation issue
+- Add the send log in wallet, minter section and their modals
+
+
+# V0.9.0
+
+- Added Direct Join functionality. 
+- Added NFT Minter Page and functionality. 
+- Light mode added. 
+- Added Default option for Chrome User. 
+- Import/Export format changed to .json. 
+- Claimer Group updated to Discord Accounts. 
+- Updated format for Discord Accounts and Proxies. 
+- Added Onboarding msgs for Discord Accounts and Proxies. 
+- Added keyword functionality for Twitter Monitor. 
+- Separated Featured Tweets for Twitter Monitor. 
+- Added Local Timezone for Twitter Monitor.
+- Fixed Animation Toggler. 
+- Multi wallet functionality in Tasks Page. 
+- Activity Changer updated to Status Changer. 
+- Improved UI and UX with proper toaster and tooltips.
+

@@ -15,12 +15,14 @@ import setting from "../../assests/activeDefault/settings-active.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchLoggedUserDetails,
+  fetchThemsState,
   setModalState,
 } from "../../features/counterSlice";
 
 import rightAero from "../../assests/images/rightAeroImg.svg";
 import leftAero from "../../assests/images/leftAero.svg";
-
+import lighMode_Arrow from "../../assests/images/lighMode_Arrow.svg";
+import lightMode_leftArrow from "../../assests/images/lightMode_leftArrow.svg";
 //OPTIONS DATA
 const options = [
   { logo: linkOpner, text: "Link Opener" },
@@ -34,6 +36,7 @@ const options = [
 const WelcomeScreen = () => {
   const userDetails = useSelector(fetchLoggedUserDetails);
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
 
   const [show, setShow] = useState(true);
 
@@ -106,6 +109,7 @@ const WelcomeScreen = () => {
       });
     });
   });
+  const textClass = appTheme ? "lightMode_color" : "";
 
   return (
     <ModalWrapper>
@@ -115,7 +119,7 @@ const WelcomeScreen = () => {
         {!show ? (
           <>
             <img
-              src={leftAero}
+              src={appTheme ? lightMode_leftArrow : leftAero}
               alt=""
               className="leftAeroImg"
               id="decrease"
@@ -126,7 +130,7 @@ const WelcomeScreen = () => {
               }}
             />
             <img
-              src={rightAero}
+              src={appTheme ? lighMode_Arrow : rightAero}
               alt=""
               className="rightAeroImg"
               id="increase"
@@ -147,9 +151,9 @@ const WelcomeScreen = () => {
         {!show ? (
           <>
             <div className="info">
-              <h1>Proxy Group Tester</h1>
+              <h1 className={textClass}>Proxy Group Tester</h1>
               <AppSpacer spacer={25} />
-              <p>
+              <p className={textClass}>
                 Proxy Group allows you to create separate groups for your
                 proxies. You can create a Group by clicking ➕ on the top left,
                 can Import and/or Export bulk proxies in a group directly. You
@@ -157,9 +161,9 @@ const WelcomeScreen = () => {
                 speed, and filter all the Bad proxies based on the response.
                 <br /> <br /> <br />
               </p>
-              <h1>Link Opener</h1>
+              <h1 className={textClass}>Link Opener</h1>
               <AppSpacer spacer={25} />
-              <p>
+              <p className={textClass}>
                 Auto Link Opener allows you to monitor channels based on
                 different keywords and directly open links based on different
                 chrome profiles. You can directly Create Accounts by clicking ➕
@@ -170,22 +174,22 @@ const WelcomeScreen = () => {
               </p>
             </div>
             <div className="info">
-              <h1>Invite Joiner</h1>
+              <h1 className={textClass}>Invite Joiner</h1>
               <AppSpacer spacer={25} />
-              <p>
+              <p className={textClass}>
                 Kyro Tools gives you an option for Mass Invite Joiner. You can
                 directly Create Accounts by clicking ➕ on the top left, add
                 Account name and your Discord Token. The tool lets you select
-                Token Group that you can create on the Settings page, use
+                Discord Accounts that you can create on the Settings page, use
                 Proxies and set Delays to join links in a bulk without getting
                 noticed or rate-limited. Direct Join lets you React and Accept
                 rules to the added Invite Links based on the values entered by
                 you.
                 <br /> <br /> <br />
               </p>
-              <h1>Spoofer</h1>
+              <h1 className={textClass}>Spoofer</h1>
               <AppSpacer spacer={25} />
-              <p>
+              <p className={textClass}>
                 Spoofer lets you create multiple browser instances for your
                 tasks. You can directly enter the URL and select your Proxy
                 group to create separate instances. Clicking on Toggle All would
@@ -194,9 +198,9 @@ const WelcomeScreen = () => {
               </p>
             </div>
             <div className="info">
-              <h1>Twitter Monitor</h1>
+              <h1 className={textClass}>Twitter Monitor</h1>
               <AppSpacer spacer={25} />
-              <p>
+              <p className={textClass}>
                 Kyro Tools offer you a Blazing fast Twitter Monitor with
                 in-built Auto Link opener and Invite Joiner. You can monitor
                 Latest and Featured Tweets with features like: QR Solver, OCR
@@ -204,12 +208,12 @@ const WelcomeScreen = () => {
                 and/or delete accounts that you want to monitor.
                 <br /> <br /> <br />
               </p>
-              <h1>Settings</h1>
+              <h1 className={textClass}>Settings</h1>
               <AppSpacer spacer={25} />
-              <p>
+              <p className={textClass}>
                 Settings let you create create different Chrome Profiles that
                 can be used for Auto Link opener. You can also create separate
-                Token groups by entering multiple tokens, which can be
+                Discord Accounts by entering multiple tokens, which can be
                 modified as how you want. It lets you start and/or stop
                 Background Animation. Enter a Webhook URL to test and select
                 toggles for whichever webhooks you want to display. The user
@@ -223,13 +227,13 @@ const WelcomeScreen = () => {
         )}
         {show ? (
           <>
-            <h1>Welcome To Kyro.!</h1>
-            <h6>
+            <h1 className={textClass}>Welcome To Kyro.!</h1>
+            <h6 className={textClass}>
               Nice to meet you, {userDetails.username}#
               {userDetails.discriminator}
             </h6>
             <AppSpacer spacer={50} />
-            <h6>TOP THINGS TO DO HERE</h6>
+            <h6 className={textClass}>TOP THINGS TO DO HERE</h6>
             {options.map((item, i) => {
               return (
                 <div className="onboarding-item" key={i * 2 + "jhvcgh"}>
@@ -245,15 +249,23 @@ const WelcomeScreen = () => {
         <AppSpacer spacer={50} />
         <div className="modal-control-btns">
           <div
-            className="modal-cancel-btn btn"
+            className={
+              appTheme
+                ? "modal-cancel-btn btn light-mode-modalbtn"
+                : "modal-cancel-btn btn"
+            }
             onClick={() => {
               dispatch(setModalState("dashboardModal"));
             }}
           >
-            <span>Skip</span>
+            <span className={textClass}>Skip</span>
           </div>
           <div
-            className="modal-cancel-btn submit btn"
+            className={
+              appTheme
+                ? "modal-cancel-btn submit btn btn-shadow "
+                : " modal-cancel-btn submit btn"
+            }
             id="right"
             onClick={() => {
               setShow(false);

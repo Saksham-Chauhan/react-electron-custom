@@ -31,7 +31,6 @@ const AccountChanger = () => {
       } else setTempList([]);
     } else setTempList([...accChangerList]);
   };
-
   return (
     <div className="spoofer-page-outer-section">
       <AccountChangerTopSection list={tempList} />

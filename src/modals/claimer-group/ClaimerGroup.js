@@ -4,6 +4,7 @@ import { claimerGroupSchema } from "../../validation";
 import {
   fetchEditStorageState,
   fetchSelectedClaimerGroupState,
+  fetchThemsState,
   setEditStorage,
   setModalState,
   setSelectedClaimerGroup,
@@ -16,9 +17,12 @@ import {
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import { toastWarning } from "../../toaster";
 import { sendLogs } from "../../helper/electron-bridge";
+import discord from "../../assests/images/discord.svg";
 
 function ClaimerGroup() {
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
+
   const editState = useSelector(fetchEditStorageState);
   const selectedClaimerGroup = useSelector(fetchSelectedClaimerGroupState);
   const [claimer, setClaimer] = useState({
@@ -56,9 +60,14 @@ function ClaimerGroup() {
     let obj = { ...claimer };
     const result = validationChecker(claimerGroupSchema, obj);
     obj.claimerToken.split("\n").forEach((t) => {
-      let str = t?.split(":");
-      if (str.length === 4) {
-        valid.push(t);
+      if (!t.includes(":")) {
+        const tempStr = `::${t}`;
+        valid.push(tempStr);
+      } else {
+        let str = t?.split(":");
+        if (str.length === 3) {
+          valid.push(t);
+        }
       }
     });
     obj["claimerToken"] = valid.map((v) => v).join("\n");
@@ -74,7 +83,7 @@ function ClaimerGroup() {
             dispatch(setSelectedClaimerGroup(objClaimer));
           }
         } else {
-          const log = `New Token Group is created ${obj["name"]}`;
+          const log = `New Discord Accounts is created ${obj["name"]}`;
           sendLogs(log);
           dispatch(addGroupInClaimerList(obj));
         }
@@ -82,12 +91,14 @@ function ClaimerGroup() {
       } else toastWarning("Enter some valid token");
     }
   };
+  const textClass = appTheme ? "lightMode_color" : "clamer-title";
 
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>
-          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Token Group
+        <h2 className={textClass}>
+          {Object.keys(editState).length > 0 ? "Edit" : "Save"} Discord Accounts
+          <img src={discord} alt="discord" style={{ marginLeft: "10px" }} />
         </h2>
       </div>
       <AppSpacer spacer={30} />
@@ -105,15 +116,31 @@ function ClaimerGroup() {
         isMulti={true}
         onChange={handleChange}
         value={claimer.claimerToken}
-        placeholderText="email:username:password:token"
+        placeholderText=""
+        labelId="token"
+        hyperLink={true}
       />
       <AppSpacer spacer={30} />
       <div className="modal-control-btns">
-        <div onClick={handleCloseModal} className="modal-cancel-btn btn">
-          <span>Cancel</span>
+        <div
+          onClick={handleCloseModal}
+          className={
+            appTheme
+              ? "modal-cancel-btn btn light-mode-modalbtn"
+              : "modal-cancel-btn btn"
+          }
+        >
+          <span className={textClass}>Cancel</span>
         </div>
-        <div onClick={handleSubmit} className="modal-cancel-btn submit btn">
-          <span>{Object.keys(editState).length > 0 ? "Save" : "Create"}</span>
+        <div
+          onClick={handleSubmit}
+          className={
+            appTheme
+              ? "modal-cancel-btn submit btn btn-shadow "
+              : " modal-cancel-btn submit btn"
+          }
+        >
+          <span>Save</span>
         </div>
       </div>
     </ModalWrapper>

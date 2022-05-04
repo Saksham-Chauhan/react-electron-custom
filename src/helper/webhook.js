@@ -2,10 +2,10 @@ import axios from "axios";
 
 const KYRO_URL = "https://www.kyrotools.in/";
 const FOOTER = {
-  text: "Made with ❤️ by Koders",
+  text: "Made with ❤️  by Koders",
 };
-const TITLE = "Kyro tool";
-const THUMB_NAIL = {
+const TITLE = "Kyro Tools";
+const THUMBNAIL = {
   url: "https://cdn.discordapp.com/attachments/540447710239784971/953925375149355008/Kyros_logo.png",
 };
 
@@ -18,10 +18,10 @@ async function webhookHandler(webhook, user, title, content) {
         url: KYRO_URL,
         color: 857138,
         footer: FOOTER,
-        thumbnail: THUMB_NAIL,
+        thumbnail: THUMBNAIL,
         author: {
           name: `New Tweet By ${user.name}`,
-          url: "https://www.twitter.com/home",
+          url: user.tweet_link,
           icon_url: user.profile_url,
         },
       },
@@ -40,7 +40,7 @@ export const webhookTest = async (webhook, userName, avatarProfile) => {
         description: "Webhook test successfully",
         url: KYRO_URL,
         color: 857138,
-        thumbnail: THUMB_NAIL,
+        thumbnail: THUMBNAIL,
         author: {
           name: `Test webhook by ${userName}`,
           icon_url: avatarProfile,
@@ -66,10 +66,10 @@ export const inviteJoinerTest = async (
         description: `${serverName} server joined successfully`,
         url: KYRO_URL,
         color: 857138,
-        thumbnail: THUMB_NAIL,
+        thumbnail: THUMBNAIL,
         footer: FOOTER,
         author: {
-          name: `Link opened by ${userName}`,
+          name: `Invite joined by ${userName}`,
           icon_url: avatarProfile,
         },
       },
@@ -93,7 +93,7 @@ export const loggedUserWebhook = async (
         description: title,
         url: KYRO_URL,
         color: 857138,
-        thumbnail: THUMB_NAIL,
+        thumbnail: THUMBNAIL,
         footer: FOOTER,
       },
     ],
@@ -115,12 +115,12 @@ export const linkOpenerWebhook = async (
     embeds: [
       {
         title: TITLE,
-        description: `${link} Link Opened`,
+        description: `${link} link opened`,
         url: KYRO_URL,
         color: 857138,
-        thumbnail: THUMB_NAIL,
+        thumbnail: THUMBNAIL,
         author: {
-          name: `Invite joined by ${userName}`,
+          name: `Link opened by ${userName}`,
           icon_url: avatarProfile,
         },
         footer: FOOTER,
@@ -141,7 +141,7 @@ export const interceptorWebhook = async (title) => {
         description: title,
         url: KYRO_URL,
         color: 857138,
-        thumbnail: THUMB_NAIL,
+        thumbnail: THUMBNAIL,
         footer: FOOTER,
       },
     ],

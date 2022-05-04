@@ -8,13 +8,30 @@ import {
 import UseAnimations from "react-useanimations";
 import add from "../../../assests/images/plus.svg";
 import play from "../../../assests/images/play.svg";
+import lightModePlay from "../../../assests/images/lightMode_play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import searchIcon from "../../../assests/images/search.svg";
-import { setModalState } from "../../../features/counterSlice";
+import lightModeplush from "../../../assests/images/lightModeplus.svg";
+import lightModesearch from "../../../assests/images/lightModesearch.svg";
+import { fetchThemsState, setModalState } from "../../../features/counterSlice";
 import { apiCallToDiscord } from "../table-section/TableSection";
-
+import { useSelector } from "react-redux";
 function TopBtnsWrapper({ search, handleSearching, tempList }) {
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
+
+  const theme = {
+    btnClass: appTheme
+      ? "icon-btn-wrapper btn light-bg"
+      : "icon-btn-wrapper btn",
+    inputContainer: appTheme
+      ? "page-top-search-container light-bg"
+      : "page-top-search-container",
+    searchIcon: appTheme ? lightModesearch : searchIcon,
+    inputClass: appTheme ? "light-mode-input" : "",
+    plusIcon: appTheme ? lightModeplush : add,
+    playIcon: appTheme ? lightModePlay : play,
+  };
 
   const handleAdd = () => {
     dispatch(setModalState("accountChangerModal"));
@@ -45,14 +62,14 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
         dispatch(updateStatusOfTableRow(obj, "Running"));
         const apiResponse = await apiCallToDiscord({
           type,
-          token: tokenArr[3],
+          token: tokenArr[2],
           proxy,
           username: obj.username,
-          password: tokenArr[2],
+          password: tokenArr[1],
           guildId: obj.serverIDs,
           activityDetail: obj.activityDetails,
           nickName: obj.nicknameGenerate,
-          currentPass: tokenArr[2],
+          currentPass: tokenArr[1],
           newPass: obj.commonPassword,
           invideCodes: obj.inviteCodes,
         });
@@ -77,22 +94,23 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
   return (
     <div className="page-top-btns-wrapper">
       <div className="page-left-container">
-        <div className="page-top-search-container">
-          <img src={searchIcon} alt="search-icon" />
+        <div className={theme.inputContainer}>
+          <img src={theme.searchIcon} alt="search-icon" />
           <input
             value={search}
             onChange={handleSearching}
             placeholder="Search"
             type="search"
+            className={theme.inputClass}
           />
         </div>
-        <div onClick={handleAdd} className="icon-btn-wrapper btn">
-          <img src={add} alt="" />
+        <div onClick={handleAdd} className={theme.btnClass}>
+          <img src={theme.plusIcon} alt="" />
         </div>
-        <div onClick={handlePlayAll} className="icon-btn-wrapper btn">
-          <img src={play} alt="" />
+        <div onClick={handlePlayAll} className={theme.btnClass}>
+          <img src={theme.playIcon} alt="" />
         </div>
-        <div onClick={handleDeleteAll} className="icon-btn-wrapper btn">
+        <div onClick={handleDeleteAll} className={theme.btnClass}>
           <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
         </div>
       </div>

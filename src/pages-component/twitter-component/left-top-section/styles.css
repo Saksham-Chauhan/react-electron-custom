@@ -1,14 +1,39 @@
 .custom-twitter-label > h3 {
   font-weight: 500;
-  font-size: 17.525px;
+  font-size: 17px;
   line-height: 26px;
   color: var(--primary);
 }
 .toogle-wrapper {
   justify-content: space-between;
 }
-.toogle-wrapper > .switch-with-text {
-  max-width: unset;
+.switch-with-text {
+  display: flex;
+  background: var(--sidebar-bg);
+  border-radius: 5px;
+  align-items: center;
+}
+.switch-with-text > span {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 13.1437px;
+  line-height: 20px;
+  margin-left: 0.8em;
+}
+.flex-btn-row {
+  display: flex;
+}
+.flex-btn-row > div.switch-monitor {
+  width: 40.5%;
+  padding: 0.8em 1em;
+}
+.flex-btn-row.page-handlers > div:last-of-type {
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  margin-left: 1em;
+}
+.flex-btn-row.toogle-wrapper > .switch-with-text {
+  padding: 0.8em 1em;
   width: 48.5%;
-  padding: 0.8em;
 }

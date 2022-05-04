@@ -19,7 +19,95 @@
   right: 0;
   top: -0.5em;
 }
+.flex-col {
+  flex-direction: column;
+}
 .refresh > img {
   position: absolute;
   left: 5px;
+}
+.custom-btn-right {
+  position: absolute;
+  right: 0;
+  bottom: -18%;
+  z-index: 2;
+}
+.custom-btn-left {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  bottom: -18%;
+}
+/* DIRECT JOIN AND MASS JOIN */
+.toogler-group-dj {
+  width: 70%;
+  justify-content: space-between;
+}
+.toggler-btn-label {
+  color: var(--primary);
+  width: 100%;
+}
+.toggler-slide-one {
+  justify-content: space-between;
+  width: 60%;
+  font-size: 12px;
+}
+.toggler-btn-label > .custom-toggler-btn {
+  justify-content: space-between;
+  width: 21%;
+}
+.toggler-btn-label > label {
+  font-size: 13.149px;
+}
+.toggler-btn-label > .custom-toggler-btn > label {
+  font-size: 13.149px;
+  line-height: 20px;
+}
+.react-fields {
+  justify-content: space-between;
+}
+.react-fields > div {
+  width: 30%;
+}
+.emoji-tray-picker {
+  position: absolute;
+  z-index: 2;
+  left: 51%;
+  top: 1%;
+}
+.joiner-custom-toggle {
+  display: flex;
+  justify-content: space-between;
+}
+.joiner-custom-toggle > label {
+  margin-left: 5px;
+}
+.react-joiner-setting-section {
+  display: flex;
+  justify-content: space-between;
+}
+.react-joiner-setting-section > div {
+  width: 32%;
+}
+.emoji-tray-picker {
+  position: absolute;
+  z-index: 2;
+  left: 51%;
+  top: 6%;
+}
+.mj-slide {
+  padding: 0 5px;
+}
+
+.css-g1d714-ValueContainer {
+  overflow-y: scroll !important;
+  height: 55px !important;
+}
+
+.css-g1d714-ValueContainer::-webkit-scrollbar {
+  width: 5px;
+}
+.css-g1d714-ValueContainer::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-bg);
+  border-radius: 10px;
 }

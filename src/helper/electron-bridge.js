@@ -27,7 +27,7 @@ const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
 const updateNotAvailable = (callback) =>
   ipcRenderer.on("update:not-avail", () => callback());
 
-const fetchNetworkSpeed = () => ipcRenderer.invoke("get-speed");
+// const fetchNetworkSpeed = () => ipcRenderer.invoke("get-speed");
 
 // Spoof IPC
 const startSpoofer = (spoof) => ipcRenderer.send("start-spoofer", spoof);
@@ -98,7 +98,17 @@ const updateStatusLOmonitor = (callback) =>
 const webhookNotificationListener = (callback) =>
   ipcRenderer.on("webhook-status", (_, status) => callback(status));
 
+// XP-FARMER
+const startXpFarmer = (value) => {
+  ipcRenderer.send("run-xp-server", value);
+};
+const stopXpFarmer = (value) => {
+  ipcRenderer.send("stop-xp-server", value);
+};
+
 module.exports = {
+  stopXpFarmer,
+  startXpFarmer,
   getURL,
   checkForURL,
   interceptorFound,
@@ -117,7 +127,7 @@ module.exports = {
   proxyTestResultListener,
   updateNotAvailable,
   checkForUpdates,
-  fetchNetworkSpeed,
+  // fetchNetworkSpeed,
   decodeUser,
   authUser,
   logoutUser,

@@ -4,6 +4,9 @@ import {
   setModalState,
   setEditStorage,
   fetchClaimerGroupList,
+  fetchThemsState,
+  fetchTwitterClaimerGroupState,
+  fetchTwitterSettingState,
 } from "../../../features/counterSlice";
 import {
   readTokenGroupFromFile,
@@ -11,8 +14,8 @@ import {
 } from "../../../features/logic/setting";
 import { downloadLogs } from "../../../helper";
 import { toastWarning } from "../../../toaster";
-import { AppSpacer } from "../../../component";
-import edit from "react-useanimations/lib/edit";
+import { AppSpacer, Tooltip } from "../../../component";
+import edit from "../../../assests/images/edit.svg";
 import UseAnimations from "react-useanimations";
 import plus from "../../../assests/images/plus.svg";
 import trash2 from "react-useanimations/lib/trash2";
@@ -23,73 +26,104 @@ import { useDispatch, useSelector } from "react-redux";
 function CalimerGroup() {
   const dispatch = useDispatch();
   const list = useSelector(fetchClaimerGroupList);
+  const appTheme = useSelector(fetchThemsState);
+  const usedGroup = useSelector(fetchTwitterClaimerGroupState);
+  const twitterSetting = useSelector(fetchTwitterSettingState);
 
+  const theme = {
+    btnClass: appTheme
+      ? "import-file-btn btn light-mode-sidebar "
+      : "import-file-btn btn",
+    claimerGroupScroll: appTheme
+      ? "claimer-group-list-scroll-list light-bg"
+      : "claimer-group-list-scroll-list",
+
+    textColor: appTheme ? "lightMode_color" : "",
+  };
   const handleOpenModal = () => {
-    dispatch(setModalState("claimerGroup"));
+    dispatch(setModalState("clamerOnboardingScreen"));
   };
 
   const handleEdit = (group) => {
     dispatch(setEditStorage(group));
-    handleOpenModal();
+    dispatch(setModalState("claimerGroup"));
   };
 
   const handleDelete = (group) => {
-    dispatch(deleteClaimerGroupFromList(group));
+    if (usedGroup.id === group.id && twitterSetting.startAutoInviteJoiner) {
+      toastWarning("Token in use on Twitter Page");
+    } else {
+      dispatch(deleteClaimerGroupFromList(group));
+    }
   };
 
   const handleImportTokenGroup = (e) => {
-    const { files } = e.target;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const tknStr = event.target.result;
-      const fileName = files[0].name.split(".")[0];
-      dispatch(readTokenGroupFromFile({ name: fileName, tokenArr: tknStr }));
-    };
-    reader.readAsText(files[0]);
+    const json = window.require(e.target.files[0].path);
+    const groups = Object.keys(json);
+    const Tokens = Object.values(json);
+    for (let i = 0; i < groups.length; i++) {
+      const tempStr = Tokens[i].join("\n");
+      let flag = true;
+      for (let j = 0; j < list.length; j++) {
+        if (list[j].name === groups[i]) {
+          flag = false;
+          break;
+        }
+      }
+      if (flag) {
+        dispatch(
+          readTokenGroupFromFile({ name: groups[i], tokenArr: tempStr })
+        );
+      }
+    }
   };
-
   const handleExportTokenGroup = () => {
     if (list.length > 0) {
       downloadLogs(list, "token");
-    } else toastWarning("No token group to export!!");
+    } else toastWarning("No discord accounts to export!!");
   };
 
   return (
-    <div className="claimer-group-outer">
+    <div className=" claimer-group-outer ">
       <div className="claimer-flex">
-        <h3>Token Group</h3>
+        <Tooltip
+          {...{ id: "import", text: "Import Discord Accounts/Tokens" }}
+        />
+        <Tooltip
+          {...{ id: "export", text: "Export Discord Accounts/Tokens" }}
+        />
+        <h3 className={appTheme ? "lightMode_color" : ""}>Discord Tokens</h3>
         <div className="claimer-btns">
-          <div className="import-file-btn btn">
-            <img src={importIcon} alt="" />
+          <div className={theme.btnClass} data-tip data-for="import">
+            <img src={importIcon} alt="imp" />
             <input
               onChange={handleImportTokenGroup}
               id="token-group-import-btn"
               type="file"
-              accept=".txt"
+              accept=".json"
             />
             <label htmlFor="token-group-import-btn" />
           </div>
-          <div onClick={handleExportTokenGroup} className="btn">
+          <div
+            onClick={handleExportTokenGroup}
+            className={theme.btnClass}
+            data-tip
+            data-for="export"
+          >
             <img src={exportIcon} alt="" />
           </div>
-          <div onClick={handleOpenModal} className="btn">
+          <div onClick={handleOpenModal} className={theme.btnClass}>
             <img src={plus} alt="" />
           </div>
         </div>
       </div>
       <AppSpacer spacer={14} />
-      <div className="claimer-group-list-scroll-list">
+      <div className={theme.claimerGroupScroll}>
         {list.map((group) => (
           <div key={group["id"]} className="claimer-group-list-item">
-            <span>{group["name"]}</span>
+            <span className={theme.textColor}>{group["name"]}</span>
             <div className="claimer-group-item-action">
-              <UseAnimations
-                onClick={() => handleEdit(group)}
-                animation={edit}
-                strokeColor="#ffff"
-                size={20}
-                wrapperStyle={{ cursor: "pointer" }}
-              />
+              <img src={edit} alt="edit" onClick={() => handleEdit(group)} />
               <UseAnimations
                 onClick={() => handleDelete(group)}
                 animation={trash2}

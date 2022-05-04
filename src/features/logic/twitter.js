@@ -91,5 +91,7 @@ export const resetTwitterMonitor = () => (dispatch, getState) => {
   const currentSetting = fetchTwitterSettingState(getState());
   let tempSetting = { ...currentSetting };
   tempSetting["twitterMonitor"] = false;
+  tempSetting["startAutoInviteJoiner"] = false;
+  tempSetting["startAutoLinkOpener"] = false;
   dispatch(setTwitterSetting(tempSetting));
 };

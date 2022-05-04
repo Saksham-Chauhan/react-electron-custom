@@ -24,17 +24,17 @@ function isDiscordInvite(url) {
 //   return istwitterLink ? true : false;
 // }
 
-// function include(urls, Includekeywords) {
-//   let filteredUrls = [];
-//   for (let i in Includekeywords) {
-//     for (let j in urls) {
-//       if (urls[j].includes(Includekeywords[i])) {
-//         filteredUrls.push(urls[j]);
-//       }
-//     }
-//   }
-//   return filteredUrls;
-// }
+function include(urls, Includekeywords) {
+  let filteredUrls = [];
+  for (let i in Includekeywords) {
+    for (let j in urls) {
+      if (urls[j].includes(Includekeywords[i])) {
+        filteredUrls.push(urls[j]);
+      }
+    }
+  }
+  return filteredUrls;
+}
 // function exclude(urls, Excludekeywords) {
 //   let filteredUrls = [...urls];
 //   for (let i in Excludekeywords) {
@@ -152,7 +152,7 @@ const extractDataFromTweet = (tweetObj) => {
 const utils = {
   // inviteJoiner,
   // linkOpener,
-
+  include,
   isEmpty,
   isDiscordInvite,
   extractDataFromTweet,

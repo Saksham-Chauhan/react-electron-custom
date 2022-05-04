@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./styles.css";
 import Chance from "chance";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   updateStatusOfTableRow,
   deleteDataFromTableList,
@@ -9,90 +9,188 @@ import {
 } from "../../../features/logic/acc-changer";
 import TableRow from "../table-row/TableRow";
 import { toastWarning } from "../../../toaster";
-import { generateRandomAvatar, getProxy } from "../../../api";
+import { directDiscordJoinAPI, generateRandomAvatar } from "../../../api";
 import { generateRandomPassword, sleep } from "../../../helper";
 import {
   readArrayOfJson,
   startInviteJoinerMonitor,
   startLinkOpenerMonitor,
+  startXpFarmer,
   stopInviteJoinerMonitor,
   stopLinkOpenerMonitor,
+  stopXpFarmer,
 } from "../../../helper/electron-bridge";
 import serverLeaverAPI from "../../../api/account-changer/leave-server";
 import tokenCheckerAPI from "../../../api/account-changer/token-checker";
 import avatarChangeAPI from "../../../api/account-changer/avatar-changer";
-import massInviteJoinerAPI from "../../../api/account-changer/mass-joiner";
 import usernameChangerAPI from "../../../api/account-changer/username-changer";
 import activityChangerAPI from "../../../api/account-changer/activity-changer";
 import nicknameChangerAPI from "../../../api/account-changer/nickname-changer";
 import passwordChangerAPI from "../../../api/account-changer/password-changer";
+import tokenChanger from "../../../api/account-changer/token-changer";
+import { toastInfo } from "../../../toaster";
+import { replyList } from "../../../constant";
+import xpFarmer from "../../../api/account-changer/xp-farmer";
+import { fetchThemsState } from "../../../features/counterSlice";
+
+const { Client } = window.require("discord.js-selfbot");
+
+let status = false;
 
 function TableSection({ list }) {
+  let flag = useRef(false);
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
+  const theme = {
+    tableHeader: appTheme
+      ? "acc-chnager-page-table-header light-mode-sidebar"
+      : "acc-chnager-page-table-header",
+  };
 
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
   };
-
   const handlePlay = async (obj) => {
+    flag.current = !flag.current;
+    status = flag.current;
     const type = obj["changerType"];
-    const { proxyGroup, claimerGroup } = obj;
-    const tokenArray = claimerGroup["value"]?.split("\n");
-    if (type === "linkOpener") {
-      startLinkOpenerMonitor(obj);
-    } else if (type === "inviteJoiner") {
-      startInviteJoinerMonitor(obj);
-    } else {
-      for (let index = 0; index < tokenArray.length; index++) {
-        const token = tokenArray[index];
-        const tokenArr = token?.split(":");
-        const proxyArray = proxyGroup["value"].split("\n");
-        for (let j = 0; j < proxyArray.length; j++) {
-          const proxy = getProxy(proxyArray);
-          dispatch(updateStatusOfTableRow(obj, "Running"));
-          const apiResponse = await apiCallToDiscord({
-            type,
-            token: tokenArr[3],
-            proxy,
-            username: obj.username,
-            password: tokenArr[2],
-            guildId: obj.serverIDs,
-            activityDetail: obj.activityDetails,
-            nickName: obj.nicknameGenerate,
-            currentPass: tokenArr[2],
-            newPass: obj.commonPassword,
-            invideCodes: obj.inviteCodes,
-            avatarAPI: obj.url,
-          });
-          if (apiResponse !== null) {
-            if (apiResponse.status === 200) {
-              let tempObj = { ...obj };
-              let arr = [];
-              let user = [];
-              if (type === "passwordChanger") {
-                let newPass = JSON.parse(apiResponse.config.data)[
-                  "new_password"
-                ];
-                let tempuser = apiResponse.data.username;
-                arr.push(newPass);
-                user.push(tempuser);
-                if (index > 0) {
-                  arr = [...tempObj["newPass"].split("\n"), ...arr];
-                  user = [...tempObj["username"].split("\n"), ...user];
-                }
-                tempObj["newPass"] = arr.join("\n");
-                tempObj["username"] = user.join("\n");
-                tempObj["status"] = "Completed";
-                dispatch(updatePasswordChangerStatus(tempObj));
-              } else {
-                dispatch(updateStatusOfTableRow(tempObj, "Completed"));
+    if (type === "giveawayJoiner" && obj.status !== "Monitoring") {
+      const monitor = new Client();
+      monitor.login(obj.token);
+      try {
+        monitor.on("ready", () => {
+          toastInfo("Giveaway Joiner ready!!");
+          dispatch(updateStatusOfTableRow(obj, "Monitoring"));
+        });
+        monitor.on("message", async (message) => {
+          const embed = message.embeds[0];
+          const serverId = message.channel.guild.id;
+          const authorId = message.author.id;
+          if (serverId === obj.serverid) {
+            if (authorId === obj.botid) {
+              if (
+                embed.title.toLowerCase().includes("google") &&
+                embed.description.toLowerCase().includes("search")
+              ) {
+                await message.react("🎉");
+                let x = Math.floor(Math.random() * replyList.length + 1);
+                message.channel.startTyping();
+                setTimeout(function () {
+                  message.channel.stopTyping();
+                  message.channel.send(replyList[x]);
+                }, obj.delay);
               }
-              break;
             }
-          } else {
-            dispatch(updateStatusOfTableRow(obj, "Stopped"));
           }
-          await sleep(Number(obj.delay) || 3000);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      let ind = 0;
+      const { proxyGroup, claimerGroup } = obj;
+      const tokenArray = claimerGroup["value"]?.split("\n");
+      if (type === "linkOpener") {
+        startLinkOpenerMonitor(obj);
+      } else if (type === "inviteJoiner") {
+        startInviteJoinerMonitor(obj);
+      } else {
+        if (type === "xpFarmer") {
+          dispatch(updateStatusOfTableRow(obj, "Running"));
+          startXpFarmer();
+        }
+        if (
+          obj.claimerGroup.value.split("\n").length >
+          obj.proxyGroup.value.split("\n").length
+        )
+          toastWarning(
+            "You are might banned because proxy is less than tokens"
+          );
+        for (let index = 0; index < tokenArray.length; index++) {
+          const token = tokenArray[index];
+          const tokenArr = token?.split(":");
+          const proxyArray = proxyGroup["value"].split("\n");
+          for (let j = 0; j < proxyArray.length; j++) {
+            let proxySplit = proxyArray[j]?.split(":");
+            const proxy = {
+              host: proxySplit[0],
+              port: proxySplit[1],
+              auth: {
+                username: proxySplit[2],
+                password: proxySplit[3],
+              },
+            };
+            dispatch(updateStatusOfTableRow(obj, "Running"));
+            await sleep(obj.delay);
+            const apiResponse = await apiCallToDiscord({
+              type,
+              token: tokenArr[2],
+              proxy,
+              username: obj.username,
+              password: tokenArr[1],
+              guildId: obj.serverIDs,
+              activityDetail: obj.activityDetails,
+              nickName: obj.nicknameGenerate,
+              newPass: obj.commonPassword,
+              invideCodes: obj.inviteCodes,
+              avatarAPI: obj.apiInfo,
+              email: tokenArr[0],
+              channelID: obj.channelId,
+              delay: obj.delay,
+              flagDec: flag.current,
+              settingObj: obj,
+            });
+            if (apiResponse !== null) {
+              if (apiResponse.status === 200 || apiResponse.status === 204) {
+                let tempObj = { ...obj };
+                let arr = [];
+                let user = [];
+                let emailArr = [];
+
+                if (type === "passwordChanger" || type === "tokenRetrieve") {
+                  if (type === "passwordChanger") {
+                    let newPass = JSON.parse(apiResponse.config.data)[
+                      "new_password"
+                    ];
+                    let tempuser = apiResponse.data.username;
+                    arr.push(newPass);
+                    user.push(tempuser);
+                    if (index > 0) {
+                      arr = [...tempObj["newPass"].split("\n"), ...arr];
+                      user = [...tempObj["username"].split("\n"), ...user];
+                    }
+                    tempObj["newPass"] = arr.join("\n");
+                    tempObj["username"] = user.join("\n");
+                    tempObj["status"] = "Completed";
+                    dispatch(updatePasswordChangerStatus(tempObj));
+                  }
+
+                  if (type === "tokenRetrieve") {
+                    let newToken = apiResponse.data.token;
+                    arr.push(newToken);
+                    user.push(tokenArr[1]);
+                    emailArr.push(tokenArr[0]);
+                    if (ind > 0) {
+                      arr = [...tempObj["newToken"].split("\n"), ...arr];
+                      user = [...tempObj["newUsername"].split("\n"), ...user];
+                      emailArr = [...tempObj["email"].split("\n"), ...user];
+                    }
+                    tempObj["newToken"] = arr.join("\n");
+                    tempObj["newUsername"] = user.join("\n");
+                    tempObj["email"] = emailArr.join("\n");
+                    tempObj["status"] = "Completed";
+                    dispatch(updatePasswordChangerStatus(tempObj));
+                    ind = ind + 1;
+                  }
+                } else {
+                  dispatch(updateStatusOfTableRow(tempObj, "Completed"));
+                }
+                break;
+              }
+            } else {
+              dispatch(updateStatusOfTableRow(obj, "Stopped"));
+            }
+          }
         }
       }
     }
@@ -113,10 +211,30 @@ function TableSection({ list }) {
       }
       readArrayOfJson(arrOfObj);
     }
+    if (type === "tokenRetrieve") {
+      const { newToken, newUsername, email } = obj;
+      let userNameArr = newUsername.split("\n");
+      let tokenArr = newToken.split("\n");
+      let newEmail = email.split("\n");
+      for (let i = 0; i < userNameArr.length; i++) {
+        let obj = {};
+        obj["token"] = tokenArr[i];
+        obj["password"] = userNameArr[i];
+        obj["email"] = newEmail[i];
+        arrOfObj.push(obj);
+      }
+      readArrayOfJson(arrOfObj);
+    }
   };
 
   const handleStop = (obj) => {
+    flag.current = !flag.current;
+    status = flag.current;
     const type = obj["changerType"];
+    if (type === "xpFarmer") {
+      stopXpFarmer();
+      dispatch(updateStatusOfTableRow(obj, "Stopped"));
+    }
     if (type === "linkOpener") {
       stopLinkOpenerMonitor(obj.id);
     } else if (type === "inviteJoiner") {
@@ -127,10 +245,10 @@ function TableSection({ list }) {
   return (
     <div className="acc-changer-page-table-section">
       <div className="acc-chnager-table-header-parent">
-        <div className="acc-chnager-page-table-header">
+        <div className={theme.tableHeader}>
           <div>#</div>
+          <div>{"Discord Accounts"}</div>
           <div>Type</div>
-          <div>Token Group</div>
           <div>Status</div>
           <div>Actions</div>
         </div>
@@ -143,6 +261,7 @@ function TableSection({ list }) {
             onPlay={handlePlay}
             onStop={handleStop}
             onDownload={handleDownload}
+            selectedCard={obj}
             {...{ obj }}
             key={obj.id}
           />
@@ -162,35 +281,59 @@ export const apiCallToDiscord = async ({
   password,
   activityDetail,
   nickName,
-  currentPass,
   newPass,
   username,
   invideCodes,
   avatarAPI,
+  email,
+  channelID,
+  delay,
+  settingObj,
 }) => {
+  const tokenMsg = "Invalid format, token not found in Discord Accounts.";
+  const passMsg = "Invalid format, password not found.";
+  const emailMsg = "Invalid format, email not found.";
   if (type === "avatarChanger") {
     let response;
     let randomImage;
-    if (avatarAPI === "customAPI") {
-      randomImage = await generateRandomAvatar(avatarAPI);
-    } else {
+    if (avatarAPI.label === "Default API") {
       randomImage = await generateRandomAvatar();
+    } else {
+      randomImage = await generateRandomAvatar(avatarAPI.value);
     }
     response = await avatarChangeAPI(token, randomImage, proxy);
     if (response.status === 200) {
       return response;
     } else {
+      if (!token) {
+        toastWarning(tokenMsg);
+        return null;
+      }
+      if (!randomImage) {
+        toastWarning("Invalid format, please select api.");
+        return null;
+      }
       toastWarning(response.response.data.message);
       return null;
     }
   } else if (type === "serverLeaver") {
-    let serverIdArray = guildId.split("\n");
+    let serverIdArray;
+    try {
+      serverIdArray = guildId.split("\n");
+    } catch (e) {
+      toastWarning("Server id is blank.");
+      return null;
+    }
     for (let i = 0; i < serverIdArray.length; i++) {
       const response = await serverLeaverAPI(token, serverIdArray[i], proxy);
       if (response.status === 200 || response.status === 204) {
         return response;
       } else {
-        toastWarning(response.response.data.message);
+        if (!token) {
+          toastWarning(tokenMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
         return null;
       }
     }
@@ -204,7 +347,13 @@ export const apiCallToDiscord = async ({
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!token) {
+        toastWarning(tokenMsg);
+      } else {
+        if (!password) {
+          toastWarning(passMsg);
+        } else toastWarning(response.response.data.message);
+      }
       return null;
     }
   } else if (type === "activityChanger") {
@@ -212,7 +361,11 @@ export const apiCallToDiscord = async ({
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!token) {
+        toastWarning(tokenMsg);
+      } else {
+        toastWarning(response.response.data.message);
+      }
       return null;
     }
   } else if (type === "nicknameChanger") {
@@ -228,7 +381,11 @@ export const apiCallToDiscord = async ({
       if (response.status === 200) {
         return response;
       } else {
-        toastWarning(response.response.data.message);
+        if (!token) {
+          toastWarning(tokenMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
         return null;
       }
     }
@@ -243,11 +400,19 @@ export const apiCallToDiscord = async ({
         length: 18,
       });
     }
-    const response = await passwordChangerAPI(token, currentPass, pass, proxy);
+    const response = await passwordChangerAPI(token, password, pass, proxy);
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!token) {
+        toastWarning(tokenMsg);
+      } else {
+        if (!password) {
+          toastWarning(passMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
+      }
       return null;
     }
   } else if (type === "tokenChecker") {
@@ -255,21 +420,75 @@ export const apiCallToDiscord = async ({
     if (response.status === 200) {
       return response;
     } else {
-      toastWarning(response.response.data.message);
+      if (!token) {
+        toastWarning(tokenMsg);
+      } else {
+        toastWarning(response.response.data.message);
+      }
       return null;
     }
   } else if (type === "massInviter") {
     const inviteCodeList = invideCodes?.split("\n");
     for (let i = 0; i < inviteCodeList.length; i++) {
       let code = inviteCodeList[i];
-      const response = await massInviteJoinerAPI(code, token, proxy);
-
+      const response = await directDiscordJoinAPI(
+        proxy,
+        code,
+        token,
+        settingObj
+      );
       if (response.status === 200) {
         return response;
       } else {
-        toastWarning(response.response.data.message);
+        if (!token) {
+          toastWarning(tokenMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
         return null;
       }
     }
+  } else if (type === "tokenRetrieve") {
+    const response = await tokenChanger(proxy, email, password);
+    if (response.status === 200) {
+      return response;
+    } else {
+      if (!email) {
+        toastWarning(emailMsg);
+      } else {
+        if (!password) {
+          toastWarning(passMsg);
+        } else {
+          toastWarning(response.response.data.message);
+        }
+      }
+      return null;
+    }
+  } else if (type === "xpFarmer") {
+    if (status) {
+      const res = await callApis(proxy, channelID, token, delay);
+      return res;
+    } else return null;
   }
+};
+
+export const callApis = async (proxy, channelID, token, delay = "") => {
+  let response = null;
+  let delayTime = delay ? delay : 1000;
+  response = await xpFarmer(proxy, channelID, token);
+  await sleep(delayTime);
+  if (status) {
+    callApis(proxy, channelID, token, delayTime);
+  }
+  if (response.status === 200) {
+    return response;
+  } else {
+    if (!token) {
+      toastWarning("Invalid format, token not found in Discord Accounts");
+    } else {
+      toastWarning(response.response.data.message);
+    }
+    status = false;
+  }
+  return null;
 };

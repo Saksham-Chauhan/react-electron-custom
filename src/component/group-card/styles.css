@@ -3,50 +3,60 @@
 }
 
 .group-card-inner {
-  display: flex;
-  align-items: center;
   padding: 0.8em;
   background: var(--card-bg);
   border-radius: 4px;
-  height: 61px;
+  height: 75px;
 }
-.group-card-inner.active-card,
-.group-card-inner:hover {
-  background: var(--active-card);
-  cursor: pointer;
+
+.groupCard_heading {
+  display: flex;
+  align-items: center;
 }
-.group-card-content {
-  display: block;
-  margin-left: 10px;
+.groupCard_heading img {
+  height: 20px;
+  width: 20px;
 }
-.group-card-content > h5 {
+
+.groupCard_heading h5 {
   font-weight: 600;
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 15px;
+  line-height: 15px;
   color: var(--primary);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.group-card-content > p {
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--primary);
-}
-.group-card-icon > img {
-  height: 18px;
-}
-.action-col-icon {
+
+.groupCard_Status {
   display: flex;
   align-items: center;
 }
-.action-col-icon > img {
+
+.stausIcons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  margin-right: 0.9em;
+}
+
+.stausIcons > img {
+  object-fit: contain;
   height: 12px;
-  width: 16px;
+  margin-right: 0.3em;
 }
-.action-col-icon > img:first-of-type {
-  margin-right: 0.5em;
+
+.stausIcons span {
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.group-card-content.clip-text {
-  width: 100px;
-  overflow: hidden;
+
+.group-card-inner:hover,
+.group-card-inner.activeNft {
+  background: var(--active-card) !important;
+  cursor: pointer;
 }

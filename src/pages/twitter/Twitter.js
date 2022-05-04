@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import {
+  TwitterTopLeftSection,
+  TwitterPageTopSection,
+  TwitterPageCardScroll,
+  TwitterUserListSection,
+  TwitterKeywordListSection,
+} from "../../pages-component";
+import {
+  fetchThemsState,
   setTwitterSetting,
   clearTweetsFeeder,
   fetchAPIlistState,
@@ -8,31 +16,24 @@ import {
   fetchTwitterUserList,
   fetchApiRotaterIndex,
   fetchLatestTweetList,
+  fetchWebhookListState,
   fetchFeatureTweetList,
   fetchTwitterKeywordList,
   fetchTwitterSettingState,
   fetchWebhookSettingState,
-  fetchWebhookListState,
   fetchTwitterClaimerGroupState,
   fetchTwitterChromeUserState,
 } from "../../features/counterSlice";
-import {
-  TwitterTopLeftSection,
-  TwitterPageTopSection,
-  TwitterPageCardScroll,
-  TwitterUserListSection,
-  TwitterKeywordListSection,
-} from "../../pages-component";
 import { AppSpacer } from "../../component";
-import { toastSuccess, toastWarning } from "../../toaster";
+import { discordServerInviteAPI } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
 import tweetHelper from "./utils/feature-tweets/helper";
-import { getTweets, sendLogs } from "../../helper/electron-bridge";
 import { TweetHandlerRegExp } from "../../constant/regex";
+import { toastSuccess, toastWarning } from "../../toaster";
 import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
+import { getTweets, sendLogs } from "../../helper/electron-bridge";
 import { appendNewTweetInList } from "../../features/logic/twitter";
-import { discordServerInviteAPI } from "../../api";
 
 const open = window.require("open");
 
@@ -40,6 +41,7 @@ const TWEET_FETCH_TIME = process.env.NODE_ENV === "development" ? 1000 : 100;
 
 function Twitter() {
   const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
   const apiList = useSelector(fetchAPIlistState);
   const userList = useSelector(fetchTwitterUserList);
   const [settingPage, setSettingPage] = useState(false);
@@ -53,6 +55,8 @@ function Twitter() {
   const selectedChrome = useSelector(fetchTwitterChromeUserState);
   const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
 
+  // console.log(twitterSetting);
+
   useEffect(() => {
     let timer = null;
     const fetchTweets = () => {
@@ -60,8 +64,8 @@ function Twitter() {
         userList.forEach(async (tweetUser) => {
           if (TweetHandlerRegExp.test(tweetUser["value"])) {
             const newTweets = await getTweets(
-              apiList[rotaterIndex].apiKey,
-              apiList[rotaterIndex].apiSecret,
+              apiList[rotaterIndex]?.apiKey,
+              apiList[rotaterIndex]?.apiSecret,
               tweetUser["value"]
             );
             if (newTweets !== undefined && typeof newTweets !== "string") {
@@ -85,7 +89,18 @@ function Twitter() {
                   );
                 }
                 if (ft.featured_type) {
-                  dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
+                  if (
+                    ft.featured_type === "URLs extracted" &&
+                    ft.urlsExtracted?.length > 0
+                  ) {
+                    dispatch(
+                      appendNewTweetInList({ key: "FEATURE", tweet: ft })
+                    );
+                  } else if (ft.featured_type !== "URLs extracted") {
+                    dispatch(
+                      appendNewTweetInList({ key: "FEATURE", tweet: ft })
+                    );
+                  }
                   if (
                     ft.urlsExtracted?.length > 0 &&
                     !(ft["tweet_id"] in latestTweetList)
@@ -97,11 +112,11 @@ function Twitter() {
                           let tokenArray = selectedClaimer["value"].split("\n");
                           tokenArray.forEach(async (token) => {
                             const tkn =
-                              token?.split(":")[3]?.substring(0, 4) + "## ##";
+                              token?.split(":")[2]?.substring(0, 4) + "## ##";
                             try {
                               const info = await discordServerInviteAPI(
                                 inviteCode,
-                                token?.split(":")[3]
+                                token?.split(":")[2]
                               );
                               if (info.status === 200) {
                                 let log = `Successfully Joined ${info.data.guild.name} with ${tkn}`;
@@ -149,14 +164,14 @@ function Twitter() {
                 }
               }
             } else {
-              const log = `${newTweets} with ${apiList[rotaterIndex].apiName}`;
+              const log = `${newTweets} with ${apiList[rotaterIndex]?.apiName}`;
               sendLogs(log);
               dispatch(incrementApiRotater());
             }
           }
         });
       } catch (error) {
-        const log = `${error.message} ${apiList[rotaterIndex].apiName}`;
+        const log = `${error.message} ${apiList[rotaterIndex]?.apiName}`;
         sendLogs(log);
         dispatch(incrementApiRotater());
       }
@@ -193,6 +208,8 @@ function Twitter() {
     const { name, checked } = event.target;
     prevState[name] = checked;
     if (name === "twitterMonitor") {
+      // if (Object.keys(selectedChrome).length) {
+      // if (Object.keys(selectedClaimer).length) {
       if (apiList.length > 0) {
         if (userList.length > 0) {
           if (!prevState["twitterMonitor"]) {
@@ -200,29 +217,39 @@ function Twitter() {
           } else {
             prevState["monitorStartDate"] = new Date().toUTCString();
           }
-          const maskedKey = apiList[rotaterIndex].apiKey.substring(0, 4);
-          const maskedSecret = apiList[rotaterIndex].apiSecret.substring(0, 4);
+          const maskedKey = apiList[rotaterIndex]?.apiKey.substring(0, 4);
+          const maskedSecret = apiList[rotaterIndex]?.apiSecret.substring(0, 4);
           const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
           let log = `Twitter  monitor start with ${token}`;
           sendLogs(log);
-          dispatch(setTwitterSetting(prevState));
-        } else toastWarning("Enter some Twitter handlers");
-      } else {
-        toastWarning("Add some API keys");
-      }
-    } else {
-      if (name === "startAutoInviteJoiner") {
-        if (selectedChrome !== undefined && selectedChrome !== null) {
-          if (Object.keys(selectedClaimer).length > 0) {
-            let log = `Twitter  monitor IJ start ${selectedClaimer["value"]}`;
-            sendLogs(log);
+          if (checked === false) {
+            prevState["startAutoInviteJoiner"] = false;
+            prevState["startAutoLinkOpener"] = false;
             dispatch(setTwitterSetting(prevState));
-          } else toastWarning("Select Token Group");
-        }
+          } else {
+            dispatch(setTwitterSetting(prevState));
+          }
+        } else toastWarning("Enter Twitter Username");
       } else {
-        let log = `Twitter  monitor LO start`;
-        sendLogs(log);
-        dispatch(setTwitterSetting(prevState));
+        toastWarning("Enter API keys under Twitter Setting");
+      }
+      // } else toastWarning("Please select discord tokens group");
+      // } else toastWarning("Please select chrome user");
+    } else {
+      if (twitterSetting.twitterMonitor) {
+        if (name === "startAutoInviteJoiner") {
+          if (selectedChrome !== undefined && selectedChrome !== null) {
+            if (Object.keys(selectedClaimer).length > 0) {
+              let log = `Twitter  monitor IJ start ${selectedClaimer["value"]}`;
+              sendLogs(log);
+              dispatch(setTwitterSetting(prevState));
+            } else toastWarning("Select Discord Accounts");
+          }
+        } else {
+          let log = `Twitter  monitor LO start`;
+          sendLogs(log);
+          dispatch(setTwitterSetting(prevState));
+        }
       }
     }
   };
@@ -248,6 +275,11 @@ function Twitter() {
     } else {
       dispatch(clearTweetsFeeder(key));
     }
+    if (
+      Object.keys(featureTweetList).length === 0 ||
+      Object.keys(latestTweetList).length === 0
+    )
+      toastWarning("Nothing to remove");
   };
 
   return (
@@ -263,6 +295,7 @@ function Twitter() {
             latestTweetList,
             featureTweetList,
             handleDeleteAllTweets,
+            appTheme,
           }}
         />
       ) : (
@@ -291,6 +324,7 @@ const DefaultTwitterScreen = ({
   latestTweetList,
   featureTweetList,
   handleDeleteAllTweets,
+  appTheme,
 }) => (
   <React.Fragment>
     <TwitterPageTopSection
@@ -303,8 +337,8 @@ const DefaultTwitterScreen = ({
           {...{ handleScreen, twitterSetting, handleToggle }}
         />
         <div className="twitter-flex-list-row">
-          <TwitterKeywordListSection {...{ keyWordList }} />
-          <TwitterUserListSection {...{ userList }} />
+          <TwitterKeywordListSection {...{ keyWordList }} appTheme={appTheme} />
+          <TwitterUserListSection {...{ userList }} appTheme={appTheme} />
         </div>
       </div>
       <div className="twitter-page-right-section">
@@ -316,6 +350,8 @@ const DefaultTwitterScreen = ({
                 .reverse()}
               title="Latest Tweets"
               onClearTweets={() => handleDeleteAllTweets("LATEST")}
+              appTheme={appTheme}
+              keyWordList={keyWordList}
             />
           </div>
           <div>
@@ -327,6 +363,8 @@ const DefaultTwitterScreen = ({
               twitterSetting={twitterSetting}
               title="Featured Tweets"
               onClearTweets={() => handleDeleteAllTweets("FEATURE")}
+              appTheme={appTheme}
+              keyWordList={keyWordList}
             />
           </div>
         </div>
