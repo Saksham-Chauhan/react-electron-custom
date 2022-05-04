@@ -77,7 +77,7 @@ function WebhookSetting({ userDetails }) {
       <AppSpacer spacer={14} />
       <div
         className={
-          appTheme ? 'webhook-setting-inner lightBg ' : 'webhook-setting-inner'
+          appTheme ? 'webhook-setting-inner light-bg ' : 'webhook-setting-inner'
         }
       >
         <div className="webhook-input-section ">
@@ -96,7 +96,7 @@ function WebhookSetting({ userDetails }) {
             onClick={handleWebhook}
             className={
               appTheme
-                ? 'webhook-test btn lightModeSidebar'
+                ? 'webhook-test btn light-mode-sidebar'
                 : 'webhook-test btn '
             }
           >

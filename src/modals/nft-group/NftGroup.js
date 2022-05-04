@@ -4,6 +4,7 @@ import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import { nftOptionsList } from "../../constant";
 import { fetchThemsState, setModalState } from "../../features/counterSlice";
 import { appendGroupInNftGroupList } from "../../features/logic/nft";
+import { sendLogs } from "../../helper/electron-bridge";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftGroupSchema } from "../../validation";
 
@@ -39,6 +40,8 @@ function NftGroup() {
   const handleSubmit = () => {
     const validationResult = validationChecker(nftGroupSchema, group);
     if (validationResult) {
+      const log = `New ETH minter group is created ${group.minterTitle}`;
+      sendLogs(log);
       dispatch(appendGroupInNftGroupList(group));
       handleCloseModal();
     }

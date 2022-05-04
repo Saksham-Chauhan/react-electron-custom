@@ -22,6 +22,21 @@ const PageListSearchPattern = {
     "isDisableImage",
   ],
   ACC_GEN: ["status", "claimerGroup.label", "proxyGroup.label", "changerType"],
+  NFT_WALLET: [
+    "walletNickName",
+    "walletPrivateKey",
+    "walletPublicKey",
+    "walletBalance",
+  ],
+  NFT_MINTER: [
+    "transactionCost",
+    "contractAddress",
+    "functionName",
+    "functionParam",
+    "gasPriceMethod",
+    "status",
+    "walletName",
+  ],
 };
 
 /**

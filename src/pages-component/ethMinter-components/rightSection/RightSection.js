@@ -1,33 +1,62 @@
-import React from "react";
-import "./style.css";
-import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
-import UseAnimations from "react-useanimations";
-import add from "../../../assests/images/plus.svg";
-import play from "../../../assests/images/play.svg";
-import trash2 from "react-useanimations/lib/trash2";
-import searchIcon from "../../../assests/images/search.svg";
-import lightModeplush from "../../../assests/images/lightModeplus.svg";
-import EthMinterSetting from "../../../assests/images/EthMinterSetting.svg";
-import rightAero from "../../../assests/images/rightAeroImg.svg";
-import lightModesearch from "../../../assests/images/lightModesearch.svg";
-import { fetchThemsState, setModalState } from "../../../features/counterSlice";
-import { useDispatch, useSelector } from "react-redux";
+import React from 'react'
+import './style.css'
+import { AppSpacer, GroupStatusCard, TopWrapper } from '../../../component'
+import UseAnimations from 'react-useanimations'
+import add from '../../../assests/images/plus.svg'
+import play from '../../../assests/images/play.svg'
+import trash2 from 'react-useanimations/lib/trash2'
+import searchIcon from '../../../assests/images/search.svg'
+import lightModeplush from '../../../assests/images/lightModeplus.svg'
+import EthMinterSetting from '../../../assests/images/EthMinterSetting.svg'
+import rightAero from '../../../assests/images/rightAeroImg.svg'
+import lightModesearch from '../../../assests/images/lightModesearch.svg'
+import { fetchThemsState, setModalState } from '../../../features/counterSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteMinterGroup } from '../../../features/logic/nft'
+import { toastWarning } from '../../../toaster'
 
-const RightSection = ({ setwalletScreen }) => {
-  const dispatch = useDispatch();
-  const appTheme = useSelector(fetchThemsState);
+const IS_RUNNING = ['Running']
+
+const RightSection = ({
+  setwalletScreen,
+  activeNftGroup,
+  handleSearching,
+  search,
+}) => {
+  const dispatch = useDispatch()
+  const appTheme = useSelector(fetchThemsState)
   const btnClass = appTheme
-    ? "icon-btn-wrapper btn lightBg"
-    : "icon-btn-wrapper btn";
+    ? 'icon-btn-wrapper btn light-bg'
+    : 'icon-btn-wrapper btn'
 
   const handleOpenModal = () => {
-    dispatch(setModalState("nftTaskModal"));
-  };
+    if (Object.keys(activeNftGroup).length > 0) {
+      dispatch(setModalState('nftTaskModal'))
+    } else toastWarning('Select Group')
+  }
+
+  const handleSettingModal = () => {
+    dispatch(setModalState('nftSettingModal'))
+  }
+
+  const handleDeleteGroup = () => {
+    if (Object.keys(activeNftGroup).length > 0) {
+      dispatch(deleteMinterGroup())
+    } else toastWarning('Select Group')
+  }
 
   return (
     <>
       <TopWrapper>
-        <GroupStatusCard subText="88 Tasks Running" title="Group 1" />
+        <GroupStatusCard
+          subText={` ${
+            activeNftGroup['minterList']?.filter((m) =>
+              IS_RUNNING.includes(m?.status),
+            ).length || 0
+          }
+          Tasks Running`}
+          title={activeNftGroup['minterTitle'] || 'Group 1'}
+        />
       </TopWrapper>
       <AppSpacer spacer={30} />
 
@@ -36,8 +65,8 @@ const RightSection = ({ setwalletScreen }) => {
           <div
             className={
               appTheme
-                ? "page-top-search-container lightBg "
-                : "page-top-search-container"
+                ? 'page-top-search-container light-bg '
+                : 'page-top-search-container'
             }
           >
             <img
@@ -45,9 +74,12 @@ const RightSection = ({ setwalletScreen }) => {
               alt="search-icon"
             />
             <input
+              disabled={Object.keys(activeNftGroup).length === 0}
+              value={search}
+              onChange={handleSearching}
               placeholder="Search"
               type="search"
-              className={appTheme ? "lightModeInput" : ""}
+              className={appTheme ? 'light-mode-input' : ''}
             />
           </div>
           <div onClick={handleOpenModal} className={btnClass}>
@@ -57,7 +89,12 @@ const RightSection = ({ setwalletScreen }) => {
             <img src={play} alt="" />
           </div>
           <div className={btnClass}>
-            <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
+            <UseAnimations
+              onClick={handleDeleteGroup}
+              animation={trash2}
+              strokeColor="#B60E0E"
+              size={25}
+            />
           </div>
         </div>
 
@@ -65,21 +102,29 @@ const RightSection = ({ setwalletScreen }) => {
           <div
             className={
               appTheme
-                ? "eth-minter-section  btn lightModeSidebar"
-                : "eth-minter-section   btn"
+                ? 'eth-minter-section  btn light-mode-sidebar'
+                : 'eth-minter-section   btn'
             }
             onClick={() => setwalletScreen(true)}
           >
             <span>Wallet Page</span>
             <img src={rightAero} alt="" className="walletBtnImg" />
           </div>
-          <div className={btnClass}>
+          <div
+            onClick={handleSettingModal}
+            style={{ marginLeft: '20px' }}
+            className={
+              appTheme
+                ? 'eth-minter-section  btn light-mode-sidebar'
+                : 'eth-minter-section   btn'
+            }
+          >
             <img src={EthMinterSetting} alt="" />
           </div>
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default RightSection;
+export default RightSection

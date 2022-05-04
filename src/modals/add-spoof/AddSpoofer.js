@@ -173,7 +173,7 @@ function AddSpoofer() {
               name="quantity"
               value={spoof.quantity}
               onChange={handleChange}
-              className={appTheme ? 'lightModeInput' : ''}
+              className={appTheme ? 'light-mode-input' : ''}
             />
             <div onClick={incrementEvent}>
               <img src={increment} alt="" />
@@ -204,7 +204,7 @@ function AddSpoofer() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? 'modal-cancel-btn btn lightMode-modalBtn '
+              ? 'modal-cancel-btn btn light-mode-modalbtn'
               : 'modal-cancel-btn btn'
           }
         >
@@ -212,7 +212,7 @@ function AddSpoofer() {
         </div>
         <div
           onClick={handleSubmit}
-          className="modal-cancel-btn submit btn btn_shadow "
+          className="modal-cancel-btn submit btn btn-shadow "
         >
           <span className={textClass}>Create</span>
         </div>

@@ -11,7 +11,7 @@ import activeSettings from '../../assests/activeDefault/settings-active.svg'
 import activeUpdate from '../../assests/activeDefault/update-active.svg'
 import activeSpoof from '../../assests/activeDefault/spoof-active.svg'
 import activeProfile from '../../assests//activeDefault/profile-active.svg'
-import activeEthminter from '../../assests//activeDefault/activeEthminter.svg'
+import activeNft from '../../assests//activeDefault/nft-active.svg'
 
 // default icon import
 import defaultDashboard from '../../assests//activeDefault/dashboard-default.svg'
@@ -19,7 +19,8 @@ import defaultTwitter from '../../assests/activeDefault/twitter-default.svg'
 import defaultSettings from '../../assests/activeDefault/settings-default.svg'
 import defaultSpoof from '../../assests/activeDefault/spoof-default.svg'
 import defaultUpdate from '../../assests/activeDefault/update-default.svg'
-import activeDefault from '../../assests//activeDefault/profile-default.svg'
+import defaultNft from '../../assests//activeDefault/nft-default.svg'
+import defaultProfile from '../../assests//activeDefault/profile-default.svg'
 import { checkForUpdates } from '../../helper/electron-bridge'
 
 const pjson = require('../../../package.json')
@@ -33,15 +34,15 @@ const iconData = [
   },
   {
     to: RoutePath.ethMinter,
-    activeIcon: activeEthminter,
-    activeClass: '',
-    defaultIcon: activeEthminter,
+    activeIcon: activeNft,
+    activeClass: 'oneclick',
+    defaultIcon: defaultNft,
   },
   {
     to: RoutePath.accountChanger,
     activeIcon: activeProfile,
     activeClass: 'profile',
-    defaultIcon: activeDefault,
+    defaultIcon: defaultProfile,
   },
   {
     to: RoutePath.spoofer,

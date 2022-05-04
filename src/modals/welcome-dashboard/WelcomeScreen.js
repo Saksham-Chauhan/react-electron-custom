@@ -251,7 +251,7 @@ const WelcomeScreen = () => {
           <div
             className={
               appTheme
-                ? 'modal-cancel-btn btn lightMode-modalBtn '
+                ? 'modal-cancel-btn btn light-mode-modalbtn'
                 : 'modal-cancel-btn btn'
             }
             onClick={() => {
@@ -263,7 +263,7 @@ const WelcomeScreen = () => {
           <div
             className={
               appTheme
-                ? 'modal-cancel-btn submit btn btn_shadow '
+                ? 'modal-cancel-btn submit btn btn-shadow '
                 : ' modal-cancel-btn submit btn'
             }
             id="right"

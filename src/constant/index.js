@@ -65,7 +65,7 @@ export const DISCORD_MASS_OPTIONS = [
   { value: "linkOpener", label: "Link Opener" },
   { value: "tokenRetrieve", label: "Token Retrieve" },
   { value: "giveawayJoiner", label: "Giveaway Joiner" },
-  // { value: "xpFarmer", label: "XP Farmer" },
+  { value: "xpFarmer", label: "XP Farmer" },
 ];
 
 export const replyList = [
@@ -81,7 +81,4 @@ export const replyList = [
   "THIS IS MINE!",
 ];
 
-export const nftOptionsList = [
-  { label: "Eth", value: "eth" },
-  { label: "BTC", value: "btc" },
-];
+export const nftOptionsList = [{ label: "Eth", value: "eth" }];

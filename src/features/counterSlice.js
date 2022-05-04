@@ -189,6 +189,10 @@ export const counterSlice = createSlice({
     setActiveNftGroup: (state, action) => {
       state.activeNftGroup = action.payload;
     },
+    setNftSetting: (state, action) => {
+      const { key, value } = action.payload;
+      state[key] = value;
+    },
   },
 });
 
@@ -232,6 +236,7 @@ export const {
   appendClaimerDiscordAccount,
   appendInviteJoinerAccount,
   appendTaskInTable,
+  setNftSetting,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -377,3 +382,7 @@ export const fetchNftWalletModalState = (state) =>
   state[STATE_KEY].modals.nftWalletModal;
 export const fetchNftSettingModalState = (state) =>
   state[STATE_KEY].modals.nftSettingModal;
+export const fetchNftSettingEhterAPIState = (state) =>
+  state[STATE_KEY].etherScanAPI;
+export const fetchNftSettingDelaytate = (state) => state[STATE_KEY].retryDelay;
+export const fetchNftSettingRPCState = (state) => state[STATE_KEY].rpcURL;

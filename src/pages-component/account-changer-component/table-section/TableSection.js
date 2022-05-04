@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import './styles.css'
 import Chance from 'chance'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   updateStatusOfTableRow,
   deleteDataFromTableList,
@@ -29,6 +29,7 @@ import tokenChanger from '../../../api/account-changer/token-changer'
 import { toastInfo } from '../../../toaster'
 import { replyList } from '../../../constant'
 import xpFarmer from '../../../api/account-changer/xp-farmer'
+import { fetchThemsState } from '../../../features/counterSlice'
 
 const { Client } = window.require('discord.js-selfbot')
 
@@ -37,7 +38,7 @@ let status = false
 function TableSection({ list }) {
   let flag = useRef(false)
   const dispatch = useDispatch()
-
+  const appTheme = useSelector(fetchThemsState)
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj))
   }
@@ -163,7 +164,9 @@ function TableSection({ list }) {
                     ind = ind + 1
                   }
                 } else {
-                  dispatch(updateStatusOfTableRow(tempObj, 'Completed'))
+                  if (!type === 'xpFarmer') {
+                    dispatch(updateStatusOfTableRow(tempObj, 'Completed'))
+                  }
                 }
                 break
               }
@@ -220,7 +223,13 @@ function TableSection({ list }) {
   return (
     <div className="acc-changer-page-table-section">
       <div className="acc-chnager-table-header-parent">
-        <div className="acc-chnager-page-table-header">
+        <div
+          className={
+            appTheme
+              ? 'acc-chnager-page-table-header light-mode-active-link'
+              : 'acc-chnager-page-table-header'
+          }
+        >
           <div>#</div>
           <div>{'Token Group'}</div>
           <div>Type</div>
@@ -393,16 +402,15 @@ export const callApis = async (proxy, channelID, token, delay = '') => {
   let response = null
   let delayTime = delay ? delay : 1000
   response = await xpFarmer(proxy, channelID, token)
-  console.log(response)
   await sleep(delayTime)
   if (status) {
-    callApis(proxy, channelID, token, (delay = ''))
+    callApis(proxy, channelID, token, delayTime)
   }
   if (response.status === 200) {
     return response
   } else {
     status = false
-    toastWarning('error in calling')
+    toastWarning(response.response.data.result.error)
     return null
   }
 }
