@@ -8,7 +8,7 @@ const BrowserWindow = electron.BrowserWindow;
 class SpooferInstance {
   constructor(id, url, proxyList, mainWin, isImage) {
     this.id = id;
-    this.proxyList = proxyList;
+    this.proxyList = proxyList || [];
     this.proxyCounter = 0;
     this.proxyHostPort = this.getProxyHostPort(this.proxyList[0]);
     this.proxy = this.getProxyData(this.proxyList[0]);
@@ -19,6 +19,8 @@ class SpooferInstance {
     this.isDeleted = false;
     this.mainWin = mainWin;
     this.isImage = isImage;
+    this.maxNumberOfRetry = 10;
+    this.numberOfRetry = 0;
     this.userAgent = new UserAgent(/Chrome/, { deviceCategory: "desktop" })
       .toString()
       .replace(/\|"/g, "");
@@ -81,16 +83,24 @@ class SpooferInstance {
 
   proxyRotater() {
     this.deleteBrowser();
-    if (this.proxyCounter < this.proxyList.length) {
-      this.proxyCounter = this.randomInt(0, this.proxyList?.length || 0);
+    if (this.numberOfRetry < this.proxyList.length) {
+      if (this.proxyCounter < this.proxyList.length) {
+        this.proxyCounter = this.randomInt(0, this.proxyList?.length - 1 || 0);
+      } else {
+        this.proxyCounter = 0;
+      }
+      const currentProxy = this.proxyList[this.proxyCounter];
+      this.proxyHostPort = this.getProxyHostPort(currentProxy);
+      this.proxy = this.getProxyData(currentProxy);
+      console.log("Proxy rotater used new proxy", this.proxyHostPort);
+      this.numberOfRetry += 1;
+      this.launchBrowser(true);
     } else {
-      this.proxyCounter = 0;
+      this.deleteBrowser();
+      this.sendStatus("Stopped");
+      this.win = null;
+      console.log("Exceed the number of retry....");
     }
-    const currentProxy = this.proxyList[this.proxyCounter];
-    this.proxyHostPort = this.getProxyHostPort(currentProxy);
-    this.proxy = this.getProxyData(currentProxy);
-    console.log("Proxy rotater used new proxy", this.proxyHostPort);
-    this.launchBrowser(true);
   }
 
   // LAUNCH BROWSER
@@ -122,15 +132,15 @@ class SpooferInstance {
         },
         () => {}
       );
-
-      this.win
+      const result = await this.win
         .loadURL(this.url, {
           userAgent: this.userAgent,
         })
         .catch((err) => {
-          return this.proxyRotater();
+          this.proxyRotater();
+          return "STOP";
         });
-
+      if (typeof result === "string") return;
       this.win.webContents.on(
         "login",
         (event, authenticationResponseDetails, authInfo, callback) => {

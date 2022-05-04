@@ -36,6 +36,7 @@
 .acc-changer-table-row-action-column {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .acc-changer-table-row-action-column > img:first-of-type {
   margin-right: 1em;

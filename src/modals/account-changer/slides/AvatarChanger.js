@@ -5,20 +5,22 @@ import {
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
 
+const getRandomNum = () => {
+  const num = Math.floor(Math.random() * 800 + 1);
+  return num;
+};
 const api = [
   {
-    label: "Default API",
-    value: "https://picsum.photos/v2/list",
-    key: "defaultAPI",
-  },
-  {
-    label: "Custom API",
-    value: "https://picsum.photos/v2/list",
-    key: "customAPI",
+    label: "Catboy API",
+    value: `https://rickandmortyapi.com/api/character/avatar/${getRandomNum()}.jpeg`,
   },
 ];
 
 function AvatarChanger({ handleSelectAPI, ...props }) {
+  const defApi = {
+    label: "Default API",
+    value: "https://picsum.photos/v2/list",
+  };
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -26,7 +28,7 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
             name="delay"
             type="number"
             min={0}
@@ -40,6 +42,7 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
             selectOptions={api}
             isSelect={true}
             onChange={handleSelectAPI}
+            defaultValue={defApi}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>

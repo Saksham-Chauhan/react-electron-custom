@@ -1,28 +1,36 @@
-import React from 'react'
-import './styles.css'
-import { AppSpacer } from '../../../component'
-import bird from '../../../assests/images/bird.svg'
-import { useSelector } from 'react-redux'
-import { fetchThemsState } from '../../../features/counterSlice'
+import React from "react";
+import "./styles.css";
+import { AppSpacer } from "../../../component";
+import bird from "../../../assests/images/bird.svg";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../../features/counterSlice";
+import helper from "../../../pages/twitter/utils//feature-tweets/helper";
 
 function TweetCard({
-  cardTitle = 'New Tweet',
-  tweetTime = 'Fri Feb 21 12:07:35 +0000 2022',
-  tweetUser = 'KodersHQ',
-  tweetMsgLink = 'https://t.co/uxttXwyy4F',
-  tweetLink = '',
-  tweetUserProfileLink = '',
-  tweetUserFollowing = '',
+  cardTitle = "Tweet",
+  tweetTime = "Fri Feb 21 12:07:35 +0000 2022",
+  tweetUser = "KodersHQ",
+  tweetMsgLink = "https://t.co/uxttXwyy4F",
+  tweetLink = "",
+  tweetUserProfileLink = "",
+  tweetUserFollowing = "",
+  isFeatureCard = false,
 }) {
-  const appTheme = useSelector(fetchThemsState)
+  const appTheme = useSelector(fetchThemsState);
   return (
     <div
       className={
-        appTheme ? 'tweet-card-outer light-mode-sidebar' : ' tweet-card-outer'
+        appTheme ? "tweet-card-outer light-mode-sidebar" : " tweet-card-outer"
       }
     >
       <div className="tweet-card-top-section">
-        <span id="cardtitle">{cardTitle}</span>
+        <span id="cardtitle">
+          {cardTitle === "URLs extracted Found"
+            ? helper.isDiscordInvite(tweetMsgLink)
+              ? "Invite Found"
+              : "Link Found"
+            : cardTitle}
+        </span>
         <span id="tweetTime">{tweetTime}</span>
       </div>
       <AppSpacer spacer={20} />
@@ -31,20 +39,34 @@ function TweetCard({
           <img src={bird} alt="" />
           <span>{tweetUser}</span>
         </div>
-        <span>{tweetMsgLink}</span>
+        {isFeatureCard ? (
+          <p className="feature-tweet-text">
+            Extracted text : <span>{tweetMsgLink}</span>
+          </p>
+        ) : (
+          <span>{tweetMsgLink}</span>
+        )}
       </div>
       <AppSpacer spacer={20} />
       <div className="tweet-card-bottom-section">
-        <div onClick={() => window.open(tweetLink)}>Tweet</div>
-        <div onClick={() => window.open(tweetUserProfileLink)}>
-          View Profile
+        <div className="cursor-pointer" onClick={() => window.open(tweetLink)}>
+          Tweet
         </div>
-        <div onClick={() => window.open(tweetUserFollowing)}>
+        <div
+          className="cursor-pointer"
+          onClick={() => window.open(tweetUserProfileLink)}
+        >
+          Profile
+        </div>
+        <div
+          className="cursor-pointer"
+          onClick={() => window.open(tweetUserFollowing)}
+        >
           View Following
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default TweetCard
+export default TweetCard;

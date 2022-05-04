@@ -42,7 +42,7 @@ export const DISCORD_MASS_OPTIONS = [
   },
   {
     value: "activityChanger",
-    label: "Activity Changer",
+    label: "Status Changer",
   },
   {
     value: "serverLeaver",
@@ -50,7 +50,7 @@ export const DISCORD_MASS_OPTIONS = [
   },
   {
     value: "tokenChecker",
-    label: "Token checker",
+    label: "Token Checker",
   },
   {
     value: "nicknameChanger",
@@ -63,7 +63,7 @@ export const DISCORD_MASS_OPTIONS = [
   { value: "massInviter", label: "Mass Joiner" },
   { value: "inviteJoiner", label: "Invite Joiner" },
   { value: "linkOpener", label: "Link Opener" },
-  { value: "tokenRetrieve", label: "Token Retrieve" },
+  { value: "tokenRetrieve", label: "Token Retriever" },
   { value: "giveawayJoiner", label: "Giveaway Joiner" },
   { value: "xpFarmer", label: "XP Farmer" },
 ];
@@ -82,3 +82,5 @@ export const replyList = [
 ];
 
 export const nftOptionsList = [{ label: "Eth", value: "eth" }];
+
+export const defaultChromeUser = { label: "Default", value: "default" };

@@ -24,12 +24,11 @@
 .twitter-secting-col > div {
   width: 30%;
 }
-.twitter-secting-col > div > h3 {
+.twitter-secting-col > div > div > h3 {
   font-weight: 500;
   font-size: 17.525px;
   line-height: 26px;
   color: var(--primary);
-  margin-bottom: 1.5em;
 }
 .setting-twitter-flex {
   display: flex;

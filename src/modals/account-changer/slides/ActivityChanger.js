@@ -13,7 +13,7 @@ function ActivityChanger({ ...props }) {
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Delay (Optional)"
+            placeholderText="Delay (in seconds)"
             name="delay"
             type="number"
             min={0}
@@ -22,7 +22,7 @@ function ActivityChanger({ ...props }) {
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <AppInputField
-            fieldTitle="Activity Details"
+            fieldTitle="Status Details"
             placeholderText="Eg. Playing Kyro Tools"
             name="activityDetails"
             {...props}

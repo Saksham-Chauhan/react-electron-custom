@@ -75,3 +75,39 @@
   left: 51%;
   top: 1%;
 }
+.joiner-custom-toggle {
+  display: flex;
+  justify-content: space-between;
+}
+.joiner-custom-toggle > label {
+  margin-left: 5px;
+}
+.react-joiner-setting-section {
+  display: flex;
+  justify-content: space-between;
+}
+.react-joiner-setting-section > div {
+  width: 32%;
+}
+.emoji-tray-picker {
+  position: absolute;
+  z-index: 2;
+  left: 51%;
+  top: 6%;
+}
+.mj-slide {
+  padding: 0 5px;
+}
+
+.css-g1d714-ValueContainer {
+  overflow-y: scroll !important;
+  height: 55px !important;
+}
+
+.css-g1d714-ValueContainer::-webkit-scrollbar {
+  width: 5px;
+}
+.css-g1d714-ValueContainer::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-bg);
+  border-radius: 10px;
+}

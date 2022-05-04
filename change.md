@@ -71,3 +71,22 @@
 - Fix the sidebar NFT active, default, animation issue
 - Add the send log in wallet, minter section and their modals
 
+
+# V0.9.0
+
+- Added Direct Join functionality. 
+- Added NFT Minter Page and functionality. 
+- Light mode added. 
+- Added Default option for Chrome User. 
+- Import/Export format changed to .json. 
+- Claimer Group updated to Discord Accounts. 
+- Updated format for Discord Accounts and Proxies. 
+- Added Onboarding msgs for Discord Accounts and Proxies. 
+- Added keyword functionality for Twitter Monitor. 
+- Separated Featured Tweets for Twitter Monitor. 
+- Added Local Timezone for Twitter Monitor.
+- Fixed Animation Toggler. 
+- Multi wallet functionality in Tasks Page. 
+- Activity Changer updated to Status Changer. 
+- Improved UI and UX with proper toaster and tooltips.
+

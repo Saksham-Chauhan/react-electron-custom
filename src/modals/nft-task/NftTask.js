@@ -1,128 +1,168 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppInputField, AppSpacer, ModalWrapper } from '../../component'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
-} from '../../component/modal-wrapper/Modal'
+} from "../../component/modal-wrapper/Modal";
 import {
   fetchEditStorageState,
+  fetchNftSettingEhterAPIState,
+  fetchNftSettingRPCState,
   fetchNftWalletListState,
   fetchThemsState,
   setEditStorage,
   setModalState,
-} from '../../features/counterSlice'
-import { addTaskInGroup, editTaskInGroup } from '../../features/logic/nft'
-import { sendLogs } from '../../helper/electron-bridge'
-import { validationChecker } from '../../hooks/validationChecker'
-import { nftTaskSchema } from '../../validation'
+} from "../../features/counterSlice";
+import { addTaskInGroup, editTaskInGroup } from "../../features/logic/nft";
+import { sendLogs } from "../../helper/electron-bridge";
+import { handleGetMintdata } from "../../helper/nft-minter";
+import { validationChecker } from "../../hooks/validationChecker";
+import { nftTaskSchema } from "../../validation";
 
 function NftTask() {
-  const dispatch = useDispatch()
-  const appTheme = useSelector(fetchThemsState)
-  const editState = useSelector(fetchEditStorageState)
-  const walletList = useSelector(fetchNftWalletListState)
-  const textClass = appTheme ? 'lightMode_color' : ''
+  const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
+  const editState = useSelector(fetchEditStorageState);
+  const walletList = useSelector(fetchNftWalletListState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
+  const apiKey = useSelector(fetchNftSettingEhterAPIState);
+  const textClass = appTheme ? "lightMode_color" : "";
   const [task, setTask] = useState({
-    walletID: '',
-    transactionCost: '',
-    contractAddress: '',
-    functionName: '',
-    functionParam: '',
-    gasPriceMethod: '',
-    status: 'Idle',
-    walletName: '',
-  })
-
+    walletID: "",
+    transactionCost: "",
+    contractAddress: "",
+    functionName: "",
+    functionParam: "",
+    gasPriceMethod: "",
+    status: "Idle",
+    walletName: "",
+  });
+  const [tempVar, setTempVar] = useState();
   useEffect(() => {
-    if (Object.keys(editState).length > 0) {
-      setTask((pre) => {
-        return { ...editState }
-      })
-    }
-    return () => {
-      dispatch(setEditStorage({}))
-    }
-  }, [editState, dispatch])
+    const setData = () => {
+      if (Object.keys(editState).length > 0) {
+        setTask((pre) => {
+          return { ...editState };
+        });
+      }
+    };
+    setData();
+    // return () => {
+    //   dispatch(setEditStorage({}));
+    // };
+  }, [editState, dispatch]);
 
   const handleCloseModal = () => {
-    dispatch(setModalState('nftTaskModal'))
-  }
+    dispatch(setEditStorage({}));
+    dispatch(setModalState("nftTaskModal"));
+  };
 
   const handleGasMethod = ({ value }) => {
     setTask((pre) => {
-      return { ...pre, gasPriceMethod: value }
-    })
-  }
+      return { ...pre, gasPriceMethod: value };
+    });
+  };
 
-  const handleWalletMethod = ({ value, label }) => {
-    setTask((pre) => {
-      return { ...pre, walletID: value, walletName: label }
-    })
-  }
+  const handleWalletMethod = (wallets) => {
+    setTempVar([...wallets]);
+  };
 
   const handleChange = (event) => {
     const {
       target: { value, name },
-    } = event
+    } = event;
     setTask((pre) => {
-      return { ...pre, [name]: value }
-    })
-  }
-
-  const makeWalletOption = () => {
-    return walletList.map((wallet) => {
-      return { label: wallet.walletNickName, value: wallet.id }
-    })
-  }
+      return { ...pre, [name]: value };
+    });
+  };
 
   const getWalletOption = () => {
-    if (walletList.length > 0) {
+    let obj = [];
+    if (walletList.length) {
       for (let i = 0; i < walletList.length; i++) {
-        const wallet = walletList[i]
-        if (wallet?.id === task.walletID) {
-          return [{ label: task.walletName, value: task.walletID }]
+        obj = [
+          {
+            label: walletList[i].walletNickName,
+            value: walletList[i].id,
+          },
+          ...obj,
+        ];
+      }
+    }
+    return obj;
+  };
+  const handleDispatchTask = (data) => {
+    dispatch(addTaskInGroup(data));
+  };
+  const handleDispatchEditTask = (data) => {
+    dispatch(editTaskInGroup(data));
+  };
+
+  const handleSubmit = async () => {
+    let log;
+    const validationresult = validationChecker(
+      nftTaskSchema(task.gasPriceMethod === "manual"),
+      task
+    );
+    if (Object.keys(editState).length === 0) {
+      if (validationresult) {
+        for (let i = 0; i < tempVar.length; i++) {
+          log = `new Minter task is created with contract address ${task.contractAddress}`;
+          task.walletID = tempVar[i].value;
+          task.walletName = tempVar[i].label;
+          try {
+            const res = await handleGetMintdata(
+              task,
+              rpcURL,
+              apiKey,
+              handleDispatchTask
+            );
+            if (res.status === 200) handleCloseModal();
+          } catch (e) {
+            log = `Can't create new task with ${task.contractAddress}`;
+          }
+          sendLogs(log);
         }
       }
-    } else return []
-  }
-
-  const handleSubmit = () => {
-    const validationresult = validationChecker(
-      nftTaskSchema(task.gasPriceMethod === 'manualPrice'),
-      task,
-    )
-    if (validationresult) {
-      if (Object.keys(editState).length === 0) {
-        const log = `new Minter task is created with contract address ${task.contractAddress}`
-        sendLogs(log)
-        dispatch(addTaskInGroup(task))
-      } else {
-        dispatch(editTaskInGroup(task))
+    } else {
+      setTask({ ...editState });
+      try {
+        const res = await handleGetMintdata(
+          task,
+          rpcURL,
+          apiKey,
+          handleDispatchEditTask
+        );
+        if (res.status === 200) {
+          dispatch(setEditStorage({}));
+          handleCloseModal();
+        }
+      } catch (e) {
+        log = `Can't create new task with ${task.contractAddress}`;
       }
-      handleCloseModal()
+      sendLogs(log);
     }
-  }
+  };
 
   return (
     <ModalWrapper>
       <div className="modal-tilte">
         <h2 className={textClass}>
-          {Object.keys(editState).length > 0 ? 'Edit' : 'Create'} Task
+          {Object.keys(editState).length > 0 ? "Edit" : "Create"} Task
         </h2>
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
-        <ModalFlexInnerRow>
-          <AppInputField
-            value={getWalletOption()}
-            onChange={handleWalletMethod}
-            fieldTitle="Wallet"
-            isSelect={true}
-            placeholderText="Select Wallet"
-            selectOptions={makeWalletOption()}
-          />
-        </ModalFlexInnerRow>
+        <AppInputField
+          fieldTitle="Select Wallets"
+          placeholderText="Select Wallets"
+          isSelect={true}
+          autoClose={false}
+          isMulti
+          selectOptions={getWalletOption()}
+          onChange={handleWalletMethod}
+        />
       </ModalFlexOuterRow>
       <AppSpacer spacer={10} />
       <ModalFlexOuterRow>
@@ -177,13 +217,13 @@ function NftTask() {
             selectOptions={GAS_OPTION}
             onChange={handleGasMethod}
             value={GAS_OPTION.filter(
-              (opt) => opt['value'] === task.gasPriceMethod,
+              (opt) => opt["value"] === task.gasPriceMethod
             )}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
       <AppSpacer spacer={10} />
-      {task['gasPriceMethod'] === 'manualPrice' && (
+      {task["gasPriceMethod"] === "manual" && (
         <ModalFlexOuterRow>
           <ModalFlexInnerRow>
             <AppInputField
@@ -214,8 +254,8 @@ function NftTask() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? 'modal-cancel-btn btn light-mode-modalbtn '
-              : 'modal-cancel-btn btn'
+              ? "modal-cancel-btn btn light-mode-modalbtn "
+              : "modal-cancel-btn btn"
           }
         >
           <span className={textClass}>Cancel</span>
@@ -224,20 +264,20 @@ function NftTask() {
           onClick={handleSubmit}
           className={
             appTheme
-              ? 'modal-cancel-btn submit btn btn-shadow '
-              : ' modal-cancel-btn submit btn'
+              ? "modal-cancel-btn submit btn btn-shadow "
+              : " modal-cancel-btn submit btn"
           }
         >
-          <span>{Object.keys(editState).length > 0 ? 'Save' : 'Create'}</span>
+          <span>{Object.keys(editState).length > 0 ? "Save" : "Create"}</span>
         </div>
       </div>
     </ModalWrapper>
-  )
+  );
 }
 
-export default NftTask
+export default NftTask;
 
 const GAS_OPTION = [
-  { label: 'Rapid Price', value: 'rapidPrice' },
-  { label: 'Manual Price', value: 'manualPrice' },
-]
+  { label: "Rapid Price", value: "rapid" },
+  { label: "Manual Price", value: "manual" },
+];

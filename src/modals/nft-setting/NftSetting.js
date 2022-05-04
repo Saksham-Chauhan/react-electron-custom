@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppInputField, AppSpacer, ModalWrapper } from '../../component'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { connectToBlockchain } from "../../api/eth-minter";
+import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import {
   fetchNftSettingDelaytate,
   fetchNftSettingEhterAPIState,
@@ -8,21 +9,24 @@ import {
   fetchThemsState,
   setModalState,
   setNftSetting,
-} from '../../features/counterSlice'
-import { sendLogs } from '../../helper/electron-bridge'
-import './styles.css'
+} from "../../features/counterSlice";
+import { sendLogs } from "../../helper/electron-bridge";
+import { getConnectFormData } from "../../helper/nft-minter";
+import { toastSuccess, toastWarning } from "../../toaster";
+import "./styles.css";
+
 function NftSetting() {
-  const dispatch = useDispatch()
-  const appTheme = useSelector(fetchThemsState)
-  const textClass = appTheme ? 'lightMode_color' : ''
-  const etherScanAPI = useSelector(fetchNftSettingEhterAPIState)
-  const retryDelay = useSelector(fetchNftSettingDelaytate)
-  const rpcURL = useSelector(fetchNftSettingRPCState)
+  const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
+  const textClass = appTheme ? "lightMode_color" : "";
+  const etherScanAPI = useSelector(fetchNftSettingEhterAPIState);
+  const retryDelay = useSelector(fetchNftSettingDelaytate);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
   const [setting, setSetting] = useState({
-    rpcURL: '',
-    etherScanAPI: '',
-    retryDelay: '',
-  })
+    rpcURL: "",
+    etherScanAPI: "",
+    retryDelay: "",
+  });
 
   useEffect(() => {
     setSetting((pre) => {
@@ -31,40 +35,53 @@ function NftSetting() {
         retryDelay,
         rpcURL,
         etherScanAPI,
-      }
-    })
-  }, [etherScanAPI, retryDelay, rpcURL])
+      };
+    });
+  }, [etherScanAPI, retryDelay, rpcURL]);
 
   const handleCloseModal = () => {
-    dispatch(setModalState('nftSettingModal'))
-  }
+    dispatch(setModalState("nftSettingModal"));
+  };
 
-  const handleSave = (key) => {
-    let log
-    if (key === 'RPC') {
-      log = `RPC is updated to ${setting.rpcURL}`
-      dispatch(setNftSetting({ key: 'rpcURL', value: setting.rpcURL }))
-    } else if (key === 'API') {
+  const handleSave = async (key) => {
+    let log;
+    if (key === "RPC") {
+      const formData = getConnectFormData(setting.rpcURL);
+      try {
+        const res = await connectToBlockchain(formData);
+        if (res.status === 200) {
+          log = `RPC is updated to ${setting.rpcURL}`;
+          dispatch(setNftSetting({ key: "rpcURL", value: setting.rpcURL }));
+          toastSuccess("Connected Succesfully.");
+        } else {
+          log = `Error in connection. ${setting.rpcURL}`;
+          toastWarning(res.response.data.error);
+        }
+      } catch (e) {
+        log = `Error in connection. ${setting.rpcURL}`;
+        toastWarning(e.res.data.error);
+      }
+    } else if (key === "API") {
       log = `EtherScan Api is updated to ${setting.etherScanAPI.substring(
         0,
-        4,
-      )}`
+        4
+      )}`;
       dispatch(
-        setNftSetting({ key: 'etherScanAPI', value: setting.etherScanAPI }),
-      )
+        setNftSetting({ key: "etherScanAPI", value: setting.etherScanAPI })
+      );
     } else {
-      log = `Retry Delay value is updated to ${setting.retryDelay}`
-      dispatch(setNftSetting({ key: 'retryDelay', value: setting.retryDelay }))
+      log = `Retry Delay value is updated to ${setting.retryDelay}`;
+      dispatch(setNftSetting({ key: "retryDelay", value: setting.retryDelay }));
     }
-    sendLogs(log)
-  }
+    sendLogs(log);
+  };
 
   const handleChange = (event) => {
-    const { name, value } = event.target
+    const { name, value } = event.target;
     setSetting((pre) => {
-      return { ...pre, [name]: value }
-    })
-  }
+      return { ...pre, [name]: value };
+    });
+  };
 
   return (
     <ModalWrapper>
@@ -82,7 +99,7 @@ function NftSetting() {
             placeholderText="Enter RPC URL"
           />
         </div>
-        <div onClick={() => handleSave('RPC')} className="nft-setting-btn btn">
+        <div onClick={() => handleSave("RPC")} className="nft-setting-btn btn">
           <span>Save</span>
         </div>
       </div>
@@ -97,7 +114,7 @@ function NftSetting() {
             placeholderText="Enter Etherscan API"
           />
         </div>
-        <div onClick={() => handleSave('API')} className="nft-setting-btn btn">
+        <div onClick={() => handleSave("API")} className="nft-setting-btn btn">
           <span>Save</span>
         </div>
       </div>
@@ -113,7 +130,7 @@ function NftSetting() {
           />
         </div>
         <div
-          onClick={() => handleSave('DELAY')}
+          onClick={() => handleSave("DELAY")}
           className="nft-setting-btn btn"
         >
           <span>Save</span>
@@ -125,8 +142,8 @@ function NftSetting() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? 'modal-cancel-btn btn light-mode-modalbtn '
-              : 'modal-cancel-btn btn'
+              ? "modal-cancel-btn btn light-mode-modalbtn "
+              : "modal-cancel-btn btn"
           }
         >
           <span className={textClass}>Cancel</span>
@@ -134,7 +151,7 @@ function NftSetting() {
         <div></div>
       </div>
     </ModalWrapper>
-  )
+  );
 }
 
-export default NftSetting
+export default NftSetting;

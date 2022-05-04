@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
-import { DISCORD_MASS_OPTIONS, RoutePath } from "../../constant";
+
+import {
+  defaultChromeUser,
+  DISCORD_MASS_OPTIONS,
+  RoutePath,
+} from "../../constant";
+
 import {
   fetchChromeUserListState,
   fetchClaimerGroupList,
@@ -20,6 +27,8 @@ import {
 import {
   activityChangerValidation,
   basicAccChangerValidation,
+  getAllChannelIds,
+  getAllServerIds,
   giveawayJoinerValidation,
   inviteJoinerValidation,
   linkOpenerValidation,
@@ -46,25 +55,32 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
+import { debounce } from "lodash";
+
 function AccountChanger() {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-
-  const appTheme = useSelector(fetchThemsState)
-  const chromeList = useSelector(fetchChromeUserListState)
-  const proxyGroupList = useSelector(fetchProxyGroupList)
-  const claimerGroupList = useSelector(fetchClaimerGroupList)
-  const dispatch = useDispatch()
-
+  const appTheme = useSelector(fetchThemsState);
+  const chromeList = useSelector(fetchChromeUserListState);
+  const proxyGroupList = useSelector(fetchProxyGroupList);
+  const claimerGroupList = useSelector(fetchClaimerGroupList);
+  const dispatch = useDispatch();
   const [accountChanger, setAccountChanger] = useState({
     proxyGroup: {},
     claimerGroup: {},
-    status: "idle",
+    status: "Idle",
     createdAt: new Date().toUTCString(),
     changerType: "",
     active: false,
     render: false,
+    delay: 1,
+    chromeUser: {
+      id: "1abzsgjhgh2klghxcvbnnbvbcv12ncv3vbcc1",
+      label: "Default",
+      value: "default",
+    },
   });
+
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
       handleCloseModal();
@@ -143,12 +159,40 @@ function AccountChanger() {
       });
     }
   };
+  const delayedQuery = useRef(
+    debounce(async (q) => {
+      const res = await getAllServerIds(q);
+      let obj = [];
+      for (let i = 0; i < res.data.length; i++) {
+        let tempOjb = {};
+        tempOjb["label"] = res.data[i].name;
+        tempOjb["value"] = res.data[i].id;
+        obj.push(tempOjb);
+      }
+      setAccountChanger((pre) => {
+        return {
+          ...pre,
+          serverIDs: obj,
+        };
+      });
+    }, 1000)
+  ).current;
 
   const handleChange = (e) => {
     const { value, name } = e.target;
-    setAccountChanger((pre) => {
-      return { ...pre, [name]: value };
-    });
+    if (
+      accountChanger.changerType === "linkOpener" ||
+      (accountChanger.changerType === "inviteJoiner" && name === "monitorToken")
+    ) {
+      setAccountChanger((pre) => {
+        return { ...pre, [name]: { label: value, value: `::${value}` } };
+      });
+      delayedQuery(e.target.value);
+    } else {
+      setAccountChanger((pre) => {
+        return { ...pre, [name]: value };
+      });
+    }
   };
 
   const handleRefreshName = () => {
@@ -187,12 +231,41 @@ function AccountChanger() {
 
   const handleSelectAPI = (obj) => {
     setAccountChanger((pre) => {
-      return { ...pre, url: obj.key };
+      return { ...pre, apiInfo: obj };
     });
   };
   const handleSelectToken = (obj) => {
     setAccountChanger((pre) => {
       return { ...pre, token: obj.value };
+    });
+  };
+
+  const handleSelectServer = async (obj) => {
+    const res = await getAllChannelIds(
+      obj.value,
+      accountChanger.monitorToken.label
+    );
+    let channels = [];
+    for (let i = 0; i < res.data.length; i++) {
+      let tempObj = {};
+      if (res.data[i].type === 0) {
+        tempObj["label"] = res.data[i].name;
+        tempObj["value"] = res.data[i].id;
+        channels.push(tempObj);
+      }
+    }
+    setAccountChanger((pre) => {
+      return { ...pre, channels: channels };
+    });
+  };
+
+  const handleSelectChannel = (obj) => {
+    let tempArr = [];
+    for (let i = 0; i < obj.length; i++) {
+      tempArr.push(obj[i].value);
+    }
+    setAccountChanger((pre) => {
+      return { ...pre, channelIDs: tempArr.join("\n") };
     });
   };
 
@@ -232,10 +305,10 @@ function AccountChanger() {
     });
   };
 
-  const textClass = appTheme ? 'lightMode_color' : ''
+  const textClass = appTheme ? "lightMode_color" : "";
 
   return (
-    <ModalWrapper {...{ handleIsEmoji, flag: "true" }}>
+    <ModalWrapper handleIsEmoji={handleIsEmoji} flag={true}>
       <div className="modal-tilte">
         <h2 className={textClass}>Create Task</h2>
       </div>
@@ -257,14 +330,11 @@ function AccountChanger() {
           {accountChanger["changerType"] === "linkOpener" && (
             <AppInputField
               onChange={handleChromeUser}
-              placeholderText={
-                chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
-              }
               selectOptions={chromeList}
               fieldTitle="Chrome User"
-              isSelect={chromeList.length > 0}
-              disabled={chromeList.length > 0}
+              isSelect={true}
               navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
+              defaultValue={defaultChromeUser}
             />
           )}
         </ModalFlexInnerRow>
@@ -274,11 +344,11 @@ function AccountChanger() {
         <ModalFlexOuterRow>
           <ModalFlexInnerRow>
             <AppInputField
-              fieldTitle="Token Group"
+              fieldTitle="Discord Accounts"
               placeholderText={
                 claimerGroupList.length > 0
-                  ? "Select Token Group"
-                  : "Add Token Group"
+                  ? "Select Discord Accounts"
+                  : "Add Discord Accounts"
               }
               onMenuOpen={handleClaimerMenuOpen}
               selectOptions={makeClaimerSelectOption(claimerGroupList)}
@@ -292,6 +362,8 @@ function AccountChanger() {
               navigate={
                 claimerGroupList.length > 0 ? () => {} : handleProxyMenuOpen
               }
+              tooltip={true}
+              toolTipText="Select Discord Accounts"
             />
           </ModalFlexInnerRow>
           <ModalFlexInnerRow>
@@ -311,6 +383,8 @@ function AccountChanger() {
               navigate={
                 proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
               }
+              tooltip={true}
+              toolTipText="Select proxy group"
             />
           </ModalFlexInnerRow>
         </ModalFlexOuterRow>
@@ -329,9 +403,11 @@ function AccountChanger() {
         handleCloseModal,
         handleSubmit,
         handleIsEmoji,
-        handleUpdateObject
+        handleUpdateObject,
+        handleSelectChannel,
+        handleSelectServer
       )}
-      <AppSpacer spacer={30} />
+      <AppSpacer spacer={20} />
       {accountChanger?.changerType ? (
         accountChanger?.changerType === "massInviter" ? (
           ""
@@ -341,8 +417,8 @@ function AccountChanger() {
               onClick={handleCloseModal}
               className={
                 appTheme
-                  ? 'modal-cancel-btn btn light-mode-modalbtn'
-                  : 'modal-cancel-btn btn'
+                  ? "modal-cancel-btn btn light-mode-modalbtn"
+                  : "modal-cancel-btn btn"
               }
             >
               <span className={textClass}>Cancel</span>
@@ -361,8 +437,8 @@ function AccountChanger() {
             onClick={handleCloseModal}
             className={
               appTheme
-                ? 'modal-cancel-btn btn light-mode-modalbtn'
-                : 'modal-cancel-btn btn'
+                ? "modal-cancel-btn btn light-mode-modalbtn"
+                : "modal-cancel-btn btn"
             }
           >
             <span className={textClass}>Cancel</span>
@@ -393,7 +469,9 @@ const getDynamicSlideRnder = (
   handleCloseModal,
   handleSubmit,
   handleIsEmoji,
-  handleUpdateObject
+  handleUpdateObject,
+  handleSelectChannel,
+  handleSelectServer
 ) => {
   switch (type) {
     case "avatarChanger":
@@ -447,16 +525,14 @@ const getDynamicSlideRnder = (
       return (
         <InviteJoinerSlide
           onChange={handleChange}
-          state={state}
-          handleMonitorToken={handleMonitorToken}
+          {...{ state, handleSelectChannel, handleSelectServer }}
         />
       );
     case "linkOpener":
       return (
         <LinkOpenerSlide
           onChange={handleChange}
-          state={state}
-          handleMonitorToken={handleMonitorToken}
+          {...{ state, handleSelectChannel, handleSelectServer }}
         />
       );
     case "xpFarmer":

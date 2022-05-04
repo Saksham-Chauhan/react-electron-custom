@@ -1,44 +1,48 @@
-import React, { useEffect } from 'react'
-import './App.css'
-import bot from './assests/images/bot.svg'
-import chip from './assests/images/chip.svg'
+import React, { useEffect } from "react";
+import "./App.css";
+import bot from "./assests/images/bot.svg";
+import chip from "./assests/images/chip.svg";
 import {
   setUserDetails,
   fetchSpoofModalState,
   fetchDiscordModalState,
   fetchLoggedUserDetails,
+  fetchNftTaskModalState,
+  fetchNftGroupModalState,
   fetchDashboardModalState,
   fetchWebhookSettingState,
+  fetchNftWalletModalState,
+  fetchNftSettingModalState,
+  fetchClamerOnbordingState,
+  fetchProxyOnbordingState,
   fetchProxyGroupModalState,
   fetchClaimerGroupModalState,
   fetchAccountChangerModalState,
-  fetchNftGroupModalState,
-  fetchNftTaskModalState,
-  fetchNftWalletModalState,
-  fetchNftSettingModalState,
   fetchThemsState,
-} from './features/counterSlice'
+} from "./features/counterSlice";
 import {
+  NftTaskModal,
+  NftGroupModal,
   AddSpoofModal,
+  NftWalletModal,
+  NftSettingModal,
   OnboardingModal,
   ProxyGroupModal,
+  ClamerOnboarding,
   ClaimerGroupModal,
   AccountChangerModal,
   DiscordAccountModal,
-  NftGroupModal,
-  NftTaskModal,
-  NftWalletModal,
-  NftSettingModal,
-} from './modals'
+  ProxyOnboarding,
+} from "./modals";
 import {
   Login,
   TwitterPage,
   SettingPage,
   SpooferPage,
   DashboardPage,
-  AccountChangerPage,
   ETHminterPage,
-} from './pages'
+  AccountChangerPage,
+} from "./pages";
 import {
   sendLogs,
   authUser,
@@ -49,148 +53,155 @@ import {
   interceptorFound,
   downloadingStart,
   updateNotAvailable,
-  proxyTestResultListener,
   updateStatusLOmonitor,
+  proxyTestResultListener,
   webhookNotificationListener,
-} from './helper/electron-bridge'
-import { resetSpooferStatus, updateSpooferStatus } from './features/logic/spoof'
+} from "./helper/electron-bridge";
+import {
+  resetSpooferStatus,
+  updateSpooferStatus,
+} from "./features/logic/spoof";
 import {
   toastInfo,
   toastWarning,
   progressToast,
   MAX_TOAST_LIMIT,
-} from './toaster'
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify'
-import { EndPointToPage, RoutePath } from './constant'
-import { useDispatch, useSelector } from 'react-redux'
-import { proxyStatusUpdater } from './features/logic/proxy'
-import { Routes, Route, useLocation } from 'react-router-dom'
-import { resetTwitterMonitor } from './features/logic/twitter'
-import { interceptorWebhook, loggedUserWebhook } from './helper/webhook'
+} from "./toaster";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { EndPointToPage, RoutePath } from "./constant";
+import { useDispatch, useSelector } from "react-redux";
+import { webhookNotifier } from "./features/logic/setting";
+import { proxyStatusUpdater } from "./features/logic/proxy";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { resetTwitterMonitor } from "./features/logic/twitter";
+import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
 import {
   AppController,
   DragBar,
   AppFooter,
   AppSidebar,
   DarkMode,
-} from './component'
-import { resetTaskState, updateTaskState } from './features/logic/acc-changer'
-import { webhookNotifier } from './features/logic/setting'
+} from "./component";
+import { resetTaskState, updateTaskState } from "./features/logic/acc-changer";
 
 function App() {
-  const dispatch = useDispatch()
-  const location = useLocation()
-  const appTheme = useSelector(fetchThemsState)
-  const nftSettingModalState = useSelector(fetchNftSettingModalState)
-  const nftTaskModalState = useSelector(fetchNftTaskModalState)
-  const spoofModalState = useSelector(fetchSpoofModalState)
-  const globalSetting = useSelector(fetchWebhookSettingState)
-  const discordModalState = useSelector(fetchDiscordModalState)
-  const logggedUserDetails = useSelector(fetchLoggedUserDetails)
-  const proxyModalState = useSelector(fetchProxyGroupModalState)
-  const onBoardingModalState = useSelector(fetchDashboardModalState)
-  const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState)
-  const accountChangerModalState = useSelector(fetchAccountChangerModalState)
-  const nftGroupModalState = useSelector(fetchNftGroupModalState)
-  const nftWalletModalState = useSelector(fetchNftWalletModalState)
-  const animClass = !globalSetting.bgAnimation
-    ? 'kyro-bot'
-    : 'kyro-bot-no-animation'
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const spoofModalState = useSelector(fetchSpoofModalState);
+  const globalSetting = useSelector(fetchWebhookSettingState);
+  const nftTaskModalState = useSelector(fetchNftTaskModalState);
+  const discordModalState = useSelector(fetchDiscordModalState);
+  const logggedUserDetails = useSelector(fetchLoggedUserDetails);
+  const proxyModalState = useSelector(fetchProxyGroupModalState);
+  const onBoardingModalState = useSelector(fetchDashboardModalState);
+  const nftSettingModalState = useSelector(fetchNftSettingModalState);
+  const claimerGroupmodalState = useSelector(fetchClaimerGroupModalState);
+  const accountChangerModalState = useSelector(fetchAccountChangerModalState);
+  const nftGroupModalState = useSelector(fetchNftGroupModalState);
+  const nftWalletModalState = useSelector(fetchNftWalletModalState);
+  const settingOnboardingh = useSelector(fetchClamerOnbordingState);
+  const settingOnboardinghProxy = useSelector(fetchProxyOnbordingState);
+  const appTheme = useSelector(fetchThemsState);
+
+  const animClass = globalSetting.bgAnimation
+    ? "kyro-bot"
+    : "kyro-bot-no-animation";
 
   useEffect(() => {
-    dispatch(resetTaskState())
-    dispatch(resetSpooferStatus())
-    dispatch(resetTwitterMonitor())
+    dispatch(resetTaskState());
+    dispatch(resetSpooferStatus());
+    dispatch(resetTwitterMonitor());
     spooferToaster((data) => {
       if (Object.keys(data).length > 0) {
-        dispatch(updateSpooferStatus(data))
+        dispatch(updateSpooferStatus(data));
       }
-    })
+    });
     authUser().then(async (user) => {
       if (user !== null) {
-        const decode = decodeUser(user)
+        const decode = decodeUser(user);
         if (decode.roles.length > 0) {
           try {
-            let title = `${decode?.username}#${decode?.discriminator} Just Logged In 🥰 🥳 `
+            let title = `${decode?.username}#${decode?.discriminator} Just Logged In 🥰 🥳 `;
 
             await loggedUserWebhook(
               title,
               globalSetting?.webhookList[0],
-              globalSetting?.logOnOff,
-            )
+              globalSetting?.logOnOff
+            );
           } catch (e) {
-            const log = `Something went wrong on dispatch user ${e.message}`
-            sendLogs(log)
+            const log = `Something went wrong on dispatch user ${e.message}`;
+            sendLogs(log);
           }
-          dispatch(setUserDetails(decode))
-        } else toastWarning("Sorry, you don't have required role")
+          dispatch(setUserDetails(decode));
+        } else toastWarning("You're not a Beta member");
       }
-    })
+    });
     proxyTestResultListener((res) => {
-      dispatch(proxyStatusUpdater(res))
-    })
+      dispatch(proxyStatusUpdater(res));
+    });
     interceptorFound((res) => {
-      interceptorWebhook(`${res} Tool found.`)
-    })
+      interceptorWebhook(`${res} Tool found.`);
+    });
     updateNotAvailable(() =>
-      toastInfo('Update not available or You are already to update 😍 🤩'),
-    )
+      toastInfo("Update not available or You are already up to date 😍 🤩")
+    );
     downloadingStart(() => {
-      progressToast()
-    })
+      progressToast();
+    });
     updateProgress((percent) => {
-      const progressDiv = document.querySelector('.progress-value')
-      progressDiv.innerHTML = percent
-    })
-    errorToaster((err) => toastWarning(err))
+      const progressDiv = document.querySelector(".progress-value");
+      progressDiv.innerHTML = percent;
+    });
+    errorToaster((err) => toastWarning(err));
     // LO IPC
-    updateStatusLOmonitor((res) => dispatch(updateTaskState(res)))
-    webhookNotificationListener((res) => dispatch(webhookNotifier(res)))
+    updateStatusLOmonitor((res) => dispatch(updateTaskState(res)));
+    webhookNotificationListener((res) => dispatch(webhookNotifier(res)));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, globalSetting.logOnOff])
+  }, [dispatch, globalSetting.logOnOff]);
 
   // Route Navigation Listener
   useEffect(() => {
-    const currentPage = EndPointToPage[location?.pathname]
-    const log = `Navigate to ${currentPage}`
-    sendLogs(log)
-  }, [location.pathname])
+    const currentPage = EndPointToPage[location?.pathname];
+    const log = `Navigate to ${currentPage}`;
+    sendLogs(log);
+  }, [location.pathname]);
 
   // check is user log in or not
-  // if (Object.keys(logggedUserDetails).length === 0) {
-  //   return (
-  //     <React.Fragment>
-  //       <Login />
-  //       <ToastContainer />
-  //     </React.Fragment>
-  //   );
-  // }
+  if (Object.keys(logggedUserDetails).length === 0) {
+    return (
+      <React.Fragment>
+        <Login />
+        <ToastContainer />
+      </React.Fragment>
+    );
+  }
 
   return (
     <div className="app">
-      {nftSettingModalState && <NftSettingModal />}
-      {nftWalletModalState && <NftWalletModal />}
-      {nftTaskModalState && <NftTaskModal />}
-      {nftGroupModalState && <NftGroupModal />}
       {spoofModalState && <AddSpoofModal />}
+      {nftTaskModalState && <NftTaskModal />}
       {proxyModalState && <ProxyGroupModal />}
-      {!onBoardingModalState && <OnboardingModal />}
+      {nftGroupModalState && <NftGroupModal />}
+      {nftWalletModalState && <NftWalletModal />}
+      {settingOnboardingh && <ClamerOnboarding />}
+      {nftSettingModalState && <NftSettingModal />}
+      {onBoardingModalState && <OnboardingModal />}
       {discordModalState && <DiscordAccountModal />}
       {claimerGroupmodalState && <ClaimerGroupModal />}
       {accountChangerModalState && <AccountChangerModal />}
-      {/* {inviteSettigModalState && <InviteJoinerSettingModal />} */}
-      <div
-        className={appTheme ? 'app sidebar light-mode-sidebar' : 'app sidebar'}
-      >
+      {settingOnboardingh && <ClamerOnboarding />}
+      {settingOnboardinghProxy && <ProxyOnboarding />}
+
+      <div className="app sidebar">
         <AppSidebar />
       </div>
       <div
         className={
           appTheme
-            ? 'app page-section light-mode-page-section'
-            : 'app page-section '
+            ? "app page-section light-mode-page-section"
+            : "app page-section "
         }
       >
         <div className=" overlay-wrapper ">
@@ -217,7 +228,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

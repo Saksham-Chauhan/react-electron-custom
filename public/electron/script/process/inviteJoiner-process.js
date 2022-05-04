@@ -53,7 +53,7 @@ class InviteJoinerMonitor {
         let inviteCode = this.getInviteCode(msgContent);
         if (isDiscordInvite) {
           for (let i = 0; i < this.tokenList.length; i++) {
-            const token = this.tokenList[i].split(":")[3];
+            const token = this.tokenList[i].split(":")[2];
             const proxy = this.getProxy(this.proxyList);
             try {
               const info = await this.discordServerInviteAPI(
@@ -182,7 +182,7 @@ class InviteJoinerMonitor {
       headers: { Authorization: token },
       method: "post",
       data: JSON.stringify({}),
-      proxy,
+      // proxy,
     });
   }
 }

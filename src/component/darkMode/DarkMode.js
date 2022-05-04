@@ -1,27 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import './style.css'
-import { useSelector, useDispatch } from 'react-redux'
-import { fetchThemsState, setThemeState } from '../../features/counterSlice'
-import DarkModeToggle from 'react-dark-mode-toggle'
+import React from "react";
+import "./style.css";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchThemsState, setThemeState } from "../../features/counterSlice";
+import DarkModeToggle from "react-dark-mode-toggle";
 
 const DarkMode = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() => false)
-  const dispatch = useDispatch()
-  const appTheme = useSelector(fetchThemsState)
-  useEffect(() => {
-    dispatch(setThemeState(!isDarkMode))
-  }, [isDarkMode, dispatch])
+  const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
   return (
     <div className="darkMode">
-      <div style={{ border: '1px solid #706A6A' }}>
+      <div style={{ border: "1px solid #706A6A" }}>
         <DarkModeToggle
-          onChange={setIsDarkMode}
-          checked={isDarkMode}
+          onChange={() => dispatch(setThemeState(!appTheme))}
+          checked={!appTheme}
           size={40}
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DarkMode
+export default DarkMode;

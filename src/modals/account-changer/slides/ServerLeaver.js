@@ -1,16 +1,16 @@
-import React from 'react'
-import { AppInputField, AppSpacer, AppToggler } from '../../../component'
+import React from "react";
+import { AppInputField, AppSpacer } from "../../../component";
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
-} from '../../../component/modal-wrapper/Modal'
-import { fetchThemsState } from '../../../features/counterSlice'
-import { useSelector } from 'react-redux'
-import './style.css'
+} from "../../../component/modal-wrapper/Modal";
+import { fetchThemsState } from "../../../features/counterSlice";
+import { useSelector } from "react-redux";
+import "./style.css";
 
 function ServerLeaver({ ...props }) {
-  const appTheme = useSelector(fetchThemsState)
-  const textClass = appTheme ? 'lightMode_color' : ''
+  const appTheme = useSelector(fetchThemsState);
+  const textClass = appTheme ? "lightMode_color" : "";
 
   return (
     <React.Fragment>
@@ -21,7 +21,7 @@ function ServerLeaver({ ...props }) {
             name="delay"
             {...props}
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
@@ -29,8 +29,8 @@ function ServerLeaver({ ...props }) {
       <AppSpacer spacer={20} />
       <div className="servre-leaver-toggler">
         <span className={textClass}>Server ID[s]</span>
-        <span className="all">All</span>
-        <AppToggler />
+        {/* <span className="all">All</span>
+        <AppToggler /> */}
       </div>
       <AppInputField
         {...props}
@@ -44,7 +44,7 @@ function ServerLeaver({ ...props }) {
         936538800027467344`}
       />
     </React.Fragment>
-  )
+  );
 }
 
-export default ServerLeaver
+export default ServerLeaver;

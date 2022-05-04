@@ -43,6 +43,7 @@ export const deleteClaimerGroupFromList = (group) => (dispatch, getState) => {
   let tempList = [...currentList];
   let obj = { ...group };
   let afterEdit = tempList.filter((d) => d["id"] !== obj["id"]);
+
   if (ijSelectedClaimer["id"] === obj["id"]) {
     dispatch(setSelectedClaimerGroup({}));
   }
@@ -104,7 +105,7 @@ export const readTokenGroupFromFile = (data) => (dispatch, getState) => {
   for (let i = 0; i < tokenList.length; i++) {
     const token = tokenList[i];
     let len = token.split(":").length;
-    if (len === 4) {
+    if (len === 3) {
       valid.push(token);
     }
   }
@@ -114,7 +115,7 @@ export const readTokenGroupFromFile = (data) => (dispatch, getState) => {
   obj["claimerList"] = [];
   obj["claimerToken"] = valid.map((tkn) => tkn).join("\n");
   obj["createdAt"] = new Date().toUTCString();
-  const log = `New Token Group is created ${obj["name"]}`;
+  const log = `New Discord Account is created ${obj["name"]}`;
   sendLogs(log);
   let combiner = [obj, ...currentList];
   dispatch(appendClaimerGroupInList(combiner));

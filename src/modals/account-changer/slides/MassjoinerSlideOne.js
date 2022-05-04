@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import {
   AppInputField,
   AppSpacer,
@@ -9,8 +10,12 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
+import { fetchThemsState } from "../../../features/counterSlice";
 
 const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
+  console.log(pageState);
+  const appTheme = useSelector(fetchThemsState);
+  const textClass = appTheme ? "lightMode_color" : "";
   return (
     <>
       <div className="mj-slide">
@@ -18,7 +23,7 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
           <ModalFlexInnerRow>
             <AppInputField
               fieldTitle="Delay (Optional)"
-              placeholderText="Enter Delay (in ms)"
+              placeholderText="Enter Delay (in seconds)"
               name="delay"
               min={0}
               onChange={onChange}
@@ -40,7 +45,7 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
         />
         <div className="d-flex toogler-group-dj">
           <div className="toggler-btn-label">
-            <label>React</label>
+            <label className={textClass}>React</label>
             <AppSpacer spacer={5} />
             <div className="d-flex toggler-slide-one">
               <AppToggler
@@ -49,7 +54,9 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
                 onChange={handleToggler}
                 name="isReact"
               />
-              <label>Turn {pageState.isReact ? "ON" : "OFF"}</label>
+              <label className={textClass}>
+                Turn {pageState.isReact ? "ON" : "OFF"}
+              </label>
             </div>
           </div>
           <div className="toggler-btn-label joiner-custom-input">
@@ -78,7 +85,9 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
                 onChange={handleToggler}
                 name="isAcceptRule"
               />
-              <label>Turn {pageState.isAcceptRule ? "ON" : "OFF"}</label>
+              <label className={textClass}>
+                Turn {pageState.isAcceptRule ? "ON" : "OFF"}
+              </label>
             </div>
           </div>
         </div>

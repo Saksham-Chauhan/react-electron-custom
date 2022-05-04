@@ -1,47 +1,43 @@
-import React from 'react'
-import './styles.css'
+import React from "react";
+import "./styles.css";
 import {
   stopSpoofer,
   startSpoofer,
   toggleSpoofer,
   deleteSpoofer,
-} from '../../../helper/electron-bridge'
-import { useDispatch, useSelector } from 'react-redux'
-import TableRow from '../spoof-table-row/SpooferTableRow'
-import { deleteSpooferFromList } from '../../../features/logic/spoof'
-import { toastWarning } from '../../../toaster'
-import { fetchThemsState } from '../../../features/counterSlice'
+} from "../../../helper/electron-bridge";
+import { useDispatch, useSelector } from "react-redux";
+import TableRow from "../spoof-table-row/SpooferTableRow";
+import { deleteSpooferFromList } from "../../../features/logic/spoof";
+import { fetchThemsState } from "../../../features/counterSlice";
 
 function SpooferTable({ tableList }) {
-  const dispatch = useDispatch()
-  const appTheme = useSelector(fetchThemsState)
+  const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
   const Theme = {
     tableHeader: appTheme
-      ? 'spoofer-page-table-header light-mode-active-link'
-      : 'spoofer-page-table-header',
-  }
+      ? "spoofer-page-table-header light-mode-sidebar"
+      : "spoofer-page-table-header",
+  };
 
   const handleStart = (spoof, setValue) => {
-    if (!tableList.proxyValue) {
-      toastWarning('No proxy found. Using system proxy.')
-    }
-    startSpoofer(spoof)
-    setValue((pre) => !pre)
-  }
+    startSpoofer(spoof);
+    setValue((pre) => !pre);
+  };
 
   const handleDelete = (spoof) => {
-    deleteSpoofer(spoof)
-    dispatch(deleteSpooferFromList(spoof))
-  }
+    deleteSpoofer(spoof);
+    dispatch(deleteSpooferFromList(spoof));
+  };
 
   const handleToggle = (spoof) => {
-    toggleSpoofer(spoof)
-  }
+    toggleSpoofer(spoof);
+  };
 
   const handleStop = (spoof, setValue) => {
-    stopSpoofer(spoof)
-    setValue((pre) => !pre)
-  }
+    stopSpoofer(spoof);
+    setValue((pre) => !pre);
+  };
 
   return (
     <div className="spoofer-page-table-section">
@@ -57,7 +53,7 @@ function SpooferTable({ tableList }) {
           <TableRow
             {...{ spoof }}
             index={index + 1}
-            key={spoof['id']}
+            key={spoof["id"]}
             onStop={handleStop}
             onStart={handleStart}
             onDelete={handleDelete}
@@ -66,7 +62,7 @@ function SpooferTable({ tableList }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default SpooferTable
+export default SpooferTable;

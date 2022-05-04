@@ -13,6 +13,7 @@ async function tokenChanger(email, password, proxy) {
       },
       proxy: proxy,
     });
+    console.log(res);
     return res;
   } catch (error) {
     return error;

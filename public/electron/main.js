@@ -15,6 +15,7 @@ const linkOpernerManager = require("./script/manager/linkOpener-manager");
 const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
+var { execFile, spawn } = require("child_process");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -78,13 +79,7 @@ function createAuthWindow() {
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-      const options = {
-        type: "error",
-        title: "Error",
-        message: "Login failed",
-        detail: "You are not a beta member",
-      };
-      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+      console.log(error);
     }
   });
   win.on("authenticated", () => {
@@ -428,6 +423,23 @@ ipcMain.handle("imageText", async (event, url) => {
   const {
     data: { text },
   } = await Tesseract.recognize(url, "eng");
+  // const folderPath = app.getPath("userData");
+  // const worker = Tesseract.createWorker({
+  //   cachePath: path.join(folderPath, "/tesseract"),
+  //   // logger: (m) => console.log("Log", m),
+  // });
+  // const getText = async () => {
+  //   await worker.load();
+  //   await worker.loadLanguage("eng");
+  //   await worker.initialize("eng");
+  //   const {
+  //     data: { text },
+  //   } = await worker.recognize(url);
+  //   await worker.terminate();
+  //   return text;
+  // };
+
+  // return await getText();
   return text;
 });
 
@@ -599,3 +611,45 @@ ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
 ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
   InviteJoinerManager.stopMonitor(id);
 });
+
+//RUN LOCAL SERVER
+ipcMain.on("run-xp-server", (_, data) => {
+  xpFarmerStart();
+});
+
+ipcMain.on("stop-xp-server", (_, data) => {
+  stopXpfarmer();
+});
+
+async function xpFarmerStart() {
+  console.log("called start");
+  const exePath = isDev
+    ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
+    : `xpfarmer.exe`;
+  try {
+    execFile(exePath, [3001], { cwd: "." }, (error, stdout, stderr) => {
+      if (error) {
+        throw error;
+      }
+      console.log(stdout);
+    });
+  } catch (e) {
+    console.log("this is error", e);
+  }
+}
+
+function stopXpfarmer() {
+  console.log("called stop");
+  try {
+    currentProcesses.get((err, processes) => {
+      const sorted = _.sortBy(processes, "cpu");
+      for (let i = 0; i < sorted.length; i += 1) {
+        if ("xpfarmer" === sorted[i].name.toLowerCase()) {
+          process.kill(sorted[i].pid);
+        }
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}

@@ -17,7 +17,16 @@ export const appendGroupInNftGroupList = (group) => (dispatch, getState) => {
 
 export const appendNftWalletInList = (wallet) => (dispatch, getState) => {
   const walletList = fetchNftWalletListState(getState());
-  dispatch(setNftWalletList([{ ...wallet, id: generateId(), ...walletList }]));
+  dispatch(setNftWalletList([{ ...wallet, id: generateId() }, ...walletList]));
+};
+
+export const editNftWalletList = (wallet) => (dispatch, getState) => {
+  const walletList = fetchNftWalletListState(getState());
+  let updatedList = walletList.filter((item) => {
+    if (item.id === wallet.id) return wallet;
+    else return item;
+  });
+  dispatch(setNftWalletList(updatedList));
 };
 
 export const removeNftWalletFromList = (data) => (dispatch, getState) => {
@@ -88,7 +97,7 @@ export const editTaskInGroup = (task) => (dispatch, getState) => {
   dispatch(
     appendGroupInNftList(
       groupList.map((d) => {
-        if (d["id"] === task["id"]) return newTask;
+        if (d["id"] === newTask["id"]) return newTask;
         return d;
       })
     )

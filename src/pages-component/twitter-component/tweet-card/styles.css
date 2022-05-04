@@ -44,7 +44,18 @@
   line-height: 17px;
   display: block;
   color: var(--primary);
-  padding: 1em 0.8em;
+  padding: 1em 1.2em;
   background: var(--sidebar-bg);
   border-radius: 7.30208px;
+}
+p.feature-tweet-text {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 17px;
+  margin: 0.3em 0px 0px 0px;
+}
+.feature-tweet-text > span {
+  font-weight: 400;
+  margin-left: 0.3em;
 }

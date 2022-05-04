@@ -1,52 +1,39 @@
 import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
 
-function GiveawayJoiner({ selectToken, ...props }) {
-  const { pageState } = props;
-  const getTokensList = () => {
-    let arr = pageState.claimerGroup.value.split("\n");
-    let arrofTokens = [];
-    for (let i = 0; i < arr.length; i++) {
-      arrofTokens.push({
-        label: arr[i].split(":")[3],
-        value: arr[i].split(":")[3],
-      });
-    }
-    return arrofTokens;
-  };
-
+function GiveawayJoiner({ onChange, selectToken, ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
       <div className="modal-flex-field-wrapper flex-col">
         <div className="half-flex-field">
-          {Object.keys(pageState.claimerGroup).length && (
-            <>
-              <AppInputField
-                fieldTitle="Select token"
-                placeholderText="Add token"
-                selectOptions={getTokensList()}
-                isSelect={true}
-                onChange={selectToken}
-              />
-              <AppSpacer spacer={10} />
-            </>
-          )}
+          <AppInputField
+            fieldTitle="Monitor Token"
+            placeholderText="Enter Token"
+            // selectOptions={getTokensList()}
+            // isSelect={true}
+            onChange={onChange}
+            name="token"
+          />
         </div>
         <AppSpacer spacer={10} />
         <div className=" modal-flex-field-wrapper">
-          <AppInputField
-            {...props}
-            name="botid"
-            fieldTitle="Enter bot id"
-            placeholderText="enter bot id"
-          />
-          <AppInputField
-            {...props}
-            name="serverid"
-            fieldTitle="Enter server id"
-            placeholderText="enter server id"
-          />
+          <div style={{ width: "48%" }}>
+            <AppInputField
+              onChange={onChange}
+              name="botid"
+              fieldTitle="Enter Bot ID"
+              placeholderText="Enter Bot ID"
+            />
+          </div>
+          <div style={{ width: "49%" }}>
+            <AppInputField
+              onChange={onChange}
+              name="serverid"
+              fieldTitle="Enter Server ID"
+              placeholderText="Enter Server ID"
+            />
+          </div>
         </div>
         <AppSpacer spacer={10} />
         <div className="half-flex-field">
@@ -54,7 +41,7 @@ function GiveawayJoiner({ selectToken, ...props }) {
             {...props}
             name="delay"
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
           />
         </div>
       </div>

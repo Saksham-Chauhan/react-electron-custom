@@ -95,3 +95,8 @@
   );
   -webkit-app-region: no-drag;
 }
+
+.login-logo-img {
+  height: 8rem;
+  margin-bottom: 3rem;
+}

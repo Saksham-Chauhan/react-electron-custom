@@ -1,5 +1,10 @@
 /* light mode classes  */
-
+.table-header-lightmode {
+  background-color: var(--lightMode-bg) !important;
+}
+.table-header-lightmode > div > .edit {
+  filter: invert(1);
+}
 .light-mode-sidebar {
   background: var(--lightMode-sidebar-bg) !important;
 }
@@ -189,7 +194,6 @@
 .left-container {
   height: 100%;
   width: 18%;
-  border-right: 0.5px solid #131b3c;
 }
 .group-card-scroll {
   height: 50vh;
@@ -317,4 +321,7 @@
 /* UTILITY */
 .d-flex {
   display: flex;
+}
+.cursor-pointer {
+  cursor: pointer;
 }

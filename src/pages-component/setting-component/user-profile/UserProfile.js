@@ -1,50 +1,50 @@
-import React from 'react'
-import './styles.css'
+import React from "react";
+import "./styles.css";
 import {
   setUserDetails,
   fetchWebhookListState,
   fetchWebhookSettingState,
   fetchThemsState,
-} from '../../../features/counterSlice'
-import { MONTHS } from '../../../helper'
-import user from '../../../assests/images/user.svg'
-import { useDispatch, useSelector } from 'react-redux'
-import logout from '../../../assests/images/logout.svg'
-import { loggedUserWebhook } from '../../../helper/webhook'
-import { discordJoinedAtRegex } from '../../../constant/regex'
+} from "../../../features/counterSlice";
+import { MONTHS } from "../../../helper";
+import user from "../../../assests/images/user.svg";
+import { useDispatch, useSelector } from "react-redux";
+import logout from "../../../assests/images/logout.svg";
+import { loggedUserWebhook } from "../../../helper/webhook";
+import { discordJoinedAtRegex } from "../../../constant/regex";
 
 function UserProfile({ userDetails }) {
-  const dispatch = useDispatch()
-  const webhookList = useSelector(fetchWebhookListState)
-  const option = useSelector(fetchWebhookSettingState)
-  const appTheme = useSelector(fetchThemsState)
+  const dispatch = useDispatch();
+  const webhookList = useSelector(fetchWebhookListState);
+  const option = useSelector(fetchWebhookSettingState);
+  const appTheme = useSelector(fetchThemsState);
 
   const Theme = {
     userLogOutBtn: appTheme
-      ? 'Light-mode-logoutbtn user-logout-btn btn'
-      : 'user-logout-btn btn',
-    textClass: appTheme ? 'lightMode_color' : '',
-  }
+      ? "Light-mode-logoutbtn user-logout-btn btn"
+      : "user-logout-btn btn",
+    textClass: appTheme ? "lightMode_color" : "",
+  };
 
-  const makeDate = (str = '') => {
-    let date = str.match(discordJoinedAtRegex)
+  const makeDate = (str = "") => {
+    let date = str.match(discordJoinedAtRegex);
     if (date !== undefined && date !== null) {
-      let trimDate = date[0]
-      let splitDate = trimDate?.split('-')
-      let month = MONTHS[Number(splitDate[1] - 1 || '0')]
-      return `${month} ${splitDate[0]}`
+      let trimDate = date[0];
+      let splitDate = trimDate?.split("-");
+      let month = MONTHS[Number(splitDate[1] - 1 || "0")];
+      return `${month} ${splitDate[0]}`;
     }
-  }
+  };
 
   const handleLogout = async () => {
     try {
-      let title = `${userDetails?.username}#${userDetails?.discriminator} Logged out 🥲 `
-      await loggedUserWebhook(title, webhookList[0], option?.logOnOff)
+      let title = `${userDetails?.username}#${userDetails?.discriminator} Logged out 🥲 `;
+      await loggedUserWebhook(title, webhookList[0], option?.logOnOff);
     } catch (e) {
       // console.log(e);
     }
-    dispatch(setUserDetails({}))
-  }
+    dispatch(setUserDetails({}));
+  };
 
   return (
     <div className="flex-right-align">
@@ -62,11 +62,11 @@ function UserProfile({ userDetails }) {
         </div>
         <div onClick={handleLogout} className={Theme.userLogOutBtn}>
           <img src={logout} alt="" />
-          <span>logout</span>
+          <span>Logout</span>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default UserProfile
+export default UserProfile;
