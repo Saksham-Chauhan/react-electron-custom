@@ -8,15 +8,11 @@ import {
   SpooferTopBtnsWrraper,
 } from '../../pages-component'
 import { searchingFunction } from '../../hooks/searchFunction'
-import {
-  fetchSpoofTableList,
-  fetchThemsState,
-} from '../../features/counterSlice'
+import { fetchSpoofTableList } from '../../features/counterSlice'
 function Spoofer() {
   const [search, setSearch] = useState('')
   const list = useSelector(fetchSpoofTableList)
   const [tableList, setTableList] = useState([])
-  const appTheme = useSelector(fetchThemsState)
   useEffect(() => {
     if (list.length > 0) {
       setTableList([...list])
