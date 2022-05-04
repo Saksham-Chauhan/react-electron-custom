@@ -45,4 +45,33 @@
 }
 .toggler-btn-label {
   color: var(--primary);
+  width: 100%;
+}
+.toggler-slide-one {
+  justify-content: space-between;
+  width: 60%;
+  font-size: 12px;
+}
+.toggler-btn-label > .custom-toggler-btn {
+  justify-content: space-between;
+  width: 21%;
+}
+.toggler-btn-label > label {
+  font-size: 13.149px;
+}
+.toggler-btn-label > .custom-toggler-btn > label {
+  font-size: 13.149px;
+  line-height: 20px;
+}
+.react-fields {
+  justify-content: space-between;
+}
+.react-fields > div {
+  width: 30%;
+}
+.emoji-tray-picker {
+  position: absolute;
+  z-index: 2;
+  left: 51%;
+  top: 1%;
 }

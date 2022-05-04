@@ -8,11 +8,17 @@ function Modal({ children, bgImageURL, handleIsEmoji = () => {}, ...props }) {
   const appTheme = useSelector(fetchThemsState)
 
   return (
-    <div className="modal-wrapper">
-      <div
-        {...props}
-        className={appTheme ? 'modal-inner light-bg-modal  ' : 'modal-inner'}
-      >
+
+    <div
+      className="modal-wrapper"
+      onClick={() => {
+        if (props.flag) {
+          handleIsEmoji(false);
+        }
+      }}
+    >
+      <div {...props} className="modal-inner">
+
         <div className="server-img">
           <img src={bgImageURL ? bgImageURL : small_bot} alt="Server Logo" />
         </div>

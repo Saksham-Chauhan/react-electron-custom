@@ -42,14 +42,14 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
           <div className="toggler-btn-label">
             <label>React</label>
             <AppSpacer spacer={5} />
-            <div className="joiner-custom-toggle">
+            <div className="d-flex toggler-slide-one">
               <AppToggler
                 id="invite-joiner-react-setting-mode"
                 checked={pageState.isReact}
                 onChange={handleToggler}
                 name="isReact"
               />
-              <label>Turn {!true ? "ON" : "OFF"}</label>
+              <label>Turn {pageState.isReact ? "ON" : "OFF"}</label>
             </div>
           </div>
           <div className="toggler-btn-label joiner-custom-input">
@@ -71,14 +71,14 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
               </p>
             </LabelWithToolTip>
             <AppSpacer spacer={5} />
-            <div className="joiner-custom-toggle">
+            <div className="d-flex toggler-slide-one">
               <AppToggler
                 id="invite-joiner-accept-rule"
                 checked={pageState.isAcceptRule}
                 onChange={handleToggler}
                 name="isAcceptRule"
               />
-              <label>Turn {!true ? "ON" : "OFF"}</label>
+              <label>Turn {pageState.isAcceptRule ? "ON" : "OFF"}</label>
             </div>
           </div>
         </div>

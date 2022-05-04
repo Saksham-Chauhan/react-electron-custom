@@ -8,7 +8,7 @@ async function xpFarmer(proxy, channelID, token) {
   });
   try {
     const res = await axios.post(
-      `http://192.168.29.117:5000/get-response`,
+      `http://178.79.152.181:5000/get-response`,
       json
     );
     return res;
