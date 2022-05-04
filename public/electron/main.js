@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const _ = require("lodash");
 const path = require("path");
 const ping = require("ping");
 const auth = require("./auth");
@@ -9,23 +10,24 @@ const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const spooferManager = require("./script/manager/spoof-manager");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager");
+const linkOpernerManager = require("./script/manager/linkOpener-manager");
 const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
-const _ = require("lodash");
+
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
 
+const DEBUGGER_CHANNEL = "debugger";
 const networkSpeed = new NetworkSpeed();
-
 const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 
 let win = null;
 let mainWindow = null;
 let splash = null;
 
-const DEBUGGER_CHANNEL = "debugger";
 const INTERCEPTOR_TOOLS = [
   "charles",
   "wireshark",
@@ -40,6 +42,7 @@ const INTERCEPTOR_TOOLS = [
   "fern-pro",
   "airgeddon",
 ];
+
 // AUTH WINDOW CREATION
 function createAuthWindow() {
   destroyAuthWin();
@@ -75,7 +78,6 @@ function createAuthWindow() {
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-
       const options = {
         type: "error",
         title: "Error",
@@ -196,7 +198,7 @@ ipcMain.on("close", () => {
       tempMainWindow.close();
     }
   } catch (error) {
-    console.log("Something went wroung on minizing app", error);
+    console.log("Something went wrong on closing app", error);
   }
 });
 
@@ -211,7 +213,7 @@ ipcMain.on("minimize", () => {
       tempMainWindow.minimize();
     }
   } catch (error) {
-    console.log("Something went wroung on minizing app", error);
+    console.log("Something went wrong on minimizing app", error);
   }
 });
 
@@ -455,7 +457,7 @@ ipcMain.on("launch-spoofer", (_, data) => {
 
 // proxy IPC
 const proxyTester = async (proxy) => {
-  const res = await ping.promise.probe(proxy);
+  let res = await ping.promise.probe(proxy, { timeout: 5 });
   if (res["time"] !== "unknown") {
     return res;
   } else {
@@ -557,8 +559,9 @@ const downloadCsvFileDialog = async (fileName, url) => {
 };
 
 // LOG IPC EVENT
-ipcMain.on("add-log", (_, log) => {
-  logManager.logMessage(log);
+ipcMain.on("add-log", (e, log) => {
+  const logMsg = log || e;
+  logManager.logMessage(logMsg);
 });
 
 ipcMain.on("export-log-report", (_, data) => {
@@ -568,6 +571,7 @@ ipcMain.on("export-log-report", (_, data) => {
 // ACC CHANGER IPC
 ipcMain.on("get-server-avatar", async (event, code) => {
   let url;
+  qq;
   var config = {
     method: "get",
     url: `https://discord.com/api/v9/invites/${code}`,
@@ -579,4 +583,19 @@ ipcMain.on("get-server-avatar", async (event, code) => {
     console.log(e);
   }
   mainWindow.webContents.send("url-is", url);
+});
+
+// LO IPC EVENTS
+ipcMain.on("start-linkOpener-monitor", (_, data) => {
+  linkOpernerManager.addMonitor(data);
+});
+ipcMain.on("stop-linkOpener-monitor", (_, id) => {
+  linkOpernerManager.stopMonitor(id);
+});
+
+ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
+  InviteJoinerManager.addMonitor(data);
+});
+ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
+  InviteJoinerManager.stopMonitor(id);
 });

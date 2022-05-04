@@ -13,20 +13,30 @@
 }
 .setting-page-section-col {
   display: flex;
-  justify-content: space-between;
   height: 350px;
 }
 
-.setting-page-section-col .setting-global-section {
-  width: 49%;
-}
 .setting-page-section-col .chrome-user-section {
-  width: 24%;
+  width: 28%;
   height: 100%;
 }
 .setting-page-section-col .chrome-user-section > div {
   height: 100%;
 }
 .setting-page-section-col .claimer-group-section {
-  width: 24%;
+  width: 27%;
+  margin: 0px 7em 0px 5em;
+}
+.setting-page-section-col .proxy-group-section {
+  width: 26%;
+}
+.setting-page_top-section {
+  display: flex;
+}
+.setting-page_webhook-section {
+  width: 53%;
+}
+.setting-page_user-section {
+  width: 35%;
+  margin-left: auto;
 }

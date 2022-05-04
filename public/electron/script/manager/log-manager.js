@@ -3,22 +3,16 @@ const path = require("path");
 const fs = require("fs");
 const { download } = require("electron-dl");
 
-const FILE_NAME_PREFIX = "kyro_tool_log-";
+const FILE_NAME_PREFIX = "kyro_tool";
 
 class LogManager {
   constructor() {
     this.WAIT_INTERVAL = 20000;
     this.logString = [];
     this.folderPath = path.join(app.getPath("userData"), "/Logs");
-
-    this.fistLogFile = null;
-    this.lastLogFile = null;
-    // The file we log on for the day
+    this.maxFileSize = 1;
     this.currentLogFile = null;
-    // Special date string so we parse it easily
-    this.dateString = `${new Date().getDate()}_${
-      new Date().getMonth() + 1
-    }_${new Date().getFullYear()}.log`;
+    this.logFile = `${FILE_NAME_PREFIX}.log`;
   }
 
   saveLogs() {
@@ -27,31 +21,35 @@ class LogManager {
     this.logString = [];
   }
 
-  isSameDate() {
-    const lastFileDate = this.lastLogFile.split(FILE_NAME_PREFIX)[1];
-    if (lastFileDate === this.dateString) {
-      return true;
-    }
-    return false;
-  }
-
   logMessage(log) {
     this.logString.push(`[${new Date().toLocaleString()}] - ${log}`);
   }
 
+  checkFileSize() {
+    const filePath = `${this.folderPath}/${this.logFile}`;
+    if (fs.existsSync(filePath)) {
+      const stats = fs.statSync(filePath);
+      const fileSizeInBytes = stats.size;
+      const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      return fileSizeInMB;
+    }
+  }
   initLogs() {
     if (!fs.existsSync(this.folderPath)) {
       fs.mkdirSync(this.folderPath);
     }
-    const newLogFile = `${FILE_NAME_PREFIX}${this.dateString}`;
+    const newLogFile = this.logFile;
     const logFiles = fs.readdirSync(this.folderPath);
     if (logFiles.length > 0) {
       this.lastLogFile = logFiles[logFiles.length - 1];
-      // If the latest log has the same day as the current day we select that file as the log file for the day
-      if (this.isSameDate()) {
+      const isExceed = this.checkFileSize() < this.maxFileSize;
+      if (isExceed) {
         this.currentLogFile = this.lastLogFile;
-        console.log("Last file has the same date, don't create a new one");
+        console.log("Last file has the same date, dont create a new one");
       } else {
+        for (let i = 0; i < logFiles.length; i++) {
+          fs.rmSync(`${this.folderPath}/${logFiles[i]}`);
+        }
         this.currentLogFile = newLogFile;
         console.log("Creating a new log file for the day");
         fs.appendFileSync(`${this.folderPath}/${newLogFile}`, "");

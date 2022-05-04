@@ -1,20 +1,24 @@
 import React from "react";
 import { AppInputField, AppSpacer, LabelWithToolTip } from "../../../component";
+import {
+  ModalFlexInnerRow,
+  ModalFlexOuterRow,
+} from "../../../component/modal-wrapper/Modal";
 
 function UserNameChanger({ ...props }) {
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
-      <div className="modal-flex-field-wrapper">
-        <div className="half-flex-field">
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
             placeholderText="Enter Delay (in ms)"
             name="delay"
             {...props}
           />
-        </div>
-        <div className="half-flex-field">
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
           <LabelWithToolTip
             toolTopText="Enter user name"
             labelText="Username (Optional)"
@@ -27,8 +31,8 @@ function UserNameChanger({ ...props }) {
             name="username"
             {...props}
           />
-        </div>
-      </div>
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
     </React.Fragment>
   );
 }

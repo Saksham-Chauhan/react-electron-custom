@@ -19,7 +19,7 @@
   background: transparent;
 }
 .custom-checkbox > input:checked + label::after {
-  content: "\2714";
+  content: '\2714';
   font-size: 10px;
   display: flex;
   height: 100%;

@@ -1,7 +1,7 @@
-import React from "react";
-import "./styles.css";
+import React from 'react'
+import './styles.css'
 function DragBar() {
-  return <div className="draggable-dragbar" />;
+  return <div className="draggable-dragbar"></div>
 }
 
-export default DragBar;
+export default DragBar

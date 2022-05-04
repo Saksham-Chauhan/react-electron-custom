@@ -1,6 +1,7 @@
 .acc-changer-page-table-section {
   height: calc(100% - 90px);
 }
+
 .acc-chnager-table-header-parent {
   background: var(--sidebar-bg);
   border-radius: 5px;
@@ -12,6 +13,7 @@
   align-items: center;
   color: var(--scrollbar-bg);
   margin-bottom: 0.5em;
+  border-radius: 5px;
 }
 .acc-chnager-page-table-header.body {
   color: var(--primary);
@@ -23,7 +25,7 @@
   width: 10%;
 }
 .acc-chnager-page-table-header > div:nth-child(2) {
-  width: 40%;
+  width: 25%;
 }
 .acc-chnager-page-table-header > div:nth-child(3) {
   width: 25%;
@@ -44,9 +46,16 @@
   height: 70vh;
   overflow-y: scroll;
 }
-/* .actions-btns-div{
-  width: 18%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
+.acc-changer-table-scroller::-webkit-scrollbar {
+  width: 10px;
+}
+
+.acc-changer-table-scroller::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.acc-changer-table-scroller::-webkit-scrollbar-thumb {
+  background-color: var(--sidebar-bg);
+  outline: none;
+  border-radius: 9px;
+}

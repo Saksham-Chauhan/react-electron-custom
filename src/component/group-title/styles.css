@@ -1,14 +1,15 @@
-.group-title {
+.group-title-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
-.group-title > span {
+.group-title-card > span {
   font-weight: 500;
   font-size: 20px;
   color: var(--primary);
 }
-.group-title.btn {
+.group-title-card-btn {
   height: 30px;
   width: 30px;
   background: #131a3c;
@@ -16,9 +17,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  /* margin-left: 25px; */
+  position: absolute;
+  right: 0;
+  z-index: 999;
 }
-.group-title.btn > img {
+.group-title-card-btn > img {
   height: 16px;
+  object-fit: contain;
 }

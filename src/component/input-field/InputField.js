@@ -1,35 +1,51 @@
-import React from "react";
-import Select from "react-select";
-import { selectCustomStyles, selectStyles } from "./styles";
-import NumberFormat from "react-number-format";
-import "./styles.css";
-
-const DefaultOptions = [];
+import React from 'react'
+import Select from 'react-select'
+import {
+  selectCustomStyles,
+  selectStyles,
+  lightMode_selectStyles,
+  LightMode_selectCustomStyles,
+} from './styles'
+import NumberFormat from 'react-number-format'
+import './styles.css'
+import { useSelector } from 'react-redux'
+import { fetchThemsState } from '../../features/counterSlice'
+const DefaultOptions = []
 
 function InputField({
   isSelect = false,
   isCustomInputField = false,
-  placeholderText = "Select Site",
-  fieldTitle = "Site",
+  placeholderText = 'Select Site',
+  fieldTitle = 'Site',
   hideLabel = false,
-  format = "### ### ####",
-  defaultValue = "",
+  format = '### ### ####',
+  defaultValue = '',
   isMulti = false,
-  multiHeight = "150px",
+  multiHeight = '150px',
   selectOptions = DefaultOptions,
   isCustomLabel = false,
   ...props
 }) {
+  const appTheme = useSelector(fetchThemsState)
+  const textClass = appTheme ? 'lightMode_color' : ''
+
+  const CustomLabelStyle = appTheme
+    ? LightMode_selectCustomStyles
+    : selectCustomStyles
   return (
     <div className="input-field-container" onClick={props.navigate}>
-      {isCustomLabel && <label className="custom-label">{fieldTitle}</label>}
-      {!hideLabel && <label>{fieldTitle}</label>}
+      {isCustomLabel && <label className="custom-label ">{fieldTitle}</label>}
+      {!hideLabel && <label className={textClass}>{fieldTitle}</label>}
       {!isSelect ? (
         <div className="input-field-box">
           {!isMulti ? (
             !isCustomInputField ? (
               <input
-                className={`${isCustomLabel && "custom-label-input"}`}
+                className={
+                  appTheme
+                    ? `${isCustomLabel} paragraph-color light-mode-input`
+                    : `${isCustomLabel && 'custom-label-input'}`
+                }
                 {...props}
                 autoSave="off"
                 autoCapitalize="off"
@@ -55,6 +71,7 @@ function InputField({
               }}
               {...props}
               placeholder={placeholderText}
+              className={appTheme ? 'light-mode-input ' : ''}
             ></textarea>
           )}
         </div>
@@ -65,13 +82,19 @@ function InputField({
             placeholder={placeholderText}
             isOptionSelected={true}
             options={selectOptions}
-            styles={isCustomLabel ? selectCustomStyles : selectStyles}
+            styles={
+              isCustomLabel
+                ? CustomLabelStyle
+                : appTheme
+                ? lightMode_selectStyles
+                : selectStyles
+            }
             isSearchable={false}
           />
         </div>
       )}
     </div>
-  );
+  )
 }
 
-export default InputField;
+export default InputField
