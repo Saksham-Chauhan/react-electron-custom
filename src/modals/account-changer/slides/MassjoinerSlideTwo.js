@@ -32,6 +32,11 @@ const MassjoinerSlideTwo = ({
   return (
     <>
       <div className="mj-slide">
+        {pageState.emoji && (
+          <div className="emoji-tray-picker">
+            <Picker onSelect={addEmoji} />
+          </div>
+        )}
         {true && (
           <>
             <div className="toggler-btn-label">
@@ -73,7 +78,6 @@ const MassjoinerSlideTwo = ({
                     <AppInputField
                       fieldTitle="Emoji"
                       placeholderText="Enter Emoji"
-                      // onCopy={handleReactChange}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleIsEmoji(!pageState.emoji);
@@ -82,17 +86,12 @@ const MassjoinerSlideTwo = ({
                       value={pageState.emojiValue}
                       onChange={onChange}
                     />
-                    {pageState.emoji && (
-                      <div className="emoji-tray-picker">
-                        <Picker onSelect={addEmoji} />
-                      </div>
-                    )}
                   </div>
                 </>
               )}
             </div>
             <AppSpacer spacer={10} />
-            <div className="joiner-custom-input">
+            <div className="toggler-btn-label">
               <LabelWithToolTip
                 delayHide={1500}
                 isCustomToolTip={true}

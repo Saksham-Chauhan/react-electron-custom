@@ -1,13 +1,13 @@
 import axios from "axios";
 import { BASE_URL } from "../index";
 
-async function tokenChanger(proxy, email, password) {
+async function tokenChanger(email, password, proxy) {
   try {
     const json = JSON.stringify({
       login: email,
       password: password,
     });
-    let res = await axios.post(`${BASE_URL}auth/login`, json, {
+    const res = await axios.post(`${BASE_URL}/auth/login`, json, {
       headers: {
         "Content-Type": "application/json",
       },

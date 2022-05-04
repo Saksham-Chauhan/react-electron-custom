@@ -71,6 +71,7 @@
 - Fix the sidebar NFT active, default, animation issue
 - Add the send log in wallet, minter section and their modals
 
+
 # V0.9.0
 
 - Added Direct Join functionality. 
@@ -88,3 +89,4 @@
 - Multi wallet functionality in Tasks Page. 
 - Activity Changer updated to Status Changer. 
 - Improved UI and UX with proper toaster and tooltips.
+

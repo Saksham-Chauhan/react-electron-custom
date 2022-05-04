@@ -123,6 +123,7 @@ function App() {
         if (decode.roles.length > 0) {
           try {
             let title = `${decode?.username}#${decode?.discriminator} Just Logged In 🥰 🥳 `;
+
             await loggedUserWebhook(
               title,
               globalSetting?.webhookList[0],

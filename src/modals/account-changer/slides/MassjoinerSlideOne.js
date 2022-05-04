@@ -47,7 +47,7 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
           <div className="toggler-btn-label">
             <label className={textClass}>React</label>
             <AppSpacer spacer={5} />
-            <div className="joiner-custom-toggle">
+            <div className="d-flex toggler-slide-one">
               <AppToggler
                 id="invite-joiner-react-setting-mode"
                 checked={pageState.isReact}
@@ -78,7 +78,7 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
               </p>
             </LabelWithToolTip>
             <AppSpacer spacer={5} />
-            <div className="joiner-custom-toggle">
+            <div className="d-flex toggler-slide-one">
               <AppToggler
                 id="invite-joiner-accept-rule"
                 checked={pageState.isAcceptRule}

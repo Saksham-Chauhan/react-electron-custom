@@ -4,8 +4,10 @@ const axios = require("axios");
 const QrCode = window.require("qrcode-reader");
 const Jimp = window.require("jimp");
 
-let filteredArray, base64Text, re, binaryText;
+// TODO => Is it really needed? 
+let filteredArray, base64Text, re, binaryText; 
 
+// Checks Binary
 function binaryCheck(tweetText) {
   binaryText = tweetText
     .split(" ")
@@ -13,7 +15,6 @@ function binaryCheck(tweetText) {
     .join("");
 
   re = /[a-zA-Z0-9]/g; // Atleast one alphanumeric
-  // Checks if the output string has any body
   if (re.test(binaryText)) {
     return binaryText;
   } else {
@@ -25,7 +26,6 @@ function binaryCheck(tweetText) {
 function base64Check(tweetText) {
   base64Text = Buffer.from(tweetText, "base64").toString("utf-8");
   re = /^[ A-Za-z0-9_@./#&+-]*$/; // All alphanumeric or special characters
-  // Checks if the output string has any body
   if (re.test(base64Text)) {
     return base64Text;
   } else {
@@ -49,6 +49,7 @@ function mathSolver(tweetText) {
   }
 }
 
+// Checks OCR
 async function ocrResolver(media) {
   let ocrArr = [];
   try {
@@ -72,6 +73,7 @@ async function ocrResolver(media) {
   }
 }
 
+// Checks QR
 async function qrResolver(media) {
   let qrArr = [];
   try {
@@ -93,12 +95,13 @@ async function qrResolver(media) {
     }
     return qrArr;
   } catch (err) {
-    console.error("error on Resolving twitter QR", err.message);
+    // TODO => Not readable and can be dispatched
+    console.error("error on resolving QR", err.message);
     return null;
   }
 }
 
-// Checks Pastebin Links (helper)
+// Checks Pastebin Links 
 async function _parsePasteHaste(url, pattern) {
   url = url.split(pattern);
   url = "https://" + pattern + "raw/" + url[1];
@@ -106,7 +109,7 @@ async function _parsePasteHaste(url, pattern) {
   return response.data;
 }
 
-// Parse hastebin only considering there is only one link
+// Parse hastebin 
 const pastebinParser = async (urls) => {
   let binArr = [];
   let response = await urls.map(async (url) => {
@@ -125,7 +128,6 @@ const pastebinParser = async (urls) => {
 
   return binArr;
 };
-
 // Checks URLs for given keywords
 function urlParser(urls, keywords) {
   let response = [];
@@ -156,6 +158,7 @@ const scanner = async (
     name: tweetObject.user.name,
     screen_name: tweetObject.user.screen_name,
     profile_url: tweetObject.user.profile_image_url,
+    tweet_link:`https://twitter.com/${tweetObject.user.screen_name}/status/${tweetObject.id_str}`
   };
   FTObject.binaryText = binaryCheck(tweetObject.text);
   if (FTObject.binaryText == null) {
@@ -176,7 +179,7 @@ const scanner = async (
       webhookHandler(
         webhooks,
         user,
-        "Binary Found",
+        "I believe there is binary code in the tweet",
         FTObject.binaryText.toString().split(",").join("\n")
       );
     }
@@ -186,7 +189,7 @@ const scanner = async (
       webhookHandler(
         webhooks,
         user,
-        "base64 Found",
+        "Base64 found",
         FTObject.binaryText.toString().split(",").join("\n")
       );
     }
@@ -196,7 +199,7 @@ const scanner = async (
       webhookHandler(
         webhooks,
         user,
-        "Maths Solved",
+        "Maths solved",
         FTObject.mathSolved.toString().split(",").join("\n")
       );
     }
@@ -220,7 +223,7 @@ const scanner = async (
       webhookHandler(
         webhooks,
         user,
-        "Urls Found",
+        "I believe there is invite link in the tweet. Trying invite joiner",
         FTObject.urlsExtracted.toString().split(",").join("\n")
       );
     }
@@ -247,7 +250,8 @@ const scanner = async (
       webhookHandler(
         webhooks,
         user,
-        "QR Found",
+        obj["tweetLink"],
+        "QR found",
         obj.qrText.toString().split(",").join("\n")
       );
     }
@@ -257,7 +261,7 @@ const scanner = async (
       webhookHandler(
         webhooks,
         user,
-        "OCR Found",
+        "Text found",
         obj.ocrText.toString().split(",").join("\n")
       );
     }

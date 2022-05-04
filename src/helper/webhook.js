@@ -2,7 +2,7 @@ import axios from "axios";
 
 const KYRO_URL = "https://www.kyrotools.in/";
 const FOOTER = {
-  text: "Made with ❤️ by Koders",
+  text: "Made with ❤️  by Koders",
 };
 const TITLE = "Kyro Tools";
 const THUMBNAIL = {
@@ -21,7 +21,7 @@ async function webhookHandler(webhook, user, title, content) {
         thumbnail: THUMBNAIL,
         author: {
           name: `New Tweet By ${user.name}`,
-          url: "https://www.twitter.com/home",
+          url: user.tweet_link,
           icon_url: user.profile_url,
         },
       },
@@ -115,7 +115,7 @@ export const linkOpenerWebhook = async (
     embeds: [
       {
         title: TITLE,
-        description: `${link} Link Opened`,
+        description: `${link} link opened`,
         url: KYRO_URL,
         color: 857138,
         thumbnail: THUMBNAIL,

@@ -18,6 +18,7 @@ function Modal({ children, bgImageURL, flag, handleIsEmoji, ...props }) {
         {...props}
         className={appTheme ? "modal-inner light-bg-modal  " : "modal-inner"}
       >
+
         <div className="server-img">
           <img src={bgImageURL ? bgImageURL : small_bot} alt="Server Logo" />
         </div>

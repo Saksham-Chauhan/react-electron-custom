@@ -14,7 +14,6 @@ function Spoofer() {
   const [search, setSearch] = useState("");
   const list = useSelector(fetchSpoofTableList);
   const [tableList, setTableList] = useState([]);
-
   useEffect(() => {
     if (list.length > 0) {
       setTableList([...list]);

@@ -63,11 +63,16 @@ function createAuthWindow() {
     session: { webRequest },
   } = win.webContents;
   const filter = {
-    urls: [auth.redirect_uri],
+    urls: [auth.redirectUrl],
   };
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     try {
       await auth.loadTokens(url);
+    }
+    catch(e){
+      mainWindow.reload();
+    }
+    try{
       await auth.login();
       if (!mainWindow) return;
       mainWindow.reload();
@@ -474,9 +479,9 @@ const proxyTester = async (proxy) => {
 
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
-  let proxyArr = proxy.split(":");
+  const proxyArr = proxy.split(":");
   if (proxyArr.length === 4 || proxyArr.length === 2) {
-    let proxyWithPort = proxyArr[0];
+    const proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
       ...data,
