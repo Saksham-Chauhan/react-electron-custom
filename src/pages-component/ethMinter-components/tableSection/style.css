@@ -1,84 +1,63 @@
-.minter-table {
-  margin: 0px 15px;
-}
-
-.table-header {
-  background: #311172;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 5px 0px;
+.table-header-parent {
+  background: var(--sidebar-bg);
   border-radius: 5px;
 }
-
-.table-header > div {
+.table-header {
+  display: flex;
+  align-items: center;
+  padding: 0.6em 2em;
+  width: 99%;
   color: var(--scrollbar-bg);
-  text-align: center;
+}
+
+.table-header.body > div {
+  color: var(--primary);
 }
 .table-header div:nth-child(1) {
   width: 10%;
 }
 .table-header div:nth-child(2) {
-  width: 25%;
+  width: 30%;
 }
 
 .table-header div:nth-child(3) {
-  width: 14%;
+  width: 15%;
 }
 
 .table-header div:nth-child(4) {
-  width: 13%;
+  width: 20%;
 }
 
 .table-header div:nth-child(5) {
-  width: 13%;
+  width: 20%;
 }
 .table-header div:nth-child(6) {
-  width: 25%;
+  width: 12%;
 }
 
-.table-body {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 5px 0px;
-  border-radius: 5px;
-  color: var(--primary);
+.table-header.body {
   background: var(--table-row);
-  margin-top: 10px;
+  margin-top: 0.5em;
 }
 
-.table-body > div {
-  color: var(--scrollbar-bg);
-  text-align: center;
-}
-.table-body div:nth-child(1) {
-  width: 10%;
-}
-.table-body div:nth-child(2) {
-  width: 25%;
-}
-
-.table-body div:nth-child(3) {
-  width: 14%;
-}
-
-.table-body div:nth-child(4) {
-  width: 13%;
-}
-
-.table-body div:nth-child(5) {
-  width: 13%;
-}
-.table-body div:nth-child(6) {
-  width: 25%;
+.table-header.body > div:nth-child(6) {
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
-.table-body div:nth-child(6) img {
-  width: 15px;
-  height: 15px;
-  margin-right: 10px;
+.table-header.body > div:nth-child(6) > img {
+  object-fit: contain;
+  height: 16px;
+  margin-right: 0.5em;
+}
+.minter-table-scroll {
+  height: 70vh;
+  overflow-y: scroll;
+}
+.minter-table-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.minter-table-scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--scrollbar-bg);
 }

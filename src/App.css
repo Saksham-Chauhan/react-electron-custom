@@ -184,6 +184,7 @@
 .page-top-btns-wrapper {
   display: flex;
   height: 40px;
+  justify-content: space-between;
 }
 .page-top-btns-wrapper > .page-left-container,
 .page-top-btns-wrapper > .page-right-container {
@@ -292,6 +293,6 @@
 }
 
 /* UTILITY */
-.d-flex{
+.d-flex {
   display: flex;
 }

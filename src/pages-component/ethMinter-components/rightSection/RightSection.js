@@ -1,22 +1,29 @@
-import React from 'react'
-import './style.css'
-import { AppSpacer, GroupStatusCard, TopWrapper } from '../../../component'
-import UseAnimations from 'react-useanimations'
-import add from '../../../assests/images/plus.svg'
-import play from '../../../assests/images/play.svg'
-import trash2 from 'react-useanimations/lib/trash2'
-import searchIcon from '../../../assests/images/search.svg'
-import lightModeplush from '../../../assests/images/lightModeplus.svg'
-import EthMinterSetting from '../../../assests/images/EthMinterSetting.svg'
-import rightAero from '../../../assests/images/rightAeroImg.svg'
-import lightModesearch from '../../../assests/images/lightModesearch.svg'
-import { fetchThemsState } from '../../../features/counterSlice'
-import { useSelector } from 'react-redux'
+import React from "react";
+import "./style.css";
+import { AppSpacer, GroupStatusCard, TopWrapper } from "../../../component";
+import UseAnimations from "react-useanimations";
+import add from "../../../assests/images/plus.svg";
+import play from "../../../assests/images/play.svg";
+import trash2 from "react-useanimations/lib/trash2";
+import searchIcon from "../../../assests/images/search.svg";
+import lightModeplush from "../../../assests/images/lightModeplus.svg";
+import EthMinterSetting from "../../../assests/images/EthMinterSetting.svg";
+import rightAero from "../../../assests/images/rightAeroImg.svg";
+import lightModesearch from "../../../assests/images/lightModesearch.svg";
+import { fetchThemsState, setModalState } from "../../../features/counterSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const RightSection = ({ setwalletScreen }) => {
-  const appTheme = useSelector(fetchThemsState)
+  const dispatch = useDispatch();
+  const appTheme = useSelector(fetchThemsState);
   const btnClass = appTheme
-    ? 'icon-btn-wrapper btn lightBg'
-    : 'icon-btn-wrapper btn'
+    ? "icon-btn-wrapper btn lightBg"
+    : "icon-btn-wrapper btn";
+
+  const handleOpenModal = () => {
+    dispatch(setModalState("nftTaskModal"));
+  };
+
   return (
     <>
       <TopWrapper>
@@ -24,13 +31,13 @@ const RightSection = ({ setwalletScreen }) => {
       </TopWrapper>
       <AppSpacer spacer={30} />
 
-      <div className="page-top-btns-wrapper">
-        <div className="page-left-container" style={{ paddingLeft: '15px' }}>
+      <div className="page-top-btns-wrapper padding-horizontal">
+        <div className="page-left-container">
           <div
             className={
               appTheme
-                ? 'page-top-search-container lightBg '
-                : 'page-top-search-container'
+                ? "page-top-search-container lightBg "
+                : "page-top-search-container"
             }
           >
             <img
@@ -40,10 +47,10 @@ const RightSection = ({ setwalletScreen }) => {
             <input
               placeholder="Search"
               type="search"
-              className={appTheme ? 'lightModeInput' : ''}
+              className={appTheme ? "lightModeInput" : ""}
             />
           </div>
-          <div className={btnClass}>
+          <div onClick={handleOpenModal} className={btnClass}>
             <img src={appTheme ? lightModeplush : add} alt="" />
           </div>
           <div className={btnClass}>
@@ -56,11 +63,10 @@ const RightSection = ({ setwalletScreen }) => {
 
         <div className="walletBtn">
           <div
-            style={{ padding: '0.8em 1em' }}
             className={
               appTheme
-                ? 'switch-with-text with-no-toggle btn lightModeSidebar'
-                : 'switch-with-text with-no-toggle btn'
+                ? "eth-minter-section  btn lightModeSidebar"
+                : "eth-minter-section   btn"
             }
             onClick={() => setwalletScreen(true)}
           >
@@ -73,7 +79,7 @@ const RightSection = ({ setwalletScreen }) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default RightSection
+export default RightSection;
