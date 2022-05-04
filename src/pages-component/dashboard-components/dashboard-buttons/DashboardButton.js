@@ -12,7 +12,7 @@ const DashboardButton = ({ to, image, text, value }) => {
       to={to}
       className={
         appTheme
-          ? 'dashboard-button centerd btn_shadow'
+          ? 'dashboard-button centerd btn-shadow'
           : 'dashboard-button centerd'
       }
     >

@@ -2,6 +2,8 @@ import React from 'react'
 import './styles.css'
 import { AppSpacer } from '../../../component'
 import bird from '../../../assests/images/bird.svg'
+import { useSelector } from 'react-redux'
+import { fetchThemsState } from '../../../features/counterSlice'
 
 function TweetCard({
   cardTitle = 'New Tweet',
@@ -12,8 +14,13 @@ function TweetCard({
   tweetUserProfileLink = '',
   tweetUserFollowing = '',
 }) {
+  const appTheme = useSelector(fetchThemsState)
   return (
-    <div className=" tweet-card-outer">
+    <div
+      className={
+        appTheme ? 'tweet-card-outer light-mode-sidebar' : ' tweet-card-outer'
+      }
+    >
       <div className="tweet-card-top-section">
         <span id="cardtitle">{cardTitle}</span>
         <span id="tweetTime">{tweetTime}</span>

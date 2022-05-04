@@ -81,7 +81,4 @@ export const replyList = [
   "THIS IS MINE!",
 ];
 
-export const nftOptionsList = [
-  { label: "Eth", value: "eth" },
-  { label: "BTC", value: "btc" },
-];
+export const nftOptionsList = [{ label: "Eth", value: "eth" }];

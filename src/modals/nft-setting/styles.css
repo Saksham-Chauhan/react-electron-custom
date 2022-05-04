@@ -1,0 +1,27 @@
+.nft-setting-flex {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+.nft-setting-input {
+  width: 70%;
+}
+.nft-setting-btn {
+  width: 120px;
+  background: var(--sidebar-bg);
+  display: flex;
+  height: 46px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0;
+  bottom: 0;
+  border-radius: 6px;
+}
+.nft-setting-btn > span {
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 15.2752px;
+  line-height: 23px;
+}

@@ -8,6 +8,7 @@ import {
 import UseAnimations from 'react-useanimations'
 import add from '../../../assests/images/plus.svg'
 import play from '../../../assests/images/play.svg'
+import lightModePlay from '../../../assests/images/lightMode_play.svg'
 import trash2 from 'react-useanimations/lib/trash2'
 import searchIcon from '../../../assests/images/search.svg'
 import lightModeplush from '../../../assests/images/lightModeplus.svg'
@@ -18,6 +19,19 @@ import { useSelector } from 'react-redux'
 function TopBtnsWrapper({ search, handleSearching, tempList }) {
   const dispatch = useDispatch()
   const appTheme = useSelector(fetchThemsState)
+
+  const theme = {
+    btnClass: appTheme
+      ? 'icon-btn-wrapper btn light-bg'
+      : 'icon-btn-wrapper btn',
+    inputContainer: appTheme
+      ? 'page-top-search-container light-bg'
+      : 'page-top-search-container',
+    searchIcon: appTheme ? lightModesearch : searchIcon,
+    inputClass: appTheme ? 'light-mode-input' : '',
+    plusIcon: appTheme ? lightModeplush : add,
+    playIcon: appTheme ? lightModePlay : play,
+  }
 
   const handleAdd = () => {
     dispatch(setModalState('accountChangerModal'))
@@ -76,38 +90,27 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
       })
     }
   }
-  const btnClass = appTheme
-    ? 'icon-btn-wrapper btn lightBg'
-    : 'icon-btn-wrapper btn'
+
   return (
     <div className="page-top-btns-wrapper">
       <div className="page-left-container">
-        <div
-          className={
-            appTheme
-              ? 'page-top-search-container lightBg '
-              : 'page-top-search-container'
-          }
-        >
-          <img
-            src={appTheme ? lightModesearch : searchIcon}
-            alt="search-icon"
-          />
+        <div className={theme.inputContainer}>
+          <img src={theme.searchIcon} alt="search-icon" />
           <input
             value={search}
             onChange={handleSearching}
             placeholder="Search"
             type="search"
-            className={appTheme ? 'lightModeInput' : ''}
+            className={theme.inputClass}
           />
         </div>
-        <div onClick={handleAdd} className={btnClass}>
-          <img src={appTheme ? lightModeplush : add} alt="" />
+        <div onClick={handleAdd} className={theme.btnClass}>
+          <img src={theme.plusIcon} alt="" />
         </div>
-        <div onClick={handlePlayAll} className={btnClass}>
-          <img src={play} alt="" />
+        <div onClick={handlePlayAll} className={theme.btnClass}>
+          <img src={theme.playIcon} alt="" />
         </div>
-        <div onClick={handleDeleteAll} className={btnClass}>
+        <div onClick={handleDeleteAll} className={theme.btnClass}>
           <UseAnimations animation={trash2} strokeColor="#B60E0E" size={25} />
         </div>
       </div>

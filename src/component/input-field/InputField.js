@@ -43,7 +43,7 @@ function InputField({
               <input
                 className={
                   appTheme
-                    ? `${isCustomLabel} paragraph-color lightModeInput`
+                    ? `${isCustomLabel} paragraph-color light-mode-input`
                     : `${isCustomLabel && 'custom-label-input'}`
                 }
                 {...props}
@@ -71,7 +71,7 @@ function InputField({
               }}
               {...props}
               placeholder={placeholderText}
-              className={appTheme ? 'lightModeInput ' : ''}
+              className={appTheme ? 'light-mode-input ' : ''}
             ></textarea>
           )}
         </div>

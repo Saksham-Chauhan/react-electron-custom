@@ -1,44 +1,49 @@
-import React from "react";
-import "./style.css";
-import {
-  fetchThemsState,
-  fetchNftWalletListState,
-} from "../../../features/counterSlice";
-import { useDispatch, useSelector } from "react-redux";
-import UseAnimations from "react-useanimations";
-import trash2 from "react-useanimations/lib/trash2";
-import refreshWallet from "../../../assests/images/refreshWallet.svg";
-import { removeNftWalletFromList } from "../../../features/logic/nft";
+import React from 'react'
+import './style.css'
+import { fetchThemsState } from '../../../features/counterSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import UseAnimations from 'react-useanimations'
+import trash2 from 'react-useanimations/lib/trash2'
+import refreshWallet from '../../../assests/images/refreshWallet.svg'
+import lightrefreshWallet from '../../../assests/images/lightrefreshWallet.svg'
 
-const WalletTable = () => {
-  const dispatch = useDispatch();
-  const appTheme = useSelector(fetchThemsState);
-  const walletList = useSelector(fetchNftWalletListState);
+import { removeNftWalletFromList } from '../../../features/logic/nft'
+import { sendLogs } from '../../../helper/electron-bridge'
+
+const WalletTable = ({ walletList = [] }) => {
+  const dispatch = useDispatch()
+  const appTheme = useSelector(fetchThemsState)
+
+  const theme = {
+    textClass: appTheme ? 'light-mode-table-color' : '',
+    tableHeader: `${
+      appTheme
+        ? 'acc-chnager-page-table-header body light-bg'
+        : 'acc-chnager-page-table-header body'
+    } `,
+    refreshIcon: appTheme ? refreshWallet : lightrefreshWallet,
+  }
 
   const handleDeleteRow = (row) => {
-    dispatch(removeNftWalletFromList(row));
-  };
+    const log = `${row?.walletNickName} Wallet id deleted`
+    sendLogs(log)
+    dispatch(removeNftWalletFromList(row))
+  }
 
   const WalletTableRow = ({ wallet, index, onDelete }) => (
-    <div
-      className={`   ${
-        appTheme
-          ? "acc-chnager-page-table-header body activeLink"
-          : "acc-chnager-page-table-header body"
-      } `}
-    >
-      <div>{index}</div>
-      <div>{wallet?.walletNickName}</div>
-      <div>{wallet?.walletPublicKey}</div>
-      <div>{wallet?.walletBalance}</div>
+    <div className={theme.tableHeader}>
+      <div className={theme.textClass}>{index}</div>
+      <div className={theme.textClass}>{wallet?.walletNickName}</div>
+      <div className={theme.textClass}>{wallet?.walletPublicKey}</div>
+      <div className={theme.textClass}>{wallet?.walletBalance}</div>
       <div>
         <div
-          style={{ alignItems: "center" }}
+          style={{ alignItems: 'center' }}
           className="acc-changer-table-row-action-column"
         >
-          <img src={refreshWallet} alt="" />
+          <img src={theme.refreshIcon} alt="" />
           <UseAnimations
-            wrapperStyle={{ cursor: "pointer" }}
+            wrapperStyle={{ cursor: 'pointer' }}
             animation={trash2}
             strokeColor="#B60E0E"
             size={25}
@@ -47,7 +52,7 @@ const WalletTable = () => {
         </div>
       </div>
     </div>
-  );
+  )
 
   return (
     <div className="wallet-table-section">
@@ -55,8 +60,8 @@ const WalletTable = () => {
         <div
           className={
             appTheme
-              ? "acc-chnager-page-table-header activeLink"
-              : "acc-chnager-page-table-header"
+              ? 'acc-chnager-page-table-header light-mode-active-link'
+              : 'acc-chnager-page-table-header'
           }
         >
           <div>#</div>
@@ -72,12 +77,12 @@ const WalletTable = () => {
             onDelete={handleDeleteRow}
             index={index + 1}
             {...{ wallet }}
-            key={wallet["id"] || `wallet-table-item-${index}`}
+            key={wallet['id'] || `wallet-table-item-${index}`}
           />
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default WalletTable;
+export default WalletTable

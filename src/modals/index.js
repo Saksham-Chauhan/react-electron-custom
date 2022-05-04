@@ -7,3 +7,5 @@ export { default as AccountChangerModal } from "./account-changer/AccountChanger
 export { default as NftGroupModal } from "./nft-group/NftGroup";
 export { default as NftTaskModal } from "./nft-task/NftTask";
 export { default as NftWalletModal } from "./nft-wallet/NftWallet";
+export { default as NftSettingModal } from "./nft-setting/NftSetting";
+export { default as NoAccountAlertModal } from "./no-account/NoAccount";

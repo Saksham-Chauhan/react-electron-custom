@@ -27,6 +27,16 @@ function CalimerGroup() {
   const list = useSelector(fetchClaimerGroupList)
   const appTheme = useSelector(fetchThemsState)
 
+  const theme = {
+    btnClass: appTheme
+      ? 'import-file-btn btn light-mode-sidebar '
+      : 'import-file-btn btn',
+    claimerGroupScroll: appTheme
+      ? 'claimer-group-list-scroll-list light-bg'
+      : 'claimer-group-list-scroll-list',
+
+    textColor: appTheme ? 'lightMode_color' : '',
+  }
   const handleOpenModal = () => {
     dispatch(setModalState('claimerGroup'))
   }
@@ -56,16 +66,13 @@ function CalimerGroup() {
       downloadLogs(list, 'token')
     } else toastWarning('No token group to export!!')
   }
-  const btnClass = appTheme
-    ? 'import-file-btn btn lightModeSidebar '
-    : 'import-file-btn btn'
 
   return (
     <div className=" claimer-group-outer ">
       <div className="claimer-flex">
-        <h3 className={appTheme ? 'lightMode_color' : ''}>Token Group</h3>
+        <h3 className={theme.textColor}>Token Group</h3>
         <div className="claimer-btns">
-          <div className={btnClass}>
+          <div className={theme.btnClass}>
             <img src={importIcon} alt="" />
             <input
               onChange={handleImportTokenGroup}
@@ -75,27 +82,19 @@ function CalimerGroup() {
             />
             <label htmlFor="token-group-import-btn" />
           </div>
-          <div onClick={handleExportTokenGroup} className={btnClass}>
+          <div onClick={handleExportTokenGroup} className={theme.btnClass}>
             <img src={exportIcon} alt="" />
           </div>
-          <div onClick={handleOpenModal} className={btnClass}>
+          <div onClick={handleOpenModal} className={theme.btnClass}>
             <img src={plus} alt="" />
           </div>
         </div>
       </div>
       <AppSpacer spacer={14} />
-      <div
-        className={
-          appTheme
-            ? 'claimer-group-list-scroll-list lightBg'
-            : 'claimer-group-list-scroll-list'
-        }
-      >
+      <div className={theme.claimerGroupScroll}>
         {list.map((group) => (
           <div key={group['id']} className="claimer-group-list-item">
-            <span className={appTheme ? 'lightMode_color' : ''}>
-              {group['name']}
-            </span>
+            <span className={theme.textColor}>{group['name']}</span>
             <div className="claimer-group-item-action">
               <UseAnimations
                 onClick={() => handleEdit(group)}
