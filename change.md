@@ -70,3 +70,4 @@
 - Added the edit functionality in minter table row
 - Fix the sidebar NFT active, default, animation issue
 - Add the send log in wallet, minter section and their modals
+
