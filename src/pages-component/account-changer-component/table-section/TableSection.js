@@ -98,6 +98,7 @@ function TableSection({ list }) {
         if (type === "xpFarmer") {
           dispatch(updateStatusOfTableRow(obj, "Running"));
           startXpFarmer();
+          await sleep(3);
         }
         if (
           obj.claimerGroup.value.split("\n").length >
@@ -239,6 +240,8 @@ function TableSection({ list }) {
       stopLinkOpenerMonitor(obj.id);
     } else if (type === "inviteJoiner") {
       stopInviteJoinerMonitor(obj.id);
+    } else {
+      dispatch(updateStatusOfTableRow(obj, "Stopped"));
     }
   };
 
@@ -438,6 +441,7 @@ export const apiCallToDiscord = async ({
         settingObj
       );
       if (response.status === 200) {
+        console.log(response.response.error);
         return response;
       } else {
         if (!token) {
@@ -488,7 +492,7 @@ export const callApis = async (proxy, channelID, token, delay = "") => {
     } else {
       toastWarning(response.response.data.message);
     }
-    status = false;
+    // status = false;
   }
   return null;
 };

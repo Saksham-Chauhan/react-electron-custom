@@ -106,12 +106,6 @@ function SettingScreen({
     }
   };
 
-  // const defaultChromeUser = {
-  //   label: "Default",
-  //   value: "default",
-  //   id: "1adsd13243xcbvjhv",
-  // };
-
   return (
     <div>
       <TwitterPageTopSection
@@ -141,6 +135,8 @@ function SettingScreen({
               value={twitterApi?.apiName}
               onChange={handleChange}
               placeholderText="Enter API Name"
+              submit={handleSubmit}
+              submitFlag={true}
             />
             <AppInputField
               hideLabel={true}
@@ -150,6 +146,8 @@ function SettingScreen({
               value={twitterApi?.apiKey}
               onChange={handleChange}
               placeholderText="Enter API Key"
+              submit={handleSubmit}
+              submitFlag={true}
             />
             <AppInputField
               hideLabel={true}
@@ -159,6 +157,8 @@ function SettingScreen({
               value={twitterApi?.apiSecret}
               onChange={handleChange}
               placeholderText="Enter API Secret"
+              submit={handleSubmit}
+              submitFlag={true}
             />
             <AppSpacer spacer={15} />
             <div className="setting-twitter-flex full">

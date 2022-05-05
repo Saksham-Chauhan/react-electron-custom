@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const base_url = "http://192.168.29.101:5000";
+const base_url = "http://178.79.152.181:5000";
 
 export const mintTransaction = async (data) => {
   return await axios.post(`${base_url}/mint`, data);

@@ -57,6 +57,8 @@ function NftGroup() {
         onChange={handleChange}
         fieldTitle="Group Name"
         placeholderText="Enter Group Name"
+        submit={handleSubmit}
+        submitFlag={true}
       />
       <AppSpacer spacer={10} />
       <AppInputField

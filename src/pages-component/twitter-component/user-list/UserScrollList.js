@@ -18,8 +18,23 @@ function UserScrollList({ userList }) {
   };
 
   const handleUserAdd = () => {
-    if (TweetHandlerRegExp.test(user) && user.length > 0) {
-      dispatch(addTwitterKeywordInList({ key: "USER", word: user }));
+    if (user.includes("@")) {
+      if (TweetHandlerRegExp.test(user) && user.length > 0) {
+        dispatch(
+          addTwitterKeywordInList({
+            key: "USER",
+            word: user.slice(1, user.length),
+          })
+        );
+        setUser("");
+      } else toastWarning("Enter valid twitter handler");
+    } else if (TweetHandlerRegExp.test(user) && user.length > 0) {
+      dispatch(
+        addTwitterKeywordInList({
+          key: "USER",
+          word: user,
+        })
+      );
       setUser("");
     } else toastWarning("Enter valid twitter handler");
   };

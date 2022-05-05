@@ -30,6 +30,8 @@ function InputField({
   isCustomLabel = false,
   autoClose = true,
   tooltip = false,
+  submit,
+  submitFlag = false,
   ...props
 }) {
   const appTheme = useSelector(fetchThemsState);
@@ -81,6 +83,11 @@ function InputField({
                 autoCorrect="off"
                 autoComplete="off"
                 placeholder={placeholderText}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13 && submitFlag) {
+                    submit();
+                  }
+                }}
               />
             ) : (
               <NumberFormat

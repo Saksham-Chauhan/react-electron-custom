@@ -108,13 +108,11 @@ export const directDiscordJoinAPI = async (
   token,
   settingObj
 ) => {
+  console.log("called", token, inviteCode);
+  let inviteResponse;
   try {
-
-    const inviteResponse = await discordServerInviteAPI(
-      inviteCode,
-      token,
-      proxy
-    );
+    inviteResponse = await discordServerInviteAPI(inviteCode, token, proxy);
+    console.log(inviteResponse);
     if (inviteResponse.status === 200) {
       const tkn =
         token.substring(0, 4) + "## ##" + token.charAt(token.length - 1);
@@ -157,7 +155,6 @@ export const directDiscordJoinAPI = async (
           const log = `Direct join Rules accepted successfully ${tkn}`;
           sendLogs(log);
           toastSuccess("Rules accepted successfully");
-
         }
       }
     } else {
@@ -165,7 +162,8 @@ export const directDiscordJoinAPI = async (
     }
     return inviteResponse;
   } catch (error) {
-    return null;
+    console.log(error.message);
+    return inviteResponse;
   }
 };
 

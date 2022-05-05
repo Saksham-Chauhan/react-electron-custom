@@ -108,6 +108,8 @@ function ClaimerGroup() {
         name="name"
         fieldTitle="Name"
         placeholderText="Enter Name"
+        submit={handleSubmit}
+        submitFlag={true}
       />
       <AppSpacer spacer={10} />
       <AppInputField

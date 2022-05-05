@@ -56,6 +56,12 @@ function InputWithList({
                   {...inputProps}
                   placeholder={placeHolder}
                   style={theme.inputStyle}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13) {
+                      const { onClick } = btnProps;
+                      onClick();
+                    }
+                  }}
                 />
                 <div {...btnProps} className={theme.plusIconBtn}>
                   <img src={plus} alt="" />

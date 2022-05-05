@@ -4,6 +4,7 @@ import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
+import lightMode_play from "../../../assests/images/lightMode_play.svg";
 import { DISCORD_MASS_OPTIONS } from "../../../constant";
 import { useSelector } from "react-redux";
 import { fetchThemsState } from "../../../features/counterSlice";
@@ -15,7 +16,6 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
       ? "acc-chnager-page-table-header body  light-bg light-mode-table-color"
       : "acc-chnager-page-table-header body",
   };
-  console.log(obj);
   return (
     <div className={theme.tableBody}>
       <div>{index}</div>
@@ -59,7 +59,7 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
             />
           ) : (
             <img
-              src={play}
+              src={appTheme ? lightMode_play : play}
               alt=""
               onClick={() => {
                 onPlay(obj);

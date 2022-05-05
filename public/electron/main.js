@@ -68,11 +68,10 @@ function createAuthWindow() {
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     try {
       await auth.loadTokens(url);
-    }
-    catch(e){
+    } catch (e) {
       mainWindow.reload();
     }
-    try{
+    try {
       await auth.login();
       if (!mainWindow) return;
       mainWindow.reload();
@@ -618,28 +617,31 @@ ipcMain.on("run-xp-server", (_, data) => {
 });
 
 ipcMain.on("stop-xp-server", (_, data) => {
-  stopXpfarmer();
+  try {
+    stopXpfarmer();
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 async function xpFarmerStart() {
-  console.log("called start");
   const exePath = isDev
     ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
-    : `xpfarmer.exe`;
+    : `${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
   try {
-    execFile(exePath, [3001], { cwd: "." }, (error, stdout, stderr) => {
+    const process = execFile(exePath, [3001], (error, stdout, stderr) => {
       if (error) {
         throw error;
       }
       console.log(stdout);
     });
+    console.log("vvvvvvvvvv", process);
   } catch (e) {
     console.log("this is error", e);
   }
 }
 
 function stopXpfarmer() {
-  console.log("called stop");
   try {
     currentProcesses.get((err, processes) => {
       const sorted = _.sortBy(processes, "cpu");
