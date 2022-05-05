@@ -157,13 +157,13 @@ export const directDiscordJoinAPI = async (
           toastSuccess("Rules accepted successfully");
         }
       }
+      return inviteResponse;
     } else {
       toastWarning("Something went wrong while accepting rules");
+      return inviteResponse;
     }
-    return inviteResponse;
   } catch (error) {
-    console.log(error.message);
-    return inviteResponse;
+    return error;
   }
 };
 

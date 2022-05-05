@@ -1,3 +1,4 @@
+import { Picker } from "emoji-mart";
 import React from "react";
 import { AppInputField, AppSpacer } from "../../../component";
 import {
@@ -5,10 +6,27 @@ import {
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
 
-function ActivityChanger({ ...props }) {
+function ActivityChanger({
+  handleIsEmoji,
+  state,
+  handleUpdateObject,
+  ...props
+}) {
+  const addEmoji = (e) => {
+    let sym = e.unified.split("-");
+    let codesArray = [];
+    sym.forEach((el) => codesArray.push("0x" + el));
+    let emojival = String.fromCodePoint(...codesArray);
+    console.log(emojival);
+    handleUpdateObject("emojiValue", emojival);
+  };
   return (
     <React.Fragment>
-      <AppSpacer spacer={10} />
+      {state.emoji && (
+        <div className="emoji-tray-picker">
+          <Picker onSelect={addEmoji} />
+        </div>
+      )}
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
@@ -17,6 +35,22 @@ function ActivityChanger({ ...props }) {
             name="delay"
             type="number"
             min={0}
+            {...props}
+          />
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
+      <AppSpacer spacer={10} />
+      <ModalFlexOuterRow>
+        <ModalFlexInnerRow>
+          <AppInputField
+            fieldTitle="Emoji"
+            placeholderText="Enter Emoji"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleIsEmoji(!state.emoji);
+            }}
+            name="emojiValue"
+            value={state.emojiValue}
             {...props}
           />
         </ModalFlexInnerRow>

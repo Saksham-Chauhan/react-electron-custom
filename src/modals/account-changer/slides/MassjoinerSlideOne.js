@@ -13,7 +13,6 @@ import {
 import { fetchThemsState } from "../../../features/counterSlice";
 
 const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
-  console.log(pageState);
   const appTheme = useSelector(fetchThemsState);
   const textClass = appTheme ? "lightMode_color" : "";
   return (

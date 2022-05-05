@@ -1,11 +1,12 @@
 import axios from "axios";
 import { BASE_URL } from "../index";
 
-async function changeActivity(token, message, proxy) {
+async function changeActivity(token, message, emojiValue, proxy) {
   try {
     const json = JSON.stringify({
       custom_status: {
         text: message,
+        emoji_name: emojiValue,
       },
     });
 

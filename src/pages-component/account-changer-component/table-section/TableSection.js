@@ -140,6 +140,7 @@ function TableSection({ list }) {
               delay: obj.delay,
               flagDec: flag.current,
               settingObj: obj,
+              emojiValue: obj.emojiValue,
             });
             if (apiResponse !== null) {
               if (apiResponse.status === 200 || apiResponse.status === 204) {
@@ -292,6 +293,7 @@ export const apiCallToDiscord = async ({
   channelID,
   delay,
   settingObj,
+  emojiValue,
 }) => {
   const tokenMsg = "Invalid format, token not found in Discord Accounts.";
   const passMsg = "Invalid format, password not found.";
@@ -299,7 +301,7 @@ export const apiCallToDiscord = async ({
   if (type === "avatarChanger") {
     let response;
     let randomImage;
-    if (avatarAPI.label === "Default API") {
+    if (avatarAPI?.label === "Default API" || avatarAPI?.label === undefined) {
       randomImage = await generateRandomAvatar();
     } else {
       randomImage = await generateRandomAvatar(avatarAPI.value);
@@ -360,7 +362,12 @@ export const apiCallToDiscord = async ({
       return null;
     }
   } else if (type === "activityChanger") {
-    const response = await activityChangerAPI(token, activityDetail, proxy);
+    const response = await activityChangerAPI(
+      token,
+      activityDetail,
+      emojiValue,
+      proxy
+    );
     if (response.status === 200) {
       return response;
     } else {
@@ -434,26 +441,27 @@ export const apiCallToDiscord = async ({
     const inviteCodeList = invideCodes?.split("\n");
     for (let i = 0; i < inviteCodeList.length; i++) {
       let code = inviteCodeList[i];
+      console.log("first");
       const response = await directDiscordJoinAPI(
         proxy,
         code,
         token,
         settingObj
       );
-      if (response.status === 200) {
+      if (response?.status === 200) {
         console.log(response.response.error);
         return response;
       } else {
         if (!token) {
           toastWarning(tokenMsg);
         } else {
-          toastWarning(response.response.data.message);
+          toastWarning(response.message);
         }
         return null;
       }
     }
   } else if (type === "tokenRetrieve") {
-    const response = await tokenChanger(proxy, email, password);
+    const response = await tokenChanger(email, password, proxy);
     if (response.status === 200) {
       return response;
     } else {

@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -486,7 +485,12 @@ const getDynamicSlideRnder = (
     case "usernameChanger":
       return <UserNameChangerSlide onChange={handleChange} />;
     case "activityChanger":
-      return <ActivityChangerSlide onChange={handleChange} />;
+      return (
+        <ActivityChangerSlide
+          onChange={handleChange}
+          {...{ handleIsEmoji, state, handleUpdateObject }}
+        />
+      );
     case "nicknameChanger":
       return (
         <NicknameChanger
