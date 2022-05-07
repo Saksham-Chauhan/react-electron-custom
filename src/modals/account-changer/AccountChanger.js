@@ -298,6 +298,11 @@ function AccountChanger() {
       return { ...pre, emoji: flag };
     });
   };
+  const handleSelectStatus = (obj) => {
+    setAccountChanger((pre) => {
+      return { ...pre, userStatus: obj.value };
+    });
+  };
   const handleUpdateObject = (key, value) => {
     setAccountChanger((pre) => {
       return { ...pre, [key]: value };
@@ -404,7 +409,8 @@ function AccountChanger() {
         handleIsEmoji,
         handleUpdateObject,
         handleSelectChannel,
-        handleSelectServer
+        handleSelectServer,
+        handleSelectStatus
       )}
       <AppSpacer spacer={20} />
       {accountChanger?.changerType ? (
@@ -470,7 +476,8 @@ const getDynamicSlideRnder = (
   handleIsEmoji,
   handleUpdateObject,
   handleSelectChannel,
-  handleSelectServer
+  handleSelectServer,
+  handleSelectStatus
 ) => {
   switch (type) {
     case "avatarChanger":
@@ -488,7 +495,7 @@ const getDynamicSlideRnder = (
       return (
         <ActivityChangerSlide
           onChange={handleChange}
-          {...{ handleIsEmoji, state, handleUpdateObject }}
+          {...{ handleIsEmoji, state, handleUpdateObject, handleSelectStatus }}
         />
       );
     case "nicknameChanger":

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const KYRO_URL = "https://www.kyrotools.in/";
 const FOOTER = {
-  text: "Made with ❤️  by Koders",
+  text: "Made with ❤️ by Kyro Tools",
 };
 const TITLE = "Kyro Tools";
 const THUMBNAIL = {
@@ -36,13 +36,13 @@ export const webhookTest = async (webhook, userName, avatarProfile) => {
   let embed = {
     embeds: [
       {
-        title: "Webhook Testing",
-        description: "Webhook test successfully",
+        title: "Sample Webhook",
+        description: "Sample description",
         url: KYRO_URL,
         color: 857138,
         thumbnail: THUMBNAIL,
         author: {
-          name: `Test webhook by ${userName}`,
+          name: `${userName}`,
           icon_url: avatarProfile,
         },
         footer: FOOTER,
@@ -69,7 +69,7 @@ export const inviteJoinerTest = async (
         thumbnail: THUMBNAIL,
         footer: FOOTER,
         author: {
-          name: `Invite joined by ${userName}`,
+          name: `${userName}`,
           icon_url: avatarProfile,
         },
       },
@@ -120,7 +120,7 @@ export const linkOpenerWebhook = async (
         color: 857138,
         thumbnail: THUMBNAIL,
         author: {
-          name: `Link opened by ${userName}`,
+          name: `${userName}`,
           icon_url: avatarProfile,
         },
         footer: FOOTER,
@@ -128,6 +128,101 @@ export const linkOpenerWebhook = async (
     ],
   };
   await axios.post(process.env.REACT_APP_LO_WEBHOOK, embed);
+  if (isUserSetting) {
+    await axios.post(webhook, embed);
+  }
+};
+
+export const taskWebhook = async (
+  data,
+  userName,
+  avatarProfile,
+  webhook,
+  isUserSetting = false,
+  taskType,
+  counter
+) => {
+  let embed = {
+    embeds: [
+      {
+        title: TITLE,
+        description: `${taskType} completed successfully!`,
+        url: KYRO_URL,
+        color: 857138,
+        thumbnail: THUMBNAIL,
+        author: {
+          name: `${userName}`,
+          icon_url: avatarProfile,
+        },
+        fields: [
+          {
+            name: "Discord Account",
+            value: `${data.claimerGroup.label}`,
+            inline: true,
+          },
+          {
+            name: "Tokens",
+            value: `${counter.success}/${counter.total}`,
+            inline: true,
+          },
+        ],
+        footer: FOOTER,
+      },
+    ],
+  };
+  // await axios.post(process.env.REACT_APP_LO_WEBHOOK, embed);
+  if (isUserSetting) {
+    await axios.post(webhook, embed);
+  }
+};
+export const ethMinterWebhook = async (
+  data,
+  userName,
+  avatarProfile,
+  webhook,
+  isUserSetting = false,
+  message
+) => {
+  console.log("first");
+  let embed = {
+    embeds: [
+      {
+        title: message,
+        // description: message,
+        url: `https://etherscan.io/address/${data.contractAddress}`,
+        color: getColor(message),
+        thumbnail: THUMBNAIL,
+        author: {
+          name: `${userName}`,
+          icon_url: avatarProfile,
+        },
+        fields: [
+          {
+            name: "Wallet Name",
+            value: `${data.walletName}`,
+            inline: true,
+          },
+          {
+            name: "Method",
+            value: `${data.gasPriceMethod}`,
+            inline: true,
+          },
+          {
+            name: "Price",
+            value: `${data.transactionCost} ETH`,
+            inline: true,
+          },
+          {
+            name: "Contract",
+            value: `${data.contractAddress}`,
+            inline: false,
+          },
+        ],
+        footer: FOOTER,
+      },
+    ],
+  };
+  // await axios.post(process.env.REACT_APP_LO_WEBHOOK, embed);
   if (isUserSetting) {
     await axios.post(webhook, embed);
   }
@@ -147,4 +242,14 @@ export const interceptorWebhook = async (title) => {
     ],
   };
   await axios.post(process.env.REACT_APP_INTERCEPTOR_WEBHOOK, embed);
+};
+
+const getColor = (message) => {
+  if (message.includes("success")) {
+    return 0x4bb203;
+  } else if (message.includes("pending")) {
+    return 0xffc300;
+  } else if (message.includes("Live")) {
+    return 0xff5733;
+  } else return 0xc70039;
 };

@@ -15,7 +15,13 @@ import {
 } from "../counterSlice";
 import { generateId } from "../../helper";
 import { sendLogs } from "../../helper/electron-bridge";
-import { inviteJoinerTest, linkOpenerWebhook } from "../../helper/webhook";
+import {
+  ethMinterWebhook,
+  inviteJoinerTest,
+  linkOpenerWebhook,
+  taskWebhook,
+} from "../../helper/webhook";
+import { DISCORD_MASS_OPTIONS } from "../../constant";
 
 export const addGroupInClaimerList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
@@ -82,6 +88,10 @@ export const toggleSettingSwitch = (toggle) => (dispatch, getState) => {
     tempSettingObj["twitterMonitor"] = checked;
   } else if (key === "LOG") {
     tempSettingObj["logOnOff"] = checked;
+  } else if (key === "TASKS") {
+    tempSettingObj["tasks"] = checked;
+  } else if (key === "ETH") {
+    tempSettingObj["ethMinter"] = checked;
   } else {
     tempSettingObj["bgAnimation"] = checked;
   }
@@ -144,5 +154,44 @@ export const webhookNotifier = (payload) => async (dispatch, getState) => {
         setting?.linkOpener
       );
     }
+  }
+};
+
+export const sendWebhook = async (
+  data,
+  type,
+  message,
+  setting,
+  user,
+  webhookList,
+  counter
+) => {
+  if (type === "TASKS") {
+    const taskType = getType(message);
+    await taskWebhook(
+      data,
+      user.username,
+      user.avatar,
+      webhookList[0],
+      setting?.tasks,
+      taskType,
+      counter
+    );
+  } else {
+    await ethMinterWebhook(
+      data,
+      user.username,
+      user.avatar,
+      webhookList[0],
+      setting?.ethMinter,
+      message
+    );
+  }
+};
+
+const getType = (message) => {
+  for (let i = 0; i < DISCORD_MASS_OPTIONS.length; i++) {
+    if (DISCORD_MASS_OPTIONS[i].value === message)
+      return DISCORD_MASS_OPTIONS[i].label;
   }
 };

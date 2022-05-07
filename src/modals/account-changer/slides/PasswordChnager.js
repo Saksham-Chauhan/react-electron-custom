@@ -23,7 +23,7 @@ function PasswordChnager({ ...props }) {
             {...props}
             name="commonPassword"
             hideLabel={true}
-            placeholderText="Leave Blank For Randomize"
+            placeholderText="Leave blank for random passwords"
           />
         </div>
       </div>

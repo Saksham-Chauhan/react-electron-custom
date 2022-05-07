@@ -84,3 +84,10 @@ export const replyList = [
 export const nftOptionsList = [{ label: "Eth", value: "eth" }];
 
 export const defaultChromeUser = { label: "Default", value: "default" };
+
+export const statusList = [
+  { label: "Online", value: "online" },
+  { label: "Idle", value: "idle" },
+  { label: "Invisible", value: "invisible" },
+  { label: "Do Not Disturb", value: "dnd" },
+];

@@ -79,7 +79,7 @@ export const resetTaskState = () => (dispatch, getState) => {
   let tempOptionList = [...currentList];
   tempOptionList = [...tempOptionList].map((row) => {
     let obj = { ...row };
-    obj["status"] = "idle";
+    obj["status"] = "Idle";
     obj["active"] = false;
     return obj;
   });

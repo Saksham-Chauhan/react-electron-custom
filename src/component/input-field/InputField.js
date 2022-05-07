@@ -61,7 +61,7 @@ function InputField({
                 window.open("https://www.youtube.com/watch?v=YEgFvgg7ZPI")
               }
             >
-              Need help with find your Discord Token?
+              Need help with finding your Discord Token?
             </label>
           )}
           {/* {tooltip && <LabelWithTooltip toolTopText={props.toolTipText} />} */}

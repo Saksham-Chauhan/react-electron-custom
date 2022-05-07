@@ -101,8 +101,8 @@ const RightSection = ({
         let log;
         try {
           await sleep(delay);
-          handleMinting(tempObj, rpcURL, handleEditTaskStatus, true, delay);
           log = `Start minting the task with id -> ${tempObj.id}`;
+          handleMinting(tempObj, rpcURL, handleEditTaskStatus, true, delay);
         } catch (e) {
           log = `Error in minting the task with id -> ${tempObj.id}`;
         }

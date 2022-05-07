@@ -5,6 +5,8 @@ export const settingInitialState = {
     twitterMonitor: false,
     logOnOff: false,
     bgAnimation: false,
+    tasks: false,
+    ethMinter: false,
     webhookList: [],
   },
 

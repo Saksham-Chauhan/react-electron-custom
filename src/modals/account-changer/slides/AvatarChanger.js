@@ -11,7 +11,7 @@ const getRandomNum = () => {
 };
 const api = [
   {
-    label: "Catboy API",
+    label: "Rick & Morty API",
     value: `https://rickandmortyapi.com/api/character/avatar/${getRandomNum()}.jpeg`,
   },
 ];

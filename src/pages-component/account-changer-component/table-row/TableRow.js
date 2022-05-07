@@ -91,7 +91,7 @@ const getColor = (status, appTheme) => {
       return appTheme ? "var(--lightMode-complete)" : "#1186db";
     case "Stopped":
       return "var(--delete)";
-    case "idle":
+    case "Idle":
       return appTheme ? "var(--lightMode-text-color)" : "";
     default:
       return "var(--primary)";

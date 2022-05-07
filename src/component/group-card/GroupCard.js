@@ -45,7 +45,7 @@ function GroupCard({
             return { ...pre, totalSuccess: pre.totalSuccess + 1 };
           });
         }
-        if (item.status === "failed" || item.status === "error") {
+        if (item.status === "failed" || item.status === "Error") {
           setTaskStatus((pre) => {
             return { ...pre, totalDecline: pre.totalDecline + 1 };
           });

@@ -5,11 +5,13 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
+import { statusList } from "../../../constant";
 
 function ActivityChanger({
   handleIsEmoji,
   state,
   handleUpdateObject,
+  handleSelectStatus,
   ...props
 }) {
   const addEmoji = (e) => {
@@ -36,6 +38,16 @@ function ActivityChanger({
             type="number"
             min={0}
             {...props}
+          />
+        </ModalFlexInnerRow>
+        <ModalFlexInnerRow>
+          <AppInputField
+            fieldTitle="Status"
+            placeholderText="Select status"
+            name="status"
+            isSelect={true}
+            selectOptions={statusList}
+            onChange={handleSelectStatus}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>

@@ -11,6 +11,9 @@ import {
   fetchNftWalletListState,
   fetchNftSettingDelaytate,
   fetchThemsState,
+  fetchWebhookSettingState,
+  fetchLoggedUserDetails,
+  fetchWebhookListState,
 } from "../../../features/counterSlice";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
@@ -27,6 +30,9 @@ const TableSection = ({ list = [] }) => {
   const rpcURL = useSelector(fetchNftSettingRPCState);
   const delay = useSelector(fetchNftSettingDelaytate);
   const walletList = useSelector(fetchNftWalletListState);
+  const setting = useSelector(fetchWebhookSettingState);
+  const user = useSelector(fetchLoggedUserDetails);
+  const webhookList = useSelector(fetchWebhookListState);
 
   const appTheme = useSelector(fetchThemsState);
   const theme = {
@@ -45,11 +51,25 @@ const TableSection = ({ list = [] }) => {
     dispatch(editTaskInGroup(task));
   };
 
-  const handleTaskPlay = (task) => {
+  const handleTaskPlay = async (task) => {
+    const webhook = {
+      task: task,
+      type: "ETH",
+      setting: setting,
+      user: user,
+      webhookList: webhookList,
+    };
     if (task.status !== "Success" && task.status !== "Monitoring") {
       let log;
       try {
-        handleMinting(task, rpcURL, handleEditTaskStatus, true, delay);
+        await handleMinting(
+          task,
+          rpcURL,
+          handleEditTaskStatus,
+          true,
+          delay,
+          webhook
+        );
         log = `Start minting the task with id -> ${task.id}`;
       } catch (e) {
         log = `Error in minting the task with id -> ${task.id}`;
@@ -167,7 +187,7 @@ const getTaskStatusColor = (status, appTheme) => {
       return appTheme ? "var(--lightMode-status)" : "var(--status)";
     case "Pending":
       return "var(--delete)";
-    case "error":
+    case "Error":
       return "var(--delete)";
     case "Idle":
       return appTheme ? "var(--lightMode-text-color)" : "";

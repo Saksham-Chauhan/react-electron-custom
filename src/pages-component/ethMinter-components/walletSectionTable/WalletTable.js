@@ -46,7 +46,12 @@ const WalletTable = ({ walletList = [] }) => {
   const handleRefresh = async (wallet) => {
     try {
       const res = await handleFetchWallet(wallet, rpcURL, handleDispatchWallet);
-      if (res.status === 200) toastSuccess("Wallet Refresh Successfully");
+      if (res.status === 200) {
+        sendLogs(
+          `Wallet refreshed with ${wallet.walletNickName} for wallet address:${wallet.walletPublicKey}`
+        );
+        toastSuccess("Wallet Refresh Successfully");
+      }
     } catch (e) {
       toastWarning("Can't Fetch Wallet");
 
@@ -64,7 +69,9 @@ const WalletTable = ({ walletList = [] }) => {
         </div>
         ...
       </div>
-      <div className={theme.textClass}>{wallet?.walletBalance}</div>
+      <div className={theme.textClass}>
+        {Number.parseFloat(wallet?.walletBalance).toFixed(6)}
+      </div>
       <div>
         <div
           style={{ alignItems: "center" }}

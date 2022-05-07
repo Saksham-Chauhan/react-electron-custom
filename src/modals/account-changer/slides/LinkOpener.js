@@ -36,10 +36,15 @@ function LinkOpener({
       <AppSpacer spacer={15} />
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
+          <LabelWithToolTip
+            toolTopText="This lets you select a server after entring monitor token."
+            labelText="Server"
+            parentStyle={{ style: { marginBottom: "10px" } }}
+          />
           <AppInputField
             isSelect={true}
             name="serverIDs"
-            fieldTitle="Server"
+            hideLabel={true}
             placeholderText="Select Server"
             onChange={handleSelectServer}
             selectOptions={state.serverIDs}
@@ -60,7 +65,7 @@ function LinkOpener({
       </ModalFlexOuterRow>
       <AppSpacer spacer={15} />
       <LabelWithToolTip
-        toolTopText="Leave Blank For All Keywords"
+        toolTopText="Leave blank for all Keywords"
         labelText="Keyword[s] (Optional)"
         parentStyle={{ style: { marginBottom: "10px" } }}
       />

@@ -31,13 +31,30 @@ import tokenChanger from "../../../api/account-changer/token-changer";
 import { toastInfo } from "../../../toaster";
 import { replyList } from "../../../constant";
 import xpFarmer from "../../../api/account-changer/xp-farmer";
-import { fetchThemsState } from "../../../features/counterSlice";
+import {
+  fetchLoggedUserDetails,
+  fetchTaskTableListState,
+  fetchThemsState,
+  fetchWebhookListState,
+  fetchWebhookSettingState,
+} from "../../../features/counterSlice";
+import { sendWebhook } from "../../../features/logic/setting";
 
 const { Client } = window.require("discord.js-selfbot");
 
 let status = false;
 
 function TableSection({ list }) {
+  const setting = useSelector(fetchWebhookSettingState);
+  const user = useSelector(fetchLoggedUserDetails);
+  const webhookList = useSelector(fetchWebhookListState);
+  const accChangerList = useSelector(fetchTaskTableListState);
+
+  let counter = {
+    total: 0,
+    success: 0,
+  };
+
   let flag = useRef(false);
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
@@ -51,6 +68,7 @@ function TableSection({ list }) {
     dispatch(deleteDataFromTableList(obj));
   };
   const handlePlay = async (obj) => {
+    console.log(obj);
     flag.current = !flag.current;
     status = flag.current;
     const type = obj["changerType"];
@@ -104,9 +122,8 @@ function TableSection({ list }) {
           obj.claimerGroup.value.split("\n").length >
           obj.proxyGroup.value.split("\n").length
         )
-          toastWarning(
-            "You are might banned because proxy is less than tokens"
-          );
+          toastWarning("You might get banned as Proxies are less than Tokens");
+        counter.total = tokenArray.length;
         for (let index = 0; index < tokenArray.length; index++) {
           const token = tokenArray[index];
           const tokenArr = token?.split(":");
@@ -141,9 +158,11 @@ function TableSection({ list }) {
               flagDec: flag.current,
               settingObj: obj,
               emojiValue: obj.emojiValue,
+              userStatus: obj.userStatus,
             });
             if (apiResponse !== null) {
               if (apiResponse.status === 200 || apiResponse.status === 204) {
+                counter.success = counter.success + 1;
                 let tempObj = { ...obj };
                 let arr = [];
                 let user = [];
@@ -196,6 +215,24 @@ function TableSection({ list }) {
         }
       }
     }
+    callWebhook(obj);
+  };
+  const callWebhook = (obj) => {
+    let tempObj = {};
+    for (let i = 0; i < accChangerList.length; i++) {
+      if (accChangerList[i].id === obj.id) {
+        tempObj = { ...accChangerList[i] };
+      }
+    }
+    sendWebhook(
+      tempObj,
+      "TASKS",
+      obj.changerType,
+      setting,
+      user,
+      webhookList,
+      counter
+    );
   };
 
   const handleDownload = (obj) => {
@@ -294,10 +331,11 @@ export const apiCallToDiscord = async ({
   delay,
   settingObj,
   emojiValue,
+  userStatus,
 }) => {
-  const tokenMsg = "Invalid format, token not found in Discord Accounts.";
-  const passMsg = "Invalid format, password not found.";
-  const emailMsg = "Invalid format, email not found.";
+  const tokenMsg = "Invalid format, Token not found in Discord Accounts.";
+  const passMsg = "Invalid format, Password not found.";
+  const emailMsg = "Invalid format, Email not found.";
   if (type === "avatarChanger") {
     let response;
     let randomImage;
@@ -315,7 +353,7 @@ export const apiCallToDiscord = async ({
         return null;
       }
       if (!randomImage) {
-        toastWarning("Invalid format, please select api.");
+        toastWarning("Invalid format, please select API.");
         return null;
       }
       toastWarning(response.response.data.message);
@@ -366,6 +404,7 @@ export const apiCallToDiscord = async ({
       token,
       activityDetail,
       emojiValue,
+      userStatus,
       proxy
     );
     if (response.status === 200) {

@@ -108,9 +108,9 @@ function NftTask() {
     if (Object.keys(editState).length === 0) {
       if (validationresult) {
         for (let i = 0; i < tempVar.length; i++) {
-          log = `new Minter task is created with contract address ${task.contractAddress}`;
           task.walletID = tempVar[i].value;
           task.walletName = tempVar[i].label;
+          log = `new Minter task is created with contract address ${task.contractAddress}`;
           try {
             const res = await handleGetMintdata(
               task,

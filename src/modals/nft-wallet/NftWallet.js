@@ -11,6 +11,7 @@ import {
   setModalState,
 } from "../../features/counterSlice";
 import { appendNftWalletInList } from "../../features/logic/nft";
+import { sendLogs } from "../../helper/electron-bridge";
 import { handleFetchWallet } from "../../helper/nft-minter";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftWalletSchema } from "../../validation";
@@ -48,7 +49,12 @@ function NftWallet() {
     const validationResult = validationChecker(nftWalletSchema, wallet);
     if (validationResult) {
       const res = await handleFetchWallet(wallet, rpcURL, handleDispatchWallet);
-      if (res) handleCloseModal();
+      if (res) {
+        handleCloseModal();
+        sendLogs(
+          `Wallet created with ${wallet.walletNickName} for wallet address:${wallet.walletPublicKey}`
+        );
+      }
     }
   };
 

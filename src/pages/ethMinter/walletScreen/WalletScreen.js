@@ -26,6 +26,7 @@ import { searchingFunction } from "../../../hooks/searchFunction";
 import { sendLogs } from "../../../helper/electron-bridge";
 import { editNftWalletList } from "../../../features/logic/nft";
 import { handleFetchWallet } from "../../../helper/nft-minter";
+import { toastSuccess, toastWarning } from "../../../toaster";
 
 const WalletScreen = ({ setwalletScreen }) => {
   const [tempList, setTempList] = useState([]);
@@ -88,21 +89,26 @@ const WalletScreen = ({ setwalletScreen }) => {
 
   const onRefreshAll = async () => {
     let log;
+    let error = false;
     for (let i = 0; i < walletList.length; i++) {
       try {
         const res = await handleFetchWallet(
           walletList[i],
           rpcURL,
-          handleDispatchWallet
+          handleDispatchWallet,
+          true
         );
         if (res) {
-          log = `${walletList[i]?.walletNickName} Wallet id refreshed`;
+          log = `Wallet refreshed with ${walletList[i]?.walletNickName} for wallet address:${walletList[i]?.walletPublicKey}`;
         }
       } catch (e) {
+        error = true;
         log = `${walletList[i]?.walletNickName} Wallet id can't refreshed`;
       }
       sendLogs(log);
     }
+    if (error) toastWarning("Error in fetching wallet's");
+    else toastSuccess("Wallet's refreshed successfully!");
   };
   return (
     <>

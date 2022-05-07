@@ -20,7 +20,7 @@ function UserNameChanger({ ...props }) {
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <LabelWithToolTip
-            toolTopText="Enter user name"
+            toolTopText="Leave blank for random usernames"
             labelText="Username (Optional)"
             parentStyle={{ style: { marginBottom: "10px" } }}
           />

@@ -55,6 +55,10 @@ function WebhookSetting({ userDetails }) {
           dispatch(toggleSettingSwitch({ key: "TWITTER", checked }));
         } else if (id === "log-on/off") {
           dispatch(toggleSettingSwitch({ key: "LOG", checked }));
+        } else if (id === "tasks") {
+          dispatch(toggleSettingSwitch({ key: "TASKS", checked }));
+        } else if (id === "eth-minter") {
+          dispatch(toggleSettingSwitch({ key: "ETH", checked }));
         }
       } else toastWarning("Enter webhook!!");
     } else {
@@ -137,7 +141,26 @@ function WebhookSetting({ userDetails }) {
             <span className={theme.textClass}>Log On/Off</span>
           </div>
         </div>
-        <AppSpacer spacer={40} />
+        <AppSpacer spacer={10} />
+        <div className="d-flex toggler-row-two">
+          <div className="setting-toggle-with-label">
+            <AppToggler
+              onChange={handleToggle}
+              checked={option?.ethMinter || false}
+              id="eth-minter"
+            />
+            <span className={theme.textClass}>ETH Minter</span>
+          </div>
+          <div className="setting-toggle-with-label">
+            <AppToggler
+              onChange={handleToggle}
+              checked={option?.tasks || false}
+              id="tasks"
+            />
+            <span className={theme.textClass}>Tasks</span>
+          </div>
+        </div>
+        <AppSpacer spacer={15} />
         <div className="setting-system-control">
           <div className="system-setting">
             <label className={theme.textClass}>System Toggle</label>
