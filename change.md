@@ -95,3 +95,4 @@
 - Fixed ETH minter bugs.
 - Added more fields in status changer modal.
 - Fixed mass joiner issue.
+- All webhook embeds updated.
