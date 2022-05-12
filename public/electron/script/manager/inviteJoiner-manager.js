@@ -6,10 +6,12 @@ class InviteJoinerManager {
   }
 
   addMonitor(data) {
+    console.log(data);
     const channelArray = data?.channelIDs?.split("\n");
     const proxyArray = data?.proxyGroup?.value?.split("\n");
     const tokenArray = data?.claimerGroup?.value?.split("\n");
     const monitorToken = data?.monitorToken?.value?.split(":")[2];
+    // const monitorToken = data?.monitorToken; // changed the format of object after ui changes
     this.bots[data.id] = new inviteJoinerMonitor(
       channelArray,
       tokenArray,

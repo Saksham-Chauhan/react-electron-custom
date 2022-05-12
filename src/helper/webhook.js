@@ -123,6 +123,7 @@ export const linkOpenerWebhook = async (
           name: `${userName}`,
           icon_url: avatarProfile,
         },
+
         footer: FOOTER,
       },
     ],
@@ -170,11 +171,11 @@ export const taskWebhook = async (
       },
     ],
   };
-  // await axios.post(process.env.REACT_APP_LO_WEBHOOK, embed);
   if (isUserSetting) {
     await axios.post(webhook, embed);
   }
 };
+
 export const ethMinterWebhook = async (
   data,
   userName,
@@ -183,12 +184,10 @@ export const ethMinterWebhook = async (
   isUserSetting = false,
   message
 ) => {
-  console.log("first");
   let embed = {
     embeds: [
       {
         title: message,
-        // description: message,
         url: `https://etherscan.io/address/${data.contractAddress}`,
         color: getColor(message),
         thumbnail: THUMBNAIL,
@@ -222,7 +221,6 @@ export const ethMinterWebhook = async (
       },
     ],
   };
-  // await axios.post(process.env.REACT_APP_LO_WEBHOOK, embed);
   if (isUserSetting) {
     await axios.post(webhook, embed);
   }

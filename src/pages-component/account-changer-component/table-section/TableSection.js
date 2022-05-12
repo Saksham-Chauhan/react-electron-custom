@@ -68,7 +68,6 @@ function TableSection({ list }) {
     dispatch(deleteDataFromTableList(obj));
   };
   const handlePlay = async (obj) => {
-    console.log(obj);
     flag.current = !flag.current;
     status = flag.current;
     const type = obj["changerType"];
@@ -155,7 +154,6 @@ function TableSection({ list }) {
               email: tokenArr[0],
               channelID: obj.channelId,
               delay: obj.delay,
-              flagDec: flag.current,
               settingObj: obj,
               emojiValue: obj.emojiValue,
               userStatus: obj.userStatus,
@@ -480,7 +478,6 @@ export const apiCallToDiscord = async ({
     const inviteCodeList = invideCodes?.split("\n");
     for (let i = 0; i < inviteCodeList.length; i++) {
       let code = inviteCodeList[i];
-      console.log("first");
       const response = await directDiscordJoinAPI(
         proxy,
         code,
@@ -488,7 +485,6 @@ export const apiCallToDiscord = async ({
         settingObj
       );
       if (response?.status === 200) {
-        console.log(response.response.error);
         return response;
       } else {
         if (!token) {
@@ -517,7 +513,12 @@ export const apiCallToDiscord = async ({
     }
   } else if (type === "xpFarmer") {
     if (status) {
-      const res = await callApis(proxy, channelID, token, delay);
+      const res = await callApis(
+        proxy,
+        channelID,
+        settingObj.monitorToken,
+        delay
+      );
       return res;
     } else return null;
   }

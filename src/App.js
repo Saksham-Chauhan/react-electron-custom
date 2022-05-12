@@ -56,6 +56,7 @@ import {
   updateStatusLOmonitor,
   proxyTestResultListener,
   webhookNotificationListener,
+  debuggerChannnel,
 } from "./helper/electron-bridge";
 import {
   resetSpooferStatus,
@@ -157,6 +158,8 @@ function App() {
     // LO IPC
     updateStatusLOmonitor((res) => dispatch(updateTaskState(res)));
     webhookNotificationListener((res) => dispatch(webhookNotifier(res)));
+
+    debuggerChannnel();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);

@@ -18,7 +18,8 @@ const XPFarmer = ({ handleMonitorToken, state, onChange }) => {
           <AppInputField
             // isSelect={true}
             isCustomSelect={true}
-            onChange={handleMonitorToken}
+            onChange={onChange}
+            name="monitorToken"
             fieldTitle="Monitor Token"
             placeholderText="Enter Monitor token"
             selectOptions={makeGroupOptions(claimerGroupList)}

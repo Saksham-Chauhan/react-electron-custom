@@ -45,18 +45,18 @@ const MassjoinerSlideTwo = ({
               <div className="d-flex">
                 <AppToggler
                   id="invite-joiner-react-setting-mode"
-                  checked={pageState.isReact}
+                  checked={pageState?.isReact}
                   onChange={handleToggler}
                   name="isReact"
                 />
                 <label style={{ marginLeft: "5px" }}>
-                  Turn {pageState.isReact ? "ON" : "OFF"}
+                  Turn {pageState?.isReact ? "ON" : "OFF"}
                 </label>
               </div>
             </div>
             <AppSpacer spacer={10} />
             <div className="react-joiner-setting-section">
-              {pageState.isReact && (
+              {pageState?.isReact && (
                 <>
                   <div>
                     <AppInputField

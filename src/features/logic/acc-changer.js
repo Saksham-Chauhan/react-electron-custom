@@ -3,6 +3,7 @@ import { appendTaskInTable, fetchTaskTableListState } from "../counterSlice";
 
 export const addDataInTableList = (obj) => (dispatch, getState) => {
   const currentList = fetchTaskTableListState(getState());
+  console.log(currentList, obj);
   let tempObj = { ...obj };
   tempObj["id"] = generateId();
   let combiner = [tempObj, ...currentList];

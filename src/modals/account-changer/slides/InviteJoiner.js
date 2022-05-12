@@ -63,18 +63,6 @@ function InviteJoiner({
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
-      {/* <AppSpacer spacer={10} />
-      <AppInputField
-        {...props}
-        fieldTitle="Channel ID[s]"
-        name="channelIDs"
-        isMulti={true}
-        multiHeight="100px"
-        placeholderText={`Eg.
-        936538800027467123
-        936534767688678923
-        936538800027467344`}
-      /> */}
     </React.Fragment>
   );
 }

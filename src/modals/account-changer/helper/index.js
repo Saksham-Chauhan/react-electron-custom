@@ -88,7 +88,6 @@ export const inviteJoinerValidation = (obj) => {
 };
 
 export const linkOpenerValidation = (obj) => {
-  console.log(obj);
   let valid;
   if (Object.keys(obj?.chromeUser || {}).length > 0) {
     valid = true;

@@ -222,6 +222,7 @@ function AccountChanger() {
         valid = true;
       }
       if (valid) {
+        console.log(accountChanger);
         dispatch(addDataInTableList(accountChanger));
         handleCloseModal();
       }

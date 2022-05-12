@@ -21,7 +21,7 @@ function GroupTitle({
           {...props}
           onClick={onClick}
           className={
-            appTheme ? "lightMode_color group-title-card" : "group-title-card"
+            appTheme ? "light-bg group-title-card-btn" : "group-title-card-btn"
           }
           style={{ cursor: "pointer" }}
         >

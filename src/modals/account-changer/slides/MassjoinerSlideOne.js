@@ -49,12 +49,12 @@ const MassjoinerSlideOne = ({ onChange, handleToggler, pageState }) => {
             <div className="d-flex toggler-slide-one">
               <AppToggler
                 id="invite-joiner-react-setting-mode"
-                checked={pageState.isReact}
+                checked={pageState?.isReact}
                 onChange={handleToggler}
                 name="isReact"
               />
               <label className={textClass}>
-                Turn {pageState.isReact ? "ON" : "OFF"}
+                Turn {pageState?.isReact ? "ON" : "OFF"}
               </label>
             </div>
           </div>

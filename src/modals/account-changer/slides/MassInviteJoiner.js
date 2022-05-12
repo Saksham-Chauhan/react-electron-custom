@@ -26,7 +26,7 @@ function MassInviteJoiner({
       <div
         className="modal-cancel-btn submit btn modal-control-btns custom-btn-right"
         onClick={() => {
-          if (pageState.isReact || pageState.isAcceptRule) {
+          if (pageState?.isReact || pageState.isAcceptRule) {
             slider?.current?.slickNext();
             if (currentSlide === 1) handleSubmit();
           } else {
@@ -35,7 +35,7 @@ function MassInviteJoiner({
         }}
       >
         <span>
-          {(pageState.isReact || pageState.isAcceptRule) && currentSlide === 0
+          {(pageState?.isReact || pageState.isAcceptRule) && currentSlide === 0
             ? "Next"
             : "Create"}
         </span>

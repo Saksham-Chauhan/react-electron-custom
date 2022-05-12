@@ -108,11 +108,9 @@ export const directDiscordJoinAPI = async (
   token,
   settingObj
 ) => {
-  console.log("called", token, inviteCode);
   let inviteResponse;
   try {
     inviteResponse = await discordServerInviteAPI(inviteCode, token, proxy);
-    console.log(inviteResponse);
     if (inviteResponse.status === 200) {
       const tkn =
         token.substring(0, 4) + "## ##" + token.charAt(token.length - 1);
@@ -120,7 +118,7 @@ export const directDiscordJoinAPI = async (
       const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
       sendLogs(log);
 
-      if (settingObj.isReact) {
+      if (settingObj?.isReact) {
         const serverReactResponse = await axios({
           url: `${BASE_URL}channels/${settingObj.channelId}/messages/${settingObj.messageId}/reactions/${settingObj.emojiValue}/%40me`,
           method: "put",
@@ -137,7 +135,7 @@ export const directDiscordJoinAPI = async (
         }
       }
 
-      if (settingObj.isAcceptRule) {
+      if (settingObj?.isAcceptRule) {
         const acceptServerRulResponse = await axios({
           url: `${BASE_URL}guilds/${inviteResponse.data.guild.id}/requests/@me`,
           method: "put",

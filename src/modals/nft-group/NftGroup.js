@@ -75,7 +75,7 @@ function NftGroup() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? "modal-cancel-btn btn lightMode-modalBtn "
+              ? "modal-cancel-btn btn light-mode-modalbtn"
               : "modal-cancel-btn btn"
           }
         >

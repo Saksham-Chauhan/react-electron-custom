@@ -54,8 +54,6 @@ const WalletTable = ({ walletList = [] }) => {
       }
     } catch (e) {
       toastWarning("Can't Fetch Wallet");
-
-      console.log(e);
     }
   };
 
