@@ -61,10 +61,8 @@
     "eject": "react-scripts eject",
     "dev": "concurrently -k \"bytenode --compile electron\\*.js\" \"npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron .",
-    "electron-pack-win": "set GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -w",
-    "electron-pack-mac": "export GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -m",
-    "obfuscate-mac": "bytenode --compile electron\\*.js && rm -rf electron\\*.js && npm run electron-pack-mac",
-    "obfuscate-win": "bytenode --compile electron\\*.js && rm -rf electron\\*.js && npm run electron-pack-win"
+    "electron-pack-win": "bytenode --compile electron\\*.js && rm -rf electron\\*.js && set GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -w",
+    "electron-pack-mac": "bytenode --compile electron\\*.js && rm -rf electron\\*.js && export GH_TOKEN=ghp_cPKnN61OPlhwuYvNZABxL1zZQLT2Zj1XVnAg && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -m"
   },
   "eslintConfig": {
     "extends": "react-app"
