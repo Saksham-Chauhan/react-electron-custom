@@ -28,12 +28,17 @@ const bytenode = require("bytenode");
 // })();
 
 // --------------------------------------------------------
+// const fetchTweets = null,
+//   spooferManager = null,
+//   InviteJoinerManager = null,
+//   linkOpernerManager = null,
+//   logManager = null;
 const auth = require("./auth.jsc");
-const { fetchTweets } = require("./helper/fetchTweet.jsc");
-const spooferManager = require("./script/manager/spoof-manager.jsc");
-const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
-const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
-const logManager = require("./script/manager/log-manager.jsc");
+const { fetchTweets } = require("./helper/fetchTweet");
+const spooferManager = require("./script/manager/spoof-manager");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager");
+const linkOpernerManager = require("./script/manager/linkOpener-manager");
+const logManager = require("./script/manager/log-manager");
 
 // const { fetchTweets } = bytenode.runBytecodeFile(
 //   `${path.join(__dirname, "/helper/fetchTweet.jsc")}`
@@ -98,9 +103,9 @@ async function createAuthWindow() {
     },
     () => {}
   );
-  win.loadURL(
-    "https://discord.com/api/oauth2/authorize?client_id=938338403106320434&redirect_uri=http://localhost/callback/*&response_type=code&scope=email%20identify"
-  );
+  // "https://discord.com/api/oauth2/authorize?client_id=938338403106320434&redirect_uri=http://localhost/callback/*&response_type=code&scope=email%20identify"
+  debugSendToIpcRenderer(auth.getAuthenticationURL());
+  win.loadURL(auth.getAuthenticationURL());
   win.webContents.on(
     "login",
     (event, authenticationResponseDetails, authInfo, callback) => {
@@ -122,23 +127,24 @@ async function createAuthWindow() {
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     debugSendToIpcRenderer("before request");
     console.log("before request");
-    // try {
-    //   auth.loadTokens(url);
-    //   debugSendToIpcRenderer("loadTokens");
-    // } catch (e) {
-    //   mainWindow.reload();
-    // }
-    // try {
-    //   auth.login();
-    //   console.log("login");
-    //   debugSendToIpcRenderer("login");
-    //   if (!mainWindow) return;
-    //   mainWindow.reload();
-    //   return destroyAuthWin();
-    // } catch (error) {
-    //   destroyAuthWin();
-    //   console.log(error);
-    // }
+    try {
+      auth.loadTokens(url);
+      debugSendToIpcRenderer("loadTokens");
+    } catch (e) {
+      console.log("rrre", e);
+      mainWindow.reload();
+    }
+    try {
+      auth.login();
+      console.log("login");
+      debugSendToIpcRenderer("login");
+      if (!mainWindow) return;
+      mainWindow.reload();
+      return destroyAuthWin();
+    } catch (error) {
+      destroyAuthWin();
+      console.log("rrr", error);
+    }
   });
   win.webContents.openDevTools();
   win.on("authenticated", () => {
@@ -642,7 +648,6 @@ ipcMain.on("export-log-report", (_, data) => {
 // ACC CHANGER IPC
 ipcMain.on("get-server-avatar", async (event, code) => {
   let url;
-  qq;
   var config = {
     method: "get",
     url: `https://discord.com/api/v9/invites/${code}`,
@@ -702,15 +707,3 @@ ipcMain.on("stop-xp-server", (_, data) => {
     console.log(e);
   }
 });
-
-// currentProcesses.get((err, processes) => {
-//   const sorted = _.sortBy(processes, "cpu");
-//   for (let i = 0; i < sorted.length; i += 1) {
-//     if ("xpfarmer" === sorted[i].name.toLowerCase()) {
-//       process.kill(sorted[i].pid);
-//     }
-//   }
-// });
-
-exports.app = app;
-exports.mainWindow = mainWindow;

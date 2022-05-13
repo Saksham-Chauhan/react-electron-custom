@@ -1,4 +1,4 @@
-const spooferProcess = require("../process/spoof-process");
+const spooferProcess = require("../process/spoof-process.js");
 class SpooferManager {
   constructor() {
     this.bots = {};

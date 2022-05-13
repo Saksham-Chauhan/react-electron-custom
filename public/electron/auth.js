@@ -54,58 +54,59 @@ function logout() {
   user = null;
 }
 
-async function getUserData(){
+async function getUserData() {
   try {
     const res = await axios({
-      method: "GET", 
+      method: "GET",
       url: "https://discordapp.com/api/users/@me",
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
-      }
-  });
-  if (res.data.id !== null || res.data.id !== undefined){
-    return res.data;
-  }
-  return res.status;
-  } catch (err){
+      },
+    });
+    if (res.data.id !== null || res.data.id !== undefined) {
+      return res.data;
+    }
+    return res.status;
+  } catch (err) {
     console.log("Something went wrong while accessing @me library");
   }
 }
 
-async function getUserGuildData(userData){
+async function getUserGuildData(userData) {
   try {
     const res = await axios({
-      method: "GET", 
+      method: "GET",
       url: `https://discordapp.com/api/guilds/${guildId}/members/${userData.id}`,
       headers: {
         Authorization: `Bot ${botToken}`,
-      }
-  });
-  if (res.data.roles !== null || res.data.roles !== undefined){
-    return res.data;
-  }
-  return res.status;
-  } catch (err){
-    console.log("Something went wrong while accessing member guild roles library");
+      },
+    });
+    if (res.data.roles !== null || res.data.roles !== undefined) {
+      return res.data;
+    }
+    return res.status;
+  } catch (err) {
+    console.log(
+      "Something went wrong while accessing member guild roles library"
+    );
   }
 }
 
-
-async function getGuildRoles(){
+async function getGuildRoles() {
   try {
     const res = await axios({
-      method: "GET", 
+      method: "GET",
       url: `https://discordapp.com/api/guilds/${guildId}/roles`,
       headers: {
         Authorization: `Bot ${botToken}`,
-      }
-  });
-  // TODO => Check what else are we taking from here?
-  if (res.data.id !== null || res.data.id !== undefined){
-    return res.data;
-  }
-  return res.status;
-  } catch (err){
+      },
+    });
+    // TODO => Check what else are we taking from here?
+    if (res.data.id !== null || res.data.id !== undefined) {
+      return res.data;
+    }
+    return res.status;
+  } catch (err) {
     console.log("Something went wrong while accessing guild roles library");
   }
 }
@@ -116,7 +117,7 @@ async function login() {
   const guildRoles = await getGuildRoles();
 
   const userRoles = userGuildData.roles;
-  const roles = []
+  const roles = [];
   for (const role of guildRoles) {
     if (
       userRoles.includes(role.id) &&
@@ -125,14 +126,13 @@ async function login() {
       roles.push(role.name);
     }
   }
-  
+
   userData.joined_at = userGuildData.joined_at;
   userData.roles = roles;
   userData.avatar = userData.avatar
     ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
     : "https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png";
   user = userData; // TODO => Check if we can simply return object with required values
-  console.log(userData);
 }
 
 module.exports = {

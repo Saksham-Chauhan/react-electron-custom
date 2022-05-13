@@ -1,4 +1,4 @@
-const inviteJoinerMonitor = require("../process/inviteJoiner-process");
+const inviteJoinerMonitor = require("../process/inviteJoiner-process.js");
 
 class InviteJoinerManager {
   constructor() {

@@ -1,4 +1,4 @@
-const linkOpenerProcess = require("../process/linkOpener-process");
+const linkOpenerProcess = require("../process/linkOpener-process.js");
 
 class LinkOpenerManager {
   constructor() {
