@@ -1,4 +1,19 @@
-const spooferProcess = require("../process/spoof-process.js");
+// const bytenode = require("bytenode");
+// const path = require("path")(
+//   // ----------------------------
+//   async () => {
+//     console.log("hello i am executed ...........");
+//     await bytenode.compileFile({
+//       filename: `${path.join(__dirname, "../process/spoof-process.js")}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//   }
+// )();
+
+const spooferProcess = require("../process/spoof-process.jsc");
 class SpooferManager {
   constructor() {
     this.bots = {};

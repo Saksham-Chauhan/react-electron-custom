@@ -8,53 +8,72 @@ const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
-const { spawn } = require("child_process");
+const { execFile } = require("child_process");
 const bytenode = require("bytenode");
 
-// (async () => {
-//   console.log("bfcgnfdngfdn", `${path.join(__dirname, "/auth.js")}`);
-//   try {
-//     const file = await bytenode.compileFile({
-//       filename: `${path.join(__dirname, "/auth.js")}`,
-//       compileAsModule: true,
-//       electron: false,
-//       createLoader: true,
-//       loaderFilename: "",
-//     });
-//     console.log(file);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// })();
+(async () => {
+  console.log("i am working");
+  try {
+    await bytenode.compileFile({
+      filename: `${path.join(__dirname, "/auth.js")}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    // await bytenode.compileFile({
+    //   filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
+    //   compileAsModule: true,
+    //   electron: false,
+    //   createLoader: true,
+    //   loaderFilename: "",
+    // });
+    await bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/inviteJoiner-manager.js"
+      )}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/linkOpener-manager.js"
+      )}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+  } catch (e) {
+    console.log(e);
+  }
+})();
 
 // --------------------------------------------------------
-// const fetchTweets = null,
-//   spooferManager = null,
-//   InviteJoinerManager = null,
-//   linkOpernerManager = null,
-//   logManager = null;
 const auth = require("./auth.jsc");
-const { fetchTweets } = require("./helper/fetchTweet");
-const spooferManager = require("./script/manager/spoof-manager");
-const InviteJoinerManager = require("./script/manager/inviteJoiner-manager");
-const linkOpernerManager = require("./script/manager/linkOpener-manager");
-const logManager = require("./script/manager/log-manager");
-
-// const { fetchTweets } = bytenode.runBytecodeFile(
-//   `${path.join(__dirname, "/helper/fetchTweet.jsc")}`
-// );
-// const spooferManager = bytenode.runBytecodeFile(
-//   `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`
-// );
-// const InviteJoinerManager = bytenode.runBytecodeFile(
-//   `${path.join(__dirname, "/script/manager/inviteJoiner-manager.jsc")}`
-// );
-// const linkOpernerManager = bytenode.runBytecodeFile(
-//   `${path.join(__dirname, "/script/manager/linkOpener-manager.jsc")}`
-// );
-// const logManager = bytenode.runBytecodeFile(
-//   `${path.join(__dirname, "/script/manager/log-manager.jsc")}`
-// );
+const { fetchTweets } = require("./helper/fetchTweet.jsc");
+const spooferManager = require("./script/manager/spoof-manager.jsc");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
+const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
+const logManager = require("./script/manager/log-manager.jsc");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -83,41 +102,20 @@ const INTERCEPTOR_TOOLS = [
 ];
 
 // AUTH WINDOW CREATION
-async function createAuthWindow() {
+function createAuthWindow() {
   destroyAuthWin();
   win = new BrowserWindow({
     width: 550,
     height: 800,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
       contextIsolation: false,
     },
     transparent: true,
     frame: false,
     devTools: false,
   });
-  //
-  win.webContents.session.setProxy(
-    {
-      proxyRules: "193.34.93.221:33861",
-    },
-    () => {}
-  );
-  // "https://discord.com/api/oauth2/authorize?client_id=938338403106320434&redirect_uri=http://localhost/callback/*&response_type=code&scope=email%20identify"
-  debugSendToIpcRenderer(auth.getAuthenticationURL());
   win.loadURL(auth.getAuthenticationURL());
-  win.webContents.on(
-    "login",
-    (event, authenticationResponseDetails, authInfo, callback) => {
-      if (authInfo.isProxy) {
-        event.preventDefault();
-        callback("", ""); //supply credentials to server
-      }
-    }
-  );
-  debugSendToIpcRenderer("next step");
-  debugSendToIpcRenderer(`redirect, ${auth.redirectUrl}`);
-
   const {
     session: { webRequest },
   } = win.webContents;
@@ -125,28 +123,21 @@ async function createAuthWindow() {
     urls: [auth.redirectUrl],
   };
   webRequest.onBeforeRequest(filter, async ({ url }) => {
-    debugSendToIpcRenderer("before request");
-    console.log("before request");
     try {
-      auth.loadTokens(url);
-      debugSendToIpcRenderer("loadTokens");
+      await auth.loadTokens(url);
     } catch (e) {
-      console.log("rrre", e);
       mainWindow.reload();
     }
     try {
-      auth.login();
-      console.log("login");
-      debugSendToIpcRenderer("login");
+      await auth.login();
       if (!mainWindow) return;
       mainWindow.reload();
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-      console.log("rrr", error);
+      console.log(error);
     }
   });
-  win.webContents.openDevTools();
   win.on("authenticated", () => {
     destroyAuthWin();
   });
@@ -159,7 +150,6 @@ function destroyAuthWin() {
   win.close();
   win = null;
 }
-
 // MAIN WINDOW CREATOR
 function createWindow() {
   try {
@@ -237,12 +227,12 @@ ipcMain.on("auth", () => {
   createAuthWindow();
 });
 
-ipcMain.handle("authenticate-user", async (_, __) => {
+ipcMain.handle("authenticate-user", (_, __) => {
   return auth.getCurrentUser();
 });
 
-ipcMain.on("logout-user", async () => {
-  await auth.logout();
+ipcMain.on("logout-user", () => {
+  auth.logout();
 });
 
 app.on("window-all-closed", () => {
@@ -310,7 +300,7 @@ if (!shouldNotQuit) {
 }
 app.on("ready", () => {
   createWindow();
-  // logManager.initLogs();
+  logManager.initLogs();
   global.mainWin = mainWindow;
 });
 
@@ -488,23 +478,6 @@ ipcMain.handle("imageText", async (event, url) => {
   const {
     data: { text },
   } = await Tesseract.recognize(url, "eng");
-  // const folderPath = app.getPath("userData");
-  // const worker = Tesseract.createWorker({
-  //   cachePath: path.join(folderPath, "/tesseract"),
-  //   // logger: (m) => console.log("Log", m),
-  // });
-  // const getText = async () => {
-  //   await worker.load();
-  //   await worker.loadLanguage("eng");
-  //   await worker.initialize("eng");
-  //   const {
-  //     data: { text },
-  //   } = await worker.recognize(url);
-  //   await worker.terminate();
-  //   return text;
-  // };
-
-  // return await getText();
   return text;
 });
 
@@ -554,49 +527,6 @@ ipcMain.on("proxy-tester", async (event, data) => {
     });
   }
 });
-
-// NEWTORK SPEED
-// async function getNetworkDownloadSpeed() {
-//   const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
-//   const fileSizeInBytes = 5000;
-//   let speed;
-//   try {
-//     speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   if (speed) {
-//     return speed.kbps;
-//   }
-// }
-
-// async function getNetworkUploadSpeed() {
-//   const options = {
-//     hostname: "www.google.com",
-//     port: 80,
-//     path: "/catchers/544b09b4599c1d0200000289",
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   };
-//   const fileSizeInBytes = 5000;
-//   let speed;
-//   try {
-//     speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   if (speed) {
-//     return speed.kbps;
-//   }
-// }
-
-// ipcMain.handle("get-speed", async () => {
-//   const download = await getNetworkDownloadSpeed();
-//   const upload = await getNetworkUploadSpeed();
-//   return { download, upload };
-// });
 
 const debugSendToIpcRenderer = (log) => {
   let win = mainWindow || global.mainWin;
@@ -677,33 +607,46 @@ ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
 });
 
 //RUN LOCAL SERVER
-let processPid = null;
-
 ipcMain.on("run-xp-server", (_, data) => {
-  console.log("called");
-  const exePath = isDev
-    ? `${path.join(__dirname, "../windows/ethminter.exe")}`
-    : `${path.join(__dirname, "../../build/windows/ethminter.exe")}`;
-  try {
-    const child = spawn(exePath);
-    processPid = child.pid;
-    console.log(processPid);
-    child.stdout.on("data", (data) => {
-      console.log(data);
-    });
-    child.stderr.on("data", (data) => {
-      console.log(data);
-    });
-  } catch (e) {
-    console.log(e);
-  }
+  xpFarmerStart();
 });
 
 ipcMain.on("stop-xp-server", (_, data) => {
-  console.log(processPid);
   try {
-    if (processPid) process.kill(processPid);
+    stopXpfarmer();
   } catch (e) {
     console.log(e);
   }
 });
+
+async function xpFarmerStart() {
+  const exePath = isDev
+    ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
+    : `${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
+  try {
+    const process = execFile(exePath, [3001], (error, stdout, stderr) => {
+      if (error) {
+        throw error;
+      }
+      console.log(stdout);
+    });
+    console.log("vvvvvvvvvv", process);
+  } catch (e) {
+    console.log("this is error", e);
+  }
+}
+
+function stopXpfarmer() {
+  try {
+    currentProcesses.get((err, processes) => {
+      const sorted = _.sortBy(processes, "cpu");
+      for (let i = 0; i < sorted.length; i += 1) {
+        if ("xpfarmer" === sorted[i].name.toLowerCase()) {
+          process.kill(sorted[i].pid);
+        }
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}

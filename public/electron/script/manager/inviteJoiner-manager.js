@@ -1,4 +1,18 @@
-const inviteJoinerMonitor = require("../process/inviteJoiner-process.js");
+// const bytenode = require("bytenode");
+// const path = require("path");
+// ----------------------------
+//   (async () => {
+//     await bytenode.compileFile({
+//       filename: `${path.join(__dirname, "../process/inviteJoiner-process.js")}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//   }
+// )();
+
+const inviteJoinerMonitor = require("../process/inviteJoiner-process.jsc");
 
 class InviteJoinerManager {
   constructor() {
