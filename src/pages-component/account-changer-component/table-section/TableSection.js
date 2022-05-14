@@ -484,7 +484,7 @@ export const apiCallToDiscord = async ({
         token,
         settingObj
       );
-      if (response?.status === 200) {
+      if (response?.status === 200 || response?.status === 204) {
         return response;
       } else {
         if (!token) {
