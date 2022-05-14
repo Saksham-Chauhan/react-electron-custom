@@ -59,10 +59,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently -k \"bytenode --compile electron\\*.js\" \"npm start\" \"npm:electron\"",
+    "dev": "concurrently -k \"npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron .",
-    "electron-pack-win": "bytenode --compile electron\\*.js && rm -rf electron\\*.js && set GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -w",
-    "electron-pack-mac": "bytenode --compile electron\\*.js && rm -rf electron\\*.js && export GH_TOKEN=ghp_cPKnN61OPlhwuYvNZABxL1zZQLT2Zj1XVnAg && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/main.js -m"
+    "electron-pack-win": "npm run obfuscate && set GH_TOKEN=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 && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/armor.js -w",
+    "electron-pack-mac": "npm run obfuscate && export GH_TOKEN=ghp_cPKnN61OPlhwuYvNZABxL1zZQLT2Zj1XVnAg && react-scripts build && electron-builder -c.extraMetadata.main=build/electron/armor.js -m",
+    "obfuscate": "sh build.sh"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -82,9 +83,10 @@
   "devDependencies": {
     "electron": "^17.0.1",
     "electron-builder": "^22.14.13",
-    "react-error-overlay": "^6.0.9"
+    "react-error-overlay": "^6.0.9",
+    "shx": "^0.3.4"
   },
-  "main": "public/electron/main.js",
+  "main": "public/electron/armor.js",
   "author": {
     "name": "Koders",
     "url": "https://koders.in"
