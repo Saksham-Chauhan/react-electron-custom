@@ -26,8 +26,6 @@ import {
 import {
   activityChangerValidation,
   basicAccChangerValidation,
-  getAllChannelIds,
-  // getAllServerIds,
   giveawayJoinerValidation,
   inviteJoinerValidation,
   linkOpenerValidation,
@@ -55,7 +53,7 @@ import {
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
 import { debounce } from "lodash";
-import { fetchedServer, fetchServer } from "../../helper/electron-bridge";
+import { fetchChannel, fetchedChannel, fetchedServer, fetchServer } from "../../helper/electron-bridge";
 
 function AccountChanger() {
   const navigate = useNavigate();
@@ -82,15 +80,12 @@ function AccountChanger() {
   });
 
   useEffect(() => {
-    fetchedServer((res) => {
-      if (res.status !== 200 || res.status !== 204)
-        console.log("ggggggg", res.message);
-      else console.log(res);
+    fetchedServer((data) => {
       let obj = [];
-      for (let i = 0; i < res.data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         let tempOjb = {};
-        tempOjb["label"] = res.data[i].name;
-        tempOjb["value"] = res.data[i].id;
+        tempOjb["label"] = data[i].name;
+        tempOjb["value"] = data[i].id;
         obj.push(tempOjb);
       }
       setAccountChanger((pre) => {
@@ -100,7 +95,24 @@ function AccountChanger() {
         };
       });
     });
-  });
+
+    fetchedChannel((data) => {
+      let channels = [];
+      for (let i = 0; i < data.length; i++) {
+        let tempObj = {};
+        if (data[i].type === 0) {
+          tempObj["label"] = data[i].name;
+          tempObj["value"] = data[i].id;
+          channels.push(tempObj);
+        }
+      }
+      setAccountChanger((pre) => {
+        return { ...pre, channels: channels };
+      })
+    });
+  })
+
+
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
       handleCloseModal();
@@ -196,7 +208,7 @@ function AccountChanger() {
       //     serverIDs: obj,
       //   };
       // });
-    }, 1000)
+    }, 1500)
   ).current;
 
   const handleChange = (e) => {
@@ -244,7 +256,6 @@ function AccountChanger() {
         valid = true;
       }
       if (valid) {
-        console.log(accountChanger);
         dispatch(addDataInTableList(accountChanger));
         handleCloseModal();
       }
@@ -263,22 +274,10 @@ function AccountChanger() {
   };
 
   const handleSelectServer = async (obj) => {
-    const res = await getAllChannelIds(
-      obj.value,
-      accountChanger.monitorToken.label
-    );
-    let channels = [];
-    for (let i = 0; i < res.data.length; i++) {
-      let tempObj = {};
-      if (res.data[i].type === 0) {
-        tempObj["label"] = res.data[i].name;
-        tempObj["value"] = res.data[i].id;
-        channels.push(tempObj);
-      }
-    }
-    setAccountChanger((pre) => {
-      return { ...pre, channels: channels };
-    });
+    fetchChannel({
+      id:obj.value,
+      token:accountChanger.monitorToken.label
+    })
   };
 
   const handleSelectChannel = (obj) => {
@@ -360,7 +359,7 @@ function AccountChanger() {
               selectOptions={chromeList}
               fieldTitle="Chrome User"
               isSelect={true}
-              navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
+              navigate={chromeList.length > 0 ? () => { } : handleChromeMenuOpen}
               defaultValue={defaultChromeUser}
             />
           )}
@@ -387,7 +386,7 @@ function AccountChanger() {
               isSelect={claimerGroupList.length > 0 ? true : false}
               disabled={claimerGroupList.length > 0 ? false : true}
               navigate={
-                claimerGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+                claimerGroupList.length > 0 ? () => { } : handleProxyMenuOpen
               }
               tooltip={true}
               toolTipText="Select Discord Accounts"
@@ -408,7 +407,7 @@ function AccountChanger() {
               isSelect={proxyGroupList.length > 0 ? true : false}
               disabled={proxyGroupList.length > 0 ? false : true}
               navigate={
-                proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
+                proxyGroupList.length > 0 ? () => { } : handleProxyMenuOpen
               }
               tooltip={true}
               toolTipText="Select proxy group"

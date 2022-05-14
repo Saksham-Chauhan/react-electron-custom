@@ -105,6 +105,7 @@ const startXpFarmer = (value) => {
 const stopXpFarmer = (value) => {
   ipcRenderer.send("stop-xp-server", value);
 };
+// FOR SERVER AND CHANNEL ID
 const fetchServer = (value) => {
   ipcRenderer.send("fetch_server", value);
 };
@@ -112,7 +113,16 @@ const fetchServer = (value) => {
 const fetchedServer = (callback) =>
   ipcRenderer.on("fetched-server", (_, data) => callback(data));
 
+  const fetchChannel = (value) => {
+    ipcRenderer.send("fetch_channel", value);
+  };
+  
+  const fetchedChannel = (callback) =>
+    ipcRenderer.on("fetched-channel", (_, data) => callback(data));
+
 module.exports = {
+  fetchChannel,
+  fetchedChannel,
   fetchedServer,
   fetchServer,
   stopXpFarmer,
