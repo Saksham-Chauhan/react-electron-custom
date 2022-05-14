@@ -105,8 +105,16 @@ const startXpFarmer = (value) => {
 const stopXpFarmer = (value) => {
   ipcRenderer.send("stop-xp-server", value);
 };
+const fetchServer = (value) => {
+  ipcRenderer.send("fetch_server", value);
+};
+
+const fetchedServer = (callback) =>
+  ipcRenderer.on("fetched-server", (_, data) => callback(data));
 
 module.exports = {
+  fetchedServer,
+  fetchServer,
   stopXpFarmer,
   startXpFarmer,
   getURL,

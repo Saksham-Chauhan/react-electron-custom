@@ -19,4 +19,4 @@ v8.setFlagsFromString("--no-lazy");
   }
 })();
 
-require("./main.jsc");
+require("./main.js");

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
@@ -27,7 +27,7 @@ import {
   activityChangerValidation,
   basicAccChangerValidation,
   getAllChannelIds,
-  getAllServerIds,
+  // getAllServerIds,
   giveawayJoinerValidation,
   inviteJoinerValidation,
   linkOpenerValidation,
@@ -55,6 +55,7 @@ import {
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
 import { debounce } from "lodash";
+import { fetchedServer, fetchServer } from "../../helper/electron-bridge";
 
 function AccountChanger() {
   const navigate = useNavigate();
@@ -80,6 +81,26 @@ function AccountChanger() {
     },
   });
 
+  useEffect(() => {
+    fetchedServer((res) => {
+      if (res.status !== 200 || res.status !== 204)
+        console.log("ggggggg", res.message);
+      else console.log(res);
+      let obj = [];
+      for (let i = 0; i < res.data.length; i++) {
+        let tempOjb = {};
+        tempOjb["label"] = res.data[i].name;
+        tempOjb["value"] = res.data[i].id;
+        obj.push(tempOjb);
+      }
+      setAccountChanger((pre) => {
+        return {
+          ...pre,
+          serverIDs: obj,
+        };
+      });
+    });
+  });
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
       handleCloseModal();
@@ -160,20 +181,21 @@ function AccountChanger() {
   };
   const delayedQuery = useRef(
     debounce(async (q) => {
-      const res = await getAllServerIds(q);
-      let obj = [];
-      for (let i = 0; i < res.data.length; i++) {
-        let tempOjb = {};
-        tempOjb["label"] = res.data[i].name;
-        tempOjb["value"] = res.data[i].id;
-        obj.push(tempOjb);
-      }
-      setAccountChanger((pre) => {
-        return {
-          ...pre,
-          serverIDs: obj,
-        };
-      });
+      fetchServer(q);
+      // const res = await getAllServerIds(q);
+      // let obj = [];
+      // for (let i = 0; i < res.data.length; i++) {
+      //   let tempOjb = {};
+      //   tempOjb["label"] = res.data[i].name;
+      //   tempOjb["value"] = res.data[i].id;
+      //   obj.push(tempOjb);
+      // }
+      // setAccountChanger((pre) => {
+      //   return {
+      //     ...pre,
+      //     serverIDs: obj,
+      //   };
+      // });
     }, 1000)
   ).current;
 
