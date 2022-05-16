@@ -1,10 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { sleep } from "../../../helper";
-import {
-  deleteAllTableRow,
-  updateStatusOfTableRow,
-} from "../../../features/logic/acc-changer";
+import { deleteAllTableRow } from "../../../features/logic/acc-changer";
 import UseAnimations from "react-useanimations";
 import add from "../../../assests/images/plus.svg";
 import play from "../../../assests/images/play.svg";
@@ -14,10 +10,36 @@ import searchIcon from "../../../assests/images/search.svg";
 import lightModeplush from "../../../assests/images/lightModeplus.svg";
 import lightModesearch from "../../../assests/images/lightModesearch.svg";
 import { fetchThemsState, setModalState } from "../../../features/counterSlice";
-import { apiCallToDiscord } from "../table-section/TableSection";
+
 import { useSelector } from "react-redux";
+import {
+  useActivityChanger,
+  useAvatarChanger,
+  useMassInviteJoiner,
+  useNickNameChanger,
+  usePasswordChanger,
+  useServerLeaver,
+  useTokeChecker,
+  useTokenRetriever,
+  useUserName,
+} from "../../../hooks/discord-api";
+
+import {
+  startInviteJoinerMonitor,
+  startLinkOpenerMonitor,
+} from "../../../helper/electron-bridge";
+
 function TopBtnsWrapper({ search, handleSearching, tempList }) {
   const dispatch = useDispatch();
+  const massjoiner = useMassInviteJoiner();
+  const serverLeaver = useServerLeaver();
+  const activityChanger = useActivityChanger();
+  const userName = useUserName();
+  const nickName = useNickNameChanger();
+  const tokenRetriever = useTokenRetriever();
+  const avatarChanger = useAvatarChanger();
+  const tokenChecker = useTokeChecker();
+  const passwordChanger = usePasswordChanger();
   const appTheme = useSelector(fetchThemsState);
 
   const theme = {
@@ -43,43 +65,40 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
 
   const handleSinglePlay = async (obj) => {
     const type = obj["changerType"];
-    const { proxyGroup, claimerGroup } = obj;
-    const tokenArray = claimerGroup["value"]?.split("\n");
-    for (let index = 0; index < tokenArray.length; index++) {
-      const token = tokenArray[index];
-      const tokenArr = token?.split(":");
-      const proxyArray = proxyGroup["value"].split("\n");
-      for (let j = 0; j < proxyArray.length; j++) {
-        let proxySplit = proxyArray[j]?.split(":");
-        const proxy = {
-          host: proxySplit[0],
-          port: proxySplit[1],
-          auth: {
-            username: proxySplit[2],
-            password: proxySplit[3],
-          },
-        };
-        dispatch(updateStatusOfTableRow(obj, "Running"));
-        const apiResponse = await apiCallToDiscord({
-          type,
-          token: tokenArr[2],
-          proxy,
-          username: obj.username,
-          password: tokenArr[1],
-          guildId: obj.serverIDs,
-          activityDetail: obj.activityDetails,
-          nickName: obj.nicknameGenerate,
-          currentPass: tokenArr[1],
-          newPass: obj.commonPassword,
-          invideCodes: obj.inviteCodes,
-        });
-        if (apiResponse.status === 200) {
-          dispatch(updateStatusOfTableRow(obj, "Completed"));
-        } else {
-          dispatch(updateStatusOfTableRow(obj, "Stopped"));
-        }
-        await sleep(Number(obj.delay) || 3000);
-      }
+    if (type === "massInviter") {
+      await massjoiner(obj);
+    } else if (type === "serverLeaver") {
+      await serverLeaver(obj);
+    } else if (type === "usernameChanger") {
+      await userName(obj);
+    } else if (type === "activityChanger") {
+      await activityChanger(obj);
+    } else if (type === "nicknameChanger") {
+      await nickName(obj);
+    } else if (type === "passwordChanger") {
+      await passwordChanger(obj);
+    } else if (type === "tokenChecker") {
+      await tokenChecker(obj);
+    } else if (type === "tokenRetrieve") {
+      await tokenRetriever(obj);
+    } else if (type === "avatarChanger") {
+      await avatarChanger(obj);
+    } else if (type === "xpFarmer") {
+      // const { proxyGroup } = obj;
+      // const proxy = getProxy(proxyGroup["value"].split("\n"));
+      // if (status) {
+      //   const res = await callApis(
+      //     proxy,
+      //     obj.channelId,
+      //     obj.monitorToken,
+      //     obj.delay
+      //   );
+      //   return res;
+      // } else return null;
+    } else if (type === "linkOpener") {
+      startLinkOpenerMonitor(obj);
+    } else if (type === "inviteJoiner") {
+      startInviteJoinerMonitor(obj);
     }
   };
 

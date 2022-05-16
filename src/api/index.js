@@ -165,11 +165,8 @@ export const directDiscordJoinAPI = async (
   }
 };
 
-// TODO => What made you do fetch instead of axios at the end of program?
 export const generateRandomAvatar = async (api = IMAGE_API) => {
-  const arrayBuffer = await fetch(api).then(function (response) {
-    return response.arrayBuffer();
-  });
+  const arrayBuffer = await axios.get(api, { responseType: "arraybuffer" });
   const str = arrayBufferToString(arrayBuffer, "base64");
   return "data:image/jpeg;base64," + str;
 };
