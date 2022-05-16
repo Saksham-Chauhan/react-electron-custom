@@ -8,72 +8,72 @@ const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 const axios = require("axios");
-var { execFile } = require("child_process");
-const bytenode = require("bytenode");
+const { execFile } = require("child_process");
+// const bytenode = require("bytenode");
 
-(async () => {
-  try {
-    await bytenode.compileFile({
-      filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    await bytenode.compileFile({
-      filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    await bytenode.compileFile({
-      filename: `${path.join(__dirname, "/auth.js")}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    await bytenode.compileFile({
-      filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    await bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/inviteJoiner-manager.js"
-      )}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    bytenode.runBytecodeFile("/script/manager/spoof-manager.jsc");
-    await bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/linkOpener-manager.js"
-      )}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    bytenode.runBytecodeFile("/script/manager/linkOpener-manager.jsc");
-  } catch (e) {
-    console.log(e);
-  }
-})();
+// (async () => {
+//   console.log("bfcgnfdngfdn", `${path.join(__dirname, "/auth.js")}`);
+//   try {
+//     const file = await bytenode.compileFile({
+//       filename: `${path.join(__dirname, "/auth.js")}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//     const file1 = await bytenode.compileFile({
+//       filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//     const file2 = await bytenode.compileFile({
+//       filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//     const file3 = await bytenode.compileFile({
+//       filename: `${path.join(
+//         __dirname,
+//         "/script/manager/inviteJoiner-manager.js"
+//       )}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//     const file4 = await bytenode.compileFile({
+//       filename: `${path.join(
+//         __dirname,
+//         "/script/manager/linkOpener-manager.js"
+//       )}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//     const file5 = await bytenode.compileFile({
+//       filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
+//       compileAsModule: true,
+//       electron: false,
+//       createLoader: true,
+//       loaderFilename: "",
+//     });
+//     console.log(file, file1, file2, file3, file4, file5);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// })();
 
-const auth = require("./auth.jsc");
-const { fetchTweets } = require("./helper/fetchTweet.jsc");
-const spooferManager = require("./script/manager/spoof-manager.jsc");
-const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
-const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
-const logManager = require("./script/manager/log-manager.jsc");
+const auth = require("./auth.js");
+const { fetchTweets } = require("./helper/fetchTweet.js");
+const spooferManager = require("./script/manager/spoof-manager.js");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.js");
+const linkOpernerManager = require("./script/manager/linkOpener-manager.js");
+const logManager = require("./script/manager/log-manager.js");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -150,7 +150,6 @@ function destroyAuthWin() {
   win.close();
   win = null;
 }
-
 // MAIN WINDOW CREATOR
 function createWindow() {
   try {
@@ -188,7 +187,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: !isDev ? false : true,
+      // devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
@@ -479,23 +478,6 @@ ipcMain.handle("imageText", async (event, url) => {
   const {
     data: { text },
   } = await Tesseract.recognize(url, "eng");
-  // const folderPath = app.getPath("userData");
-  // const worker = Tesseract.createWorker({
-  //   cachePath: path.join(folderPath, "/tesseract"),
-  //   // logger: (m) => console.log("Log", m),
-  // });
-  // const getText = async () => {
-  //   await worker.load();
-  //   await worker.loadLanguage("eng");
-  //   await worker.initialize("eng");
-  //   const {
-  //     data: { text },
-  //   } = await worker.recognize(url);
-  //   await worker.terminate();
-  //   return text;
-  // };
-
-  // return await getText();
   return text;
 });
 
@@ -545,49 +527,6 @@ ipcMain.on("proxy-tester", async (event, data) => {
     });
   }
 });
-
-// NEWTORK SPEED
-// async function getNetworkDownloadSpeed() {
-//   const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
-//   const fileSizeInBytes = 5000;
-//   let speed;
-//   try {
-//     speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   if (speed) {
-//     return speed.kbps;
-//   }
-// }
-
-// async function getNetworkUploadSpeed() {
-//   const options = {
-//     hostname: "www.google.com",
-//     port: 80,
-//     path: "/catchers/544b09b4599c1d0200000289",
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   };
-//   const fileSizeInBytes = 5000;
-//   let speed;
-//   try {
-//     speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   if (speed) {
-//     return speed.kbps;
-//   }
-// }
-
-// ipcMain.handle("get-speed", async () => {
-//   const download = await getNetworkDownloadSpeed();
-//   const upload = await getNetworkUploadSpeed();
-//   return { download, upload };
-// });
 
 const debugSendToIpcRenderer = (log) => {
   let win = mainWindow || global.mainWin;
@@ -711,35 +650,3 @@ function stopXpfarmer() {
     console.log(e);
   }
 }
-
-ipcMain.on("fetch_server", async (_, token) => {
-  try {
-    const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
-    mainWindow.webContents.send("fetched-server", res.data);
-  } catch (e) {
-    mainWindow.webContents.send("fetched-server", e);
-    console.log(e);
-  }
-});
-
-ipcMain.on("fetch_channel", async (_, data) => {
-  try {
-    const res = await axios.get(`https://discord.com/api/v9/guilds/${data.id}/channels`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: data.token,
-      },
-    });
-    mainWindow.webContents.send("fetched-channel", res.data);
-  } catch (e) {
-    mainWindow.webContents.send("fetched-channel", e.message);
-    console.log(e);
-  }
-});
-
-

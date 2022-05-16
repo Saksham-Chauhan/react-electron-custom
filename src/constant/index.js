@@ -81,7 +81,7 @@ export const replyList = [
   "THIS IS MINE!",
 ];
 
-export const nftOptionsList = [{ label: "Eth", value: "eth" }];
+export const nftOptionsList = [{ label: "ETH", value: "eth" }];
 
 export const defaultChromeUser = { label: "Default", value: "default" };
 
