@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+import { DISCORD_MASS_OPTIONS } from "../constant";
 export const makeStrOfArr = (arrOfObj) => arrOfObj.map((data) => data["value"]);
 
 export const isValueInUse = (arrOfObj, key, firstValue) => {
@@ -66,7 +67,7 @@ export const downloadLogs = (content, title) => {
 export const makeClaimerSelectOption = (list) => {
   if (list.length > 0) {
     return list.map((d) => {
-      return { "label" : d["name"], "id" : d["id"], "value" : d["claimerToken"] } 
+      return { label: d["name"], id: d["id"], value: d["claimerToken"] };
     });
   } else return [];
 };
@@ -153,4 +154,11 @@ export const arrayBufferToString = (buffer, encoding) => {
   var decoder = new TextDecoder(encoding);
   str = decoder.decode(uint8);
   return str;
+};
+
+export const getChangerTypeLabel = (data) => {
+  for (let i = 0; i < DISCORD_MASS_OPTIONS.length; i++) {
+    if (data === DISCORD_MASS_OPTIONS[i].value)
+      return DISCORD_MASS_OPTIONS[i].label;
+  }
 };

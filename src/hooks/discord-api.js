@@ -3,6 +3,7 @@ import { directDiscordJoinAPI, generateRandomAvatar, getProxy } from "../api";
 import {
   updatePasswordChangerStatus,
   updateStatusOfTableRow,
+  updateTaskState,
 } from "../features/logic/acc-changer";
 import serverLeaverAPI from "../api/account-changer/leave-server";
 import usernameChangerAPI from "../api/account-changer/username-changer";
@@ -13,9 +14,8 @@ import tokenCheckerAPI from "../api/account-changer/token-checker";
 import tokenRetrieverAPI from "../api/account-changer/token-changer";
 import avatarChangerAPI from "../api/account-changer/avatar-changer";
 import Chance from "chance";
-import { generateRandomPassword } from "../helper";
-import { replyList } from "../constant";
-const { Client } = window.require("discord.js-selfbot");
+import { generateRandomPassword, sleep } from "../helper";
+
 // const tokenMsg = "Invalid format, Token not found in Discord Accounts.";
 // const passMsg = "Invalid format, Password not found.";
 // const emailMsg = "Invalid format, Email not found.";
@@ -24,6 +24,7 @@ const getTokenList = (obj) => obj.claimerGroup["value"]?.split("\n");
 export const useMassInviteJoiner = () => {
   const dispatch = useDispatch();
   const callApi = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     dispatch(updateStatusOfTableRow(obj, "Monitoring"));
     const { proxyGroup } = obj;
@@ -50,11 +51,15 @@ export const useMassInviteJoiner = () => {
       }
     }
     if (counter === 0) {
-      dispatch(updateStatusOfTableRow(obj, "Error"));
+      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
     } else if (counter < maxLoop) {
-      dispatch(updateStatusOfTableRow(obj, "Completed"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Completed", active: false })
+      );
     } else {
-      dispatch(updateStatusOfTableRow(obj, "Success"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Success", active: false })
+      );
     }
   };
   return callApi;
@@ -63,6 +68,7 @@ export const useMassInviteJoiner = () => {
 export const useServerLeaver = () => {
   const dispatch = useDispatch();
   const apiCall = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const serverIdArray = obj.serverIDs?.split("\n");
@@ -90,11 +96,17 @@ export const useServerLeaver = () => {
         }
       }
       if (counter === 0) {
-        dispatch(updateStatusOfTableRow(obj, "Error"));
+        dispatch(
+          updateTaskState({ id: obj.id, status: "Error", active: false })
+        );
       } else if (counter < maxLoop) {
-        dispatch(updateStatusOfTableRow(obj, "Completed"));
+        dispatch(
+          updateTaskState({ id: obj.id, status: "Completed", active: false })
+        );
       } else {
-        dispatch(updateStatusOfTableRow(obj, "Success"));
+        dispatch(
+          updateTaskState({ id: obj.id, status: "Success", active: false })
+        );
       }
     }
   };
@@ -104,6 +116,8 @@ export const useServerLeaver = () => {
 export const useUserName = () => {
   const dispatch = useDispatch();
   const apiCall = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     const { proxyGroup } = obj;
     let name = null;
     let counter = 0;
@@ -127,6 +141,7 @@ export const useUserName = () => {
         if (response.status === 200 || response.status === 204) {
           counter++;
         }
+        sleep(2);
       } catch (error) {
         console.log(
           "Something went wrong while  to change user name",
@@ -135,11 +150,15 @@ export const useUserName = () => {
       }
     }
     if (counter === 0) {
-      dispatch(updateStatusOfTableRow(obj, "Error"));
+      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
     } else if (counter < maxLoop) {
-      dispatch(updateStatusOfTableRow(obj, "Completed"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Completed", active: false })
+      );
     } else {
-      dispatch(updateStatusOfTableRow(obj, "Success"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Success", active: false })
+      );
     }
   };
   return apiCall;
@@ -148,6 +167,7 @@ export const useUserName = () => {
 export const useActivityChanger = () => {
   const dispatch = useDispatch();
   const apiCall = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
     const maxLoop = tokenArray.length;
@@ -173,11 +193,15 @@ export const useActivityChanger = () => {
       }
     }
     if (counter === 0) {
-      dispatch(updateStatusOfTableRow(obj, "Error"));
+      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
     } else if (counter < maxLoop) {
-      dispatch(updateStatusOfTableRow(obj, "Completed"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Completed", active: false })
+      );
     } else {
-      dispatch(updateStatusOfTableRow(obj, "Success"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Success", active: false })
+      );
     }
   };
   return apiCall;
@@ -186,6 +210,7 @@ export const useActivityChanger = () => {
 export const useNickNameChanger = () => {
   const dispatch = useDispatch();
   const apiCall = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const serverIdArray = obj.serverIDs?.split("\n");
@@ -208,11 +233,17 @@ export const useNickNameChanger = () => {
         }
       }
       if (counter === 0) {
-        dispatch(updateStatusOfTableRow(obj, "Error"));
+        dispatch(
+          updateTaskState({ id: obj.id, status: "Error", active: false })
+        );
       } else if (counter < maxLoop) {
-        dispatch(updateStatusOfTableRow(obj, "Completed"));
+        dispatch(
+          updateTaskState({ id: obj.id, status: "Completed", active: false })
+        );
       } else {
-        dispatch(updateStatusOfTableRow(obj, "Success"));
+        dispatch(
+          updateTaskState({ id: obj.id, status: "Success", active: false })
+        );
       }
     }
   };
@@ -240,6 +271,7 @@ export const usePasswordChanger = () => {
   };
 
   const apiCall = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
@@ -268,11 +300,15 @@ export const usePasswordChanger = () => {
       }
     }
     if (counter === 0) {
-      dispatch(updateStatusOfTableRow(obj, "Error"));
+      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
     } else if (counter < maxLoop) {
-      dispatch(updateStatusOfTableRow(obj, "Completed"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Completed", active: false })
+      );
     } else {
-      dispatch(updateStatusOfTableRow(obj, "Success"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Success", active: false })
+      );
     }
   };
   return apiCall;
@@ -281,6 +317,7 @@ export const usePasswordChanger = () => {
 export const useTokeChecker = () => {
   const dispatch = useDispatch();
   const apiCall = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
@@ -296,11 +333,15 @@ export const useTokeChecker = () => {
       }
     }
     if (counter === 0) {
-      dispatch(updateStatusOfTableRow(obj, "Error"));
+      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
     } else if (counter < maxLoop) {
-      dispatch(updateStatusOfTableRow(obj, "Completed"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Completed", active: false })
+      );
     } else {
-      dispatch(updateStatusOfTableRow(obj, "Success"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Success", active: false })
+      );
     }
   };
   return apiCall;
@@ -330,6 +371,7 @@ export const useTokenRetriever = () => {
   };
 
   const apiCall = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
@@ -347,11 +389,15 @@ export const useTokenRetriever = () => {
       }
     }
     if (counter === 0) {
-      dispatch(updateStatusOfTableRow(obj, "Error"));
+      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
     } else if (counter < maxLoop) {
-      dispatch(updateStatusOfTableRow(obj, "Completed"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Completed", active: false })
+      );
     } else {
-      dispatch(updateStatusOfTableRow(obj, "Success"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Success", active: false })
+      );
     }
   };
   return apiCall;
@@ -360,6 +406,7 @@ export const useTokenRetriever = () => {
 export const useAvatarChanger = () => {
   const dispatch = useDispatch();
   const apiCall = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let randomImage;
     let counter = 0;
     const { proxyGroup } = obj;
@@ -383,50 +430,15 @@ export const useAvatarChanger = () => {
       }
     }
     if (counter === 0) {
-      dispatch(updateStatusOfTableRow(obj, "Error"));
+      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
     } else if (counter < maxLoop) {
-      dispatch(updateStatusOfTableRow(obj, "Completed"));
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Completed", active: false })
+      );
     } else {
-      dispatch(updateStatusOfTableRow(obj, "Success"));
-    }
-  };
-  return apiCall;
-};
-
-export const useGiveAwayJoiner = () => {
-  const monitor = new Client();
-  const dispatch = useDispatch();
-  const apiCall = async (obj) => {
-    monitor.login(obj.token).catch((e) => {
-      console.log("Invalid token", e);
-    });
-    try {
-      monitor.on("ready", () => {
-        dispatch(updateStatusOfTableRow(obj, "Monitoring"));
-      });
-      monitor.on("message", async (message) => {
-        const embed = message.embeds[0];
-        const serverId = message.channel.guild.id;
-        const authorId = message.author.id;
-        if (serverId === obj.serverid) {
-          if (authorId === obj.botid) {
-            if (
-              embed.title.toLowerCase().includes("google") &&
-              embed.description.toLowerCase().includes("search")
-            ) {
-              await message.react("🎉");
-              let x = Math.floor(Math.random() * replyList.length + 1);
-              message.channel.startTyping();
-              setTimeout(function () {
-                message.channel.stopTyping();
-                message.channel.send(replyList[x]);
-              }, obj.delay);
-            }
-          }
-        }
-      });
-    } catch (e) {
-      console.log("Something went wrong while running give away", e);
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Success", active: false })
+      );
     }
   };
   return apiCall;

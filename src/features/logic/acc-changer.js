@@ -65,6 +65,7 @@ export const updatePasswordChangerStatus = (obj) => (dispatch, getState) => {
 //   dispatch(setAccountChangerList(afterUpdate));
 // };
 export const updateTaskState = (data) => (dispatch, getState) => {
+  console.log("call", data);
   const { id, status, active } = data;
   const currentList = fetchTaskTableListState(getState());
   let tempOptionList = [...currentList];

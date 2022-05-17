@@ -16,13 +16,13 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
       ? "acc-chnager-page-table-header body  light-bg light-mode-table-color"
       : "acc-chnager-page-table-header body",
   };
+  console.log(obj);
   return (
     <div className={theme.tableBody}>
       <div>{index}</div>
       <div style={{ display: "flex" }}>
         <div style={{ width: "70%", overflow: "hidden" }}>
-          {obj.changerType === "giveawayJoiner" ||
-          obj.changerType === "linkOpener"
+          {obj.changerType === "linkOpener"
             ? obj?.monitorToken?.label
             : obj?.claimerGroup?.label}
         </div>
@@ -43,13 +43,7 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
       </div>
       <div>
         <div className="acc-changer-table-row-action-column">
-          {obj?.status === "Completed" &&
-          (obj?.changerType === "passwordChanger" ||
-            obj?.changerType === "tokenRetrieve") ? (
-            <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
-          ) : obj["status"] === "Running" ||
-            obj["status"] === "Monitoring" ||
-            obj["status"] === "Monitoring..." ? (
+          {obj["active"] ? (
             <img
               src={stop}
               alt=""
@@ -57,6 +51,8 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
                 onStop(obj);
               }}
             />
+          ) : obj.status === "Completed" || obj.status === "Success" ? (
+            <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
           ) : (
             <img
               src={appTheme ? lightMode_play : play}
@@ -87,9 +83,13 @@ const getColor = (status, appTheme) => {
       return appTheme ? "var(--lightMode-status)" : "var(--status)";
     case "Monitoring...":
       return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
+    case "Monitoring":
+      return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
     case "Completed":
       return appTheme ? "var(--lightMode-complete)" : "#1186db";
     case "Stopped":
+      return "var(--delete)";
+    case "Error":
       return "var(--delete)";
     case "Idle":
       return appTheme ? "var(--lightMode-text-color)" : "";

@@ -98,6 +98,18 @@ const updateStatusLOmonitor = (callback) =>
 const webhookNotificationListener = (callback) =>
   ipcRenderer.on("webhook-status", (_, status) => callback(status));
 
+// Giveaway Joiner
+const startGiveawayJoiner = (data) =>
+  ipcRenderer.send("start-giveaway-joiner", data);
+
+const stopGiveawayJoiner = (id) => ipcRenderer.send("stop-giveaway-joiner", id);
+
+const updateGiveawayJoinerStatus = (callback) =>
+  ipcRenderer.on("giveaway-joiner-status", (_, res) => callback(res));
+
+// const startGiveawayJoiner = (data) =>
+//   ipcRenderer.send("start-giveaway-joiner", data);
+
 // XP-FARMER
 const startXpFarmer = (value) => {
   ipcRenderer.send("run-xp-server", value);
@@ -113,14 +125,17 @@ const fetchServer = (value) => {
 const fetchedServer = (callback) =>
   ipcRenderer.on("fetched-server", (_, data) => callback(data));
 
-  const fetchChannel = (value) => {
-    ipcRenderer.send("fetch_channel", value);
-  };
-  
-  const fetchedChannel = (callback) =>
-    ipcRenderer.on("fetched-channel", (_, data) => callback(data));
+const fetchChannel = (value) => {
+  ipcRenderer.send("fetch_channel", value);
+};
+
+const fetchedChannel = (callback) =>
+  ipcRenderer.on("fetched-channel", (_, data) => callback(data));
 
 module.exports = {
+  updateGiveawayJoinerStatus,
+  startGiveawayJoiner,
+  stopGiveawayJoiner,
   fetchChannel,
   fetchedChannel,
   fetchedServer,

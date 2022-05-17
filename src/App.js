@@ -57,6 +57,7 @@ import {
   proxyTestResultListener,
   webhookNotificationListener,
   debuggerChannnel,
+  updateGiveawayJoinerStatus,
 } from "./helper/electron-bridge";
 import {
   resetSpooferStatus,
@@ -158,6 +159,9 @@ function App() {
     // LO IPC
     updateStatusLOmonitor((res) => dispatch(updateTaskState(res)));
     webhookNotificationListener((res) => dispatch(webhookNotifier(res)));
+
+    // GJ
+    updateGiveawayJoinerStatus((res) => dispatch(updateTaskState(res)));
 
     debuggerChannnel();
 

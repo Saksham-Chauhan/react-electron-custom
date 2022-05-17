@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateStatusOfTableRow,
   deleteDataFromTableList,
+  updateTaskState,
 } from "../../../features/logic/acc-changer";
 import TableRow from "../table-row/TableRow";
 import { toastWarning } from "../../../toaster";
@@ -11,15 +12,15 @@ import { getProxy } from "../../../api";
 
 import {
   readArrayOfJson,
+  startGiveawayJoiner,
   startInviteJoinerMonitor,
   startLinkOpenerMonitor,
+  stopGiveawayJoiner,
   stopInviteJoinerMonitor,
   stopLinkOpenerMonitor,
   stopXpFarmer,
 } from "../../../helper/electron-bridge";
 
-import { toastInfo } from "../../../toaster";
-import { replyList } from "../../../constant";
 import xpFarmer from "../../../api/account-changer/xp-farmer";
 import {
   fetchLoggedUserDetails,
@@ -41,8 +42,6 @@ import {
   useUserName,
 } from "../../../hooks/discord-api";
 import { sleep } from "../../../helper";
-
-const { Client } = window.require("discord.js-selfbot");
 
 let status = false;
 
@@ -78,6 +77,7 @@ function TableSection({ list }) {
   const handleDelete = (obj) => {
     dispatch(deleteDataFromTableList(obj));
   };
+
   const handlePlay = async (obj) => {
     flag.current = !flag.current;
     status = flag.current;
@@ -93,7 +93,7 @@ function TableSection({ list }) {
     } else if (type === "nicknameChanger") {
       await nickName(obj);
     } else if (type === "passwordChanger") {
-      await passwordChanger(obj);
+      await passwordChanger(obj, handleDownload);
     } else if (type === "tokenChecker") {
       await tokenChecker(obj);
     } else if (type === "tokenRetrieve") {
@@ -116,39 +116,11 @@ function TableSection({ list }) {
       startLinkOpenerMonitor(obj);
     } else if (type === "inviteJoiner") {
       startInviteJoinerMonitor(obj);
-    }
-    if (type === "giveawayJoiner" && obj.status !== "Monitoring") {
-      const monitor = new Client();
-      monitor.login(obj.token);
-      try {
-        monitor.on("ready", () => {
-          toastInfo("Giveaway Joiner ready!!");
-          dispatch(updateStatusOfTableRow(obj, "Monitoring"));
-        });
-        monitor.on("message", async (message) => {
-          const embed = message.embeds[0];
-          const serverId = message.channel.guild.id;
-          const authorId = message.author.id;
-          if (serverId === obj.serverid) {
-            if (authorId === obj.botid) {
-              if (
-                embed.title.toLowerCase().includes("google") &&
-                embed.description.toLowerCase().includes("search")
-              ) {
-                await message.react("🎉");
-                let x = Math.floor(Math.random() * replyList.length + 1);
-                message.channel.startTyping();
-                setTimeout(function () {
-                  message.channel.stopTyping();
-                  message.channel.send(replyList[x]);
-                }, obj.delay);
-              }
-            }
-          }
-        });
-      } catch (e) {
-        console.log(e);
-      }
+    } else if (type === "giveawayJoiner") {
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Monitoring", active: true })
+      );
+      startGiveawayJoiner(obj);
     }
     callWebhook(obj);
   };
@@ -208,8 +180,10 @@ function TableSection({ list }) {
     if (type === "xpFarmer") {
       stopXpFarmer();
       dispatch(updateStatusOfTableRow(obj, "Stopped"));
-    }
-    if (type === "linkOpener") {
+    } else if (type === "giveawayJoiner") {
+      console.log("stop", obj.id);
+      stopGiveawayJoiner(obj.id);
+    } else if (type === "linkOpener") {
       stopLinkOpenerMonitor(obj.id);
     } else if (type === "inviteJoiner") {
       stopInviteJoinerMonitor(obj.id);

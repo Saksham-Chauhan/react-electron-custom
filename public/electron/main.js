@@ -74,6 +74,7 @@ const spooferManager = require("./script/manager/spoof-manager.js");
 const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.js");
 const linkOpernerManager = require("./script/manager/linkOpener-manager.js");
 const logManager = require("./script/manager/log-manager.js");
+const giveawayJoiner = require("./script/manager/giveawayJoiner-manager");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -604,6 +605,15 @@ ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
 });
 ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
   InviteJoinerManager.stopMonitor(id);
+});
+
+// GIVEAWAY JOINER
+ipcMain.on("start-giveaway-joiner", (_, data) => {
+  giveawayJoiner.addMonitor(data);
+});
+ipcMain.on("stop-giveaway-joiner", (_, id) => {
+  console.log(id);
+  giveawayJoiner.stopMonitor(id);
 });
 
 //RUN LOCAL SERVER
