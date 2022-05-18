@@ -72,7 +72,7 @@ class LogManager {
               buttons: ["Yes", "No"],
               defaultId: 0,
               title: "Kyro",
-              message: `Do you want to download ${this.currentLogFile}`,
+              message: `Do you want to download ${this.currentLogFile}?`,
               detail: "Log report",
             };
             const dialogResult = await dialog.showMessageBox(win, options);

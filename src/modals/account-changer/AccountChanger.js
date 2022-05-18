@@ -53,7 +53,12 @@ import {
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
 import { debounce } from "lodash";
-import { fetchChannel, fetchedChannel, fetchedServer, fetchServer } from "../../helper/electron-bridge";
+import {
+  fetchChannel,
+  fetchedChannel,
+  fetchedServer,
+  fetchServer,
+} from "../../helper/electron-bridge";
 
 function AccountChanger() {
   const navigate = useNavigate();
@@ -108,10 +113,9 @@ function AccountChanger() {
       }
       setAccountChanger((pre) => {
         return { ...pre, channels: channels };
-      })
+      });
     });
-  })
-
+  });
 
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
@@ -194,20 +198,6 @@ function AccountChanger() {
   const delayedQuery = useRef(
     debounce(async (q) => {
       fetchServer(q);
-      // const res = await getAllServerIds(q);
-      // let obj = [];
-      // for (let i = 0; i < res.data.length; i++) {
-      //   let tempOjb = {};
-      //   tempOjb["label"] = res.data[i].name;
-      //   tempOjb["value"] = res.data[i].id;
-      //   obj.push(tempOjb);
-      // }
-      // setAccountChanger((pre) => {
-      //   return {
-      //     ...pre,
-      //     serverIDs: obj,
-      //   };
-      // });
     }, 1500)
   ).current;
 
@@ -275,9 +265,9 @@ function AccountChanger() {
 
   const handleSelectServer = async (obj) => {
     fetchChannel({
-      id:obj.value,
-      token:accountChanger.monitorToken.label
-    })
+      id: obj.value,
+      token: accountChanger.monitorToken.label,
+    });
   };
 
   const handleSelectChannel = (obj) => {
@@ -359,7 +349,7 @@ function AccountChanger() {
               selectOptions={chromeList}
               fieldTitle="Chrome User"
               isSelect={true}
-              navigate={chromeList.length > 0 ? () => { } : handleChromeMenuOpen}
+              navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
               defaultValue={defaultChromeUser}
             />
           )}
@@ -386,7 +376,7 @@ function AccountChanger() {
               isSelect={claimerGroupList.length > 0 ? true : false}
               disabled={claimerGroupList.length > 0 ? false : true}
               navigate={
-                claimerGroupList.length > 0 ? () => { } : handleProxyMenuOpen
+                claimerGroupList.length > 0 ? () => {} : handleProxyMenuOpen
               }
               tooltip={true}
               toolTipText="Select Discord Accounts"
@@ -407,7 +397,7 @@ function AccountChanger() {
               isSelect={proxyGroupList.length > 0 ? true : false}
               disabled={proxyGroupList.length > 0 ? false : true}
               navigate={
-                proxyGroupList.length > 0 ? () => { } : handleProxyMenuOpen
+                proxyGroupList.length > 0 ? () => {} : handleProxyMenuOpen
               }
               tooltip={true}
               toolTipText="Select proxy group"

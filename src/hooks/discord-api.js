@@ -14,16 +14,18 @@ import tokenCheckerAPI from "../api/account-changer/token-checker";
 import tokenRetrieverAPI from "../api/account-changer/token-changer";
 import avatarChangerAPI from "../api/account-changer/avatar-changer";
 import Chance from "chance";
-import { generateRandomPassword, sleep } from "../helper";
+import { generateRandomPassword, getEncryptedToken, sleep } from "../helper";
+import { sendWebhook } from "../features/logic/setting";
+import { sendLogs } from "../helper/electron-bridge";
 
 // const tokenMsg = "Invalid format, Token not found in Discord Accounts.";
 // const passMsg = "Invalid format, Password not found.";
 // const emailMsg = "Invalid format, Email not found.";
 const getTokenList = (obj) => obj.claimerGroup["value"]?.split("\n");
 
-export const useMassInviteJoiner = () => {
+export const useMassInviteJoiner = () => { 
   const dispatch = useDispatch();
-  const callApi = async (obj) => {
+  const callApi = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     dispatch(updateStatusOfTableRow(obj, "Monitoring"));
@@ -32,7 +34,8 @@ export const useMassInviteJoiner = () => {
     const tokenArray = getTokenList(obj);
     const maxLoop = tokenArray.length * inviteCodeList.length;
     for (let index = 0; index < tokenArray.length; index++) {
-      for (let i = 0; i < inviteCodeList.length; i++) {
+      await sleep(obj.delay);
+      for (let i = 0; i < inviteCodeList.length; i++) { 
         const proxy = getProxy(proxyGroup["value"].split("\n"));
         let code = inviteCodeList[i];
         try {
@@ -44,8 +47,21 @@ export const useMassInviteJoiner = () => {
           );
           if (response.status === 200 || response.status === 204) {
             counter++;
+            const log = `Server joined successfully with token: ${getEncryptedToken(
+              tokenArray[index]?.split(":")[2]
+            )}`;
+            sendLogs(log);
+          } else {
+            const log = `Unable to join server with token: ${getEncryptedToken(
+              tokenArray[index]?.split(":")[2]
+            )}, error message:${response.message}`;
+            sendLogs(log);
           }
         } catch (error) {
+          const log = `Unable to join server with token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )}, error message:${error.message}`;
+          sendLogs(log);
           console.log("Something went wrong while mass joiner", error.message);
         }
       }
@@ -61,21 +77,26 @@ export const useMassInviteJoiner = () => {
         updateTaskState({ id: obj.id, status: "Success", active: false })
       );
     }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return callApi;
 };
 
 export const useServerLeaver = () => {
   const dispatch = useDispatch();
-  const apiCall = async (obj) => {
+  const apiCall = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const serverIdArray = obj.serverIDs?.split("\n");
+    const tokenArray = getTokenList(obj);
     if (serverIdArray.length > 0) {
-      const tokenArray = getTokenList(obj);
       const maxLoop = tokenArray.length * serverIdArray.length;
       for (let index = 0; index < tokenArray.length; index++) {
+        await sleep(obj.delay);
         for (let i = 0; i < serverIdArray.length; i++) {
           try {
             const proxy = getProxy(proxyGroup["value"].split("\n"));
@@ -86,8 +107,21 @@ export const useServerLeaver = () => {
             );
             if (response.status === 200 || response.status === 204) {
               counter++;
+              const log = `Server leave successfully, token: ${getEncryptedToken(
+                tokenArray[index]?.split(":")[2]
+              )}`;
+              sendLogs(log);
+            } else {
+              const log = `Unable to leave server, token: ${getEncryptedToken(
+                tokenArray[index]?.split(":")[2]
+              )},error:${response.message}`;
+              sendLogs(log);
             }
           } catch (error) {
+            const log = `Unable to leave server, token: ${getEncryptedToken(
+              tokenArray[index]?.split(":")[2]
+            )},error:${error.message}`;
+            sendLogs(log);
             console.log(
               "Something went wrong while trying to leave server",
               error.message
@@ -109,14 +143,17 @@ export const useServerLeaver = () => {
         );
       }
     }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return apiCall;
 };
 
 export const useUserName = () => {
   const dispatch = useDispatch();
-  const apiCall = async (obj) => {
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
+  const apiCall = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     const { proxyGroup } = obj;
     let name = null;
@@ -130,8 +167,10 @@ export const useUserName = () => {
     const tokenArray = getTokenList(obj);
     const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
+      await sleep(obj.delay);
+      await await sleep(obj.delay);
+      const proxy = getProxy(proxyGroup["value"].split("\n"));
       try {
-        const proxy = getProxy(proxyGroup["value"].split("\n"));
         const response = await usernameChangerAPI(
           tokenArray[index]?.split(":")[2],
           tokenArray[index]?.split(":")[1],
@@ -140,13 +179,21 @@ export const useUserName = () => {
         );
         if (response.status === 200 || response.status === 204) {
           counter++;
+          const log = `Username changed successfully with token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )}`;
+          sendLogs(log);
+        } else {
+          const log = `Unable to change username, token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )},error:${response.message}`;
+          sendLogs(log);
         }
-        sleep(2);
-      } catch (error) {
-        console.log(
-          "Something went wrong while  to change user name",
-          error.message
-        );
+      } catch (e) {
+        const log = `Unable to change username, token: ${getEncryptedToken(
+          tokenArray[index]?.split(":")[2]
+        )},error:${e.message}`;
+        sendLogs(log);
       }
     }
     if (counter === 0) {
@@ -160,19 +207,24 @@ export const useUserName = () => {
         updateTaskState({ id: obj.id, status: "Success", active: false })
       );
     }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return apiCall;
 };
 
 export const useActivityChanger = () => {
   const dispatch = useDispatch();
-  const apiCall = async (obj) => {
+  const apiCall = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
     const maxLoop = tokenArray.length;
     let counter = 0;
     for (let index = 0; index < tokenArray.length; index++) {
+      await sleep(obj.delay);
       try {
         const proxy = getProxy(proxyGroup["value"].split("\n"));
         const response = await activityChangerAPI(
@@ -184,8 +236,21 @@ export const useActivityChanger = () => {
         );
         if (response.status === 200 || response.status === 204) {
           counter++;
+          const log = `Status changed successfully with token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )}`;
+          sendLogs(log);
+        } else {
+          const log = `Unable to change status, token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )},error:${response.message}`;
+          sendLogs(log);
         }
       } catch (error) {
+        const log = `Unable to change status, token: ${getEncryptedToken(
+          tokenArray[index]?.split(":")[2]
+        )},error:${error.message}`;
+        sendLogs(log);
         console.log(
           "Something went wrong while changing activity",
           error.message
@@ -203,13 +268,18 @@ export const useActivityChanger = () => {
         updateTaskState({ id: obj.id, status: "Success", active: false })
       );
     }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return apiCall;
 };
 
 export const useNickNameChanger = () => {
   const dispatch = useDispatch();
-  const apiCall = async (obj) => {
+  const apiCall = async (obj, setting, user, webhookList) => {
+    const tokenArray = getTokenList(obj);
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
@@ -220,15 +290,32 @@ export const useNickNameChanger = () => {
       let name = obj.nicknameGenerate.split("\n");
       for (let i = 0; i < serverIdArray.length; i++) {
         for (let index = 0; index < tokenArray.length; index++) {
-          const proxy = getProxy(proxyGroup["value"].split("\n"));
-          const response = await nicknameChangerAPI(
-            tokenArray[index]?.split(":")[2],
-            serverIdArray[i],
-            name[index],
-            proxy
-          );
-          if (response.status === 200 || response.status === 204) {
-            counter++;
+          await sleep(obj.delay);
+          try {
+            const proxy = getProxy(proxyGroup["value"].split("\n"));
+            const response = await nicknameChangerAPI(
+              tokenArray[index]?.split(":")[2],
+              serverIdArray[i],
+              name[index],
+              proxy
+            );
+            if (response.status === 200 || response.status === 204) {
+              counter++;
+              const log = `Nickname changed successfully with token: ${getEncryptedToken(
+                tokenArray[index]?.split(":")[2]
+              )}`;
+              sendLogs(log);
+            } else {
+              const log = `Unable to change nickname, token: ${getEncryptedToken(
+                tokenArray[index]?.split(":")[2]
+              )},error${response.message}`;
+              sendLogs(log);
+            }
+          } catch (e) {
+            const log = `Unable to change nickname, token: ${getEncryptedToken(
+              tokenArray[index]?.split(":")[2]
+            )},error${e.message}`;
+            sendLogs(log);
           }
         }
       }
@@ -246,6 +333,10 @@ export const useNickNameChanger = () => {
         );
       }
     }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return apiCall;
 };
@@ -254,13 +345,15 @@ export const usePasswordChanger = () => {
   const dispatch = useDispatch();
   let arr = [];
   let user = [];
-  const helper = (response, obj, index) => {
-    let tempObj = { ...obj };
+  let tracker = 0;
+  let tempObj = {};
+  const helper = (response, obj) => {
+    tempObj = { ...obj };
     let newPass = JSON.parse(response.config.data)["new_password"];
     let tempuser = response.data.username;
     arr.push(newPass);
     user.push(tempuser);
-    if (index > 0) {
+    if (tracker > 0) {
       arr = [...tempObj["newPass"].split("\n"), ...arr];
       user = [...tempObj["username"].split("\n"), ...user];
     }
@@ -268,9 +361,10 @@ export const usePasswordChanger = () => {
     tempObj["username"] = user.join("\n");
     tempObj["status"] = "Completed";
     dispatch(updatePasswordChangerStatus(tempObj));
+    tracker = tracker + 1;
   };
 
-  const apiCall = async (obj) => {
+  const apiCall = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
@@ -287,16 +381,33 @@ export const usePasswordChanger = () => {
       });
     }
     for (let index = 0; index < tokenArray.length; index++) {
+      await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
-      const response = await passwordChangerAPI(
-        tokenArray[index]?.split(":")[2],
-        tokenArray[index]?.split(":")[1],
-        newPass,
-        proxy
-      );
-      if (response.status === 200 || response.status === 204) {
-        helper(response, obj, index);
-        counter++;
+      try {
+        const response = await passwordChangerAPI(
+          tokenArray[index]?.split(":")[2],
+          tokenArray[index]?.split(":")[1],
+          newPass,
+          proxy
+        );
+        if (response.status === 200 || response.status === 204) {
+          counter++;
+          helper(response, obj);
+          const log = `Password changed successfully with token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )}`;
+          sendLogs(log);
+        } else {
+          const log = `Unable to change password, token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )},error:${response.message}`;
+          sendLogs(log);
+        }
+      } catch (e) {
+        const log = `Unable to change password, token: ${getEncryptedToken(
+          tokenArray[index]?.split(":")[2]
+        )},error:${e.message}`;
+        sendLogs(log);
       }
     }
     if (counter === 0) {
@@ -310,39 +421,65 @@ export const usePasswordChanger = () => {
         updateTaskState({ id: obj.id, status: "Success", active: false })
       );
     }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return apiCall;
 };
 
 export const useTokeChecker = () => {
   const dispatch = useDispatch();
-  const apiCall = async (obj) => {
+  const apiCall = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
     const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
+      await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
-      const response = await tokenCheckerAPI(
-        tokenArray[index]?.split(":")[2],
-        proxy
-      );
-      if (response.status === 200 || response.status === 204) {
-        counter++;
+      try {
+        const response = await tokenCheckerAPI(
+          tokenArray[index]?.split(":")[2],
+          proxy
+        );
+        if (response.status === 200 || response.status === 204) {
+          dispatch(updateTaskState({ id: obj.id, status: `${counter+1}/${tokenArray.length}`, active: true }));
+          counter=counter+1;
+          const log = `Token checked successfully with token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )}`;
+          sendLogs(log);
+        } else {
+          const log = `Unable to check token, token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )},error:${response.message}`;
+          sendLogs(log);
+        }
+      } catch (e) {
+        const log = `Unable to check token, token: ${getEncryptedToken(
+          tokenArray[index]?.split(":")[2]
+        )},error:${e.message}`;
+        sendLogs(log);
       }
     }
-    if (counter === 0) {
-      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    } else if (counter < maxLoop) {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Completed", active: false })
-      );
-    } else {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Success", active: false })
-      );
-    }
+    // if (counter === 0) {
+    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
+    // } else if (counter < maxLoop) {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Success", active: false })
+    //   );
+    // }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return apiCall;
 };
@@ -350,53 +487,61 @@ export const useTokeChecker = () => {
 export const useTokenRetriever = () => {
   const dispatch = useDispatch();
   let arr = [];
-  let user = [];
   let emailArr = [];
-  const helper = (obj, apiResponse, tokenArr, index) => {
-    console.log("helper");
-    let tempObj = { ...obj };
+  let tempObj = {};
+  let tracker = 0;
+  const helper = (obj, apiResponse, tokenArr) => {
     let newToken = apiResponse.data.token;
     arr.push(newToken);
-    user.push(tokenArr[1]);
-    emailArr.push(tokenArr[0]);
-    if (index > 0) {
-      console.log(tempObj);
-      arr = [...tempObj["newToken"]?.split("\n"), ...arr];
-      user = [...tempObj["newUsername"]?.split("\n"), ...user];
-      emailArr = [...tempObj["email"]?.split("\n"), ...user];
+    emailArr.push(tokenArr.split(":")[0]);
+    if (tracker > 0) {
+      arr = [...tempObj["newToken"].split("\n"), ...arr];
+      emailArr = [...tempObj["email"].split("\n"), ...emailArr];
     }
     tempObj["newToken"] = arr.join("\n");
-    tempObj["newUsername"] = user.join("\n");
     tempObj["email"] = emailArr.join("\n");
     tempObj["status"] = "Completed";
     console.log("updated",tempObj)
     dispatch(updatePasswordChangerStatus(tempObj));
+    tracker = tracker + 1;
   };
 
-  const apiCall = async (obj) => {
+  const apiCall = async (obj, setting, user, webhookList) => {
+    tempObj = { ...obj };
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
     const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
-      console.log("beefore call")
-      // try{
-        const proxy = getProxy(proxyGroup["value"].split("\n"));
-         const response = await tokenRetrieverAPI(
+      await sleep(obj.delay);
+      await await sleep(obj.delay);
+      const proxy = getProxy(proxyGroup["value"].split("\n"));
+      try {
+        const response = await tokenRetrieverAPI(
           tokenArray[index]?.split(":")[0],
           tokenArray[index]?.split(":")[1],
           proxy
         );
-        console.log("response",response)
-      if (response.status === 200 || response.status === 204) {
-        counter=counter+1;
-        helper(obj, response, tokenArray, index);
-      } 
-    // }catch(e){
-    //   console.log("error nmdfbghjvfdhnjdrt")
-    // }
-    console.log("after call");
+        if (response.status === 200 || response.status === 204) {
+          counter++;
+          helper(obj, response, tokenArray[index]);
+          const log = `Token Retrieve successfully with token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )}`;
+          sendLogs(log);
+        } else {
+          const log = `Unable to retrieve token, token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )},error:${response.message}`;
+          sendLogs(log);
+        }
+      } catch (e) {
+        const log = `Unable to retrieve token, token: ${getEncryptedToken(
+          tokenArray[index]?.split(":")[2]
+        )},error:${e.message}`;
+        sendLogs(log);
+      }
     }
     if (counter === 0) {
       dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
@@ -409,13 +554,17 @@ export const useTokenRetriever = () => {
         updateTaskState({ id: obj.id, status: "Success", active: false })
       );
     }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return apiCall;
 };
 
 export const useAvatarChanger = () => {
   const dispatch = useDispatch();
-  const apiCall = async (obj) => {
+  const apiCall = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let randomImage;
     let counter = 0;
@@ -429,14 +578,31 @@ export const useAvatarChanger = () => {
       randomImage = await generateRandomAvatar(avatarAPI.value);
     }
     for (let index = 0; index < tokenArray.length; index++) {
+      await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
-      const response = await avatarChangerAPI(
-        tokenArray[index]?.split(":")[2],
-        randomImage,
-        proxy
-      );
-      if (response.status === 200 || response.status === 204) {
-        counter++;
+      try {
+        const response = await avatarChangerAPI(
+          tokenArray[index]?.split(":")[2],
+          randomImage,
+          proxy
+        );
+        if (response.status === 200 || response.status === 204) {
+          counter++;
+          const log = `Avatar changed successfully with token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )}`;
+          sendLogs(log);
+        } else {
+          const log = `Unable to change avatar, token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )},error:${response.message}`;
+          sendLogs(log);
+        }
+      } catch (error) {
+        const log = `Unable to change avatar, token: ${getEncryptedToken(
+          tokenArray[index]?.split(":")[2]
+        )},error:${error.message}`;
+        sendLogs(log);
       }
     }
     if (counter === 0) {
@@ -450,6 +616,10 @@ export const useAvatarChanger = () => {
         updateTaskState({ id: obj.id, status: "Success", active: false })
       );
     }
+    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+      success: counter,
+      total: tokenArray.length,
+    });
   };
   return apiCall;
 };

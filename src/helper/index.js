@@ -162,3 +162,5 @@ export const getChangerTypeLabel = (data) => {
       return DISCORD_MASS_OPTIONS[i].label;
   }
 };
+export const getEncryptedToken = (token) =>
+  token.slice(0, 4) + "#### ####" + token.slice(-6);

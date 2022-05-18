@@ -88,6 +88,7 @@ export const inviteJoinerValidation = (obj) => {
 };
 
 export const linkOpenerValidation = (obj) => {
+  console.log(obj)
   let valid;
   if (Object.keys(obj?.chromeUser || {}).length > 0) {
     valid = true;
@@ -110,7 +111,7 @@ export const linkOpenerValidation = (obj) => {
     valid = false;
     return valid;
   }
-  if (obj?.keywords?.length > 0) {
+  if (Object.keys(obj?.keywords).length>0) {
     valid = true;
   } else {
     toastWarning("Enter keyword");

@@ -7,7 +7,7 @@ class LinkOpenerManager {
 
   addMonitor(data) {
     const channelArray = data?.channelIDs?.split("\n");
-    const keywordArray = data?.keywords?.split("\n");
+    const keywordArray = data?.keywords?.label?.split("\n");
     const chromeUser = data?.chromeUser;
     const monitorToken = data?.monitorToken?.value?.split(":")[2];
     this.bots[data.id] = new linkOpenerProcess(

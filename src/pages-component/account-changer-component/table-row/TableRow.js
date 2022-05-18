@@ -50,7 +50,10 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
                 onStop(obj);
               }}
             />
-          ) : obj.status === "Completed" || obj.status === "Success" ? (
+          ) : (obj.status === "Completed" || obj.status === "Success") &&
+            (obj.changerType === "linkOpner" ||
+              obj.changerType === "inviteJoiner" ||
+              obj.changerType === "passwordChanger") ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
           ) : (
             <img
@@ -85,6 +88,8 @@ const getColor = (status, appTheme) => {
     case "Monitoring":
       return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
     case "Completed":
+      return appTheme ? "var(--lightMode-complete)" : "#1186db";
+    case "Success":
       return appTheme ? "var(--lightMode-complete)" : "#1186db";
     case "Stopped":
       return "var(--delete)";
