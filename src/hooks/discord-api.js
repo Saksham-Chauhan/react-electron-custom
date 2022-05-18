@@ -353,20 +353,23 @@ export const useTokenRetriever = () => {
   let user = [];
   let emailArr = [];
   const helper = (obj, apiResponse, tokenArr, index) => {
+    console.log("helper");
     let tempObj = { ...obj };
     let newToken = apiResponse.data.token;
     arr.push(newToken);
     user.push(tokenArr[1]);
     emailArr.push(tokenArr[0]);
     if (index > 0) {
-      arr = [...tempObj["newToken"].split("\n"), ...arr];
-      user = [...tempObj["newUsername"].split("\n"), ...user];
-      emailArr = [...tempObj["email"].split("\n"), ...user];
+      console.log(tempObj);
+      arr = [...tempObj["newToken"]?.split("\n"), ...arr];
+      user = [...tempObj["newUsername"]?.split("\n"), ...user];
+      emailArr = [...tempObj["email"]?.split("\n"), ...user];
     }
     tempObj["newToken"] = arr.join("\n");
     tempObj["newUsername"] = user.join("\n");
     tempObj["email"] = emailArr.join("\n");
     tempObj["status"] = "Completed";
+    console.log("updated",tempObj)
     dispatch(updatePasswordChangerStatus(tempObj));
   };
 
@@ -377,16 +380,23 @@ export const useTokenRetriever = () => {
     const tokenArray = getTokenList(obj);
     const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
-      const proxy = getProxy(proxyGroup["value"].split("\n"));
-      const response = await tokenRetrieverAPI(
-        tokenArray[index]?.split(":")[0],
-        tokenArray[index]?.split(":")[1],
-        proxy
-      );
+      console.log("beefore call")
+      // try{
+        const proxy = getProxy(proxyGroup["value"].split("\n"));
+         const response = await tokenRetrieverAPI(
+          tokenArray[index]?.split(":")[0],
+          tokenArray[index]?.split(":")[1],
+          proxy
+        );
+        console.log("response",response)
       if (response.status === 200 || response.status === 204) {
+        counter=counter+1;
         helper(obj, response, tokenArray, index);
-        counter++;
-      }
+      } 
+    // }catch(e){
+    //   console.log("error nmdfbghjvfdhnjdrt")
+    // }
+    console.log("after call");
     }
     if (counter === 0) {
       dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));

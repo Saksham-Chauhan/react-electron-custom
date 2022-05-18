@@ -143,34 +143,35 @@ function TableSection({ list }) {
   };
 
   const handleDownload = (obj) => {
-    let arrOfObj = [];
-    const type = obj["changerType"];
-    if (type === "passwordChanger") {
-      const { username, newPass } = obj;
-      let userNameArr = username.split("\n");
-      let passArr = newPass.split("\n");
-      for (let i = 0; i < userNameArr.length; i++) {
-        let obj = {};
-        obj["newPassword"] = passArr[i];
-        obj["userName"] = userNameArr[i];
-        arrOfObj.push(obj);
-      }
-      readArrayOfJson(arrOfObj);
-    }
-    if (type === "tokenRetrieve") {
-      const { newToken, newUsername, email } = obj;
-      let userNameArr = newUsername.split("\n");
-      let tokenArr = newToken.split("\n");
-      let newEmail = email.split("\n");
-      for (let i = 0; i < userNameArr.length; i++) {
-        let obj = {};
-        obj["token"] = tokenArr[i];
-        obj["password"] = userNameArr[i];
-        obj["email"] = newEmail[i];
-        arrOfObj.push(obj);
-      }
-      readArrayOfJson(arrOfObj);
-    }
+    console.log(obj)
+    // let arrOfObj = [];
+    // const type = obj["changerType"];
+    // if (type === "passwordChanger") {
+    //   const { username, newPass } = obj;
+    //   let userNameArr = username.split("\n");
+    //   let passArr = newPass.split("\n");
+    //   for (let i = 0; i < userNameArr.length; i++) {
+    //     let obj = {};
+    //     obj["newPassword"] = passArr[i];
+    //     obj["userName"] = userNameArr[i];
+    //     arrOfObj.push(obj);
+    //   }
+    //   readArrayOfJson(arrOfObj);
+    // }
+    // if (type === "tokenRetrieve") {
+    //   const { newToken, newUsername, email } = obj;
+    //   let userNameArr = newUsername.split("\n");
+    //   let tokenArr = newToken.split("\n");
+    //   let newEmail = email.split("\n");
+    //   for (let i = 0; i < userNameArr.length; i++) {
+    //     let obj = {};
+    //     obj["token"] = tokenArr[i];
+    //     obj["password"] = userNameArr[i];
+    //     obj["email"] = newEmail[i];
+    //     arrOfObj.push(obj);
+    //   }
+    //   readArrayOfJson(arrOfObj);
+    // }
   };
 
   const handleStop = (obj) => {

@@ -16,7 +16,6 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
       ? "acc-chnager-page-table-header body  light-bg light-mode-table-color"
       : "acc-chnager-page-table-header body",
   };
-  console.log(obj);
   return (
     <div className={theme.tableBody}>
       <div>{index}</div>

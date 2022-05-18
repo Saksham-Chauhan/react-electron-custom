@@ -38,6 +38,7 @@ export const updateStatusOfTableRow = (obj, status) => (dispatch, getState) => {
 };
 
 export const updatePasswordChangerStatus = (obj) => (dispatch, getState) => {
+  console.log("asemghn dfvgyujsvgb ykus lllllllllll")
   const currentList = fetchTaskTableListState(getState());
   let tempOptionList = [...currentList];
   tempOptionList = [...tempOptionList].map((row) => {
