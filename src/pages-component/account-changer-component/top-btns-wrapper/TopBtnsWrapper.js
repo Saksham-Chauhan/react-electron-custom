@@ -9,7 +9,13 @@ import trash2 from "react-useanimations/lib/trash2";
 import searchIcon from "../../../assests/images/search.svg";
 import lightModeplush from "../../../assests/images/lightModeplus.svg";
 import lightModesearch from "../../../assests/images/lightModesearch.svg";
-import { fetchThemsState, setModalState } from "../../../features/counterSlice";
+import {
+  fetchLoggedUserDetails,
+  fetchThemsState,
+  fetchWebhookListState,
+  fetchWebhookSettingState,
+  setModalState,
+} from "../../../features/counterSlice";
 
 import { useSelector } from "react-redux";
 import {
@@ -28,6 +34,7 @@ import {
   startInviteJoinerMonitor,
   startLinkOpenerMonitor,
 } from "../../../helper/electron-bridge";
+import { sleep } from "../../../helper";
 
 function TopBtnsWrapper({ search, handleSearching, tempList }) {
   const dispatch = useDispatch();
@@ -41,6 +48,10 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
   const tokenChecker = useTokeChecker();
   const passwordChanger = usePasswordChanger();
   const appTheme = useSelector(fetchThemsState);
+
+  const setting = useSelector(fetchWebhookSettingState);
+  const user = useSelector(fetchLoggedUserDetails);
+  const webhookList = useSelector(fetchWebhookListState);
 
   const theme = {
     btnClass: appTheme
@@ -66,23 +77,23 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
   const handleSinglePlay = async (obj) => {
     const type = obj["changerType"];
     if (type === "massInviter") {
-      await massjoiner(obj);
+      await massjoiner(obj, setting, user, webhookList);
     } else if (type === "serverLeaver") {
-      await serverLeaver(obj);
+      await serverLeaver(obj, setting, user, webhookList);
     } else if (type === "usernameChanger") {
-      await userName(obj);
+      await userName(obj, setting, user, webhookList);
     } else if (type === "activityChanger") {
-      await activityChanger(obj);
+      await activityChanger(obj, setting, user, webhookList);
     } else if (type === "nicknameChanger") {
-      await nickName(obj);
+      await nickName(obj, setting, user, webhookList);
     } else if (type === "passwordChanger") {
-      await passwordChanger(obj);
+      await passwordChanger(obj, setting, user, webhookList);
     } else if (type === "tokenChecker") {
-      await tokenChecker(obj);
+      await tokenChecker(obj, setting, user, webhookList);
     } else if (type === "tokenRetrieve") {
-      await tokenRetriever(obj);
+      await tokenRetriever(obj, setting, user, webhookList);
     } else if (type === "avatarChanger") {
-      await avatarChanger(obj);
+      await avatarChanger(obj, setting, user, webhookList);
     } else if (type === "xpFarmer") {
       // const { proxyGroup } = obj;
       // const proxy = getProxy(proxyGroup["value"].split("\n"));
@@ -96,15 +107,16 @@ function TopBtnsWrapper({ search, handleSearching, tempList }) {
       //   return res;
       // } else return null;
     } else if (type === "linkOpener") {
-      startLinkOpenerMonitor(obj);
+      startLinkOpenerMonitor(obj, setting, user, webhookList);
     } else if (type === "inviteJoiner") {
-      startInviteJoinerMonitor(obj);
+      startInviteJoinerMonitor(obj, setting, user, webhookList);
     }
   };
 
   const handlePlayAll = () => {
     if (tempList?.length > 0) {
       tempList?.forEach(async (data) => {
+        await sleep(data.delay);
         await handleSinglePlay(data);
       });
     }

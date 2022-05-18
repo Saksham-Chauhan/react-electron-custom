@@ -660,3 +660,37 @@ function stopXpfarmer() {
     console.log(e);
   }
 }
+
+ipcMain.on("fetch_server", async (_, token) => {
+  try {
+    const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    console.log(res);
+    mainWindow.webContents.send("fetched-server", res.data);
+  } catch (e) {
+    mainWindow.webContents.send("fetched-server", e);
+    console.log(e);
+  }
+});
+
+ipcMain.on("fetch_channel", async (_, data) => {
+  try {
+    const res = await axios.get(
+      `https://discord.com/api/v9/guilds/${data.id}/channels`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: data.token,
+        },
+      }
+    );
+    mainWindow.webContents.send("fetched-channel", res.data);
+  } catch (e) {
+    mainWindow.webContents.send("fetched-channel", e.message);
+    console.log(e);
+  }
+});

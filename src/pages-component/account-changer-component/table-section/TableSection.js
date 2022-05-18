@@ -24,12 +24,10 @@ import {
 import xpFarmer from "../../../api/account-changer/xp-farmer";
 import {
   fetchLoggedUserDetails,
-  fetchTaskTableListState,
   fetchThemsState,
   fetchWebhookListState,
   fetchWebhookSettingState,
 } from "../../../features/counterSlice";
-import { sendWebhook } from "../../../features/logic/setting";
 import {
   useActivityChanger,
   useAvatarChanger,
@@ -58,12 +56,6 @@ function TableSection({ list }) {
   const setting = useSelector(fetchWebhookSettingState);
   const user = useSelector(fetchLoggedUserDetails);
   const webhookList = useSelector(fetchWebhookListState);
-  const accChangerList = useSelector(fetchTaskTableListState);
-
-  let counter = {
-    total: 0,
-    success: 0,
-  };
 
   let flag = useRef(false);
   const dispatch = useDispatch();
@@ -83,23 +75,23 @@ function TableSection({ list }) {
     status = flag.current;
     const type = obj["changerType"];
     if (type === "massInviter") {
-      await massjoiner(obj);
+      await massjoiner(obj, setting, user, webhookList);
     } else if (type === "serverLeaver") {
-      await serverLeaver(obj);
+      await serverLeaver(obj, setting, user, webhookList);
     } else if (type === "usernameChanger") {
-      await userName(obj);
+      await userName(obj, setting, user, webhookList);
     } else if (type === "activityChanger") {
-      await activityChanger(obj);
+      await activityChanger(obj, setting, user, webhookList);
     } else if (type === "nicknameChanger") {
-      await nickName(obj);
+      await nickName(obj, setting, user, webhookList);
     } else if (type === "passwordChanger") {
-      await passwordChanger(obj, handleDownload);
+      await passwordChanger(obj, setting, user, webhookList);
     } else if (type === "tokenChecker") {
-      await tokenChecker(obj);
+      await tokenChecker(obj, setting, user, webhookList);
     } else if (type === "tokenRetrieve") {
-      await tokenRetriever(obj);
+      await tokenRetriever(obj, setting, user, webhookList);
     } else if (type === "avatarChanger") {
-      await avatarChanger(obj);
+      await avatarChanger(obj, setting, user, webhookList);
     } else if (type === "xpFarmer") {
       const { proxyGroup } = obj;
       const proxy = getProxy(proxyGroup["value"].split("\n"));
@@ -113,33 +105,16 @@ function TableSection({ list }) {
         return res;
       } else return null;
     } else if (type === "linkOpener") {
-      startLinkOpenerMonitor(obj);
+      startLinkOpenerMonitor(obj, setting, user, webhookList);
     } else if (type === "inviteJoiner") {
-      startInviteJoinerMonitor(obj);
+      startInviteJoinerMonitor(obj, setting, user, webhookList);
     } else if (type === "giveawayJoiner") {
       dispatch(
         updateTaskState({ id: obj.id, status: "Monitoring", active: true })
       );
       startGiveawayJoiner(obj);
     }
-    callWebhook(obj);
-  };
-  const callWebhook = (obj) => {
-    let tempObj = {};
-    for (let i = 0; i < accChangerList.length; i++) {
-      if (accChangerList[i].id === obj.id) {
-        tempObj = { ...accChangerList[i] };
-      }
-    }
-    sendWebhook(
-      tempObj,
-      "TASKS",
-      obj.changerType,
-      setting,
-      user,
-      webhookList,
-      counter
-    );
+    // callWebhook(obj);
   };
 
   const handleDownload = (obj) => {
@@ -158,14 +133,12 @@ function TableSection({ list }) {
       readArrayOfJson(arrOfObj);
     }
     if (type === "tokenRetrieve") {
-      const { newToken, newUsername, email } = obj;
-      let userNameArr = newUsername.split("\n");
+      const { newToken, email } = obj;
       let tokenArr = newToken.split("\n");
       let newEmail = email.split("\n");
-      for (let i = 0; i < userNameArr.length; i++) {
+      for (let i = 0; i < newEmail.length; i++) {
         let obj = {};
         obj["token"] = tokenArr[i];
-        obj["password"] = userNameArr[i];
         obj["email"] = newEmail[i];
         arrOfObj.push(obj);
       }

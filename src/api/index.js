@@ -11,7 +11,7 @@ function randomIntFromInterval(min, max) {
 }
 
 export const getProxy = (proxyArr) => {
-  const randomIndex = randomIntFromInterval(0, proxyArr?.length || 0);
+  const randomIndex = randomIntFromInterval(0, proxyArr?.length - 1 || 0);
   const [host, port, username, password] = proxyArr[randomIndex]?.split(":");
   const proxy = {
     host: host,

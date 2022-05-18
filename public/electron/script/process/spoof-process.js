@@ -137,6 +137,7 @@ class SpooferInstance {
           userAgent: this.userAgent,
         })
         .catch((err) => {
+          console.log("ERR", err);
           this.proxyRotater();
           return "STOP";
         });

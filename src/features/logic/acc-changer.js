@@ -3,7 +3,6 @@ import { appendTaskInTable, fetchTaskTableListState } from "../counterSlice";
 
 export const addDataInTableList = (obj) => (dispatch, getState) => {
   const currentList = fetchTaskTableListState(getState());
-  console.log(currentList, obj);
   let tempObj = { ...obj };
   tempObj["id"] = generateId();
   let combiner = [tempObj, ...currentList];
@@ -65,7 +64,6 @@ export const updatePasswordChangerStatus = (obj) => (dispatch, getState) => {
 //   dispatch(setAccountChangerList(afterUpdate));
 // };
 export const updateTaskState = (data) => (dispatch, getState) => {
-  console.log("call", data);
   const { id, status, active } = data;
   const currentList = fetchTaskTableListState(getState());
   let tempOptionList = [...currentList];
