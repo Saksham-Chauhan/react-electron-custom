@@ -631,6 +631,7 @@ ipcMain.on("run-xp-server", (_, data) => {
       }
       console.log(stdout);
     });
+    pid = process.pid;
     console.log("vvvvvvvvvv", process.pid);
   } catch (e) {
     console.log("this is error", e);

@@ -15,6 +15,7 @@ import {
   startGiveawayJoiner,
   startInviteJoinerMonitor,
   startLinkOpenerMonitor,
+  startXpFarmer,
   stopGiveawayJoiner,
   stopInviteJoinerMonitor,
   stopLinkOpenerMonitor,
@@ -93,11 +94,14 @@ function TableSection({ list }) {
     } else if (type === "avatarChanger") {
       await avatarChanger(obj, setting, user, webhookList);
     } else if (type === "xpFarmer") {
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Running", active: true })
+      );
+      startXpFarmer();
       const { proxyGroup } = obj;
-      const proxy = getProxy(proxyGroup["value"].split("\n"));
       if (status) {
         const res = await callApis(
-          proxy,
+          proxyGroup,
           obj.channelId,
           obj.monitorToken,
           obj.delay
@@ -114,7 +118,6 @@ function TableSection({ list }) {
       );
       startGiveawayJoiner(obj);
     }
-    // callWebhook(obj);
   };
 
   const handleDownload = (obj) => {
@@ -147,12 +150,14 @@ function TableSection({ list }) {
   };
 
   const handleStop = (obj) => {
-    flag.current = !flag.current;
+    flag.current = false;
     status = flag.current;
     const type = obj["changerType"];
     if (type === "xpFarmer") {
       stopXpFarmer();
-      updateTaskState({ id: obj.id, status: "Stopped", active: false });
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Stopped", active: false })
+      );
     } else if (type === "giveawayJoiner") {
       console.log("stop", obj.id);
       stopGiveawayJoiner(obj.id);
@@ -161,7 +166,9 @@ function TableSection({ list }) {
     } else if (type === "inviteJoiner") {
       stopInviteJoinerMonitor(obj.id);
     } else {
-      updateTaskState({ id: obj.id, status: "Stopped", active: false });
+      dispatch(
+        updateTaskState({ id: obj.id, status: "Stopped", active: false })
+      );
     }
   };
 
@@ -196,13 +203,14 @@ function TableSection({ list }) {
 
 export default TableSection;
 
-export const callApis = async (proxy, channelID, token, delay = "") => {
+export const callApis = async (proxyGroup, channelID, token, delay = "") => {
+  const proxy = getProxy(proxyGroup["value"].split("\n"));
   let response = null;
   let delayTime = delay ? delay : 1000;
   response = await xpFarmer(proxy, channelID, token);
   await sleep(delayTime);
   if (status) {
-    callApis(proxy, channelID, token, delayTime);
+    callApis(proxyGroup, channelID, token, delayTime);
   }
   if (response.status === 200) {
     return response;
