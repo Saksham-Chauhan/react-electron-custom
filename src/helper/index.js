@@ -66,7 +66,7 @@ export const downloadLogs = (content, title) => {
 export const makeClaimerSelectOption = (list) => {
   if (list.length > 0) {
     return list.map((d) => {
-      return { "label" : d["name"], "id" : d["id"], "value" : d["claimerToken"] } 
+      return { label: d["name"], id: d["id"], value: d["claimerToken"] };
     });
   } else return [];
 };
@@ -154,3 +154,19 @@ export const arrayBufferToString = (buffer, encoding) => {
   str = decoder.decode(uint8);
   return str;
 };
+
+export default function prependHttp(url, { https = true } = {}) {
+  if (typeof url !== "string") {
+    throw new TypeError(
+      `Expected \`url\` to be of type \`string\`, got \`${typeof url}\``
+    );
+  }
+
+  url = url.trim();
+
+  if (/^\.*\/|^(?!localhost)\w+?:/.test(url)) {
+    return url;
+  }
+
+  return url.replace(/^(?!(?:\w+?:)?\/\/)/, https ? "https://" : "http://");
+}

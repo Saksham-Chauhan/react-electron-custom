@@ -27,8 +27,6 @@ const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
 const updateNotAvailable = (callback) =>
   ipcRenderer.on("update:not-avail", () => callback());
 
-// const fetchNetworkSpeed = () => ipcRenderer.invoke("get-speed");
-
 // Spoof IPC
 const startSpoofer = (spoof) => ipcRenderer.send("start-spoofer", spoof);
 
@@ -50,7 +48,11 @@ const getTweets = (consumerKey, consumerSecret, userHandler) =>
     consumerSecret,
     userHandler,
   });
-
+const testTwiterAPI = (consumerKey, consumerSecret) =>
+  ipcRenderer.invoke("checkTwitterAPI", {
+    consumerKey,
+    consumerSecret,
+  });
 // PROXY IPC
 const proxyTester = (proxy) => ipcRenderer.send("proxy-tester", proxy);
 
@@ -113,12 +115,12 @@ const fetchServer = (value) => {
 const fetchedServer = (callback) =>
   ipcRenderer.on("fetched-server", (_, data) => callback(data));
 
-  const fetchChannel = (value) => {
-    ipcRenderer.send("fetch_channel", value);
-  };
-  
-  const fetchedChannel = (callback) =>
-    ipcRenderer.on("fetched-channel", (_, data) => callback(data));
+const fetchChannel = (value) => {
+  ipcRenderer.send("fetch_channel", value);
+};
+
+const fetchedChannel = (callback) =>
+  ipcRenderer.on("fetched-channel", (_, data) => callback(data));
 
 module.exports = {
   fetchChannel,
@@ -162,4 +164,5 @@ module.exports = {
   startInviteJoinerMonitor,
   stopInviteJoinerMonitor,
   webhookNotificationListener,
+  testTwiterAPI,
 };

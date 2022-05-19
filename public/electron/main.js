@@ -2,82 +2,21 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const _ = require("lodash");
 const path = require("path");
 const ping = require("ping");
+const auth = require("./auth");
+const axios = require("axios");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
-const { autoUpdater } = require("electron-updater");
-const currentProcesses = require("current-processes");
-const richPresence = require("discord-rich-presence")("938338403106320434");
-const axios = require("axios");
-var { execFile } = require("child_process");
-const bytenode = require("bytenode");
-
-(async () => {
-  try {
-    await bytenode.compileFile({
-      filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    await bytenode.compileFile({
-      filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    await bytenode.compileFile({
-      filename: `${path.join(__dirname, "/auth.js")}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    await bytenode.compileFile({
-      filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    await bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/inviteJoiner-manager.js"
-      )}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    bytenode.runBytecodeFile("/script/manager/spoof-manager.jsc");
-    await bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/linkOpener-manager.js"
-      )}`,
-      compileAsModule: true,
-      electron: false,
-      createLoader: true,
-      loaderFilename: "",
-    });
-    bytenode.runBytecodeFile("/script/manager/linkOpener-manager.jsc");
-  } catch (e) {
-    console.log(e);
-  }
-})();
-
-const auth = require("./auth.jsc");
-const { fetchTweets } = require("./helper/fetchTweet.jsc");
-const spooferManager = require("./script/manager/spoof-manager.jsc");
-const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
-const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
-const logManager = require("./script/manager/log-manager.jsc");
-
-const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
+const ObjectsToCsv = require("objects-to-csv");
+const { autoUpdater } = require("electron-updater");
+const currentProcesses = require("current-processes");
+const logManager = require("./script/manager/log-manager");
+const spooferManager = require("./script/manager/spoof-manager");
+const { fetchTweets, checkTwitterAPI } = require("./helper/fetchTweet");
+const linkOpernerManager = require("./script/manager/linkOpener-manager");
+const richPresence = require("discord-rich-presence")("938338403106320434");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager");
 
 const DEBUGGER_CHANNEL = "debugger";
 const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
@@ -87,18 +26,18 @@ let mainWindow = null;
 let splash = null;
 
 const INTERCEPTOR_TOOLS = [
-  "charles",
-  "wireshark",
-  "fiddler",
-  "aircrack-ng",
-  "cowpatty",
+  "pyrit",
   "reaver",
   "wifite",
-  "wepdecrypt",
-  "cloudcracker",
-  "pyrit",
+  "charles",
+  "fiddler",
   "fern-pro",
+  "cowpatty",
+  "wireshark",
   "airgeddon",
+  "wepdecrypt",
+  "aircrack-ng",
+  "cloudcracker",
 ];
 
 // AUTH WINDOW CREATION
@@ -120,22 +59,25 @@ function createAuthWindow() {
     session: { webRequest },
   } = win.webContents;
   const filter = {
-    urls: [auth.redirectUrl],
+    urls: [auth.redirect_uri],
   };
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     try {
       await auth.loadTokens(url);
-    } catch (e) {
-      mainWindow.reload();
-    }
-    try {
       await auth.login();
       if (!mainWindow) return;
       mainWindow.reload();
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-      console.log(error);
+      const options = {
+        type: "question",
+        defaultId: 2,
+        title: "Login Error",
+        message: "Login Failed",
+        detail: "You are not allowed to login",
+      };
+      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
     }
   });
   win.on("authenticated", () => {
@@ -475,27 +417,15 @@ ipcMain.handle(
     return fetchTweets(consumerKey, consumerSecret, userHandler);
   }
 );
+
+ipcMain.handle("checkTwitterAPI", (e, { consumerKey, consumerSecret }) => {
+  return checkTwitterAPI(consumerKey, consumerSecret);
+});
+
 ipcMain.handle("imageText", async (event, url) => {
   const {
     data: { text },
   } = await Tesseract.recognize(url, "eng");
-  // const folderPath = app.getPath("userData");
-  // const worker = Tesseract.createWorker({
-  //   cachePath: path.join(folderPath, "/tesseract"),
-  //   // logger: (m) => console.log("Log", m),
-  // });
-  // const getText = async () => {
-  //   await worker.load();
-  //   await worker.loadLanguage("eng");
-  //   await worker.initialize("eng");
-  //   const {
-  //     data: { text },
-  //   } = await worker.recognize(url);
-  //   await worker.terminate();
-  //   return text;
-  // };
-
-  // return await getText();
   return text;
 });
 
@@ -535,9 +465,9 @@ const proxyTester = async (proxy) => {
 
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
-  const proxyArr = proxy.split(":");
+  let proxyArr = proxy.split(":");
   if (proxyArr.length === 4 || proxyArr.length === 2) {
-    const proxyWithPort = proxyArr[0];
+    let proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
       ...data,
@@ -545,49 +475,6 @@ ipcMain.on("proxy-tester", async (event, data) => {
     });
   }
 });
-
-// NEWTORK SPEED
-// async function getNetworkDownloadSpeed() {
-//   const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
-//   const fileSizeInBytes = 5000;
-//   let speed;
-//   try {
-//     speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   if (speed) {
-//     return speed.kbps;
-//   }
-// }
-
-// async function getNetworkUploadSpeed() {
-//   const options = {
-//     hostname: "www.google.com",
-//     port: 80,
-//     path: "/catchers/544b09b4599c1d0200000289",
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   };
-//   const fileSizeInBytes = 5000;
-//   let speed;
-//   try {
-//     speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   if (speed) {
-//     return speed.kbps;
-//   }
-// }
-
-// ipcMain.handle("get-speed", async () => {
-//   const download = await getNetworkDownloadSpeed();
-//   const upload = await getNetworkUploadSpeed();
-//   return { download, upload };
-// });
 
 const debugSendToIpcRenderer = (log) => {
   let win = mainWindow || global.mainWin;
@@ -639,6 +526,7 @@ ipcMain.on("export-log-report", (_, data) => {
 // ACC CHANGER IPC
 ipcMain.on("get-server-avatar", async (event, code) => {
   let url;
+  qq;
   var config = {
     method: "get",
     url: `https://discord.com/api/v9/invites/${code}`,
@@ -666,80 +554,3 @@ ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
 ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
   InviteJoinerManager.stopMonitor(id);
 });
-
-//RUN LOCAL SERVER
-ipcMain.on("run-xp-server", (_, data) => {
-  xpFarmerStart();
-});
-
-ipcMain.on("stop-xp-server", (_, data) => {
-  try {
-    stopXpfarmer();
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-async function xpFarmerStart() {
-  const exePath = isDev
-    ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
-    : `${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
-  try {
-    const process = execFile(exePath, [3001], (error, stdout, stderr) => {
-      if (error) {
-        throw error;
-      }
-      console.log(stdout);
-    });
-    console.log("vvvvvvvvvv", process);
-  } catch (e) {
-    console.log("this is error", e);
-  }
-}
-
-function stopXpfarmer() {
-  try {
-    currentProcesses.get((err, processes) => {
-      const sorted = _.sortBy(processes, "cpu");
-      for (let i = 0; i < sorted.length; i += 1) {
-        if ("xpfarmer" === sorted[i].name.toLowerCase()) {
-          process.kill(sorted[i].pid);
-        }
-      }
-    });
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-ipcMain.on("fetch_server", async (_, token) => {
-  try {
-    const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
-    mainWindow.webContents.send("fetched-server", res.data);
-  } catch (e) {
-    mainWindow.webContents.send("fetched-server", e);
-    console.log(e);
-  }
-});
-
-ipcMain.on("fetch_channel", async (_, data) => {
-  try {
-    const res = await axios.get(`https://discord.com/api/v9/guilds/${data.id}/channels`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: data.token,
-      },
-    });
-    mainWindow.webContents.send("fetched-channel", res.data);
-  } catch (e) {
-    mainWindow.webContents.send("fetched-channel", e.message);
-    console.log(e);
-  }
-});
-
-

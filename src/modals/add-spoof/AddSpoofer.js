@@ -21,6 +21,7 @@ import { validationChecker } from "../../hooks/validationChecker";
 import { addNewSpooferInList } from "../../features/logic/spoof";
 import { useNavigate } from "react-router-dom";
 import { RoutePath } from "../../constant";
+import prependHttp from "../../helper";
 
 function AddSpoofer() {
   const dispatch = useDispatch();
@@ -106,7 +107,9 @@ function AddSpoofer() {
       const result = validationChecker(spooferSchema, spoof);
       if (result) {
         for (let i = 0; i < Number(spoof.quantity); i++) {
-          dispatch(addNewSpooferInList(spoof));
+          dispatch(
+            addNewSpooferInList({ ...spoof, url: prependHttp(spoof.url) })
+          );
         }
         handleCloseModal();
       }
