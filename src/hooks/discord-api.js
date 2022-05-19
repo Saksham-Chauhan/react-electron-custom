@@ -2,7 +2,6 @@ import { useDispatch } from "react-redux";
 import { directDiscordJoinAPI, generateRandomAvatar, getProxy } from "../api";
 import {
   updatePasswordChangerStatus,
-  updateStatusOfTableRow,
   updateTaskState,
 } from "../features/logic/acc-changer";
 import serverLeaverAPI from "../api/account-changer/leave-server";
@@ -17,25 +16,26 @@ import Chance from "chance";
 import { generateRandomPassword, getEncryptedToken, sleep } from "../helper";
 import { sendWebhook } from "../features/logic/setting";
 import { sendLogs } from "../helper/electron-bridge";
+import { toastWarning } from "../toaster";
 
-// const tokenMsg = "Invalid format, Token not found in Discord Accounts.";
-// const passMsg = "Invalid format, Password not found.";
-// const emailMsg = "Invalid format, Email not found.";
+const tokenMsg = "Invalid format, Token not found in Discord Accounts";
+const passMsg = "Invalid format, Password not found";
+const emailMsg = "Invalid format, Email not found";
 const getTokenList = (obj) => obj.claimerGroup["value"]?.split("\n");
 
-export const useMassInviteJoiner = () => { 
+export const useMassInviteJoiner = () => {
   const dispatch = useDispatch();
   const callApi = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
-    dispatch(updateStatusOfTableRow(obj, "Monitoring"));
+    // dispatch(updateStatusOfTableRow(obj, "Monitoring"));
     const { proxyGroup } = obj;
     const inviteCodeList = obj.inviteCodes?.split("\n");
     const tokenArray = getTokenList(obj);
-    const maxLoop = tokenArray.length * inviteCodeList.length;
+    // const maxLoop = tokenArray.length * inviteCodeList.length;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
-      for (let i = 0; i < inviteCodeList.length; i++) { 
+      for (let i = 0; i < inviteCodeList.length; i++) {
         const proxy = getProxy(proxyGroup["value"].split("\n"));
         let code = inviteCodeList[i];
         try {
@@ -46,12 +46,29 @@ export const useMassInviteJoiner = () => {
             obj
           );
           if (response.status === 200 || response.status === 204) {
-            counter++;
+            dispatch(
+              updateTaskState({
+                id: obj.id,
+                status: `${counter + 1}/${tokenArray.length}  Joined`,
+                active: true,
+              })
+            );
+            counter = counter + 1;
             const log = `Server joined successfully with token: ${getEncryptedToken(
               tokenArray[index]?.split(":")[2]
             )}`;
             sendLogs(log);
           } else {
+            if (!code) toastWarning("Invalid format, Invit code not found");
+            else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
+            else toastWarning(response.message);
+            dispatch(
+              updateTaskState({
+                id: obj.id,
+                status: `${counter}/${tokenArray.length} Joined`,
+                active: true,
+              })
+            );
             const log = `Unable to join server with token: ${getEncryptedToken(
               tokenArray[index]?.split(":")[2]
             )}, error message:${response.message}`;
@@ -66,17 +83,23 @@ export const useMassInviteJoiner = () => {
         }
       }
     }
-    if (counter === 0) {
-      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    } else if (counter < maxLoop) {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Completed", active: false })
-      );
-    } else {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Success", active: false })
-      );
-    }
+    // if (counter === 0) {
+    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
+    // } else if (counter < maxLoop) {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Success", active: false })
+    //   );
+    // }
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -90,12 +113,15 @@ export const useServerLeaver = () => {
   const apiCall = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
+    let tracker = 0,
+      flag = false;
     const { proxyGroup } = obj;
     const serverIdArray = obj.serverIDs?.split("\n");
     const tokenArray = getTokenList(obj);
-    if (serverIdArray.length > 0) {
-      const maxLoop = tokenArray.length * serverIdArray.length;
+    if (serverIdArray?.length !== undefined) {
+      // const maxLoop = tokenArray.length * serverIdArray.length;
       for (let index = 0; index < tokenArray.length; index++) {
+        flag = false;
         await sleep(obj.delay);
         for (let i = 0; i < serverIdArray.length; i++) {
           try {
@@ -106,12 +132,22 @@ export const useServerLeaver = () => {
               proxy
             );
             if (response.status === 200 || response.status === 204) {
-              counter++;
+              flag = true;
+              counter = counter + 1;
               const log = `Server leave successfully, token: ${getEncryptedToken(
                 tokenArray[index]?.split(":")[2]
               )}`;
               sendLogs(log);
             } else {
+              if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
+              else toastWarning(response.message);
+              dispatch(
+                updateTaskState({
+                  id: obj.id,
+                  status: `${counter}/${tokenArray.length} Leaved`,
+                  active: true,
+                })
+              );
               const log = `Unable to leave server, token: ${getEncryptedToken(
                 tokenArray[index]?.split(":")[2]
               )},error:${response.message}`;
@@ -128,21 +164,37 @@ export const useServerLeaver = () => {
             );
           }
         }
+        if (flag) {
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${tracker + 1}/${tokenArray.length} Leaved`,
+              active: true,
+            })
+          );
+          tracker = tracker + 1;
+        }
       }
-      if (counter === 0) {
-        dispatch(
-          updateTaskState({ id: obj.id, status: "Error", active: false })
-        );
-      } else if (counter < maxLoop) {
-        dispatch(
-          updateTaskState({ id: obj.id, status: "Completed", active: false })
-        );
-      } else {
-        dispatch(
-          updateTaskState({ id: obj.id, status: "Success", active: false })
-        );
-      }
-    }
+      // if (counter === 0) {
+      //   dispatch(
+      //     updateTaskState({ id: obj.id, status: "Error", active: false })
+      //   );
+      // } else if (counter < maxLoop) {
+      //   dispatch(
+      //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+      //   );
+      // } else {
+      //   dispatch(
+      //     updateTaskState({ id: obj.id, status: "Success", active: false })
+      //   );
+      // }
+    } else toastWarning("Invalid format, Server ID not found");
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -165,7 +217,7 @@ export const useUserName = () => {
       name = chance.name();
     }
     const tokenArray = getTokenList(obj);
-    const maxLoop = tokenArray.length;
+    // const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
       await await sleep(obj.delay);
@@ -178,12 +230,29 @@ export const useUserName = () => {
           name
         );
         if (response.status === 200 || response.status === 204) {
-          counter++;
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter + 1}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
+          counter = counter + 1;
           const log = `Username changed successfully with token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )}`;
           sendLogs(log);
         } else {
+          if (!tokenArray[index]?.split(":")[1]) toastWarning(passMsg);
+          else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
+          else toastWarning(response.message);
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
           const log = `Unable to change username, token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )},error:${response.message}`;
@@ -196,17 +265,23 @@ export const useUserName = () => {
         sendLogs(log);
       }
     }
-    if (counter === 0) {
-      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    } else if (counter < maxLoop) {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Completed", active: false })
-      );
-    } else {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Success", active: false })
-      );
-    }
+    // if (counter === 0) {
+    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
+    // } else if (counter < maxLoop) {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Success", active: false })
+    //   );
+    // }
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -221,7 +296,7 @@ export const useActivityChanger = () => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    const maxLoop = tokenArray.length;
+    // const maxLoop = tokenArray.length;
     let counter = 0;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
@@ -235,12 +310,32 @@ export const useActivityChanger = () => {
           proxy
         );
         if (response.status === 200 || response.status === 204) {
-          counter++;
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter + 1}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
+          counter = counter + 1;
           const log = `Status changed successfully with token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )}`;
           sendLogs(log);
         } else {
+          if (!obj.activityDetail)
+            toastWarning("Invalid format, Status detail not found");
+          else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
+          else if (!obj.emojiValue)
+            toastWarning("Invalid format, Emoji not found");
+          else toastWarning(response.message);
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
           const log = `Unable to change status, token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )},error:${response.message}`;
@@ -257,17 +352,23 @@ export const useActivityChanger = () => {
         );
       }
     }
-    if (counter === 0) {
-      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    } else if (counter < maxLoop) {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Completed", active: false })
-      );
-    } else {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Success", active: false })
-      );
-    }
+    // if (counter === 0) {
+    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
+    // } else if (counter < maxLoop) {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Success", active: false })
+    //   );
+    // }
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -282,13 +383,16 @@ export const useNickNameChanger = () => {
     const tokenArray = getTokenList(obj);
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
+    let tracker = 0,
+      flag = false;
     const { proxyGroup } = obj;
     const serverIdArray = obj.serverIDs?.split("\n");
     if (serverIdArray.length > 0) {
       const tokenArray = getTokenList(obj);
-      const maxLoop = tokenArray.length * serverIdArray.length;
+      // const maxLoop = tokenArray.length * serverIdArray.length;
       let name = obj.nicknameGenerate.split("\n");
       for (let i = 0; i < serverIdArray.length; i++) {
+        flag = false;
         for (let index = 0; index < tokenArray.length; index++) {
           await sleep(obj.delay);
           try {
@@ -300,12 +404,22 @@ export const useNickNameChanger = () => {
               proxy
             );
             if (response.status === 200 || response.status === 204) {
-              counter++;
+              flag = true;
+              counter = counter + 1;
               const log = `Nickname changed successfully with token: ${getEncryptedToken(
                 tokenArray[index]?.split(":")[2]
               )}`;
               sendLogs(log);
             } else {
+              if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
+              else toastWarning(response.message);
+              dispatch(
+                updateTaskState({
+                  id: obj.id,
+                  status: `${counter}/${tokenArray.length} Changed`,
+                  active: true,
+                })
+              );
               const log = `Unable to change nickname, token: ${getEncryptedToken(
                 tokenArray[index]?.split(":")[2]
               )},error${response.message}`;
@@ -318,21 +432,37 @@ export const useNickNameChanger = () => {
             sendLogs(log);
           }
         }
+        if (flag) {
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${tracker + 1}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
+          tracker = tracker + 1;
+        }
       }
-      if (counter === 0) {
-        dispatch(
-          updateTaskState({ id: obj.id, status: "Error", active: false })
-        );
-      } else if (counter < maxLoop) {
-        dispatch(
-          updateTaskState({ id: obj.id, status: "Completed", active: false })
-        );
-      } else {
-        dispatch(
-          updateTaskState({ id: obj.id, status: "Success", active: false })
-        );
-      }
+      // if (counter === 0) {
+      //   dispatch(
+      //     updateTaskState({ id: obj.id, status: "Error", active: false })
+      //   );
+      // } else if (counter < maxLoop) {
+      //   dispatch(
+      //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+      //   );
+      // } else {
+      //   dispatch(
+      //     updateTaskState({ id: obj.id, status: "Success", active: false })
+      //   );
+      // }
     }
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -369,7 +499,7 @@ export const usePasswordChanger = () => {
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    const maxLoop = tokenArray.length;
+    // const maxLoop = tokenArray.length;
     let newPass = obj.commonPassword;
     if (!newPass) {
       newPass = generateRandomPassword({
@@ -391,13 +521,31 @@ export const usePasswordChanger = () => {
           proxy
         );
         if (response.status === 200 || response.status === 204) {
-          counter++;
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter + 1}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
+          counter = counter + 1;
           helper(response, obj);
           const log = `Password changed successfully with token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )}`;
           sendLogs(log);
         } else {
+          if (!tokenArray[index]?.split(":")[1])
+            toastWarning("Invalid format, Password not found");
+          else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
+          else toastWarning(response.message);
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
           const log = `Unable to change password, token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )},error:${response.message}`;
@@ -410,17 +558,23 @@ export const usePasswordChanger = () => {
         sendLogs(log);
       }
     }
-    if (counter === 0) {
-      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    } else if (counter < maxLoop) {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Completed", active: false })
-      );
-    } else {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Success", active: false })
-      );
-    }
+    // if (counter === 0) {
+    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
+    // } else if (counter < maxLoop) {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Success", active: false })
+    //   );
+    // }
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -436,7 +590,7 @@ export const useTokeChecker = () => {
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    const maxLoop = tokenArray.length;
+    // const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
@@ -446,13 +600,28 @@ export const useTokeChecker = () => {
           proxy
         );
         if (response.status === 200 || response.status === 204) {
-          dispatch(updateTaskState({ id: obj.id, status: `${counter+1}/${tokenArray.length}`, active: true }));
-          counter=counter+1;
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter + 1}/${tokenArray.length} Checked`,
+              active: true,
+            })
+          );
+          counter = counter + 1;
           const log = `Token checked successfully with token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )}`;
           sendLogs(log);
         } else {
+          if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
+          else toastWarning(response.message);
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter}/${tokenArray.length} Checked`,
+              active: true,
+            })
+          );
           const log = `Unable to check token, token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )},error:${response.message}`;
@@ -476,6 +645,12 @@ export const useTokeChecker = () => {
     //     updateTaskState({ id: obj.id, status: "Success", active: false })
     //   );
     // }
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -501,7 +676,7 @@ export const useTokenRetriever = () => {
     tempObj["newToken"] = arr.join("\n");
     tempObj["email"] = emailArr.join("\n");
     tempObj["status"] = "Completed";
-    console.log("updated",tempObj)
+    console.log("updated", tempObj);
     dispatch(updatePasswordChangerStatus(tempObj));
     tracker = tracker + 1;
   };
@@ -512,7 +687,7 @@ export const useTokenRetriever = () => {
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    const maxLoop = tokenArray.length;
+    // const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
       await await sleep(obj.delay);
@@ -524,13 +699,30 @@ export const useTokenRetriever = () => {
           proxy
         );
         if (response.status === 200 || response.status === 204) {
-          counter++;
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter + 1}/${tokenArray.length} Retrieved`,
+              active: true,
+            })
+          );
+          counter = counter + 1;
           helper(obj, response, tokenArray[index]);
           const log = `Token Retrieve successfully with token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )}`;
           sendLogs(log);
         } else {
+          if (!tokenArray[index]?.split(":")[0]) toastWarning(emailMsg);
+          else if (!tokenArray[index]?.split(":")[1]) toastWarning(passMsg);
+          else toastWarning(response.message);
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter}/${tokenArray.length} Retrieved`,
+              active: true,
+            })
+          );
           const log = `Unable to retrieve token, token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )},error:${response.message}`;
@@ -543,17 +735,23 @@ export const useTokenRetriever = () => {
         sendLogs(log);
       }
     }
-    if (counter === 0) {
-      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    } else if (counter < maxLoop) {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Completed", active: false })
-      );
-    } else {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Success", active: false })
-      );
-    }
+    // if (counter === 0) {
+    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
+    // } else if (counter < maxLoop) {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Success", active: false })
+    //   );
+    // }
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -570,7 +768,7 @@ export const useAvatarChanger = () => {
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    const maxLoop = tokenArray.length;
+    // const maxLoop = tokenArray.length;
     const avatarAPI = obj.apiInfo;
     if (avatarAPI?.label === "Default API" || avatarAPI?.label === undefined) {
       randomImage = await generateRandomAvatar();
@@ -587,12 +785,28 @@ export const useAvatarChanger = () => {
           proxy
         );
         if (response.status === 200 || response.status === 204) {
-          counter++;
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter + 1}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
+          counter = counter + 1;
           const log = `Avatar changed successfully with token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )}`;
           sendLogs(log);
         } else {
+          if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
+          else toastWarning(response.message);
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter}/${tokenArray.length} Changed`,
+              active: true,
+            })
+          );
           const log = `Unable to change avatar, token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )},error:${response.message}`;
@@ -605,17 +819,23 @@ export const useAvatarChanger = () => {
         sendLogs(log);
       }
     }
-    if (counter === 0) {
-      dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    } else if (counter < maxLoop) {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Completed", active: false })
-      );
-    } else {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Success", active: false })
-      );
-    }
+    // if (counter === 0) {
+    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
+    // } else if (counter < maxLoop) {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateTaskState({ id: obj.id, status: "Success", active: false })
+    //   );
+    // }
+    dispatch(
+      updateTaskState({
+        id: obj.id,
+        active: false,
+      })
+    );
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,

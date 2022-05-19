@@ -4,6 +4,7 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
+import { fetchServer } from "../../../helper/electron-bridge";
 
 function LinkOpener({
   handleSelectChannel,
@@ -11,6 +12,9 @@ function LinkOpener({
   state,
   onChange,
 }) {
+  const onBtnClick = () => {
+    fetchServer(state?.monitorToken?.label);
+  };
   return (
     <React.Fragment>
       <ModalFlexOuterRow>
@@ -20,6 +24,8 @@ function LinkOpener({
             name="monitorToken"
             fieldTitle="Monitor Token"
             placeholderText="Enter Monitor token"
+            isBtn={true}
+            onBtnClick={onBtnClick}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>

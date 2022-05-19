@@ -111,3 +111,15 @@
   background-color: var(--scrollbar-bg);
   border-radius: 10px;
 }
+
+.refresh-btn {
+  border-radius: 3px;
+  background-color: var(--btn-bg);
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.5em;
+  margin: 0 0 0 6px;
+  cursor: pointer;
+}

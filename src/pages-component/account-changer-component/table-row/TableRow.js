@@ -80,24 +80,28 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
 export default TableRow;
 
 const getColor = (status, appTheme) => {
-  switch (status) {
-    case "Running":
-      return appTheme ? "var(--lightMode-status)" : "var(--status)";
-    case "Monitoring...":
-      return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
-    case "Monitoring":
-      return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
-    case "Completed":
-      return appTheme ? "var(--lightMode-complete)" : "#1186db";
-    case "Success":
-      return appTheme ? "var(--lightMode-complete)" : "#1186db";
-    case "Stopped":
-      return "var(--delete)";
-    case "Error":
-      return "var(--delete)";
-    case "Idle":
-      return appTheme ? "var(--lightMode-text-color)" : "";
-    default:
-      return "var(--primary)";
+  if (status.includes("/")) {
+    return appTheme ? "var(--lightMode-complete)" : "#1186db";
+  } else {
+    switch (status) {
+      case "Running":
+        return appTheme ? "var(--lightMode-status)" : "var(--status)";
+      case "Monitoring...":
+        return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
+      case "Monitoring":
+        return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
+      case "Completed":
+        return appTheme ? "var(--lightMode-complete)" : "#1186db";
+      case "Success":
+        return appTheme ? "var(--lightMode-complete)" : "#1186db";
+      case "Stopped":
+        return "var(--delete)";
+      case "Error":
+        return "var(--delete)";
+      case "Idle":
+        return appTheme ? "var(--lightMode-text-color)" : "";
+      default:
+        return "var(--primary)";
+    }
   }
 };

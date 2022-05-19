@@ -37,7 +37,7 @@ export const updateStatusOfTableRow = (obj, status) => (dispatch, getState) => {
 };
 
 export const updatePasswordChangerStatus = (obj) => (dispatch, getState) => {
-  console.log("asemghn dfvgyujsvgb ykus lllllllllll")
+  console.log("asemghn dfvgyujsvgb ykus lllllllllll");
   const currentList = fetchTaskTableListState(getState());
   let tempOptionList = [...currentList];
   tempOptionList = [...tempOptionList].map((row) => {
@@ -69,7 +69,8 @@ export const updateTaskState = (data) => (dispatch, getState) => {
   const currentList = fetchTaskTableListState(getState());
   let tempOptionList = [...currentList];
   tempOptionList = [...tempOptionList].map((row) => {
-    if (row["id"] === id) return { ...row, status, active };
+    if (row["id"] === id)
+      return status ? { ...row, status, active } : { ...row, active };
     return row;
   });
   dispatch(appendTaskInTable(tempOptionList));

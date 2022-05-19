@@ -617,49 +617,33 @@ ipcMain.on("stop-giveaway-joiner", (_, id) => {
 });
 
 //RUN LOCAL SERVER
+
+let pid = null;
+
 ipcMain.on("run-xp-server", (_, data) => {
-  xpFarmerStart();
-});
-
-ipcMain.on("stop-xp-server", (_, data) => {
-  try {
-    stopXpfarmer();
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-async function xpFarmerStart() {
   const exePath = isDev
     ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
     : `${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
   try {
-    const process = execFile(exePath, [3001], (error, stdout, stderr) => {
+    const process = execFile(exePath, [3001], (error, stdout) => {
       if (error) {
         throw error;
       }
       console.log(stdout);
     });
-    console.log("vvvvvvvvvv", process);
+    console.log("vvvvvvvvvv", process.pid);
   } catch (e) {
     console.log("this is error", e);
   }
-}
+});
 
-function stopXpfarmer() {
+ipcMain.on("stop-xp-server", (_, data) => {
   try {
-    currentProcesses.get((err, processes) => {
-      const sorted = _.sortBy(processes, "cpu");
-      for (let i = 0; i < sorted.length; i += 1) {
-        if ("xpfarmer" === sorted[i].name.toLowerCase()) {
-          process.kill(sorted[i].pid);
-        }
-      }
-    });
+    process.kill(pid);
   } catch (e) {
     console.log(e);
   }
-}
+});
 
 ipcMain.on("fetch_server", async (_, token) => {
   try {
@@ -669,7 +653,6 @@ ipcMain.on("fetch_server", async (_, token) => {
         Authorization: token,
       },
     });
-    console.log(res);
     mainWindow.webContents.send("fetched-server", res.data);
   } catch (e) {
     mainWindow.webContents.send("fetched-server", e);

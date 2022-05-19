@@ -31,6 +31,7 @@ import {
   linkOpenerValidation,
   massInviteJoinerValidation,
   nicknameChangerValidation,
+  serverLeaverValidation,
 } from "./helper";
 import {
   UserNameChangerSlide,
@@ -242,6 +243,8 @@ function AccountChanger() {
         valid = linkOpenerValidation(accountChanger);
       } else if (type === "inviteJoiner") {
         valid = inviteJoinerValidation(accountChanger);
+      } else if (type === "serverLeaver") {
+        valid = serverLeaverValidation(accountChanger);
       } else {
         valid = true;
       }
@@ -251,7 +254,6 @@ function AccountChanger() {
       }
     }
   };
-
   const handleSelectAPI = (obj) => {
     setAccountChanger((pre) => {
       return { ...pre, apiInfo: obj };

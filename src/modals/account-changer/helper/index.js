@@ -12,15 +12,40 @@ export const activityChangerValidation = (obj) => {
 };
 
 export const massInviteJoinerValidation = (obj) => {
-  if (obj.inviteCodes.length > 0) {
-    return true;
-  } else {
+  let flag = false;
+  if (!obj.inviteCodes) {
     toastWarning("Enter Invite code ");
     return false;
   }
+  if (obj?.isReact) {
+    flag = reactValidation(obj);
+    if (!flag) return flag;
+  }
+  if (obj?.isAcceptRule) {
+    flag = acceptValidation(obj);
+    if (!flag) return flag;
+  }
+  return true;
+};
+
+const reactValidation = (obj) => {
+  if (!obj?.channelId || !obj?.messageId || !obj?.emojiValue) {
+    if (!obj?.channelId) {
+      toastWarning("Enter channel ID");
+    }
+    if (!obj?.messageId) toastWarning("Enter message ID");
+    if (!obj?.emojiValue) toastWarning("Enter emoji");
+    return false;
+  } else return true;
+};
+const acceptValidation = (obj) => {
+  if (!obj?.rules) {
+    toastWarning("Enter accept format rule");
+    return false;
+  } else return true;
 };
 export const nicknameChangerValidation = (obj) => {
-  if (obj.serverIDs.length > 0) {
+  if (obj?.serverIDs) {
     return true;
   } else {
     toastWarning("Enter Server IDs");
@@ -70,10 +95,10 @@ export const giveawayJoinerValidation = (obj) => {
 
 export const inviteJoinerValidation = (obj) => {
   let valid = false;
-  if (Object.keys(obj?.monitorToken || {}).length > 0) {
+  if (Object.keys(obj?.monitorToken || {})?.length > 0) {
     valid = true;
   } else {
-    toastWarning("Select Monitor token");
+    toastWarning("Enter Monitor token");
     valid = false;
     return valid;
   }
@@ -86,9 +111,15 @@ export const inviteJoinerValidation = (obj) => {
   }
   return valid;
 };
+export const serverLeaverValidation = (obj) => {
+  let valid = false;
+  if (obj.serverIDs) {
+    return true;
+  } else toastWarning("Enter server ID");
+  return valid;
+};
 
 export const linkOpenerValidation = (obj) => {
-  console.log(obj)
   let valid;
   if (Object.keys(obj?.chromeUser || {}).length > 0) {
     valid = true;
@@ -100,7 +131,7 @@ export const linkOpenerValidation = (obj) => {
   if (Object.keys(obj?.monitorToken || {}).length > 0) {
     valid = true;
   } else {
-    toastWarning("Select Monitor token");
+    toastWarning("Enter Monitor token");
     valid = false;
     return valid;
   }
@@ -111,7 +142,7 @@ export const linkOpenerValidation = (obj) => {
     valid = false;
     return valid;
   }
-  if (Object.keys(obj?.keywords).length>0) {
+  if (Object.keys(obj?.keywords).length > 0) {
     valid = true;
   } else {
     toastWarning("Enter keyword");

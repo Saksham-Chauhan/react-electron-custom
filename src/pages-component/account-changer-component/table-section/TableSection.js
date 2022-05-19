@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  updateStatusOfTableRow,
+  // updateStatusOfTableRow,
   deleteDataFromTableList,
   updateTaskState,
 } from "../../../features/logic/acc-changer";
@@ -152,7 +152,7 @@ function TableSection({ list }) {
     const type = obj["changerType"];
     if (type === "xpFarmer") {
       stopXpFarmer();
-      dispatch(updateStatusOfTableRow(obj, "Stopped"));
+      updateTaskState({ id: obj.id, status: "Stopped", active: false });
     } else if (type === "giveawayJoiner") {
       console.log("stop", obj.id);
       stopGiveawayJoiner(obj.id);
@@ -161,7 +161,7 @@ function TableSection({ list }) {
     } else if (type === "inviteJoiner") {
       stopInviteJoinerMonitor(obj.id);
     } else {
-      dispatch(updateStatusOfTableRow(obj, "Stopped"));
+      updateTaskState({ id: obj.id, status: "Stopped", active: false });
     }
   };
 

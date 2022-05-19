@@ -30,7 +30,7 @@ a {
 .input-field-box {
   margin-top: 0.4em;
 }
-.input-field-box > input,
+.input-field-box > div > input,
 .input-field-box > textarea {
   width: 100%;
   border: none;
@@ -48,7 +48,7 @@ a {
   overflow-y: scroll;
   resize: none;
 }
-.input-field-box > input:focus,
+.input-field-box > div > input:focus,
 .input-field-box > textarea:focus {
   border-color: var(--active-input);
 }
@@ -59,7 +59,7 @@ a {
   background: var(--scrollbar-bg);
   border-radius: 10px;
 }
-.input-field-box > input::placeholder,
+.input-field-box > div > input::placeholder,
 .input-field-box > textarea::placeholder {
   font-size: 13px;
   line-height: 18px;

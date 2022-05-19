@@ -11,7 +11,7 @@ import "./styles.css";
 import { useSelector } from "react-redux";
 import { fetchThemsState } from "../../features/counterSlice";
 import makeAnimated from "react-select/animated";
-// import LabelWithTooltip from "../tooltip-label/LabelWithTooltip";
+import refresh from "../../assests/images/refresh.svg";
 const animatedComponents = makeAnimated();
 
 const DefaultOptions = [];
@@ -32,6 +32,8 @@ function InputField({
   tooltip = false,
   submit,
   submitFlag = false,
+  isBtn = false,
+  onBtnClick,
   ...props
 }) {
   const appTheme = useSelector(fetchThemsState);
@@ -64,31 +66,39 @@ function InputField({
               Need help with finding your Discord Token?
             </label>
           )}
-          {/* {tooltip && <LabelWithTooltip toolTopText={props.toolTipText} />} */}
         </div>
       )}
       {!isSelect ? (
         <div className="input-field-box">
           {!isMulti ? (
             !isCustomInputField ? (
-              <input
-                className={
-                  appTheme
-                    ? `${isCustomLabel} paragraph-color lightModeInput`
-                    : `${isCustomLabel && "custom-label-input"}`
-                }
-                {...props}
-                autoSave="off"
-                autoCapitalize="off"
-                autoCorrect="off"
-                autoComplete="off"
-                placeholder={placeholderText}
-                onKeyDown={(e) => {
-                  if (e.keyCode === 13 && submitFlag) {
-                    submit();
+              <div className="d-flex">
+                <input
+                  className={
+                    appTheme
+                      ? `${isCustomLabel} paragraph-color lightModeInput`
+                      : `${isCustomLabel && "custom-label-input"}`
                   }
-                }}
-              />
+                  {...props}
+                  autoSave="off"
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                  autoComplete="off"
+                  placeholder={placeholderText}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13 && submitFlag) {
+                      submit();
+                    }
+                  }}
+                />
+                {isBtn ? (
+                  <div className="refresh-btn" onClick={onBtnClick}>
+                    <img src={refresh} alt="" />
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
             ) : (
               <NumberFormat
                 {...props}
