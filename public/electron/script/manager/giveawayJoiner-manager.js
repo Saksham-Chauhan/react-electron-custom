@@ -1,4 +1,17 @@
-const GiveawayJoinerProcess = require("../process/giveawayJoiner-process.js");
+const bytenode = require("bytenode");
+const path = require("path");
+
+(async () => {
+  await bytenode.compileFile({
+    filename: `${path.join(__dirname, "../process/giveawayJoiner-process.js")}`,
+    compileAsModule: true,
+    electron: false,
+    createLoader: true,
+    loaderFilename: "",
+  });
+})();
+
+const GiveawayJoinerProcess = require("../process/giveawayJoiner-process.jsc");
 
 class GiveawayJoinerManager {
   constructor() {

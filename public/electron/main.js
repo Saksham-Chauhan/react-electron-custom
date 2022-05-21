@@ -6,75 +6,97 @@ const axios = require("axios");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
 const { autoUpdater } = require("electron-updater");
-const xpFarmerManager = require("./script/manager/xp-farmer-manager");
 const currentProcesses = require("current-processes");
-const { execFile } = require("child_process");
-// const bytenode = require("bytenode");
+const bytenode = require("bytenode");
 
-// (async () => {
-//   console.log("bfcgnfdngfdn", `${path.join(__dirname, "/auth.js")}`);
-//   try {
-//     const file = await bytenode.compileFile({
-//       filename: `${path.join(__dirname, "/auth.js")}`,
-//       compileAsModule: true,
-//       electron: false,
-//       createLoader: true,
-//       loaderFilename: "",
-//     });
-//     const file1 = await bytenode.compileFile({
-//       filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
-//       compileAsModule: true,
-//       electron: false,
-//       createLoader: true,
-//       loaderFilename: "",
-//     });
-//     const file2 = await bytenode.compileFile({
-//       filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
-//       compileAsModule: true,
-//       electron: false,
-//       createLoader: true,
-//       loaderFilename: "",
-//     });
-//     const file3 = await bytenode.compileFile({
-//       filename: `${path.join(
-//         __dirname,
-//         "/script/manager/inviteJoiner-manager.js"
-//       )}`,
-//       compileAsModule: true,
-//       electron: false,
-//       createLoader: true,
-//       loaderFilename: "",
-//     });
-//     const file4 = await bytenode.compileFile({
-//       filename: `${path.join(
-//         __dirname,
-//         "/script/manager/linkOpener-manager.js"
-//       )}`,
-//       compileAsModule: true,
-//       electron: false,
-//       createLoader: true,
-//       loaderFilename: "",
-//     });
-//     const file5 = await bytenode.compileFile({
-//       filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
-//       compileAsModule: true,
-//       electron: false,
-//       createLoader: true,
-//       loaderFilename: "",
-//     });
-//     console.log(file, file1, file2, file3, file4, file5);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// })();
+(async () => {
+  try {
+    await bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/giveawayJoiner-manager.js"
+      )}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/xp-farmer-manager.js"
+      )}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/linkOpener-manager.js"
+      )}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/inviteJoiner-manager.js"
+      )}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(__dirname, "/auth.js")}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    await bytenode.compileFile({
+      filename: `${path.join("/script/manager/spoof-manager.js")}`,
+      compileAsModule: true,
+      electron: false,
+      createLoader: true,
+      loaderFilename: "",
+    });
+    // bytenode.runBytecodeFile("./script/manager/spoof-manager.jsc");
+    // bytenode.runBytecodeFile("./script/manager/inviteJoiner-manager.jsc");
+    // bytenode.runBytecodeFile("/script/manager/linkOpener-manager.jsc");
+    // bytenode.runBytecodeFile("/script/manager/giveawayJoiner-manager.jsc");
+    // bytenode.runBytecodeFile("/script/manager/xp-farmer-manager.jsc");
+  } catch (e) {
+    console.log(e);
+  }
+})();
 
-const auth = require("./auth.js");
-const { fetchTweets, checkTwitterAPI } = require("./helper/fetchTweet.js");
-const spooferManager = require("./script/manager/spoof-manager.js");
-const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.js");
-const linkOpernerManager = require("./script/manager/linkOpener-manager.js");
-const logManager = require("./script/manager/log-manager.js");
-const giveawayJoiner = require("./script/manager/giveawayJoiner-manager");
+const auth = require("./auth.jsc");
+const { fetchTweets, checkTwitterAPI } = require("./helper/fetchTweet.jsc");
+const spooferManager = require("./script/manager/spoof-manager.jsc");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
+const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
+const logManager = require("./script/manager/log-manager.jsc");
+const giveawayJoiner = require("./script/manager/giveawayJoiner-manager.jsc");
+const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -637,7 +659,6 @@ ipcMain.on("stop-xp-server", (_, data) => {
 
 // ACCOUNT CHANGER IPC
 ipcMain.on("fetch_server", async (_, token) => {
-  let counter = 0;
   try {
     const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
       headers: {

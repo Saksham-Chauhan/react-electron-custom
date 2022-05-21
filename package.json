@@ -84,7 +84,7 @@
     "electron-builder": "^22.14.13",
     "react-error-overlay": "^6.0.9"
   },
-  "main": "public/electron/main.js",
+  "main": "public/electron/armor.js",
   "author": {
     "name": "Koders",
     "url": "https://koders.in"

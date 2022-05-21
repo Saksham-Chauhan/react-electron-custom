@@ -1,4 +1,17 @@
-const xpfarmerProcess = require("../process/xp-farmer-process");
+const bytenode = require("bytenode");
+const path = require("path");
+
+(async () => {
+  await bytenode.compileFile({
+    filename: `${path.join(__dirname, "../process/xp-farmer-process.js")}`,
+    compileAsModule: true,
+    electron: false,
+    createLoader: true,
+    loaderFilename: "",
+  });
+})();
+
+const xpfarmerProcess = require("../process/xp-farmer-process.jsc");
 
 class XPFarmerManager {
   constructor() {

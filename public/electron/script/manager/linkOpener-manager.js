@@ -1,4 +1,17 @@
-const linkOpenerProcess = require("../process/linkOpener-process.js");
+const bytenode = require("bytenode");
+const path = require("path");
+
+(async () => {
+  await bytenode.compileFile({
+    filename: `${path.join(__dirname, "../process/linkOpener-process.js")}`,
+    compileAsModule: true,
+    electron: false,
+    createLoader: true,
+    loaderFilename: "",
+  });
+})();
+
+const linkOpenerProcess = require("../process/linkOpener-process.jsc");
 
 class LinkOpenerManager {
   constructor() {
