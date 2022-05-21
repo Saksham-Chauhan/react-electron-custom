@@ -262,20 +262,17 @@ ipcMain.on("logout-user", () => {
   auth.logout();
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-
 ipcMain.on("close", () => {
+  let win = mainWindow || global.mainWin;
   try {
-    let tempMainWindow = mainWindow || global.mainWin;
-    if (tempMainWindow) {
-      tempMainWindow.close();
+    if (win) {
+      win.close();
     }
   } catch (error) {
     console.log("Something went wrong on closing app", error);
+  }
+  if(app.isQuitting){
+    win.hide();
   }
 });
 
@@ -308,8 +305,11 @@ ipcMain.on("close", () => {
 });
 
 app.on("activate", () => {
+  const win = mainWindow || global.mainWin;
   if (win === null) {
     createWindow();
+  }else{
+    win.show();
   }
 });
 
