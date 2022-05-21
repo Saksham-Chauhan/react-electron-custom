@@ -1,5 +1,4 @@
 import { v4 as uuid } from "uuid";
-import { DISCORD_MASS_OPTIONS } from "../constant";
 export const makeStrOfArr = (arrOfObj) => arrOfObj.map((data) => data["value"]);
 
 export const isValueInUse = (arrOfObj, key, firstValue) => {
@@ -156,11 +155,21 @@ export const arrayBufferToString = (buffer, encoding) => {
   return str;
 };
 
-export const getChangerTypeLabel = (data) => {
-  for (let i = 0; i < DISCORD_MASS_OPTIONS.length; i++) {
-    if (data === DISCORD_MASS_OPTIONS[i].value)
-      return DISCORD_MASS_OPTIONS[i].label;
+export default function prependHttp(url, { https = true } = {}) {
+  if (typeof url !== "string") {
+    throw new TypeError(
+      `Expected \`url\` to be of type \`string\`, got \`${typeof url}\``
+    );
   }
-};
+
+  url = url.trim();
+
+  if (/^\.*\/|^(?!localhost)\w+?:/.test(url)) {
+    return url;
+  }
+
+  return url.replace(/^(?!(?:\w+?:)?\/\/)/, https ? "https://" : "http://");
+}
+
 export const getEncryptedToken = (token) =>
   token.slice(0, 4) + "#### ####" + token.slice(-6);

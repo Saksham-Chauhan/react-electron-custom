@@ -60,6 +60,8 @@ import {
   fetchedServer,
   fetchServer,
 } from "../../helper/electron-bridge";
+import { toastSuccess, toastWarning } from "../../toaster";
+// import { toastWarning } from "../";
 
 function AccountChanger() {
   const navigate = useNavigate();
@@ -87,19 +89,23 @@ function AccountChanger() {
 
   useEffect(() => {
     fetchedServer((data) => {
-      let obj = [];
-      for (let i = 0; i < data.length; i++) {
-        let tempOjb = {};
-        tempOjb["label"] = data[i].name;
-        tempOjb["value"] = data[i].id;
-        obj.push(tempOjb);
+      if (data?.badRQ) {
+        toastWarning(data.error);
+      } else {
+        let obj = [];
+        for (let i = 0; i < data.length; i++) {
+          let tempOjb = {};
+          tempOjb["label"] = data[i].name;
+          tempOjb["value"] = data[i].id;
+          obj.push(tempOjb);
+        }
+        setAccountChanger((pre) => {
+          return {
+            ...pre,
+            serverIDs: obj,
+          };
+        });
       }
-      setAccountChanger((pre) => {
-        return {
-          ...pre,
-          serverIDs: obj,
-        };
-      });
     });
 
     fetchedChannel((data) => {
@@ -116,7 +122,7 @@ function AccountChanger() {
         return { ...pre, channels: channels };
       });
     });
-  });
+  }, []);
 
   const handleClaimerMenuOpen = () => {
     if (claimerGroupList.length === 0) {
@@ -431,7 +437,7 @@ function AccountChanger() {
         accountChanger?.changerType === "massInviter" ? (
           ""
         ) : (
-          <div className="modal-control-btns">
+          <div onClick={() => toastSuccess()} className="modal-control-btns">
             <div
               onClick={handleCloseModal}
               className={

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,6 +11,7 @@ import { toastWarning } from "../../../toaster";
 import { getProxy } from "../../../api";
 
 import {
+  errorInProxy,
   readArrayOfJson,
   startGiveawayJoiner,
   startInviteJoinerMonitor,
@@ -45,6 +46,16 @@ import { sleep } from "../../../helper";
 let status = false;
 
 function TableSection({ list }) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    errorInProxy((data) => {
+      toastWarning("Error proxy not found");
+      dispatch(
+        updateTaskState({ id: data.id, status: "Stopped", active: false })
+      );
+    });
+  }, [dispatch]);
+
   const massjoiner = useMassInviteJoiner();
   const serverLeaver = useServerLeaver();
   const activityChanger = useActivityChanger();
@@ -59,7 +70,6 @@ function TableSection({ list }) {
   const webhookList = useSelector(fetchWebhookListState);
 
   let flag = useRef(false);
-  const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
   const theme = {
     tableHeader: appTheme
@@ -97,17 +107,7 @@ function TableSection({ list }) {
       dispatch(
         updateTaskState({ id: obj.id, status: "Running", active: true })
       );
-      startXpFarmer();
-      const { proxyGroup } = obj;
-      if (status) {
-        const res = await callApis(
-          proxyGroup,
-          obj.channelId,
-          obj.monitorToken,
-          obj.delay
-        );
-        return res;
-      } else return null;
+      startXpFarmer(obj);
     } else if (type === "linkOpener") {
       startLinkOpenerMonitor(obj, setting, user, webhookList);
     } else if (type === "inviteJoiner") {
@@ -154,21 +154,16 @@ function TableSection({ list }) {
     status = flag.current;
     const type = obj["changerType"];
     if (type === "xpFarmer") {
-      stopXpFarmer();
+      stopXpFarmer(obj);
       dispatch(
         updateTaskState({ id: obj.id, status: "Stopped", active: false })
       );
     } else if (type === "giveawayJoiner") {
-      console.log("stop", obj.id);
       stopGiveawayJoiner(obj.id);
     } else if (type === "linkOpener") {
       stopLinkOpenerMonitor(obj.id);
     } else if (type === "inviteJoiner") {
       stopInviteJoinerMonitor(obj.id);
-    } else {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Stopped", active: false })
-      );
     }
   };
 

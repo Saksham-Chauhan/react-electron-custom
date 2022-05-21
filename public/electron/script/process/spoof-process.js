@@ -132,25 +132,23 @@ class SpooferInstance {
         },
         () => {}
       );
-      const result = await this.win
+      this.win
         .loadURL(this.url, {
           userAgent: this.userAgent,
         })
         .catch((err) => {
-          console.log("ERR", err);
-          this.proxyRotater();
-          return "STOP";
+          console.log("Error while loading url", err);
         });
-      if (typeof result === "string") return;
-      this.win.webContents.on(
-        "login",
-        (event, authenticationResponseDetails, authInfo, callback) => {
-          if (authInfo.isProxy) {
-            event.preventDefault();
-            callback(this.proxy.user, this.proxy.pass); //supply credentials to server
-          }
+      this.win.webContents.on("did-fail-load", function () {
+        console.log("Proxy rotater is called");
+        this.proxyRotater();
+      });
+      this.win.webContents.on("login", (event, _, authInfo, callback) => {
+        if (authInfo.isProxy) {
+          event.preventDefault();
+          callback(this.proxy.user, this.proxy.pass); //supply credentials to server
         }
-      );
+      });
     } else {
       this.win.loadURL(this.url, {
         userAgent: this.userAgent,

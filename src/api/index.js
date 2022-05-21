@@ -167,6 +167,6 @@ export const directDiscordJoinAPI = async (
 
 export const generateRandomAvatar = async (api = IMAGE_API) => {
   const arrayBuffer = await axios.get(api, { responseType: "arraybuffer" });
-  const str = arrayBufferToString(arrayBuffer, "base64");
+  const str = arrayBufferToString(arrayBuffer.data, "base64");
   return "data:image/jpeg;base64," + str;
 };

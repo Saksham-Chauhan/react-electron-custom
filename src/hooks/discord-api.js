@@ -28,11 +28,9 @@ export const useMassInviteJoiner = () => {
   const callApi = async (obj, setting, user, webhookList) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
-    // dispatch(updateStatusOfTableRow(obj, "Monitoring"));
     const { proxyGroup } = obj;
     const inviteCodeList = obj.inviteCodes?.split("\n");
     const tokenArray = getTokenList(obj);
-    // const maxLoop = tokenArray.length * inviteCodeList.length;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
       for (let i = 0; i < inviteCodeList.length; i++) {
@@ -59,7 +57,10 @@ export const useMassInviteJoiner = () => {
             )}`;
             sendLogs(log);
           } else {
-            if (!code) toastWarning("Invalid format, Invit code not found");
+            if ("captcha_key" in response?.response?.data)
+              toastWarning("Captcha key error");
+            else if (!code)
+              toastWarning("Invalid format, Invit code not found");
             else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
             else toastWarning(response.message);
             dispatch(
@@ -75,6 +76,13 @@ export const useMassInviteJoiner = () => {
             sendLogs(log);
           }
         } catch (error) {
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `Stopped`,
+              active: false,
+            })
+          );
           const log = `Unable to join server with token: ${getEncryptedToken(
             tokenArray[index]?.split(":")[2]
           )}, error message:${error.message}`;
@@ -83,17 +91,6 @@ export const useMassInviteJoiner = () => {
         }
       }
     }
-    // if (counter === 0) {
-    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    // } else if (counter < maxLoop) {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-    //   );
-    // } else {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Success", active: false })
-    //   );
-    // }
     dispatch(
       updateTaskState({
         id: obj.id,
@@ -119,7 +116,6 @@ export const useServerLeaver = () => {
     const serverIdArray = obj.serverIDs?.split("\n");
     const tokenArray = getTokenList(obj);
     if (serverIdArray?.length !== undefined) {
-      // const maxLoop = tokenArray.length * serverIdArray.length;
       for (let index = 0; index < tokenArray.length; index++) {
         flag = false;
         await sleep(obj.delay);
@@ -154,6 +150,13 @@ export const useServerLeaver = () => {
               sendLogs(log);
             }
           } catch (error) {
+            dispatch(
+              updateTaskState({
+                id: obj.id,
+                status: `Stopped`,
+                active: false,
+              })
+            );
             const log = `Unable to leave server, token: ${getEncryptedToken(
               tokenArray[index]?.split(":")[2]
             )},error:${error.message}`;
@@ -175,19 +178,6 @@ export const useServerLeaver = () => {
           tracker = tracker + 1;
         }
       }
-      // if (counter === 0) {
-      //   dispatch(
-      //     updateTaskState({ id: obj.id, status: "Error", active: false })
-      //   );
-      // } else if (counter < maxLoop) {
-      //   dispatch(
-      //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-      //   );
-      // } else {
-      //   dispatch(
-      //     updateTaskState({ id: obj.id, status: "Success", active: false })
-      //   );
-      // }
     } else toastWarning("Invalid format, Server ID not found");
     dispatch(
       updateTaskState({
@@ -217,7 +207,6 @@ export const useUserName = () => {
       name = chance.name();
     }
     const tokenArray = getTokenList(obj);
-    // const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
       await await sleep(obj.delay);
@@ -259,23 +248,19 @@ export const useUserName = () => {
           sendLogs(log);
         }
       } catch (e) {
+        dispatch(
+          updateTaskState({
+            id: obj.id,
+            status: `Stopped`,
+            active: false,
+          })
+        );
         const log = `Unable to change username, token: ${getEncryptedToken(
           tokenArray[index]?.split(":")[2]
         )},error:${e.message}`;
         sendLogs(log);
       }
     }
-    // if (counter === 0) {
-    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    // } else if (counter < maxLoop) {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-    //   );
-    // } else {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Success", active: false })
-    //   );
-    // }
     dispatch(
       updateTaskState({
         id: obj.id,
@@ -296,7 +281,6 @@ export const useActivityChanger = () => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    // const maxLoop = tokenArray.length;
     let counter = 0;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
@@ -342,6 +326,13 @@ export const useActivityChanger = () => {
           sendLogs(log);
         }
       } catch (error) {
+        dispatch(
+          updateTaskState({
+            id: obj.id,
+            status: `Stopped`,
+            active: false,
+          })
+        );
         const log = `Unable to change status, token: ${getEncryptedToken(
           tokenArray[index]?.split(":")[2]
         )},error:${error.message}`;
@@ -352,17 +343,6 @@ export const useActivityChanger = () => {
         );
       }
     }
-    // if (counter === 0) {
-    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    // } else if (counter < maxLoop) {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-    //   );
-    // } else {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Success", active: false })
-    //   );
-    // }
     dispatch(
       updateTaskState({
         id: obj.id,
@@ -389,7 +369,6 @@ export const useNickNameChanger = () => {
     const serverIdArray = obj.serverIDs?.split("\n");
     if (serverIdArray.length > 0) {
       const tokenArray = getTokenList(obj);
-      // const maxLoop = tokenArray.length * serverIdArray.length;
       let name = obj.nicknameGenerate.split("\n");
       for (let i = 0; i < serverIdArray.length; i++) {
         flag = false;
@@ -426,6 +405,13 @@ export const useNickNameChanger = () => {
               sendLogs(log);
             }
           } catch (e) {
+            dispatch(
+              updateTaskState({
+                id: obj.id,
+                status: `Stopped`,
+                active: false,
+              })
+            );
             const log = `Unable to change nickname, token: ${getEncryptedToken(
               tokenArray[index]?.split(":")[2]
             )},error${e.message}`;
@@ -443,19 +429,6 @@ export const useNickNameChanger = () => {
           tracker = tracker + 1;
         }
       }
-      // if (counter === 0) {
-      //   dispatch(
-      //     updateTaskState({ id: obj.id, status: "Error", active: false })
-      //   );
-      // } else if (counter < maxLoop) {
-      //   dispatch(
-      //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-      //   );
-      // } else {
-      //   dispatch(
-      //     updateTaskState({ id: obj.id, status: "Success", active: false })
-      //   );
-      // }
     }
     dispatch(
       updateTaskState({
@@ -489,7 +462,6 @@ export const usePasswordChanger = () => {
     }
     tempObj["newPass"] = arr.join("\n");
     tempObj["username"] = user.join("\n");
-    tempObj["status"] = "Completed";
     dispatch(updatePasswordChangerStatus(tempObj));
     tracker = tracker + 1;
   };
@@ -499,7 +471,6 @@ export const usePasswordChanger = () => {
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    // const maxLoop = tokenArray.length;
     let newPass = obj.commonPassword;
     if (!newPass) {
       newPass = generateRandomPassword({
@@ -552,23 +523,19 @@ export const usePasswordChanger = () => {
           sendLogs(log);
         }
       } catch (e) {
+        dispatch(
+          updateTaskState({
+            id: obj.id,
+            status: `Stopped`,
+            active: false,
+          })
+        );
         const log = `Unable to change password, token: ${getEncryptedToken(
           tokenArray[index]?.split(":")[2]
         )},error:${e.message}`;
         sendLogs(log);
       }
     }
-    // if (counter === 0) {
-    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    // } else if (counter < maxLoop) {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-    //   );
-    // } else {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Success", active: false })
-    //   );
-    // }
     dispatch(
       updateTaskState({
         id: obj.id,
@@ -590,7 +557,6 @@ export const useTokeChecker = () => {
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    // const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
@@ -628,23 +594,19 @@ export const useTokeChecker = () => {
           sendLogs(log);
         }
       } catch (e) {
+        dispatch(
+          updateTaskState({
+            id: obj.id,
+            status: `Stopped`,
+            active: false,
+          })
+        );
         const log = `Unable to check token, token: ${getEncryptedToken(
           tokenArray[index]?.split(":")[2]
         )},error:${e.message}`;
         sendLogs(log);
       }
     }
-    // if (counter === 0) {
-    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    // } else if (counter < maxLoop) {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-    //   );
-    // } else {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Success", active: false })
-    //   );
-    // }
     dispatch(
       updateTaskState({
         id: obj.id,
@@ -675,19 +637,16 @@ export const useTokenRetriever = () => {
     }
     tempObj["newToken"] = arr.join("\n");
     tempObj["email"] = emailArr.join("\n");
-    tempObj["status"] = "Completed";
     console.log("updated", tempObj);
     dispatch(updatePasswordChangerStatus(tempObj));
     tracker = tracker + 1;
   };
-
   const apiCall = async (obj, setting, user, webhookList) => {
+    const tokenArray = getTokenList(obj);
     tempObj = { ...obj };
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
-    const tokenArray = getTokenList(obj);
-    // const maxLoop = tokenArray.length;
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
       await await sleep(obj.delay);
@@ -729,23 +688,19 @@ export const useTokenRetriever = () => {
           sendLogs(log);
         }
       } catch (e) {
+        dispatch(
+          updateTaskState({
+            id: obj.id,
+            status: `Stopped`,
+            active: false,
+          })
+        );
         const log = `Unable to retrieve token, token: ${getEncryptedToken(
           tokenArray[index]?.split(":")[2]
         )},error:${e.message}`;
         sendLogs(log);
       }
     }
-    // if (counter === 0) {
-    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    // } else if (counter < maxLoop) {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-    //   );
-    // } else {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Success", active: false })
-    //   );
-    // }
     dispatch(
       updateTaskState({
         id: obj.id,
@@ -768,13 +723,13 @@ export const useAvatarChanger = () => {
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
-    // const maxLoop = tokenArray.length;
     const avatarAPI = obj.apiInfo;
     if (avatarAPI?.label === "Default API" || avatarAPI?.label === undefined) {
       randomImage = await generateRandomAvatar();
     } else {
       randomImage = await generateRandomAvatar(avatarAPI.value);
     }
+    console.log("image", randomImage);
     for (let index = 0; index < tokenArray.length; index++) {
       await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
@@ -813,23 +768,19 @@ export const useAvatarChanger = () => {
           sendLogs(log);
         }
       } catch (error) {
+        dispatch(
+          updateTaskState({
+            id: obj.id,
+            status: `Stopped`,
+            active: false,
+          })
+        );
         const log = `Unable to change avatar, token: ${getEncryptedToken(
           tokenArray[index]?.split(":")[2]
         )},error:${error.message}`;
         sendLogs(log);
       }
     }
-    // if (counter === 0) {
-    //   dispatch(updateTaskState({ id: obj.id, status: "Error", active: false }));
-    // } else if (counter < maxLoop) {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Completed", active: false })
-    //   );
-    // } else {
-    //   dispatch(
-    //     updateTaskState({ id: obj.id, status: "Success", active: false })
-    //   );
-    // }
     dispatch(
       updateTaskState({
         id: obj.id,

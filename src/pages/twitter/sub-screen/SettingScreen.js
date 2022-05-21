@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import "./styles.css";
 import {
+  fetchThemsState,
   setTwitterChromeUser,
   setTwitterClaimerGroup,
   fetchClaimerGroupList,
   fetchChromeUserListState,
   fetchTwitterClaimerGroupState,
-  fetchThemsState,
 } from "../../../features/counterSlice";
 import {
   addNewApiInList,
   removeApiFromList,
 } from "../../../features/logic/twitter";
+import { useNavigate } from "react-router-dom";
 import { toastWarning } from "../../../toaster";
 import UseAnimations from "react-useanimations";
 import trash2 from "react-useanimations/lib/trash2";
@@ -19,11 +20,11 @@ import back from "../../../assests/images/back.svg";
 import { twiiterApiSchema } from "../../../validation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppInputField, AppSpacer } from "../../../component";
+import { testTwiterAPI } from "../../../helper/electron-bridge";
 import { TwitterPageTopSection } from "../../../pages-component";
+import { defaultChromeUser, RoutePath } from "../../../constant";
 import { validationChecker } from "../../../hooks/validationChecker";
 import { getClaimerValue, makeClaimerSelectOption } from "../../../helper";
-import { useNavigate } from "react-router-dom";
-import { defaultChromeUser, RoutePath } from "../../../constant";
 import LabelWithTooltip from "../../../component/tooltip-label/LabelWithTooltip";
 
 function SettingScreen({
@@ -64,15 +65,25 @@ function SettingScreen({
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const result = validationChecker(twiiterApiSchema, twitterApi);
     if (result) {
-      dispatch(addNewApiInList(twitterApi));
-      setTwitterApi({
-        apiName: "",
-        apiKey: "",
-        apiSecret: "",
-      });
+      try {
+        const response = await testTwiterAPI(
+          twitterApi.apiKey,
+          twitterApi.apiSecret
+        );
+        if (response) {
+          dispatch(addNewApiInList(twitterApi));
+          setTwitterApi({
+            apiName: "",
+            apiKey: "",
+            apiSecret: "",
+          });
+        }
+      } catch (error) {
+        console.log("Error while testing twitter API", error);
+      }
     }
   };
 
@@ -122,9 +133,7 @@ function SettingScreen({
         <div className="twitter-secting-col">
           <div>
             <div className="d-flex">
-              <h3 className={theme.textClass} style={{ marginRight: "" }}>
-                Twitter API
-              </h3>
+              <h3 className={theme.textClass}>Twitter API</h3>
               <LabelWithTooltip toolTopText="Multiple API keys would enable rotation" />
             </div>
             <AppInputField
@@ -235,14 +244,7 @@ function SettingScreen({
               placeholderText={
                 chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
               }
-              // value={
-              //   chromeList.length > 0
-              //     ? chromeList.filter((d) => d["id"] === selectedChrome["id"])
-              //     : ""
-              // }
               isSelect={true}
-              // disabled={chromeList.length > 0}
-              // navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
             />
           </div>
         </div>

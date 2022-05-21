@@ -12,15 +12,16 @@ const TOAST_CONFIGURATION = {
   progress: undefined,
 };
 
-export const toastSuccess = (msg = "🦄 Wow so easy!") => {
+export const toastSuccess = (msg) => {
+  if (!msg) return;
   toast.success(msg, TOAST_CONFIGURATION);
 };
 
-export const toastWarning = (msg = "🦄 Wow so easy!") => {
+export const toastWarning = (msg = "") => {
   toast.warn(msg, { ...TOAST_CONFIGURATION });
 };
 
-export const toastInfo = (msg = "🦄 Wow so easy!") => {
+export const toastInfo = (msg = "") => {
   toast.info(msg, TOAST_CONFIGURATION);
 };
 

@@ -27,8 +27,6 @@ const readArrayOfJson = (array) => ipcRenderer.send("read-array", array);
 const updateNotAvailable = (callback) =>
   ipcRenderer.on("update:not-avail", () => callback());
 
-// const fetchNetworkSpeed = () => ipcRenderer.invoke("get-speed");
-
 // Spoof IPC
 const startSpoofer = (spoof) => ipcRenderer.send("start-spoofer", spoof);
 
@@ -50,7 +48,11 @@ const getTweets = (consumerKey, consumerSecret, userHandler) =>
     consumerSecret,
     userHandler,
   });
-
+const testTwiterAPI = (consumerKey, consumerSecret) =>
+  ipcRenderer.invoke("checkTwitterAPI", {
+    consumerKey,
+    consumerSecret,
+  });
 // PROXY IPC
 const proxyTester = (proxy) => ipcRenderer.send("proxy-tester", proxy);
 
@@ -107,9 +109,6 @@ const stopGiveawayJoiner = (id) => ipcRenderer.send("stop-giveaway-joiner", id);
 const updateGiveawayJoinerStatus = (callback) =>
   ipcRenderer.on("giveaway-joiner-status", (_, res) => callback(res));
 
-// const startGiveawayJoiner = (data) =>
-//   ipcRenderer.send("start-giveaway-joiner", data);
-
 // XP-FARMER
 const startXpFarmer = (value) => {
   ipcRenderer.send("run-xp-server", value);
@@ -117,22 +116,27 @@ const startXpFarmer = (value) => {
 const stopXpFarmer = (value) => {
   ipcRenderer.send("stop-xp-server", value);
 };
+const errorInProxy = (callback) => {
+  ipcRenderer.on("no-proxy", (e_, data) => callback(data));
+};
+
 // FOR SERVER AND CHANNEL ID
 const fetchServer = (value) => {
   ipcRenderer.send("fetch_server", value);
 };
 
 const fetchedServer = (callback) =>
-  ipcRenderer.on("fetched-server", (_, data) => callback(data));
+  ipcRenderer.on("fetched-server", (e, data) => callback(data));
 
 const fetchChannel = (value) => {
   ipcRenderer.send("fetch_channel", value);
 };
 
 const fetchedChannel = (callback) =>
-  ipcRenderer.on("fetched-channel", (_, data) => callback(data));
+  ipcRenderer.once("fetched-channel", (_, data) => callback(data));
 
 module.exports = {
+  errorInProxy,
   updateGiveawayJoinerStatus,
   startGiveawayJoiner,
   stopGiveawayJoiner,
@@ -177,4 +181,5 @@ module.exports = {
   startInviteJoinerMonitor,
   stopInviteJoinerMonitor,
   webhookNotificationListener,
+  testTwiterAPI,
 };

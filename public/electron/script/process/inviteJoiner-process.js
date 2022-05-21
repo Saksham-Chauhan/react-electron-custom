@@ -92,7 +92,7 @@ class InviteJoinerMonitor {
    * @param {Array} proxyArray
    */
   getProxy(proxyArray) {
-    const indIndex = this.randomIntFromInterval(0, proxyArray?.length || 0);
+    const indIndex = this.randomIntFromInterval(0, proxyArray?.length - 1 || 0);
     let proxySplit = proxyArray[indIndex]?.split(":");
     const [host, port, username, password] = proxySplit;
     const proxy = {
@@ -182,7 +182,7 @@ class InviteJoinerMonitor {
       headers: { Authorization: token },
       method: "post",
       data: JSON.stringify({}),
-      // proxy,
+      proxy,
     });
   }
 }

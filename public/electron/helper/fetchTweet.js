@@ -10,8 +10,7 @@ async function fetchTweets(cKey, cSecret, account) {
       bearers.set(cKey, await getbearerToken(cKey, cSecret));
     }
     let bearer = bearers.get(cKey);
-    let res;
-    res = await axios(
+    const res = await axios(
       `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
       {
         mode: "no-cors",
@@ -27,4 +26,27 @@ async function fetchTweets(cKey, cSecret, account) {
   }
 }
 
-module.exports = { fetchTweets };
+async function checkTwitterAPI(cKey, cSecret) {
+  const account = "KodersHQ";
+  try {
+    if (!bearers.has(cKey)) {
+      bearers.set(cKey, await getbearerToken(cKey, cSecret));
+    }
+    let bearer = bearers.get(cKey);
+    const res = await axios(
+      `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
+      {
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${bearer}`,
+        },
+      }
+    );
+    return res.status === 200;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+module.exports = { fetchTweets, checkTwitterAPI };

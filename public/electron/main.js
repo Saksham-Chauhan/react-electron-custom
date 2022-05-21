@@ -2,12 +2,12 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const _ = require("lodash");
 const path = require("path");
 const ping = require("ping");
+const axios = require("axios");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
 const { autoUpdater } = require("electron-updater");
+const xpFarmerManager = require("./script/manager/xp-farmer-manager");
 const currentProcesses = require("current-processes");
-const richPresence = require("discord-rich-presence")("938338403106320434");
-const axios = require("axios");
 const { execFile } = require("child_process");
 // const bytenode = require("bytenode");
 
@@ -69,7 +69,7 @@ const { execFile } = require("child_process");
 // })();
 
 const auth = require("./auth.js");
-const { fetchTweets } = require("./helper/fetchTweet.js");
+const { fetchTweets, checkTwitterAPI } = require("./helper/fetchTweet.js");
 const spooferManager = require("./script/manager/spoof-manager.js");
 const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.js");
 const linkOpernerManager = require("./script/manager/linkOpener-manager.js");
@@ -79,6 +79,7 @@ const giveawayJoiner = require("./script/manager/giveawayJoiner-manager");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 var str2ab = require("string-to-arraybuffer");
+const richPresence = require("discord-rich-presence")("938338403106320434");
 
 const DEBUGGER_CHANNEL = "debugger";
 const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
@@ -88,18 +89,18 @@ let mainWindow = null;
 let splash = null;
 
 const INTERCEPTOR_TOOLS = [
-  "charles",
-  "wireshark",
-  "fiddler",
-  "aircrack-ng",
-  "cowpatty",
+  "pyrit",
   "reaver",
   "wifite",
-  "wepdecrypt",
-  "cloudcracker",
-  "pyrit",
+  "charles",
+  "fiddler",
   "fern-pro",
+  "cowpatty",
+  "wireshark",
   "airgeddon",
+  "wepdecrypt",
+  "aircrack-ng",
+  "cloudcracker",
 ];
 
 // AUTH WINDOW CREATION
@@ -121,22 +122,25 @@ function createAuthWindow() {
     session: { webRequest },
   } = win.webContents;
   const filter = {
-    urls: [auth.redirectUrl],
+    urls: [auth.redirect_uri],
   };
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     try {
       await auth.loadTokens(url);
-    } catch (e) {
-      mainWindow.reload();
-    }
-    try {
       await auth.login();
       if (!mainWindow) return;
       mainWindow.reload();
       return destroyAuthWin();
     } catch (error) {
       destroyAuthWin();
-      console.log(error);
+      const options = {
+        type: "question",
+        defaultId: 2,
+        title: "Login Error",
+        message: "Login Failed",
+        detail: "You are not allowed to login",
+      };
+      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
     }
   });
   win.on("authenticated", () => {
@@ -475,6 +479,11 @@ ipcMain.handle(
     return fetchTweets(consumerKey, consumerSecret, userHandler);
   }
 );
+
+ipcMain.handle("checkTwitterAPI", (e, { consumerKey, consumerSecret }) => {
+  return checkTwitterAPI(consumerKey, consumerSecret);
+});
+
 ipcMain.handle("imageText", async (event, url) => {
   const {
     data: { text },
@@ -518,9 +527,9 @@ const proxyTester = async (proxy) => {
 
 ipcMain.on("proxy-tester", async (event, data) => {
   const { proxy } = data;
-  const proxyArr = proxy.split(":");
+  let proxyArr = proxy.split(":");
   if (proxyArr.length === 4 || proxyArr.length === 2) {
-    const proxyWithPort = proxyArr[0];
+    let proxyWithPort = proxyArr[0];
     const response = await proxyTester(proxyWithPort);
     event.sender.send("proxy-test-result", {
       ...data,
@@ -616,37 +625,19 @@ ipcMain.on("stop-giveaway-joiner", (_, id) => {
   giveawayJoiner.stopMonitor(id);
 });
 
-//RUN LOCAL SERVER
-
-let pid = null;
+// XP FARMER IPC
 
 ipcMain.on("run-xp-server", (_, data) => {
-  const exePath = isDev
-    ? `${path.join(__dirname, "../windows/xpfarmer.exe")}`
-    : `${path.join(__dirname, "../../build/windows/xpfarmer.exe")}`;
-  try {
-    const process = execFile(exePath, [3001], (error, stdout) => {
-      if (error) {
-        throw error;
-      }
-      console.log(stdout);
-    });
-    pid = process.pid;
-    console.log("vvvvvvvvvv", process.pid);
-  } catch (e) {
-    console.log("this is error", e);
-  }
+  xpFarmerManager.addFarmer(data);
 });
 
 ipcMain.on("stop-xp-server", (_, data) => {
-  try {
-    process.kill(pid);
-  } catch (e) {
-    console.log(e);
-  }
+  xpFarmerManager.stopFarmer(data);
 });
 
+// ACCOUNT CHANGER IPC
 ipcMain.on("fetch_server", async (_, token) => {
+  let counter = 0;
   try {
     const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
       headers: {
@@ -654,10 +645,18 @@ ipcMain.on("fetch_server", async (_, token) => {
         Authorization: token,
       },
     });
-    mainWindow.webContents.send("fetched-server", res.data);
+    if (res.status === 200 || res.status === 204) {
+      mainWindow.webContents.send("fetched-server", res.data);
+    }
   } catch (e) {
-    mainWindow.webContents.send("fetched-server", e);
-    console.log(e);
+    // if (counter === 0) {
+    mainWindow.webContents.send("fetched-server", {
+      error: e.message,
+      badRQ: true,
+    });
+    // }
+    // counter++;
+    console.log(e.message);
   }
 });
 
