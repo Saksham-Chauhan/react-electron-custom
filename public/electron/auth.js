@@ -102,6 +102,7 @@ async function getGuildRoles() {
       },
     });
     // TODO => Check what else are we taking from here?
+    // TODO => OPTIMZE CODE LIKE-> (!!res.data.id)
     if (res.data.id !== null || res.data.id !== undefined) {
       return res.data;
     }

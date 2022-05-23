@@ -19,18 +19,19 @@ class GiveawayJoinerManager {
   }
 
   addMonitor(data) {
-    const serverId = data?.serverid;
-    const authorId = data?.botid;
+    // TODO => Destructure
+    // const {ID, serverID, authorID, token, delay} = data
+    const serverID = data?.serverid;
+    const authorID = data?.botid;
     const token = data?.token;
     const delay = data?.delay;
     this.bots[data.id] = new GiveawayJoinerProcess(
-      serverId,
-      authorId,
+      data.id,
       token,
-      delay,
-      data.id
+      serverID,
+      authorID,
+      delay
     );
-    console.log("helo in");
   }
 
   stopMonitor(id) {

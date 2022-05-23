@@ -19,11 +19,12 @@ class SpooferManager {
   }
 
   addSpoofer(data) {
-    let proxyArr = data.proxyValue.split("\n") || [];
+    const proxyArr = data.proxyValue.split("\n") || [];
     this.bots[data.id] = new spooferProcess(
       data.id,
       data.url,
       proxyArr,
+      // TODO => Remove global main windows
       global.mainWin,
       data.isDisableImage
     );

@@ -15,11 +15,11 @@ const replyList = [
 
 class GiveawayJoinerProcess {
   monitor = new Client();
-  constructor(serverId, authorId, token, delay, id) {
-    this.serverId = serverId;
-    this.authorId = authorId;
-    this.token = token;
+  constructor(id, token, serverID, authorID, delay) {
     this.id = id;
+    this.token = token;
+    this.serverID = serverID;
+    this.authorID = authorID;
     this.delay = delay;
     this.isMonitorStart = true;
     this.init();

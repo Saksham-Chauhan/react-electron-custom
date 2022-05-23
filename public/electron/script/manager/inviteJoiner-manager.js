@@ -19,22 +19,22 @@ class InviteJoinerManager {
   }
 
   addMonitor(data) {
-    console.log(data);
+    // TODO => Destructure
     const channelArray = data?.channelIDs?.split("\n");
     const proxyArray = data?.proxyGroup?.value?.split("\n");
     const tokenArray = data?.claimerGroup?.value?.split("\n");
     const monitorToken = data?.monitorToken?.value?.split(":")[2];
-    // const monitorToken = data?.monitorToken; // changed the format of object after ui changes
     this.bots[data.id] = new inviteJoinerMonitor(
+      data.id,
       channelArray,
       tokenArray,
       proxyArray,
       monitorToken,
-      data?.delay || 1000,
-      data.id
+      data?.delay || 1000
     );
   }
 
+  // TODO => Add stop monitor in helper
   stopMonitor(id) {
     if (id in this.bots) {
       this.bots[id].stop();

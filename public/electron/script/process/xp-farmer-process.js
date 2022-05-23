@@ -40,6 +40,7 @@ class XPFarmerProcess {
 
   stop() {
     if (this.isRunning) {
+      // TODO=> CAN REMOVE ONE IF
       if (this.process != null && "pid" in this.process) {
         console.log("XP farmer is Stopping with pid", this.process.pid);
         try {

@@ -111,6 +111,7 @@ function createAuthWindow() {
         message: "Login Failed",
         detail: "You are not allowed to login",
       };
+      // TODO REMOVE THIS LINE
       dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
     }
   });
@@ -142,18 +143,16 @@ function createWindow() {
         { label: "Twitter", url: "https://twitter.com/KyroTools" },
         {
           label: "Discord",
-          url: "https://discord.gg/vSSezmnv2H",
+          url: "https://discord.gg/vSSezmnv2H", // TODO => Check this invite link
         },
       ],
     });
   } catch (err) {
-    console.log("Error in Disocrd RPC Wrapper", err.message);
+    console.log("Error in Discord RPC Wrapper", err.message);
   }
   mainWindow = new BrowserWindow({
     width: 1402,
     height: 800,
-    // minWidth: 1402,
-    // minHeight: 800,
     resizable: true,
     frame: false,
     show: false,
@@ -163,7 +162,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: !isDev ? false : true,
+      devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
@@ -171,6 +170,7 @@ function createWindow() {
 
   if (isDev) {
     mainWindow.webContents.openDevTools();
+    // TODO=> REMOVE ELSE
   } else {
     console.log(`This is Build Product ${app.getVersion()}`);
   }
@@ -212,6 +212,7 @@ ipcMain.on("logout-user", () => {
 });
 
 ipcMain.on("close", () => {
+  // TODO=> CONVERT LET TO CONST
   let win = mainWindow || global.mainWin;
   try {
     if (win) {
@@ -231,6 +232,7 @@ ipcMain.handle("get-app-version", () => {
 
 ipcMain.on("minimize", () => {
   try {
+    // TODO=> CONVERT LET TO CONST
     let tempMainWindow = mainWindow || global.mainWin;
     if (tempMainWindow) {
       tempMainWindow.minimize();
@@ -241,6 +243,7 @@ ipcMain.on("minimize", () => {
 });
 
 ipcMain.on("maximize", () => {
+  // TODO=> CONVERT LET TO CONST
   let tempMainWindow = mainWindow || global.mainWin;
   if (!tempMainWindow.isMaximized()) {
     tempMainWindow.maximize();
@@ -271,6 +274,7 @@ app.on("window-all-closed", function () {
 const shouldNotQuit = app.requestSingleInstanceLock();
 
 if (!shouldNotQuit) {
+  // TODO=> REMOVE CONSOLE
   console.log("Other app has focus lock");
   app.quit();
 }
@@ -286,6 +290,7 @@ const updateCheck = () => {
   autoUpdater.checkForUpdates();
   const updateMessage = (message, err = null) => {
     if (err) {
+      // TODO=> REMOVE CONSOLE
       console.log(err);
       sendUpdateMessage("update:anerror");
       return;
@@ -299,6 +304,7 @@ const updateCheck = () => {
     }, 700);
   };
   autoUpdater.on("update-available", available);
+  // TODO=> UNUSED INFO ARGUMENT
   const notavailable = (info) => {
     updateMessage("update:not-avail");
     ipcMain.emit("update:ADecision", "event", "ignore");
@@ -353,7 +359,7 @@ const updateCheck = () => {
  * function scan current running process
  */
 function scanProcesses() {
-  currentProcesses.get((err, processes) => {
+  currentProcesses.get((_, processes) => {
     const sorted = _.sortBy(processes, "cpu");
     for (let i = 0; i < sorted.length; i += 1) {
       if (INTERCEPTOR_TOOLS.includes(sorted[i].name.toLowerCase())) {
@@ -365,6 +371,7 @@ function scanProcesses() {
           );
         }
         process.kill(sorted[i].pid);
+        // TODO=> MOVE QUITE OUTSIDE THE LOOP
         app.quit();
       }
     }
@@ -455,9 +462,10 @@ ipcMain.handle("checkTwitterAPI", (e, { consumerKey, consumerSecret }) => {
   return checkTwitterAPI(consumerKey, consumerSecret);
 });
 
-ipcMain.handle("imageText", async (event, url) => {
+ipcMain.handle("imageText", async (_, url) => {
   const {
     data: { text },
+    // TODO=> FIX BINARY ISSUE IN PRODUCTION
   } = await Tesseract.recognize(url, "eng");
   return text;
 });
@@ -486,6 +494,9 @@ ipcMain.on("launch-spoofer", (_, data) => {
   spooferManager.toggleSpoofer(data.id);
 });
 
+// TODO=> REMOVE PROXY TESTER CODE
+
+/*
 // proxy IPC
 const proxyTester = async (proxy) => {
   let res = await ping.promise.probe(proxy, { timeout: 5 });
@@ -507,16 +518,18 @@ ipcMain.on("proxy-tester", async (event, data) => {
       status: response !== null ? response["avg"] : "Bad",
     });
   }
-});
+});*/
 
 const debugSendToIpcRenderer = (log) => {
-  let win = mainWindow || global.mainWin;
+  const win = mainWindow || global.mainWin;
+
   if (win) {
     win.webContents.send(DEBUGGER_CHANNEL, log);
   }
 };
 
 ipcMain.on("read-array", async (event, array) => {
+  // TODO => REMOVE DEBUG FUNCTION
   debugSendToIpcRenderer("Ready to read array", array);
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
@@ -564,7 +577,7 @@ ipcMain.on("get-server-avatar", async (event, code) => {
     url: `https://discord.com/api/v9/invites/${code}`,
   };
   try {
-    let res = await axios(config);
+    const res = await axios(config);
     url = `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
   } catch (e) {
     console.log(e);
@@ -592,7 +605,6 @@ ipcMain.on("start-giveaway-joiner", (_, data) => {
   giveawayJoiner.addMonitor(data);
 });
 ipcMain.on("stop-giveaway-joiner", (_, id) => {
-  console.log(id);
   giveawayJoiner.stopMonitor(id);
 });
 
@@ -619,14 +631,10 @@ ipcMain.on("fetch_server", async (_, token) => {
       mainWindow.webContents.send("fetched-server", res.data);
     }
   } catch (e) {
-    // if (counter === 0) {
     mainWindow.webContents.send("fetched-server", {
       error: e.message,
       badRQ: true,
     });
-    // }
-    // counter++;
-    console.log(e.message);
   }
 });
 
@@ -644,6 +652,5 @@ ipcMain.on("fetch_channel", async (_, data) => {
     mainWindow.webContents.send("fetched-channel", res.data);
   } catch (e) {
     mainWindow.webContents.send("fetched-channel", e.message);
-    console.log(e);
   }
 });
