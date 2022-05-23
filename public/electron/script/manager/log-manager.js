@@ -3,16 +3,16 @@ const path = require("path");
 const fs = require("fs");
 const { download } = require("electron-dl");
 
-const FILE_NAME_PREFIX = "kyro_tool";
+const logFile = "kyro.log";
 
 class LogManager {
+  // TODO => Remove non repeated states
   constructor() {
     this.WAIT_INTERVAL = 20000;
     this.logString = [];
     this.folderPath = path.join(app.getPath("userData"), "/Logs");
     this.maxFileSize = 1;
     this.currentLogFile = null;
-    this.logFile = `${FILE_NAME_PREFIX}.log`;
   }
 
   saveLogs() {
@@ -26,11 +26,13 @@ class LogManager {
   }
 
   checkFileSize() {
-    const filePath = `${this.folderPath}/${this.logFile}`;
+    const filePath = `${this.folderPath}/${logFile}`;
     if (fs.existsSync(filePath)) {
       const stats = fs.statSync(filePath);
       const fileSizeInBytes = stats.size;
+      // TODO => Check in bytes only
       const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      // TODO => Return with condition
       return fileSizeInMB;
     }
   }
@@ -38,7 +40,8 @@ class LogManager {
     if (!fs.existsSync(this.folderPath)) {
       fs.mkdirSync(this.folderPath);
     }
-    const newLogFile = this.logFile;
+    // TODO => Improvise this code
+    const newLogFile = logFile;
     const logFiles = fs.readdirSync(this.folderPath);
     if (logFiles.length > 0) {
       this.lastLogFile = logFiles[logFiles.length - 1];
@@ -69,11 +72,9 @@ class LogManager {
           const win = global.mainWin;
           if (win) {
             const options = {
-              buttons: ["Yes", "No"],
-              defaultId: 0,
-              title: "Kyro",
+              buttons: ["Download", "Cancel"],
+              title: "Kyro Tools Log File Downloader",
               message: `Do you want to download ${this.currentLogFile}?`,
-              detail: "Log report",
             };
             const dialogResult = await dialog.showMessageBox(win, options);
             if (dialogResult.response === 0) {
@@ -93,6 +94,7 @@ class LogManager {
   startLogSession() {
     setInterval(() => {
       this.saveLogs();
+      // Remove redundant states
     }, this.WAIT_INTERVAL);
   }
 }

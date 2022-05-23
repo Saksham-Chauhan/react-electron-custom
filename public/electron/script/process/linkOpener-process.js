@@ -11,11 +11,13 @@ class LinkOpenerMonitor {
    * @param {String} monitorToken monitor with selected disoord token
    * @param {String} id unique ID for each monitor
    */
+  // TODO => argument passed should be in priority
+
   constructor(channelArray, keywordArray, chromeUser, monitorToken, id) {
+    this.id = id;
+    this.token = monitorToken;
     this.channelList = channelArray || [];
     this.keywordList = keywordArray || [];
-    this.token = monitorToken;
-    this.id = id;
     this.chromeProfile = chromeUser;
     this.isMonitorStart = true;
     this.init();
@@ -26,16 +28,12 @@ class LinkOpenerMonitor {
       this.sensMonitorStatus("Monitoring...", true);
     });
     this.monitor.on("message", async (message) => {
-      let msgContent = message.content;
-      let channelID = message.channel.id;
-      await this.scanMessage(channelID, msgContent);
+      await this.scanMessage(message.channel.id, message.content);
     });
-    if (/^[0-9A-Za-z_.-]+$/.test(this.token)) {
-      this.isMonitorStart = true;
-      this.monitor.login(this.token).catch((e) => {
-        this.sensMonitorStatus("Invalid token", false);
-      });
-    } else this.sensMonitorStatus("Invalid token", false);
+    this.isMonitorStart = true;
+    this.monitor.login(this.token).catch((e) => {
+      this.sensMonitorStatus("Invalid token", false);
+    });
   }
 
   /**
@@ -50,7 +48,7 @@ class LinkOpenerMonitor {
           let flag = this.containsKeyword(this.keywordList, msgContent);
           if (this.keywordList.length === 0 || flag) {
             if (this.chromeProfile) {
-              let log = `${msgContent} open with ${this.chromeProfile.label} chrome profile`;
+              const log = `${msgContent} open with ${this.chromeProfile.label} chrome profile`;
               this.sendWebhook(log);
               ipcMain.emit("add-log", log);
               try {
@@ -63,10 +61,11 @@ class LinkOpenerMonitor {
                   },
                 });
               } catch (e) {
+                // TODO => Send to logging?
                 console.log(e);
               }
             } else {
-              let log = `${msgContent} open with Default chrome profile`;
+              const log = `${msgContent} open with Default chrome profile`;
               this.sendWebhook(log);
               ipcMain.emit("add-log", log);
               await open(msgContent, {
@@ -99,13 +98,10 @@ class LinkOpenerMonitor {
    * @param {String} message
    */
   containsKeyword(keywordsLO, message) {
-    let flag = false;
     for (let i = 0; i < keywordsLO.length; i++)
-      if (message.includes(keywordsLO[i])) {
-        flag = true;
-        break;
-      }
-    return flag;
+      if (message.includes(keywordsLO[i])) 
+        return true;
+    return false;
   }
 
   /**
@@ -122,6 +118,7 @@ class LinkOpenerMonitor {
    * @param {String} status
    * @param {Boolean} active
    */
+  // TODO => Fix this typo
   sensMonitorStatus(status, active) {
     const win = global.mainWin;
     if (win) {
@@ -136,6 +133,7 @@ class LinkOpenerMonitor {
   sendWebhook(status) {
     const win = global.mainWin;
     if (win) {
+      // TODO => Not use bridge?
       win.webContents.send("webhook-status", { status, type: "LO" });
     }
   }

@@ -19,6 +19,7 @@ class LinkOpenerManager {
   }
 
   addMonitor(data) {
+    // TOOD => Destructure
     const channelArray = data?.channelIDs?.split("\n");
     const keywordArray = data?.keywords?.label?.split("\n");
     const chromeUser = data?.chromeUser;

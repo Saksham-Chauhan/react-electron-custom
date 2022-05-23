@@ -7,9 +7,9 @@ class InviteJoinerMonitor {
   monitor = new Client();
   /**
    * @param {Array} channelArray channel that want to monitor
-   * @param {String} monitorToken monitor with selected disoord token
+   * @param {String} monitorToken monitor with selected discord token
    * @param {Array} tokenArray token group that has to join
-   * @param {Array} proxyArray  use different IP to avoid account banned
+   * @param {Array} proxyArray use different IP to avoid account banned
    * @param {String} id unique ID for each monitor
    * @param {Number} delay
    */
@@ -29,16 +29,12 @@ class InviteJoinerMonitor {
       this.sendMonitorStatus("Monitoring...", true);
     });
     this.monitor.on("message", async (message) => {
-      let msgContent = message.content;
-      let channelID = message.channel.id;
-      await this.scanMessage(channelID, msgContent);
+      await this.scanMessage(message.channel.id, message.content);
     });
-    if (/^[0-9A-Za-z_.-]+$/.test(this.token)) {
-      this.isMonitorStart = true;
-      this.monitor.login(this.token).catch((e) => {
-        this.sendMonitorStatus("Invalid token", false);
-      });
-    } else this.sendMonitorStatus("Invalid token", false);
+    this.isMonitorStart = true;
+    this.monitor.login(this.token).catch((e) => {
+      this.sendMonitorStatus("Invalid token", false);
+    });
   }
 
   /**
@@ -49,8 +45,8 @@ class InviteJoinerMonitor {
   async scanMessage(channelID, msgContent) {
     if (this.isMonitorStart) {
       if (this.channelList.includes(channelID)) {
-        let isDiscordInvite = this.checkDiscordInvite(msgContent);
-        let inviteCode = this.getInviteCode(msgContent);
+        const isDiscordInvite = this.checkDiscordInvite(msgContent);
+        const inviteCode = this.getInviteCode(msgContent);
         if (isDiscordInvite) {
           for (let i = 0; i < this.tokenList.length; i++) {
             const token = this.tokenList[i].split(":")[2];
@@ -61,15 +57,15 @@ class InviteJoinerMonitor {
                 token,
                 proxy
               );
+              // FUTURE SCOPE => Check if already joined
               if (info.status === 200) {
-                let log = `Joined ${info.data.guild.name} server `;
+                const log = `Joined ${info.data.guild.name} server `;
                 this.sendWebhook(log);
                 ipcMain.emit("add-log", log);
                 break;
               }
             } catch (error) {
-              let log = `Something went wrong ${error.message} while joining server  `;
-              ipcMain.emit("add-log", log);
+              ipcMain.emit("add-log", `Something went wrong while joining server. Error: ${error.message}`);
             }
             await this.sleep();
           }
@@ -93,8 +89,7 @@ class InviteJoinerMonitor {
    */
   getProxy(proxyArray) {
     const indIndex = this.randomIntFromInterval(0, proxyArray?.length - 1 || 0);
-    let proxySplit = proxyArray[indIndex]?.split(":");
-    const [host, port, username, password] = proxySplit;
+    const [host, port, username, password] = proxyArray[indIndex]?.split(":");
     const proxy = {
       host: host,
       port: port,
@@ -110,7 +105,8 @@ class InviteJoinerMonitor {
    * helper function check message is valid invite link
    */
   checkDiscordInvite(url) {
-    let inviteCheck = url.match(
+    // TODO => Check this regex and redundancy of this function
+    const inviteCheck = url.match(
       /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discord\.com|discordapp\.com\/invite)\/.+[a-z|A-Z|0-9]/g
     );
     return inviteCheck ? true : false;
@@ -120,7 +116,7 @@ class InviteJoinerMonitor {
    * helper function extract invite code from invite link
    */
   getInviteCode(url) {
-    let invite = url.match(
+    const invite = url.match(
       /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discord\.com|discordapp\.com\/invite)\/.+[a-z|A-Z|0-9]/g
     );
     if (invite) {
@@ -155,6 +151,7 @@ class InviteJoinerMonitor {
   sendMonitorStatus(status, active) {
     const win = global.mainWin;
     if (win) {
+      // TODO => lo-status to proper name convention
       win.webContents.send("lo-status", { id: this.id, status, active });
     }
   }
@@ -166,6 +163,7 @@ class InviteJoinerMonitor {
   sendWebhook(status) {
     const win = global.mainWin;
     if (win) {
+      // TODO => Should not use bridge for the same
       win.webContents.send("webhook-status", { status, type: "IJ" });
     }
   }
@@ -178,6 +176,7 @@ class InviteJoinerMonitor {
    */
   async discordServerInviteAPI(inviteCode, token, proxy) {
     return await axios({
+      // TODO => Change BASE URL to without slash in the end
       url: `${BASE_URL}invites/${inviteCode}`,
       headers: { Authorization: token },
       method: "post",

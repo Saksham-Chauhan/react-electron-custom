@@ -79,11 +79,6 @@ const bytenode = require("bytenode");
       createLoader: true,
       loaderFilename: "",
     });
-    // bytenode.runBytecodeFile("./script/manager/spoof-manager.jsc");
-    // bytenode.runBytecodeFile("./script/manager/inviteJoiner-manager.jsc");
-    // bytenode.runBytecodeFile("/script/manager/linkOpener-manager.jsc");
-    // bytenode.runBytecodeFile("/script/manager/giveawayJoiner-manager.jsc");
-    // bytenode.runBytecodeFile("/script/manager/xp-farmer-manager.jsc");
   } catch (e) {
     console.log(e);
   }
@@ -100,7 +95,7 @@ const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
 
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
-var str2ab = require("string-to-arraybuffer");
+const str2ab = require("string-to-arraybuffer");
 const richPresence = require("discord-rich-presence")("938338403106320434");
 
 const DEBUGGER_CHANNEL = "debugger";
@@ -193,18 +188,16 @@ function createWindow() {
         { label: "Twitter", url: "https://twitter.com/KyroTools" },
         {
           label: "Discord",
-          url: "https://discord.gg/vSSezmnv2H",
+          url: "https://discord.gg/vSSezmnv2H", // TODO => Check this invite link
         },
       ],
     });
   } catch (err) {
-    console.log("Error in Disocrd RPC Wrapper", err.message);
+    console.log("Error in Discord RPC Wrapper", err.message);
   }
   mainWindow = new BrowserWindow({
     width: 1402,
     height: 800,
-    // minWidth: 1402,
-    // minHeight: 800,
     resizable: true,
     frame: false,
     show: false,
@@ -214,7 +207,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: !isDev ? false : true,
+      devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",

@@ -44,6 +44,7 @@ class SpooferInstance {
 
   clearCookie() {
     if (this.isLaunched) {
+      // TODO => Logging in log file
       console.log(this.win.getTitle());
       console.log(this.win.webContents.session);
       this.win.reload();
@@ -52,6 +53,7 @@ class SpooferInstance {
 
   getProxyData(proxy) {
     if (proxy) {
+      // TODO => Destructure
       const splitProxy = proxy.split(":");
       if (splitProxy.length > 2) {
         return {
@@ -71,9 +73,9 @@ class SpooferInstance {
 
   getProxyHostPort(proxy) {
     if (proxy) {
-      const splitProxy = proxy.split(":");
-      const final = splitProxy[0] + ":" + splitProxy[1];
-      return final;
+      // TODO => Fix me abhishek
+      const [ip, port] = proxy.split(":");
+      return (ip + ":" + port)
     }
   }
 
@@ -99,7 +101,7 @@ class SpooferInstance {
       this.deleteBrowser();
       this.sendStatus("Stopped");
       this.win = null;
-      console.log("Exceed the number of retry....");
+      console.log("Exceed the number of retry.");
     }
   }
 
@@ -112,19 +114,19 @@ class SpooferInstance {
       resizable: true,
       fullscreenable: false,
       title: this.displayTitle(),
-      icon: path.resolve(__dirname, "img", "icon-win.ico"),
       show: isShow,
       parent: this.mainWin,
       webPreferences: {
         nodeIntegration: true,
         webSecurity: false,
         session,
+        // TODO => Check its working
         partition: `persist:task_id_${this.id}`,
         images: !this.isImage,
       },
     });
 
-    // # load using proxy or not
+    // load using proxy or not
     if (this.proxy) {
       this.win.webContents.session.setProxy(
         {
@@ -156,14 +158,6 @@ class SpooferInstance {
     }
     this.win.setMenu(null);
 
-    // # Fixed title not showing
-    this.win.on("page-title-updated", (evt, title) => {
-      evt.preventDefault();
-      // # update title when title update
-
-      // # if title change, notify user
-    });
-
     this.win.on("closed", () => {
       this.sendStatus("Stopped");
       this.win = null;
@@ -186,7 +180,7 @@ class SpooferInstance {
     }
   }
 
-  // # set title
+  // Set Title
   displayTitle() {
     return `${
       this.proxyHostPort == null ? "Local IP" : this.proxyHostPort
@@ -204,7 +198,7 @@ class SpooferInstance {
     if (this.mainWin) {
       try {
         this.mainWin.webContents.send("spoofer-toaster", {
-          status: msg,
+          status:msg,
           id: this.id,
         });
       } catch (error) {

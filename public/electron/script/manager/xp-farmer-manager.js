@@ -1,6 +1,7 @@
 const bytenode = require("bytenode");
 const path = require("path");
 
+// TODO => Look into bytenode
 (async () => {
   await bytenode.compileFile({
     filename: `${path.join(__dirname, "../process/xp-farmer-process.js")}`,
@@ -19,8 +20,8 @@ class XPFarmerManager {
   }
 
   addFarmer(data) {
+    // TODO => Make helper function for parsing proxy
     const proxy = this.parseProxyGroup(data.proxyGroup);
-    console.log("ppp", proxy, data.proxyGroup);
     if (proxy) {
       this.bots[data.id] = new xpfarmerProcess(
         data.monitorToken,

@@ -64,7 +64,7 @@ export const handleFetchWallet = async (
   dispatchResponse,
   refresh = false
 ) => {
-  let obj = { ...data };
+  const obj = { ...data };
   const formData = getWalletFormData(data, url);
   try {
     const res = await getWalletData(formData);
