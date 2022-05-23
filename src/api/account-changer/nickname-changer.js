@@ -7,7 +7,7 @@ async function changeNickname(token, guildId, name, proxy) {
       nick: name,
     });
 
-    const res = await axios.patch(
+    return await axios.patch(
       `${BASE_URL}/guilds/${guildId}/members/@me`,
       json,
       {
@@ -18,7 +18,6 @@ async function changeNickname(token, guildId, name, proxy) {
         proxy: proxy,
       }
     );
-    return res;
   } catch (error) {
     return error;
   }

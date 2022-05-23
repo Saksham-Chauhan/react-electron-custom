@@ -2,13 +2,13 @@ const bytenode = require("bytenode");
 const path = require("path");
 
 (async () => {
-  await bytenode.compileFile({
-    filename: `${path.join(__dirname, "../process/spoof-process.js")}`,
-    compileAsModule: true,
-    electron: false,
-    createLoader: true,
-    loaderFilename: "",
-  });
+  try {
+    await bytenode.runBytecodeFile(
+      `${path.join(__dirname, "../process/spoof-process.jsc")}`
+    );
+  } catch (e) {
+    console.log(e);
+  }
 })();
 
 const spooferProcess = require("../process/spoof-process.jsc");

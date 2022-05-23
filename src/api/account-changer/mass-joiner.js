@@ -2,8 +2,7 @@ import { discordServerInviteAPI } from "../index";
 
 async function massInviteJoiner(inviteCode, token, proxy) {
   try {
-    const response = await discordServerInviteAPI(inviteCode, token, proxy);
-    return response;
+    return await discordServerInviteAPI(inviteCode, token, proxy);
   } catch (error) {
     return error;
   }

@@ -7,8 +7,7 @@ async function xpFarmer(proxy, channelID, token) {
     proxy: proxy,
   });
   try {
-    const res = await axios.post(`http://127.0.0.1:3001/get-response`, json);
-    return res;
+    return await axios.post(`http://127.0.0.1:3001/get-response`, json);
   } catch (error) {
     return error;
   }

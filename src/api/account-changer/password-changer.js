@@ -8,14 +8,13 @@ async function changePassword(token, currentPassword, newPassword, proxy) {
       new_password: newPassword,
     });
 
-    const res = await axios.patch(`${BASE_URL}/users/@me`, json, {
+    return await axios.patch(`${BASE_URL}/users/@me`, json, {
       headers: {
         "Content-Type": "application/json",
         Authorization: token,
       },
       proxy: proxy,
     });
-    return res;
   } catch (error) {
     return error;
   }

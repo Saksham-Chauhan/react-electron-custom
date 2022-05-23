@@ -3,14 +3,13 @@ import { BASE_URL } from "../index";
 
 async function checkToken(token, proxy) {
   try {
-    const res = await axios.get(`${BASE_URL}/users/@me`, {
+    return await axios.get(`${BASE_URL}/users/@me`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: token,
       },
       proxy: proxy,
     });
-    return res;
   } catch (error) {
     return error;
   }

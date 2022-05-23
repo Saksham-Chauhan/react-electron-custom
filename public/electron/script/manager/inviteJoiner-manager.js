@@ -2,13 +2,13 @@ const bytenode = require("bytenode");
 const path = require("path");
 
 (async () => {
-  await bytenode.compileFile({
-    filename: `${path.join(__dirname, "../process/inviteJoiner-process.js")}`,
-    compileAsModule: true,
-    electron: false,
-    createLoader: true,
-    loaderFilename: "",
-  });
+  try {
+    await bytenode.runBytecodeFile(
+      `${path.join(__dirname, "../process/inviteJoiner-process.jsc")}`
+    );
+  } catch (e) {
+    console.log(e);
+  }
 })();
 
 const inviteJoinerMonitor = require("../process/inviteJoiner-process.jsc");

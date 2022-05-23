@@ -2,13 +2,13 @@ const bytenode = require("bytenode");
 const path = require("path");
 
 (async () => {
-  await bytenode.compileFile({
-    filename: `${path.join(__dirname, "../process/giveawayJoiner-process.js")}`,
-    compileAsModule: true,
-    electron: false,
-    createLoader: true,
-    loaderFilename: "",
-  });
+  try {
+    await bytenode.runBytecodeFile(
+      `${path.join(__dirname, "../process/giveawayJoiner-process.jsc")}`
+    );
+  } catch (e) {
+    console.log(e);
+  }
 })();
 
 const GiveawayJoinerProcess = require("../process/giveawayJoiner-process.jsc");

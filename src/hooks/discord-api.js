@@ -22,6 +22,9 @@ const tokenMsg = "Invalid format, Token not found in Discord Accounts";
 const passMsg = "Invalid format, Password not found";
 const emailMsg = "Invalid format, Email not found";
 const getTokenList = (obj) => obj.claimerGroup["value"]?.split("\n");
+const ERROR_CODE = [400, 401, 404];
+
+// TODO:=> need to check active in dispatch don't set undefined in store
 
 export const useMassInviteJoiner = () => {
   const dispatch = useDispatch();
@@ -32,11 +35,18 @@ export const useMassInviteJoiner = () => {
     const inviteCodeList = obj.inviteCodes?.split("\n");
     const tokenArray = getTokenList(obj);
     for (let index = 0; index < tokenArray.length; index++) {
-      await sleep(obj.delay);
       for (let i = 0; i < inviteCodeList.length; i++) {
         const proxy = getProxy(proxyGroup["value"].split("\n"));
-        let code = inviteCodeList[i];
+        const code = inviteCodeList[i];
+        if (!code) {
+          toastWarning("Invalid format, Invit code not found");
+          continue;
+        } else if (!tokenArray[index]?.split(":")[2]) {
+          toastWarning(tokenMsg);
+          continue;
+        }
         try {
+          await sleep(obj.delay);
           const response = await directDiscordJoinAPI(
             proxy,
             code,
@@ -48,7 +58,6 @@ export const useMassInviteJoiner = () => {
               updateTaskState({
                 id: obj.id,
                 status: `${counter + 1}/${tokenArray.length}  Joined`,
-                active: true,
               })
             );
             counter = counter + 1;
@@ -56,18 +65,16 @@ export const useMassInviteJoiner = () => {
               tokenArray[index]?.split(":")[2]
             )}`;
             sendLogs(log);
-          } else {
-            if ("captcha_key" in response?.response?.data)
+          } else if (ERROR_CODE.includes(response.status)) {
+            if ("captcha_key" in response?.response?.data) {
               toastWarning("Captcha key error");
-            else if (!code)
-              toastWarning("Invalid format, Invit code not found");
-            else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
-            else toastWarning(response.message);
+            } else {
+              toastWarning(response.message);
+            }
             dispatch(
               updateTaskState({
                 id: obj.id,
                 status: `${counter}/${tokenArray.length} Joined`,
-                active: true,
               })
             );
             const log = `Unable to join server with token: ${getEncryptedToken(
@@ -118,10 +125,10 @@ export const useServerLeaver = () => {
     if (serverIdArray?.length !== undefined) {
       for (let index = 0; index < tokenArray.length; index++) {
         flag = false;
-        await sleep(obj.delay);
         for (let i = 0; i < serverIdArray.length; i++) {
           try {
             const proxy = getProxy(proxyGroup["value"].split("\n"));
+            await sleep(obj.delay);
             const response = await serverLeaverAPI(
               tokenArray[index]?.split(":")[2],
               serverIdArray[i],
@@ -208,10 +215,9 @@ export const useUserName = () => {
     }
     const tokenArray = getTokenList(obj);
     for (let index = 0; index < tokenArray.length; index++) {
-      await sleep(obj.delay);
-      await await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
       try {
+        await sleep(obj.delay);
         const response = await usernameChangerAPI(
           tokenArray[index]?.split(":")[2],
           tokenArray[index]?.split(":")[1],
@@ -223,7 +229,6 @@ export const useUserName = () => {
             updateTaskState({
               id: obj.id,
               status: `${counter + 1}/${tokenArray.length} Changed`,
-              active: true,
             })
           );
           counter = counter + 1;
@@ -239,7 +244,6 @@ export const useUserName = () => {
             updateTaskState({
               id: obj.id,
               status: `${counter}/${tokenArray.length} Changed`,
-              active: true,
             })
           );
           const log = `Unable to change username, token: ${getEncryptedToken(
@@ -283,9 +287,9 @@ export const useActivityChanger = () => {
     const tokenArray = getTokenList(obj);
     let counter = 0;
     for (let index = 0; index < tokenArray.length; index++) {
-      await sleep(obj.delay);
       try {
         const proxy = getProxy(proxyGroup["value"].split("\n"));
+        await sleep(obj.delay);
         const response = await activityChangerAPI(
           tokenArray[index]?.split(":")[2],
           obj.activityDetail,
@@ -369,13 +373,13 @@ export const useNickNameChanger = () => {
     const serverIdArray = obj.serverIDs?.split("\n");
     if (serverIdArray.length > 0) {
       const tokenArray = getTokenList(obj);
-      let name = obj.nicknameGenerate.split("\n");
+      const name = obj.nicknameGenerate?.split("\n");
       for (let i = 0; i < serverIdArray.length; i++) {
         flag = false;
         for (let index = 0; index < tokenArray.length; index++) {
-          await sleep(obj.delay);
           try {
             const proxy = getProxy(proxyGroup["value"].split("\n"));
+            await sleep(obj.delay);
             const response = await nicknameChangerAPI(
               tokenArray[index]?.split(":")[2],
               serverIdArray[i],
@@ -482,9 +486,9 @@ export const usePasswordChanger = () => {
       });
     }
     for (let index = 0; index < tokenArray.length; index++) {
-      await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
       try {
+        await sleep(obj.delay);
         const response = await passwordChangerAPI(
           tokenArray[index]?.split(":")[2],
           tokenArray[index]?.split(":")[1],
@@ -558,9 +562,9 @@ export const useTokeChecker = () => {
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
     for (let index = 0; index < tokenArray.length; index++) {
-      await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
       try {
+        await sleep(obj.delay);
         const response = await tokenCheckerAPI(
           tokenArray[index]?.split(":")[2],
           proxy
@@ -637,7 +641,6 @@ export const useTokenRetriever = () => {
     }
     tempObj["newToken"] = arr.join("\n");
     tempObj["email"] = emailArr.join("\n");
-    console.log("updated", tempObj);
     dispatch(updatePasswordChangerStatus(tempObj));
     tracker = tracker + 1;
   };
@@ -648,10 +651,9 @@ export const useTokenRetriever = () => {
     let counter = 0;
     const { proxyGroup } = obj;
     for (let index = 0; index < tokenArray.length; index++) {
-      await sleep(obj.delay);
-      await await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
       try {
+        await sleep(obj.delay);
         const response = await tokenRetrieverAPI(
           tokenArray[index]?.split(":")[0],
           tokenArray[index]?.split(":")[1],
@@ -729,16 +731,20 @@ export const useAvatarChanger = () => {
     } else {
       randomImage = await generateRandomAvatar(avatarAPI.value);
     }
-    console.log("image", randomImage);
     for (let index = 0; index < tokenArray.length; index++) {
-      await sleep(obj.delay);
       const proxy = getProxy(proxyGroup["value"].split("\n"));
       try {
+        await sleep(obj.delay);
         const response = await avatarChangerAPI(
           tokenArray[index]?.split(":")[2],
           randomImage,
           proxy
         );
+        setTimeout(() => {
+          if (!response) {
+            toastWarning("API response time out");
+          }
+        }, 1000 * 10);
         if (response.status === 200 || response.status === 204) {
           dispatch(
             updateTaskState({
@@ -793,4 +799,12 @@ export const useAvatarChanger = () => {
     });
   };
   return apiCall;
+};
+
+export const useUpdateTaskStatus = () => {
+  const dispatch = useDispatch();
+  const updateStatus = (id, status, activeType) => {
+    dispatch(updateTaskState({ id: id, status: status, active: activeType }));
+  };
+  return updateStatus;
 };
