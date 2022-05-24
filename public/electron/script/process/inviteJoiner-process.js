@@ -1,7 +1,8 @@
 const { Client } = require("discord.js-selfbot");
 const { ipcMain } = require("electron");
 const { default: axios } = require("axios");
-const BASE_URL = "https://discord.com/api/v9/";
+const { getRandomParsedProxy } = require("../../helper");
+const BASE_URL = "https://discord.com/api/v9";
 
 class InviteJoinerMonitor {
   monitor = new Client();
@@ -13,7 +14,7 @@ class InviteJoinerMonitor {
    * @param {String} id unique ID for each monitor
    * @param {Number} delay
    */
-  constructor(channelArray, tokenArray, proxyArray, monitorToken, delay, id) {
+  constructor(id, monitorToken, tokenArray, channelArray, proxyArray, delay) {
     this.id = id;
     this.token = monitorToken;
     this.tokenList = tokenArray;
@@ -45,12 +46,11 @@ class InviteJoinerMonitor {
   async scanMessage(channelID, msgContent) {
     if (this.isMonitorStart) {
       if (this.channelList.includes(channelID)) {
-        const isDiscordInvite = this.checkDiscordInvite(msgContent);
         const inviteCode = this.getInviteCode(msgContent);
-        if (isDiscordInvite) {
+        if (inviteCode) {
           for (let i = 0; i < this.tokenList.length; i++) {
             const token = this.tokenList[i].split(":")[2];
-            const proxy = this.getProxy(this.proxyList);
+            const proxy = getRandomParsedProxy(this.proxyList);
             try {
               const info = await this.discordServerInviteAPI(
                 inviteCode,
@@ -65,51 +65,16 @@ class InviteJoinerMonitor {
                 break;
               }
             } catch (error) {
-              ipcMain.emit("add-log", `Something went wrong while joining server. Error: ${error.message}`);
+              ipcMain.emit(
+                "add-log",
+                `Something went wrong while joining server. Error: ${error.message}`
+              );
             }
             await this.sleep();
           }
         }
       }
     }
-  }
-
-  /**
-   * helper function generate random number between min & max interval
-   * @param {Number} min
-   * @param {Number} max
-   */
-  randomIntFromInterval(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
-  /**
-   * helper function generate random proxy
-   * @param {Array} proxyArray
-   */
-  getProxy(proxyArray) {
-    const indIndex = this.randomIntFromInterval(0, proxyArray?.length - 1 || 0);
-    const [host, port, username, password] = proxyArray[indIndex]?.split(":");
-    const proxy = {
-      host: host,
-      port: port,
-      auth: {
-        username: username,
-        password: password,
-      },
-    };
-    return proxy;
-  }
-
-  /**
-   * helper function check message is valid invite link
-   */
-  checkDiscordInvite(url) {
-    // TODO => Check this regex and redundancy of this function
-    const inviteCheck = url.match(
-      /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discord\.com|discordapp\.com\/invite)\/.+[a-z|A-Z|0-9]/g
-    );
-    return inviteCheck ? true : false;
   }
 
   /**
@@ -151,8 +116,7 @@ class InviteJoinerMonitor {
   sendMonitorStatus(status, active) {
     const win = global.mainWin;
     if (win) {
-      // TODO => lo-status to proper name convention
-      win.webContents.send("lo-status", { id: this.id, status, active });
+      win.webContents.send("update-status", { id: this.id, status, active });
     }
   }
 
@@ -176,10 +140,9 @@ class InviteJoinerMonitor {
    */
   async discordServerInviteAPI(inviteCode, token, proxy) {
     return await axios({
-      // TODO => Change BASE URL to without slash in the end
-      url: `${BASE_URL}invites/${inviteCode}`,
+      url: `${BASE_URL}/invites/${inviteCode}`,
       headers: { Authorization: token },
-      method: "post",
+      method: "POST",
       data: JSON.stringify({}),
       proxy,
     });

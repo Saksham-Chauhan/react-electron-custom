@@ -3,6 +3,16 @@ const path = require("path");
 
 (async () => {
   try {
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "../process/giveawayJoiner-process.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "../process/giveawayJoiner-process.jsc"
+      )}`,
+    });
     await bytenode.runBytecodeFile(
       `${path.join(__dirname, "../process/giveawayJoiner-process.jsc")}`
     );
@@ -19,17 +29,12 @@ class GiveawayJoinerManager {
   }
 
   addMonitor(data) {
-    // TODO => Destructure
-    // const {ID, serverID, authorID, token, delay} = data
-    const serverID = data?.serverid;
-    const authorID = data?.botid;
-    const token = data?.token;
-    const delay = data?.delay;
-    this.bots[data.id] = new GiveawayJoinerProcess(
-      data.id,
+    const { id, serverid, botid, token, delay } = data;
+    this.bots[id] = new GiveawayJoinerProcess(
+      id,
       token,
-      serverID,
-      authorID,
+      serverid,
+      botid,
       delay
     );
   }

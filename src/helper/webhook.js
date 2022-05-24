@@ -9,8 +9,6 @@ const THUMBNAIL = {
   url: "https://cdn.discordapp.com/attachments/540447710239784971/953925375149355008/Kyros_logo.png",
 };
 
-const color = 857138;
-
 async function webhookHandler(webhook, user, title, content) {
   let embed = {
     embeds: [
@@ -18,7 +16,7 @@ async function webhookHandler(webhook, user, title, content) {
         title: TITLE,
         description: title + "\t\t\t\t\t" + content,
         url: KYRO_URL,
-        color: color,
+        color: 857138,
         footer: FOOTER,
         thumbnail: THUMBNAIL,
         author: {
@@ -35,13 +33,13 @@ async function webhookHandler(webhook, user, title, content) {
 export default webhookHandler;
 
 export const webhookTest = async (webhook, userName, avatarProfile) => {
-  const embed = {
+  let embed = {
     embeds: [
       {
         title: "Sample Webhook",
         description: "Sample description",
         url: KYRO_URL,
-        color: color,
+        color: 857138,
         thumbnail: THUMBNAIL,
         author: {
           name: `${userName}`,
@@ -61,13 +59,13 @@ export const inviteJoinerTest = async (
   serverName,
   isUserSetting = false
 ) => {
-  const embed = {
+  let embed = {
     embeds: [
       {
         title: TITLE,
         description: `${serverName} server joined successfully`,
         url: KYRO_URL,
-        color: color,
+        color: 857138,
         thumbnail: THUMBNAIL,
         footer: FOOTER,
         author: {
@@ -88,13 +86,13 @@ export const loggedUserWebhook = async (
   webhook,
   isUserSetting = false
 ) => {
-  const embed = {
+  let embed = {
     embeds: [
       {
         title: TITLE,
         description: title,
         url: KYRO_URL,
-        color: color,
+        color: 857138,
         thumbnail: THUMBNAIL,
         footer: FOOTER,
       },
@@ -113,13 +111,13 @@ export const linkOpenerWebhook = async (
   webhook,
   isUserSetting = false
 ) => {
-  const embed = {
+  let embed = {
     embeds: [
       {
         title: TITLE,
         description: `${link} link opened`,
         url: KYRO_URL,
-        color: color,
+        color: 857138,
         thumbnail: THUMBNAIL,
         author: {
           name: `${userName}`,
@@ -145,13 +143,13 @@ export const taskWebhook = async (
   taskType,
   counter
 ) => {
-  const embed = {
+  let embed = {
     embeds: [
       {
         title: TITLE,
         description: `${taskType} completed successfully!`,
         url: KYRO_URL,
-        color: color,
+        color: 857138,
         thumbnail: THUMBNAIL,
         author: {
           name: `${userName}`,
@@ -186,7 +184,7 @@ export const ethMinterWebhook = async (
   isUserSetting = false,
   message
 ) => {
-  const embed = {
+  let embed = {
     embeds: [
       {
         title: message,
@@ -229,13 +227,13 @@ export const ethMinterWebhook = async (
 };
 
 export const interceptorWebhook = async (title) => {
-  const embed = {
+  let embed = {
     embeds: [
       {
         title: TITLE,
         description: title,
         url: KYRO_URL,
-        color: color,
+        color: 857138,
         thumbnail: THUMBNAIL,
         footer: FOOTER,
       },

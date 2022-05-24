@@ -54,7 +54,6 @@ import {
   downloadingStart,
   updateNotAvailable,
   updateStatusLOmonitor,
-  proxyTestResultListener,
   webhookNotificationListener,
   debuggerChannnel,
   updateGiveawayJoinerStatus,
@@ -74,7 +73,6 @@ import { ToastContainer } from "react-toastify";
 import { EndPointToPage, RoutePath } from "./constant";
 import { useDispatch, useSelector } from "react-redux";
 import { webhookNotifier } from "./features/logic/setting";
-import { proxyStatusUpdater } from "./features/logic/proxy";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { resetTwitterMonitor } from "./features/logic/twitter";
 import { interceptorWebhook, loggedUserWebhook } from "./helper/webhook";
@@ -139,9 +137,7 @@ function App() {
         } else toastWarning("You're not a Beta member");
       }
     });
-    proxyTestResultListener((res) => {
-      dispatch(proxyStatusUpdater(res));
-    });
+
     interceptorFound((res) => {
       interceptorWebhook(`${res} Tool found.`);
     });

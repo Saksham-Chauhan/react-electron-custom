@@ -25,9 +25,7 @@ import { DISCORD_MASS_OPTIONS } from "../../constant";
 
 export const addGroupInClaimerList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
-  let obj = { ...group };
-  obj["id"] = generateId();
-  let combiner = [obj, ...currentList];
+  const combiner = [{ ...group, id: generateId() }, ...currentList];
   dispatch(appendClaimerGroupInList(combiner));
 };
 

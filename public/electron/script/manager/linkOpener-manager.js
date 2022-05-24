@@ -3,6 +3,10 @@ const path = require("path");
 
 (async () => {
   try {
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "../process/linkOpener-process.js")}`,
+      output: `${path.join(__dirname, "../process/linkOpener-process.jsc")}`,
+    });
     await bytenode.runBytecodeFile(
       `${path.join(__dirname, "../process/linkOpener-process.jsc")}`
     );
@@ -19,17 +23,13 @@ class LinkOpenerManager {
   }
 
   addMonitor(data) {
-    // TOOD => Destructure
-    const channelArray = data?.channelIDs?.split("\n");
-    const keywordArray = data?.keywords?.label?.split("\n");
-    const chromeUser = data?.chromeUser;
-    const monitorToken = data?.monitorToken?.value?.split(":")[2];
-    this.bots[data.id] = new linkOpenerProcess(
-      channelArray,
-      keywordArray,
-      chromeUser,
-      monitorToken,
-      data.id
+    const { channelIDs, keywords, chromeUser, monitorToken, id } = data;
+    this.bots[id] = new linkOpenerProcess(
+      id,
+      monitorToken?.value?.split(":")[2],
+      channelIDs?.split("\n"),
+      keywords?.label?.split("\n"),
+      chromeUser
     );
   }
 

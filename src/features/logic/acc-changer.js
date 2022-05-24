@@ -3,16 +3,14 @@ import { appendTaskInTable, fetchTaskTableListState } from "../counterSlice";
 
 export const addDataInTableList = (obj) => (dispatch, getState) => {
   const currentList = fetchTaskTableListState(getState());
-  let tempObj = { ...obj };
+  const tempObj = { ...obj };
   tempObj["id"] = generateId();
-  let combiner = [tempObj, ...currentList];
-  dispatch(appendTaskInTable(combiner));
+  dispatch(appendTaskInTable([tempObj, ...currentList]));
 };
 
 export const deleteDataFromTableList = (deletedRow) => (dispatch, getState) => {
   const currentList = fetchTaskTableListState(getState());
-  let tempOptionList = [...currentList];
-  tempOptionList = [...tempOptionList].filter(
+  const tempOptionList = [...currentList].filter(
     (obj) => obj["id"] !== deletedRow["id"]
   );
   dispatch(appendTaskInTable(tempOptionList));
@@ -24,51 +22,26 @@ export const deleteAllTableRow = () => (dispatch, getState) => {
 
 export const updateStatusOfTableRow = (obj, status) => (dispatch, getState) => {
   const currentList = fetchTaskTableListState(getState());
-  let tempOptionList = [...currentList];
-  tempOptionList = [...tempOptionList].map((row) => {
-    if (row["id"] === obj["id"]) {
-      let data = { ...row };
-      data["status"] = status;
-      return data;
-    }
+  const tempOptionList = [...currentList].map((row) => {
+    if (row["id"] === obj["id"]) return { ...row, status };
     return row;
   });
   dispatch(appendTaskInTable(tempOptionList));
 };
 
 export const updatePasswordChangerStatus = (obj) => (dispatch, getState) => {
-  console.log("asemghn dfvgyujsvgb ykus lllllllllll");
   const currentList = fetchTaskTableListState(getState());
-  let tempOptionList = [...currentList];
-  tempOptionList = [...tempOptionList].map((row) => {
+  const tempOptionList = [...currentList].map((row) => {
     if (row["id"] === obj["id"]) return obj;
     return row;
   });
   dispatch(appendTaskInTable(tempOptionList));
 };
 
-// export const updateTokenRetrieveverStatus = (obj) => (dispatch, getState) => {
-//   const currentSelectedAccChangerType = fetchSelectedAccChangerCard(getState());
-//   const currentOptionList = fetchAccChangerListState(getState());
-//   let tempSelectedObj = { ...currentSelectedAccChangerType };
-//   let tempOptionList = [...currentOptionList];
-//   tempSelectedObj["list"] = [...tempSelectedObj["list"]].map((row) => {
-//     if (row["id"] === obj["id"]) return obj;
-//     return row;
-//   });
-//   let afterUpdate = tempOptionList.map((acc) => {
-//     if (acc["changerType"] === tempSelectedObj["changerType"])
-//       return tempSelectedObj;
-//     return acc;
-//   });
-//   dispatch(setSelctedAccChangerCard(tempSelectedObj));
-//   dispatch(setAccountChangerList(afterUpdate));
-// };
 export const updateTaskState = (data) => (dispatch, getState) => {
   const { id, status, active } = data;
   const currentList = fetchTaskTableListState(getState());
-  let tempOptionList = [...currentList];
-  tempOptionList = [...tempOptionList].map((row) => {
+  const tempOptionList = [...currentList].map((row) => {
     if (row["id"] === id)
       return status ? { ...row, status, active } : { ...row, active };
     return row;
@@ -78,12 +51,8 @@ export const updateTaskState = (data) => (dispatch, getState) => {
 
 export const resetTaskState = () => (dispatch, getState) => {
   const currentList = fetchTaskTableListState(getState());
-  let tempOptionList = [...currentList];
-  tempOptionList = [...tempOptionList].map((row) => {
-    let obj = { ...row };
-    obj["status"] = "Idle";
-    obj["active"] = false;
-    return obj;
+  const tempOptionList = [...currentList].map((row) => {
+    return { ...row, status: "Idle", active: false };
   });
   dispatch(appendTaskInTable(tempOptionList));
 };

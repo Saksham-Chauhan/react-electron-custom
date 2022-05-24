@@ -1,6 +1,7 @@
 const isDev = require("electron-is-dev");
 const { spawn } = require("child_process");
 const path = require("path");
+const { ipcMain } = require("electron");
 
 class XPFarmerProcess {
   constructor(token, channelID, proxy) {
@@ -30,26 +31,35 @@ class XPFarmerProcess {
         this.process.stderr.on("data", (data) => {
           console.log("Error: ", data.toString("utf8"));
         });
-        console.log("Process is Running with Pid", this.process.pid);
+        ipcMain.emit(
+          "add-log",
+          `Process is Running with Pid ${this.process.pid}`
+        );
       } catch (e) {
         this.process = null;
-        console.log("this is error", e);
+        ipcMain.emit(
+          "add-log",
+          `Something went wrong on executing xpFarmer with pid ${this.process.pid} Errro ${e.message}`
+        );
       }
     } else console.log("ALREADY RUNNING!!!!!");
   }
 
   stop() {
-    if (this.isRunning) {
-      // TODO=> CAN REMOVE ONE IF
-      if (this.process != null && "pid" in this.process) {
-        console.log("XP farmer is Stopping with pid", this.process.pid);
-        try {
-          process.kill(this.process.pid);
-        } catch (e) {
-          console.log(e);
-        }
-      } else console.log("something not found!!!");
-    } else console.log("NOT RUNNING!!!");
+    if (this.isRunning && this.process != null && "pid" in this.process) {
+      ipcMain.emit(
+        "add-log",
+        `XP farmer is Stopping with pid, ${this.process.pid}`
+      );
+      try {
+        process.kill(this.process.pid);
+      } catch (e) {
+        ipcMain.emit(
+          "add-log",
+          `Something went wrong during killing process with ${this.process.pid} Error message:${e.message}`
+        );
+      }
+    } else console.log("something not found!!!");
   }
 }
 

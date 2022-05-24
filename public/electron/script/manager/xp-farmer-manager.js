@@ -1,9 +1,13 @@
 const bytenode = require("bytenode");
 const path = require("path");
-
+const { randomInt } = require("../../helper");
 // TODO => Look into bytenode
 (async () => {
   try {
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "../process/xp-farmer-process.js")}`,
+      output: `${path.join(__dirname, "../process/xp-farmer-process.jsc")}`,
+    });
     await bytenode.runBytecodeFile(
       `${path.join(__dirname, "../process/xp-farmer-process.jsc")}`
     );
@@ -20,14 +24,10 @@ class XPFarmerManager {
   }
 
   addFarmer(data) {
-    // TODO => Make helper function for parsing proxy
     const proxy = this.parseProxyGroup(data.proxyGroup);
     if (proxy) {
-      this.bots[data.id] = new xpfarmerProcess(
-        data.monitorToken,
-        data.channelId,
-        proxy
-      );
+      const { monitorToken, channelId, id } = data;
+      this.bots[id] = new xpfarmerProcess(monitorToken, channelId, proxy);
     } else {
       this.sendMessage(data);
     }
@@ -42,14 +42,8 @@ class XPFarmerManager {
 
   parseProxyGroup(proxyGroup) {
     const arr = proxyGroup?.value?.split("\n");
-    if (arr !== undefined) {
-      const random = this.randomInt(0, arr.length - 1);
-      return arr[random];
-    } else return false;
-  }
-
-  randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    if (!!arr) return arr[randomInt(0, arr.length - 1)];
+    else return false;
   }
 
   stopFarmer(data) {

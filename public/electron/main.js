@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const _ = require("lodash");
 const path = require("path");
-const ping = require("ping");
 const axios = require("axios");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
@@ -11,25 +10,84 @@ const bytenode = require("bytenode");
 
 (async () => {
   try {
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
+      output: `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`,
+    });
     bytenode.runBytecodeFile(
-      `${path.join("/script/manager/spoof-manager.jsc")}`
+      `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`
     );
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
+      output: `${path.join(__dirname, "/helper/fetchTweet.jsc")}`,
+    });
     bytenode.runBytecodeFile(
       `${path.join(__dirname, "/helper/fetchTweet.jsc")}`
     );
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "/auth.js")}`,
+      output: `${path.join(__dirname, "/auth.jsc")}`,
+    });
     bytenode.runBytecodeFile(`${path.join(__dirname, "/auth.jsc")}`);
+
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/giveawayJoiner-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/giveawayJoiner-manager.jsc"
+      )}`,
+    });
+
     bytenode.runBytecodeFile(
       `${path.join(__dirname, "/script/manager/giveawayJoiner-manager.jsc")}`
     );
+
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/xp-farmer-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/xp-farmer-manager.jsc"
+      )}`,
+    });
     bytenode.runBytecodeFile(
       `${path.join(__dirname, "/script/manager/xp-farmer-manager.jsc")}`
     );
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
+      output: `${path.join(__dirname, "/script/manager/log-manager.jsc")}`,
+    });
     bytenode.runBytecodeFile(
       `${path.join(__dirname, "/script/manager/log-manager.jsc")}`
     );
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/linkOpener-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/linkOpener-manager.jsc"
+      )}`,
+    });
     bytenode.runBytecodeFile(
       `${path.join(__dirname, "/script/manager/linkOpener-manager.jsc")}`
     );
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/inviteJoiner-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/inviteJoiner-manager.jsc"
+      )}`,
+    });
     bytenode.runBytecodeFile(
       `${path.join(__dirname, "/script/manager/inviteJoiner-manager.jsc")}`
     );
@@ -39,8 +97,8 @@ const bytenode = require("bytenode");
 })();
 
 const auth = require("./auth.jsc");
-const { fetchTweets, checkTwitterAPI } = require("./helper/fetchTweet.jsc");
-const spooferManager = require("./script/manager/spoof-manager.jsc");
+const { fetchTweets } = require("./helper/fetchTweet.jsc");
+const spooferManager = require("./script/manager/spoof-manager");
 const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
 const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
 const logManager = require("./script/manager/log-manager.jsc");
@@ -111,8 +169,7 @@ function createAuthWindow() {
         message: "Login Failed",
         detail: "You are not allowed to login",
       };
-      // TODO REMOVE THIS LINE
-      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+      await dialog.showMessageBox(null, options);
     }
   });
   win.on("authenticated", () => {
@@ -168,12 +225,7 @@ function createWindow() {
     titleBarStyle: "customButtonsOnHover",
   });
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-    // TODO=> REMOVE ELSE
-  } else {
-    console.log(`This is Build Product ${app.getVersion()}`);
-  }
+  if (isDev) mainWindow.webContents.openDevTools();
 
   splash = new BrowserWindow({
     width: 700,
@@ -212,8 +264,7 @@ ipcMain.on("logout-user", () => {
 });
 
 ipcMain.on("close", () => {
-  // TODO=> CONVERT LET TO CONST
-  let win = mainWindow || global.mainWin;
+  const win = mainWindow || global.mainWin;
   try {
     if (win) {
       win.close();
@@ -232,10 +283,9 @@ ipcMain.handle("get-app-version", () => {
 
 ipcMain.on("minimize", () => {
   try {
-    // TODO=> CONVERT LET TO CONST
-    let tempMainWindow = mainWindow || global.mainWin;
-    if (tempMainWindow) {
-      tempMainWindow.minimize();
+    const win = mainWindow || global.mainWin;
+    if (win) {
+      win.minimize();
     }
   } catch (error) {
     console.log("Something went wrong on minimizing app", error);
@@ -243,12 +293,11 @@ ipcMain.on("minimize", () => {
 });
 
 ipcMain.on("maximize", () => {
-  // TODO=> CONVERT LET TO CONST
-  let tempMainWindow = mainWindow || global.mainWin;
-  if (!tempMainWindow.isMaximized()) {
-    tempMainWindow.maximize();
+  const win = mainWindow || global.mainWin;
+  if (!win.isMaximized()) {
+    win.maximize();
   } else {
-    tempMainWindow.unmaximize();
+    win.unmaximize();
   }
 });
 
@@ -274,7 +323,6 @@ app.on("window-all-closed", function () {
 const shouldNotQuit = app.requestSingleInstanceLock();
 
 if (!shouldNotQuit) {
-  // TODO=> REMOVE CONSOLE
   console.log("Other app has focus lock");
   app.quit();
 }
@@ -290,8 +338,6 @@ const updateCheck = () => {
   autoUpdater.checkForUpdates();
   const updateMessage = (message, err = null) => {
     if (err) {
-      // TODO=> REMOVE CONSOLE
-      console.log(err);
       sendUpdateMessage("update:anerror");
       return;
     }
@@ -304,8 +350,8 @@ const updateCheck = () => {
     }, 700);
   };
   autoUpdater.on("update-available", available);
-  // TODO=> UNUSED INFO ARGUMENT
-  const notavailable = (info) => {
+
+  const notavailable = () => {
     updateMessage("update:not-avail");
     ipcMain.emit("update:ADecision", "event", "ignore");
   };
@@ -371,10 +417,9 @@ function scanProcesses() {
           );
         }
         process.kill(sorted[i].pid);
-        // TODO=> MOVE QUITE OUTSIDE THE LOOP
-        app.quit();
       }
     }
+    app.quit();
   });
 }
 
@@ -458,10 +503,6 @@ ipcMain.handle(
   }
 );
 
-ipcMain.handle("checkTwitterAPI", (e, { consumerKey, consumerSecret }) => {
-  return checkTwitterAPI(consumerKey, consumerSecret);
-});
-
 ipcMain.handle("imageText", async (_, url) => {
   const {
     data: { text },
@@ -494,32 +535,6 @@ ipcMain.on("launch-spoofer", (_, data) => {
   spooferManager.toggleSpoofer(data.id);
 });
 
-// TODO=> REMOVE PROXY TESTER CODE
-
-/*
-// proxy IPC
-const proxyTester = async (proxy) => {
-  let res = await ping.promise.probe(proxy, { timeout: 5 });
-  if (res["time"] !== "unknown") {
-    return res;
-  } else {
-    return null;
-  }
-};
-
-ipcMain.on("proxy-tester", async (event, data) => {
-  const { proxy } = data;
-  let proxyArr = proxy.split(":");
-  if (proxyArr.length === 4 || proxyArr.length === 2) {
-    let proxyWithPort = proxyArr[0];
-    const response = await proxyTester(proxyWithPort);
-    event.sender.send("proxy-test-result", {
-      ...data,
-      status: response !== null ? response["avg"] : "Bad",
-    });
-  }
-});*/
-
 const debugSendToIpcRenderer = (log) => {
   const win = mainWindow || global.mainWin;
 
@@ -529,17 +544,11 @@ const debugSendToIpcRenderer = (log) => {
 };
 
 ipcMain.on("read-array", async (event, array) => {
-  // TODO => REMOVE DEBUG FUNCTION
-  debugSendToIpcRenderer("Ready to read array", array);
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
-  debugSendToIpcRenderer(csv);
   const data = await csv.toString();
-  debugSendToIpcRenderer(data);
   const str = str2ab(data);
-  debugSendToIpcRenderer(str);
   const url = `data:text/csv;base64,${new Buffer.from(str).toString("base64")}`;
-  debugSendToIpcRenderer(url);
   await downloadCsvFileDialog(`${fileName}.csv`, url);
 });
 

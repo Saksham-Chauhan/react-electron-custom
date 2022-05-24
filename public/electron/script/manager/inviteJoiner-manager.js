@@ -3,6 +3,10 @@ const path = require("path");
 
 (async () => {
   try {
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "../process/inviteJoiner-process.js")}`,
+      output: `${path.join(__dirname, "../process/inviteJoiner-process.jsc")}`,
+    });
     await bytenode.runBytecodeFile(
       `${path.join(__dirname, "../process/inviteJoiner-process.jsc")}`
     );
@@ -19,22 +23,18 @@ class InviteJoinerManager {
   }
 
   addMonitor(data) {
-    // TODO => Destructure
-    const channelArray = data?.channelIDs?.split("\n");
-    const proxyArray = data?.proxyGroup?.value?.split("\n");
-    const tokenArray = data?.claimerGroup?.value?.split("\n");
-    const monitorToken = data?.monitorToken?.value?.split(":")[2];
-    this.bots[data.id] = new inviteJoinerMonitor(
-      data.id,
-      channelArray,
-      tokenArray,
-      proxyArray,
-      monitorToken,
-      data?.delay || 1000
+    const { channelIDs, proxyGroup, claimerGroup, monitorToken, id, delay } =
+      data;
+    this.bots[id] = new inviteJoinerMonitor(
+      id,
+      monitorToken?.value?.split(":")[2],
+      claimerGroup?.value?.split("\n"),
+      channelIDs?.split("\n"),
+      proxyGroup?.value?.split("\n"),
+      delay || 1000
     );
   }
 
-  // TODO => Add stop monitor in helper
   stopMonitor(id) {
     if (id in this.bots) {
       this.bots[id].stop();

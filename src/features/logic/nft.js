@@ -20,9 +20,10 @@ export const appendNftWalletInList = (wallet) => (dispatch, getState) => {
   dispatch(setNftWalletList([{ ...wallet, id: generateId() }, ...walletList]));
 };
 
+// TODO=> NEED TOD DISCUSS
 export const editNftWalletList = (wallet) => (dispatch, getState) => {
   const walletList = fetchNftWalletListState(getState());
-  let updatedList = walletList.filter((item) => {
+  const updatedList = walletList.filter((item) => {
     if (item.id === wallet.id) return wallet;
     else return item;
   });

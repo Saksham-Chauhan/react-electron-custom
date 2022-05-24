@@ -3,6 +3,10 @@ const path = require("path");
 
 (async () => {
   try {
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "../process/spoof-process.js")}`,
+      output: `${path.join(__dirname, "../process/spoof-process.jsc")}`,
+    });
     await bytenode.runBytecodeFile(
       `${path.join(__dirname, "../process/spoof-process.jsc")}`
     );
@@ -19,14 +23,12 @@ class SpooferManager {
   }
 
   addSpoofer(data) {
-    const proxyArr = data.proxyValue.split("\n") || [];
-    this.bots[data.id] = new spooferProcess(
-      data.id,
-      data.url,
-      proxyArr,
-      // TODO => Remove global main windows
-      global.mainWin,
-      data.isDisableImage
+    const { id, url, isDisableImage, proxyValue } = data;
+    this.bots[id] = new spooferProcess(
+      id,
+      url,
+      proxyValue.split("\n") || [],
+      isDisableImage
     );
   }
 

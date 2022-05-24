@@ -48,11 +48,7 @@ const getTweets = (consumerKey, consumerSecret, userHandler) =>
     consumerSecret,
     userHandler,
   });
-const testTwiterAPI = (consumerKey, consumerSecret) =>
-  ipcRenderer.invoke("checkTwitterAPI", {
-    consumerKey,
-    consumerSecret,
-  });
+
 // PROXY IPC
 const proxyTester = (proxy) => ipcRenderer.send("proxy-tester", proxy);
 
@@ -95,7 +91,7 @@ const stopInviteJoinerMonitor = (id) =>
   ipcRenderer.send("stop-inviteJoiner-monitor", id);
 
 const updateStatusLOmonitor = (callback) =>
-  ipcRenderer.on("lo-status", (_, res) => callback(res));
+  ipcRenderer.on("update-status", (_, res) => callback(res));
 
 const webhookNotificationListener = (callback) =>
   ipcRenderer.on("webhook-status", (_, status) => callback(status));
@@ -164,7 +160,6 @@ module.exports = {
   proxyTestResultListener,
   updateNotAvailable,
   checkForUpdates,
-  // fetchNetworkSpeed,
   decodeUser,
   authUser,
   logoutUser,
@@ -181,5 +176,4 @@ module.exports = {
   startInviteJoinerMonitor,
   stopInviteJoinerMonitor,
   webhookNotificationListener,
-  testTwiterAPI,
 };

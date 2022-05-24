@@ -20,7 +20,7 @@ import back from "../../../assests/images/back.svg";
 import { twiiterApiSchema } from "../../../validation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppInputField, AppSpacer } from "../../../component";
-import { testTwiterAPI } from "../../../helper/electron-bridge";
+import { getTweets } from "../../../helper/electron-bridge";
 import { TwitterPageTopSection } from "../../../pages-component";
 import { defaultChromeUser, RoutePath } from "../../../constant";
 import { validationChecker } from "../../../hooks/validationChecker";
@@ -69,11 +69,12 @@ function SettingScreen({
     const result = validationChecker(twiiterApiSchema, twitterApi);
     if (result) {
       try {
-        const response = await testTwiterAPI(
+        const response = await getTweets(
           twitterApi.apiKey,
-          twitterApi.apiSecret
+          twitterApi.apiSecret,
+          "KodersHQ"
         );
-        if (response) {
+        if (Object.keys(response).length > 0) {
           dispatch(addNewApiInList(twitterApi));
           setTwitterApi({
             apiName: "",

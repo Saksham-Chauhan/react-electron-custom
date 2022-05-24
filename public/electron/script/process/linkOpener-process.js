@@ -11,9 +11,8 @@ class LinkOpenerMonitor {
    * @param {String} monitorToken monitor with selected disoord token
    * @param {String} id unique ID for each monitor
    */
-  // TODO => argument passed should be in priority
 
-  constructor(channelArray, keywordArray, chromeUser, monitorToken, id) {
+  constructor(id, monitorToken, channelArray, keywordArray, chromeUser) {
     this.id = id;
     this.token = monitorToken;
     this.channelList = channelArray || [];
@@ -25,14 +24,14 @@ class LinkOpenerMonitor {
 
   init() {
     this.monitor.on("ready", () => {
-      this.sensMonitorStatus("Monitoring...", true);
+      this.sendMonitorStatus("Monitoring...", true);
     });
     this.monitor.on("message", async (message) => {
       await this.scanMessage(message.channel.id, message.content);
     });
     this.isMonitorStart = true;
     this.monitor.login(this.token).catch((e) => {
-      this.sensMonitorStatus("Invalid token", false);
+      this.sendMonitorStatus("Invalid token", false);
     });
   }
 
@@ -61,8 +60,10 @@ class LinkOpenerMonitor {
                   },
                 });
               } catch (e) {
-                // TODO => Send to logging?
-                console.log(e);
+                ipcMain.emit(
+                  "add-log",
+                  `Error while openiong ${msgContent} with chrome profile ${this.chromeProfile["label"]}`
+                );
               }
             } else {
               const log = `${msgContent} open with Default chrome profile`;
@@ -99,8 +100,7 @@ class LinkOpenerMonitor {
    */
   containsKeyword(keywordsLO, message) {
     for (let i = 0; i < keywordsLO.length; i++)
-      if (message.includes(keywordsLO[i])) 
-        return true;
+      if (message.includes(keywordsLO[i])) return true;
     return false;
   }
 
@@ -109,7 +109,7 @@ class LinkOpenerMonitor {
    */
   stop() {
     this.isMonitorStart = false;
-    this.sensMonitorStatus("Stopped", false);
+    this.sendMonitorStatus("Stopped", false);
     this.monitor.destroy();
   }
 
@@ -118,11 +118,10 @@ class LinkOpenerMonitor {
    * @param {String} status
    * @param {Boolean} active
    */
-  // TODO => Fix this typo
-  sensMonitorStatus(status, active) {
+  sendMonitorStatus(status, active) {
     const win = global.mainWin;
     if (win) {
-      win.webContents.send("lo-status", { id: this.id, status, active });
+      win.webContents.send("update-status", { id: this.id, status, active });
     }
   }
 

@@ -1,12 +1,12 @@
-const path = require("path");
 const electron = require("electron");
 const UserAgent = require("user-agents");
 
 const session = electron.session;
 const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
 
 class SpooferInstance {
-  constructor(id, url, proxyList, mainWin, isImage) {
+  constructor(id, url, proxyList, isImage) {
     this.id = id;
     this.proxyList = proxyList || [];
     this.proxyCounter = 0;
@@ -14,10 +14,9 @@ class SpooferInstance {
     this.proxy = this.getProxyData(this.proxyList[0]);
     this.url = url;
     this.win = null;
-    this.status = "";
     this.isLaunched = false;
     this.isDeleted = false;
-    this.mainWin = mainWin;
+    this.mainWin = global.mainWin;
     this.isImage = isImage;
     this.maxNumberOfRetry = 10;
     this.numberOfRetry = 0;
@@ -53,29 +52,27 @@ class SpooferInstance {
 
   getProxyData(proxy) {
     if (proxy) {
-      // TODO => Destructure
-      const splitProxy = proxy.split(":");
+      const [host, port, user, pass] = proxy.split(":");
       if (splitProxy.length > 2) {
         return {
-          host: splitProxy[0],
-          port: splitProxy[1],
-          user: splitProxy[2],
-          pass: splitProxy[3],
+          host,
+          port,
+          user,
+          pass,
         };
       }
 
       return {
-        host: splitProxy[0],
-        port: splitProxy[1],
+        host,
+        port,
       };
     }
   }
 
   getProxyHostPort(proxy) {
     if (proxy) {
-      // TODO => Fix me abhishek
       const [ip, port] = proxy.split(":");
-      return (ip + ":" + port)
+      return ip + ":" + port;
     }
   }
 
@@ -94,7 +91,9 @@ class SpooferInstance {
       const currentProxy = this.proxyList[this.proxyCounter];
       this.proxyHostPort = this.getProxyHostPort(currentProxy);
       this.proxy = this.getProxyData(currentProxy);
-      console.log("Proxy rotater used new proxy", this.proxyHostPort);
+      const log = "Proxy rotater used new proxy" + this.proxyHostPort;
+      console.log(log);
+      ipcMain.emit("add-log", log);
       this.numberOfRetry += 1;
       this.launchBrowser(true);
     } else {
@@ -120,7 +119,6 @@ class SpooferInstance {
         nodeIntegration: true,
         webSecurity: false,
         session,
-        // TODO => Check its working
         partition: `persist:task_id_${this.id}`,
         images: !this.isImage,
       },
@@ -198,7 +196,7 @@ class SpooferInstance {
     if (this.mainWin) {
       try {
         this.mainWin.webContents.send("spoofer-toaster", {
-          status:msg,
+          status: msg,
           id: this.id,
         });
       } catch (error) {

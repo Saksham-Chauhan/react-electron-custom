@@ -4,14 +4,13 @@ const fs = require("fs");
 const { download } = require("electron-dl");
 
 const logFile = "kyro.log";
+const WAIT_INTERVAL = 20000;
+const MAX_FILE_SIZE = 1000000;
 
 class LogManager {
-  // TODO => Remove non repeated states
   constructor() {
-    this.WAIT_INTERVAL = 20000;
     this.logString = [];
     this.folderPath = path.join(app.getPath("userData"), "/Logs");
-    this.maxFileSize = 1;
     this.currentLogFile = null;
   }
 
@@ -28,38 +27,33 @@ class LogManager {
   checkFileSize() {
     const filePath = `${this.folderPath}/${logFile}`;
     if (fs.existsSync(filePath)) {
-      const stats = fs.statSync(filePath);
-      const fileSizeInBytes = stats.size;
-      // TODO => Check in bytes only
-      const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-      // TODO => Return with condition
-      return fileSizeInMB;
+      const fileSizeInBytes = fs.statSync(filePath).size;
+      return fileSizeInBytes < MAX_FILE_SIZE;
     }
   }
   initLogs() {
     if (!fs.existsSync(this.folderPath)) {
       fs.mkdirSync(this.folderPath);
     }
-    // TODO => Improvise this code
-    const newLogFile = logFile;
     const logFiles = fs.readdirSync(this.folderPath);
     if (logFiles.length > 0) {
       this.lastLogFile = logFiles[logFiles.length - 1];
-      const isExceed = this.checkFileSize() < this.maxFileSize;
-      if (isExceed) {
+      if (this.checkFileSize()) {
         this.currentLogFile = this.lastLogFile;
-        console.log("Last file has the same date, dont create a new one");
+        console.log(
+          "Last file doesn't overflow its maximum size so, dont create a new one"
+        );
       } else {
         for (let i = 0; i < logFiles.length; i++) {
           fs.rmSync(`${this.folderPath}/${logFiles[i]}`);
         }
-        this.currentLogFile = newLogFile;
+        this.currentLogFile = logFile;
         console.log("Creating a new log file for the day");
-        fs.appendFileSync(`${this.folderPath}/${newLogFile}`, "");
+        fs.appendFileSync(`${this.folderPath}/${logFile}`, "");
       }
     } else {
-      this.currentLogFile = newLogFile;
-      fs.appendFileSync(`${this.folderPath}/${newLogFile}`, "");
+      this.currentLogFile = logFile;
+      fs.appendFileSync(`${this.folderPath}/${logFile}`, "");
     }
     this.startLogSession();
   }
@@ -94,8 +88,7 @@ class LogManager {
   startLogSession() {
     setInterval(() => {
       this.saveLogs();
-      // Remove redundant states
-    }, this.WAIT_INTERVAL);
+    }, WAIT_INTERVAL);
   }
 }
 
