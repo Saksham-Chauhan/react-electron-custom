@@ -14,9 +14,11 @@ import { generateId } from "../../helper";
 
 export const addDiscordAccountInList = (account) => (dispatch, getState) => {
   const currentAccountList = fetchDiscordAccountList(getState());
+  // TODO => ...
   let tempCurrentAccount = [...currentAccountList];
   let tempAccount = { ...account };
   tempAccount["id"] = generateId();
+  // TODO=> CAN DIRESCTLY PASS IN APPEND FUNCTION
   let combiner = [tempAccount, ...tempCurrentAccount];
   dispatch(appendDiscordAccount(combiner));
 };
@@ -58,6 +60,7 @@ export const addClaimerAccountInList = (account) => (dispatch, getState) => {
   let tempCurrentAccount = [...currentAccountList];
   let newAccount = { ...account };
   newAccount["id"] = generateId();
+  // TODO=> CAN DIRESCTLY PASS IN APPEND FUNCTION
   let combiner = [newAccount, ...tempCurrentAccount];
   dispatch(appendClaimerDiscordAccount(combiner));
 };
@@ -65,6 +68,7 @@ export const addClaimerAccountInList = (account) => (dispatch, getState) => {
 export const deleteClaimerAccountFromList =
   (account) => (dispatch, getState) => {
     const currentAccountList = fetchClaimerDiscordAccountList(getState());
+    // TODO => IS tempCurrentAccount VARIABLE REQUIRED
     let tempCurrentAccount = [...currentAccountList];
     let afterFilter = tempCurrentAccount.filter(
       (acc) => acc["id"] !== account["id"]
@@ -74,6 +78,7 @@ export const deleteClaimerAccountFromList =
 
 export const editClaimerAccountFromList = (account) => (dispatch, getState) => {
   const currentAccountList = fetchClaimerDiscordAccountList(getState());
+  // TODO => IS tempCurrentAccount VARIABLE REQUIRED
   let tempCurrentAccount = [...currentAccountList];
   let afterUpdate = tempCurrentAccount.map((data) => {
     if (data["id"] === account["id"]) return account;
