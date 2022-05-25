@@ -26,12 +26,17 @@ export const getProxy = (proxyArr) => {
   } else return proxyArr;
 };
 
-export const discordServerInviteAPI = async (inviteCode, token, proxy) =>
+export const discordServerInviteAPI = async (
+  inviteCode,
+  token,
+  proxy,
+  solution = null
+) =>
   await axios({
     url: `${BASE_URL}/invites/${inviteCode}`,
     headers: { Authorization: token },
     method: "POST",
-    data: JSON.stringify({}),
+    data: JSON.stringify(solution ? { captcha_key: solution } : {}),
     proxy,
   });
 
@@ -108,12 +113,19 @@ export const directDiscordJoinAPI = async (
   proxy,
   inviteCode,
   token,
-  settingObj
+  settingObj,
+  solution
 ) => {
   let inviteResponse;
   try {
-    inviteResponse = await discordServerInviteAPI(inviteCode, token, proxy);
+    inviteResponse = await discordServerInviteAPI(
+      inviteCode,
+      token,
+      proxy,
+      solution
+    );
     if (inviteResponse.status === 200) {
+      console.log("joined");
       const tkn =
         token.substring(0, 4) + "## ##" + token.charAt(token.length - 1);
       toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);

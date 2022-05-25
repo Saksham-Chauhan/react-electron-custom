@@ -159,6 +159,7 @@ function App() {
     // GJ
     updateGiveawayJoinerStatus((res) => dispatch(updateTaskState(res)));
 
+    // channel for debugging in production
     debuggerChannnel();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

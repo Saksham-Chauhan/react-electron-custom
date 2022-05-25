@@ -4,8 +4,8 @@ const axios = require("axios");
 const QrCode = window.require("qrcode-reader");
 const Jimp = window.require("jimp");
 
-// TODO => Is it really needed? 
-let filteredArray, base64Text, re, binaryText; 
+// TODO => Is it really needed?
+let filteredArray, base64Text, re, binaryText;
 
 // Checks Binary
 function binaryCheck(tweetText) {
@@ -101,7 +101,7 @@ async function qrResolver(media) {
   }
 }
 
-// Checks Pastebin Links 
+// Checks Pastebin Links
 async function _parsePasteHaste(url, pattern) {
   url = url.split(pattern);
   url = "https://" + pattern + "raw/" + url[1];
@@ -109,7 +109,7 @@ async function _parsePasteHaste(url, pattern) {
   return response.data;
 }
 
-// Parse hastebin 
+// Parse hastebin
 const pastebinParser = async (urls) => {
   let binArr = [];
   let response = await urls.map(async (url) => {
@@ -158,7 +158,7 @@ const scanner = async (
     name: tweetObject.user.name,
     screen_name: tweetObject.user.screen_name,
     profile_url: tweetObject.user.profile_image_url,
-    tweet_link:`https://twitter.com/${tweetObject.user.screen_name}/status/${tweetObject.id_str}`
+    tweet_link: `https://twitter.com/${tweetObject.user.screen_name}/status/${tweetObject.id_str}`,
   };
   FTObject.binaryText = binaryCheck(tweetObject.text);
   if (FTObject.binaryText == null) {

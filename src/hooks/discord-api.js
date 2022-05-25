@@ -17,14 +17,12 @@ import { generateRandomPassword, getEncryptedToken, sleep } from "../helper";
 import { sendWebhook } from "../features/logic/setting";
 import { sendLogs } from "../helper/electron-bridge";
 import { toastWarning } from "../toaster";
+import { resolveMassJoinerCaptcha } from "../helper/captcha-resolver/resolve captcha/mass-joiner";
 
 const tokenMsg = "Invalid format, Token not found in Discord Accounts";
 const passMsg = "Invalid format, Password not found";
 const emailMsg = "Invalid format, Email not found";
 const getTokenList = (obj) => obj.claimerGroup["value"]?.split("\n");
-const ERROR_CODE = [400, 401, 404];
-
-// TODO:=> need to check active in dispatch don't set undefined in store
 
 export const useMassInviteJoiner = () => {
   const dispatch = useDispatch();
@@ -39,7 +37,7 @@ export const useMassInviteJoiner = () => {
         const proxy = getProxy(proxyGroup["value"].split("\n"));
         const code = inviteCodeList[i];
         if (!code) {
-          toastWarning("Invalid format, Invit code not found");
+          toastWarning("Invalid format, Invite code not found");
           continue;
         } else if (!tokenArray[index]?.split(":")[2]) {
           toastWarning(tokenMsg);
@@ -65,23 +63,47 @@ export const useMassInviteJoiner = () => {
               tokenArray[index]?.split(":")[2]
             )}`;
             sendLogs(log);
-          } else if (ERROR_CODE.includes(response.status)) {
-            if ("captcha_key" in response?.response?.data) {
-              toastWarning("Captcha key error");
+          } else if ("captcha_key" in response?.response?.data) {
+            console.log("captcha error");
+            const token = tokenArray[index]?.split(":")[2];
+            const res = await resolveMassJoinerCaptcha({
+              proxy,
+              code,
+              token,
+              obj,
+              sitekey: response?.response?.data?.captcha_sitekey,
+            });
+            console.log("vv", res);
+            if (res.status === 200) {
+              console.log("than resolvee");
+              dispatch(
+                updateTaskState({
+                  id: obj.id,
+                  status: `${counter + 1}/${tokenArray.length}  Joined`,
+                })
+              );
+              counter = counter + 1;
+              const log = `Server joined successfully with token: ${getEncryptedToken(
+                tokenArray[index]?.split(":")[2]
+              )} after resolving captcha.`;
+              sendLogs(log);
             } else {
               toastWarning(response.message);
+              throw new Error();
             }
-            dispatch(
-              updateTaskState({
-                id: obj.id,
-                status: `${counter}/${tokenArray.length} Joined`,
-              })
-            );
-            const log = `Unable to join server with token: ${getEncryptedToken(
-              tokenArray[index]?.split(":")[2]
-            )}, error message:${response.message}`;
-            sendLogs(log);
+          } else {
+            toastWarning(response.message);
           }
+          dispatch(
+            updateTaskState({
+              id: obj.id,
+              status: `${counter}/${tokenArray.length} Joined`,
+            })
+          );
+          const log = `Unable to join server with token: ${getEncryptedToken(
+            tokenArray[index]?.split(":")[2]
+          )}, error message:${response.message}`;
+          sendLogs(log);
         } catch (error) {
           dispatch(
             updateTaskState({

@@ -405,7 +405,7 @@ const updateCheck = () => {
  * function scan current running process
  */
 function scanProcesses() {
-  currentProcesses.get((_, processes) => {
+  currentProcesses.get((event, processes) => {
     const sorted = _.sortBy(processes, "cpu");
     for (let i = 0; i < sorted.length; i += 1) {
       if (INTERCEPTOR_TOOLS.includes(sorted[i].name.toLowerCase())) {
@@ -506,8 +506,12 @@ ipcMain.handle(
 ipcMain.handle("imageText", async (_, url) => {
   const {
     data: { text },
-    // TODO=> FIX BINARY ISSUE IN PRODUCTION
-  } = await Tesseract.recognize(url, "eng");
+    // TODO =>FUTURE SCOPE: FIX BINARY ISSUE IN PRODUCTION
+  } = await Tesseract.recognize(url, "eng", {
+    langPath: path.join(__dirname, ".."),
+    gzip: false,
+    cacheMethod: "none",
+  });
   return text;
 });
 
