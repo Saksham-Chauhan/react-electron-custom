@@ -29,6 +29,7 @@
     "open": "^8.4.0",
     "path": "^0.12.7",
     "ping": "^0.4.1",
+    "promise-poller": "^1.9.1",
     "qrcode-reader": "^1.0.4",
     "react": "^17.0.2",
     "react-chartjs-2": "^4.0.1",

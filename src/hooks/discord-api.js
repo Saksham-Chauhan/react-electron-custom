@@ -17,7 +17,7 @@ import { generateRandomPassword, getEncryptedToken, sleep } from "../helper";
 import { sendWebhook } from "../features/logic/setting";
 import { sendLogs } from "../helper/electron-bridge";
 import { toastWarning } from "../toaster";
-import { resolveMassJoinerCaptcha } from "../helper/captcha-resolver/resolve captcha/mass-joiner";
+import { useCaptchaResolverMassJoiner } from "../helper/captcha-resolver/captcha-resolver";
 
 const tokenMsg = "Invalid format, Token not found in Discord Accounts";
 const passMsg = "Invalid format, Password not found";
@@ -26,7 +26,8 @@ const getTokenList = (obj) => obj.claimerGroup["value"]?.split("\n");
 
 export const useMassInviteJoiner = () => {
   const dispatch = useDispatch();
-  const callApi = async (obj, setting, user, webhookList) => {
+  const captchaResolverMassjoiner = useCaptchaResolverMassJoiner();
+  const callApi = async (obj) => {
     dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
@@ -65,32 +66,41 @@ export const useMassInviteJoiner = () => {
             sendLogs(log);
           } else if ("captcha_key" in response?.response?.data) {
             console.log("captcha error");
-            const token = tokenArray[index]?.split(":")[2];
-            const res = await resolveMassJoinerCaptcha({
+            // const token = tokenArray[index]?.split(":")[2];
+            captchaResolverMassjoiner({
               proxy,
-              code,
-              token,
-              obj,
+              inviteCode: code,
+              discordToken: tokenArray[index]?.split(":")[2],
+              taskObj: obj,
               sitekey: response?.response?.data?.captcha_sitekey,
+              clientKey: process.env.REACT_APP_CLIENT_KEY,
             });
-            console.log("vv", res);
-            if (res.status === 200) {
-              console.log("than resolvee");
-              dispatch(
-                updateTaskState({
-                  id: obj.id,
-                  status: `${counter + 1}/${tokenArray.length}  Joined`,
-                })
-              );
-              counter = counter + 1;
-              const log = `Server joined successfully with token: ${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
-              )} after resolving captcha.`;
-              sendLogs(log);
-            } else {
-              toastWarning(response.message);
-              throw new Error();
-            }
+            // const res = await resolveMassJoinerCaptcha({
+            // proxy,
+            // code,
+            // token,
+            // obj,
+            // sitekey: response?.response?.data?.captcha_sitekey,
+            // key: process.env.REACT_APP_CLIENT_KEY,
+            // });
+            // console.log("vv", res);
+            // if (res.status === 200) {
+            //   console.log("than resolvee");
+            //   dispatch(
+            //     updateTaskState({
+            //       id: obj.id,
+            //       status: `${counter + 1}/${tokenArray.length}  Joined`,
+            //     })
+            //   );
+            //   counter = counter + 1;
+            //   const log = `Server joined successfully with token: ${getEncryptedToken(
+            //     tokenArray[index]?.split(":")[2]
+            //   )} after resolving captcha.`;
+            //   sendLogs(log);
+            // } else {
+            //   toastWarning(response.message);
+            //   throw new Error();
+            // }
           } else {
             toastWarning(response.message);
           }
@@ -126,10 +136,12 @@ export const useMassInviteJoiner = () => {
         active: false,
       })
     );
-    sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
-      success: counter,
-      total: tokenArray.length,
-    });
+
+    // TODO => fetch logged uyser details from store instead of passing as parameter
+    // sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
+    //   success: counter,
+    //   total: tokenArray.length,
+    // });
   };
   return callApi;
 };

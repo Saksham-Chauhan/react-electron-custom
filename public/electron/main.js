@@ -104,7 +104,7 @@ const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
 const logManager = require("./script/manager/log-manager.jsc");
 const giveawayJoiner = require("./script/manager/giveawayJoiner-manager.jsc");
 const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
-
+const captchaResolverManager = require("./script/manager/captchaResolver-manager");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 const str2ab = require("string-to-arraybuffer");
@@ -666,4 +666,10 @@ ipcMain.on("fetch_channel", async (_, data) => {
   } catch (e) {
     mainWindow.webContents.send("fetched-channel", e.message);
   }
+});
+
+// CAPTCHA RESOLVER
+
+ipcMain.on("add-captcha", (_, captcha) => {
+  captchaResolverManager.addCaptcha(captcha);
 });

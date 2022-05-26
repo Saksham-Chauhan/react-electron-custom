@@ -131,6 +131,12 @@ const fetchChannel = (value) => {
 const fetchedChannel = (callback) =>
   ipcRenderer.once("fetched-channel", (_, data) => callback(data));
 
+// CAPTCHA RESOLVER
+const addCaptchaResolver = (captcha) =>
+  ipcRenderer.send("add-captcha", captcha);
+const captchaResolverListener = (callback) =>
+  ipcRenderer.on("captcha-response", (_, data) => callback(data));
+
 module.exports = {
   errorInProxy,
   updateGiveawayJoinerStatus,
@@ -176,4 +182,6 @@ module.exports = {
   startInviteJoinerMonitor,
   stopInviteJoinerMonitor,
   webhookNotificationListener,
+  addCaptchaResolver,
+  captchaResolverListener,
 };
