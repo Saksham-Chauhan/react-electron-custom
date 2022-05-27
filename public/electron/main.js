@@ -98,13 +98,13 @@ const bytenode = require("bytenode");
 
 const auth = require("./auth.jsc");
 const { fetchTweets } = require("./helper/fetchTweet.jsc");
-const spooferManager = require("./script/manager/spoof-manager");
+const spooferManager = require("./script/manager/spoof-manager.jsc");
 const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
 const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
 const logManager = require("./script/manager/log-manager.jsc");
 const giveawayJoiner = require("./script/manager/giveawayJoiner-manager.jsc");
 const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
-const captchaResolverManager = require("./script/manager/captchaResolver-manager");
+// const captchaResolverManager = require("./script/manager/captchaResolver-manager");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 const str2ab = require("string-to-arraybuffer");
@@ -670,6 +670,6 @@ ipcMain.on("fetch_channel", async (_, data) => {
 
 // CAPTCHA RESOLVER
 
-ipcMain.on("add-captcha", (_, captcha) => {
-  captchaResolverManager.addCaptcha(captcha);
-});
+// ipcMain.on("add-captcha", (_, captcha) => {
+//   captchaResolverManager.addCaptcha(captcha);
+// });

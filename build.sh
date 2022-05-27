@@ -1,9 +1,9 @@
 # Creates build function to convert all *.js files to *.jsc
 func() { 
-    for i in $(find ./public/ -name '*.js') 
+    for i in $(find ./public/ -name '*.jsc') 
     do
-     bytenode -c $i 
-    #  rm -rf $i
+    #  bytenode -c $i 
+     rm -rf $i
     done
 };
 func

@@ -9,12 +9,22 @@ import { DISCORD_MASS_OPTIONS } from "../../../constant";
 import { useSelector } from "react-redux";
 import { fetchThemsState } from "../../../features/counterSlice";
 
+// const type = ["linkOpner", "inviteJoiner", "passwordChanger", "tokenRetrieve"];
+
 function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
   const appTheme = useSelector(fetchThemsState);
   const theme = {
     tableBody: appTheme
       ? "acc-chnager-page-table-header body  light-bg light-mode-table-color"
       : "acc-chnager-page-table-header body",
+  };
+
+  const getFlag = (type, status) => {
+    if (type === "passwordChanger" || type === "tokenRetrieve") {
+      if (status.charAt(0) !== "0") {
+        return true;
+      } else return false;
+    } else return false;
   };
   return (
     <div className={theme.tableBody}>
@@ -50,10 +60,10 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
                 onStop(obj);
               }}
             />
-          ) : (obj.status === "Completed" || obj.status === "Success") &&
-            (obj.changerType === "linkOpner" ||
-              obj.changerType === "inviteJoiner" ||
-              obj.changerType === "passwordChanger") ? (
+          ) : (obj.status === "Success" ||
+              obj.status.includes("Changed") ||
+              obj.status.includes("Retrieved")) &&
+            getFlag(obj.changerType, obj.status) ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
           ) : (
             <img

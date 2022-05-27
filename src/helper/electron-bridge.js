@@ -122,7 +122,7 @@ const fetchServer = (value) => {
 };
 
 const fetchedServer = (callback) =>
-  ipcRenderer.on("fetched-server", (e, data) => callback(data));
+  ipcRenderer.once("fetched-server", (e, data) => callback(data));
 
 const fetchChannel = (value) => {
   ipcRenderer.send("fetch_channel", value);
