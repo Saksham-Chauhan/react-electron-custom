@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import axios from "axios";
 import poller from "promise-poller";
 import { directDiscordJoinAPI } from "../../api";
@@ -6,8 +5,6 @@ import { directDiscordJoinAPI } from "../../api";
 const CAPTCHA_SITEKEY = "4c672d35-0701-42b2-88c3-78380b0db560";
 
 export const useCaptchaResolverMassJoiner = () => {
-  const dispatch = useDispatch();
-
   const tryToSolve = async (data) => {
     const { sitekey, clientKey } = data;
     try {
