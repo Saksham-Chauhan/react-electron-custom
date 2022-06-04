@@ -1,5 +1,6 @@
 const bytenode = require("bytenode");
 const path = require("path");
+const logManager = require("./log-manager.jsc");
 
 (async () => {
   try {
@@ -13,8 +14,15 @@ const path = require("path");
         "../process/giveawayJoiner-process.jsc"
       )}`,
     });
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "../../helper/index.js")}`,
+      output: `${path.join(__dirname, "../../helper/index.jsc")}`,
+    });
     await bytenode.runBytecodeFile(
       `${path.join(__dirname, "../process/giveawayJoiner-process.jsc")}`
+    );
+    await bytenode.runBytecodeFile(
+      `${path.join(__dirname, "../../helper/index.jsc")}`
     );
   } catch (e) {
     console.log(e);
@@ -22,6 +30,7 @@ const path = require("path");
 })();
 
 const GiveawayJoinerProcess = require("../process/giveawayJoiner-process.jsc");
+const { getEncryptedToken } = require("../../helper/index.jsc");
 
 class GiveawayJoinerManager {
   constructor() {
@@ -36,6 +45,9 @@ class GiveawayJoinerManager {
       serverid,
       botid,
       delay
+    );
+    logManager.logMessage(
+      `Giveaway joiner start monitoring with token:${getEncryptedToken(token)}`
     );
   }
 

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import {
+  addClientCaptchaKey,
   appendWebhookInList,
+  fetchClientCaptchaKey,
   fetchThemsState,
   fetchWebhookListState,
   fetchWebhookSettingState,
@@ -21,6 +23,7 @@ function WebhookSetting({ userDetails }) {
   const option = useSelector(fetchWebhookSettingState);
   const webhookList = useSelector(fetchWebhookListState);
   const appTheme = useSelector(fetchThemsState);
+  const cKey = useSelector(fetchClientCaptchaKey);
 
   const theme = {
     webhookSettingInner: appTheme
@@ -88,6 +91,9 @@ function WebhookSetting({ userDetails }) {
   const handleExportLog = () => {
     exportLogs();
   };
+  const handleCaptchaKey = (e) => {
+    dispatch(addClientCaptchaKey(e.target.value));
+  };
 
   return (
     <div className="webhook-setting-outer">
@@ -106,7 +112,8 @@ function WebhookSetting({ userDetails }) {
             <span>Test</span>
           </div>
         </div>
-        <AppSpacer spacer={20} />
+
+        <AppSpacer spacer={10} />
         <div className="setting-toggle-wrapper">
           <div className="setting-toggle-with-label">
             <AppToggler
@@ -160,7 +167,7 @@ function WebhookSetting({ userDetails }) {
             <span className={theme.textClass}>Tasks</span>
           </div>
         </div>
-        <AppSpacer spacer={15} />
+        <AppSpacer spacer={13} />
         <div className="setting-system-control">
           <div className="system-setting">
             <label className={theme.textClass}>System Toggle</label>
@@ -175,7 +182,18 @@ function WebhookSetting({ userDetails }) {
             </div>
           </div>
         </div>
-        <AppSpacer spacer={18} />
+        <AppSpacer spacer={10} />
+        <div className="webhook-input-section system-setting">
+          <label className={theme.textClass}>Anticap Key</label>
+          <input
+            onChange={handleCaptchaKey}
+            value={cKey}
+            placeholder="Enter client key to resolve captcha"
+            type="text"
+            style={theme.inputStyle}
+          />
+        </div>
+        <AppSpacer spacer={5} />
         <div className="system-setting log-report">
           <label className={theme.textClass}>Export logs</label>
 

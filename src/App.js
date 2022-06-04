@@ -70,7 +70,7 @@ import {
 } from "./toaster";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { EndPointToPage, RoutePath } from "./constant";
+import { RoutePath } from "./constant";
 import { useDispatch, useSelector } from "react-redux";
 import { webhookNotifier } from "./features/logic/setting";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -164,13 +164,6 @@ function App() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, globalSetting.logOnOff]);
-
-  // Route Navigation Listener
-  useEffect(() => {
-    const currentPage = EndPointToPage[location?.pathname];
-    const log = `Navigate to ${currentPage}`;
-    sendLogs(log);
-  }, [location.pathname]);
 
   // check is user log in or not
   if (Object.keys(logggedUserDetails).length === 0) {

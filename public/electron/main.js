@@ -333,82 +333,88 @@ app.on("ready", () => {
 });
 
 const updateCheck = () => {
-  autoUpdater.autoDownload = false;
+  try {
+    autoUpdater.autoDownload = false;
 
-  autoUpdater.checkForUpdates();
-  const updateMessage = (message, err = null) => {
-    if (err) {
-      sendUpdateMessage("update:anerror");
-      return;
-    }
-    sendUpdateMessage(message);
-  };
-  const available = (info) => {
-    updateMessage("update:avail");
-    setTimeout(() => {
-      sendUpdateMessage("update:showModal", info);
-    }, 700);
-  };
-  autoUpdater.on("update-available", available);
+    autoUpdater.checkForUpdates();
+    const updateMessage = (message, err = null) => {
+      if (err) {
+        sendUpdateMessage("update:anerror");
+        return;
+      }
+      sendUpdateMessage(message);
+    };
+    const available = (info) => {
+      updateMessage("update:avail");
+      setTimeout(() => {
+        sendUpdateMessage("update:showModal", info);
+      }, 700);
+    };
+    autoUpdater.on("update-available", available);
 
-  const notavailable = () => {
-    updateMessage("update:not-avail");
-    ipcMain.emit("update:ADecision", "event", "ignore");
-  };
-  autoUpdater.on("update-not-available", notavailable);
+    const notavailable = () => {
+      updateMessage("update:not-avail");
+      ipcMain.emit("update:ADecision", "event", "ignore");
+    };
+    autoUpdater.on("update-not-available", notavailable);
 
-  const anerror = (err) => {
-    updateMessage("update:anerror", err);
-    ipcMain.emit("update:ADecision", "event", "ignore");
-    ipcMain.emit("update:installDecision", "event", "ignore");
-  };
-  autoUpdater.on("error", anerror);
+    const anerror = (err) => {
+      updateMessage("update:anerror", err);
+      ipcMain.emit("update:ADecision", "event", "ignore");
+      ipcMain.emit("update:installDecision", "event", "ignore");
+    };
+    autoUpdater.on("error", anerror);
 
-  const progression = (progressObj) => {
-    const percent = Math.trunc(progressObj.percent);
-    sendUpdateMessage("update:pogress", percent);
-    if (progressObj.percent === "100")
-      autoUpdater.removeListener("download-progress", progression);
-  };
-  autoUpdater.on("download-progress", progression);
-  ipcMain.once("update:ADecision", (e, decision) => {
-    const actualDecision = decision || e;
-    if (actualDecision === "ignore") {
-      autoUpdater.removeListener("update-available", available);
-      autoUpdater.removeListener("update-not-available", notavailable);
-      autoUpdater.removeListener("error", anerror);
-      autoUpdater.removeListener("download-progress", progression);
-    } else {
-      autoUpdater.downloadUpdate();
-      sendUpdateMessage("update:downloading");
-    }
-  });
-  ipcMain.once("update:installDecision", (e, decision) => {
-    const actualDecision = decision || e;
-    if (actualDecision === "ignore") {
-      autoUpdater.removeListener("update-available", available);
-      autoUpdater.removeListener("update-not-available", notavailable);
-      autoUpdater.removeListener("error", anerror);
-      autoUpdater.removeListener("download-progress", progression);
-    } else {
-      autoUpdater.quitAndInstall();
-      app.quit();
-    }
-  });
-  const installation = () => {
-    sendUpdateDownloaded();
-  };
-  autoUpdater.on("update-downloaded", installation);
+    const progression = (progressObj) => {
+      const percent = Math.trunc(progressObj.percent);
+      sendUpdateMessage("update:pogress", percent);
+      if (progressObj.percent === "100")
+        autoUpdater.removeListener("download-progress", progression);
+    };
+    autoUpdater.on("download-progress", progression);
+    ipcMain.once("update:ADecision", (e, decision) => {
+      const actualDecision = decision || e;
+      if (actualDecision === "ignore") {
+        autoUpdater.removeListener("update-available", available);
+        autoUpdater.removeListener("update-not-available", notavailable);
+        autoUpdater.removeListener("error", anerror);
+        autoUpdater.removeListener("download-progress", progression);
+      } else {
+        autoUpdater.downloadUpdate();
+        sendUpdateMessage("update:downloading");
+      }
+    });
+    ipcMain.once("update:installDecision", (e, decision) => {
+      const actualDecision = decision || e;
+      if (actualDecision === "ignore") {
+        autoUpdater.removeListener("update-available", available);
+        autoUpdater.removeListener("update-not-available", notavailable);
+        autoUpdater.removeListener("error", anerror);
+        autoUpdater.removeListener("download-progress", progression);
+      } else {
+        autoUpdater.quitAndInstall();
+        app.quit();
+      }
+    });
+    const installation = () => {
+      sendUpdateDownloaded();
+    };
+    autoUpdater.on("update-downloaded", installation);
+  } catch (error) {
+    console.log(error, "in update");
+  }
 };
 
 /**
  * function scan current running process
  */
 function scanProcesses() {
+  let flag = false;
   currentProcesses.get((event, processes) => {
     const sorted = _.sortBy(processes, "cpu");
     for (let i = 0; i < sorted.length; i += 1) {
       if (INTERCEPTOR_TOOLS.includes(sorted[i].name.toLowerCase())) {
+        flag = true;
         const win = mainWindow || global.mainWin;
         if (win) {
           win.webContents.send(
@@ -419,7 +425,7 @@ function scanProcesses() {
         process.kill(sorted[i].pid);
       }
     }
-    app.quit();
+    if (flag) app.quit();
   });
 }
 

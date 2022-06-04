@@ -2,7 +2,13 @@ import axios from "axios";
 import { sleep } from "../../helper";
 import { BASE_URL } from "../index";
 
-async function changeActivity(token, message, emojiValue, userStatus, proxy) {
+async function changeActivity({
+  token,
+  message,
+  emojiValue,
+  userStatus,
+  proxy,
+}) {
   try {
     const json = JSON.stringify({
       custom_status: {

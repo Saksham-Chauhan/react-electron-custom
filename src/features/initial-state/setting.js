@@ -8,6 +8,7 @@ export const settingInitialState = {
     tasks: false,
     ethMinter: false,
     webhookList: [],
+    captchaClientKey: "",
   },
 
   claimerGroupList: [],

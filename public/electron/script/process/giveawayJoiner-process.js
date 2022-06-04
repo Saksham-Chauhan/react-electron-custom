@@ -1,4 +1,6 @@
 const { Client } = require("discord.js-selfbot");
+const logManager = require("../manager/log-manager.jsc");
+const { getEncryptedToken } = require("../../helper/index.jsc");
 
 const replyList = [
   "lfgooooo",
@@ -39,14 +41,17 @@ class GiveawayJoinerProcess {
     this.isMonitorStart = true;
     this.monitor.login(this.token).catch((e) => {
       this.sendMonitoStatus("Invalid token", false);
+      logManager.logMessage(
+        `Giveaway joiner found invalid token:${getEncryptedToken(this.token)}`
+      );
     });
   }
-  async sendReply(embed, serverId, authorId, message) {
-    if (serverId === this.serverId) {
-      if (authorId === this.authorId) {
+  async sendReply(embed, serverID, authorID, message) {
+    if (serverID === this.serverID) {
+      if (authorID === this.authorID) {
         if (
-          embed.title.toLowerCase().includes("google") &&
-          embed.description.toLowerCase().includes("search")
+          embed?.title?.toLowerCase().includes("giveaway") &&
+          embed?.description?.toLowerCase().includes("react")
         ) {
           await message.react("🎉");
           const x = Math.floor(Math.random() * replyList.length + 1);
@@ -54,12 +59,22 @@ class GiveawayJoinerProcess {
           setTimeout(function () {
             message.channel.stopTyping();
             message.channel.send(replyList[x]);
-          }, this.delay);
+          }, 4000);
+          logManager.logMessage(
+            `Successful react to giveaway joiner message (id:${
+              message.lastMessageID
+            }) with token:${getEncryptedToken(this.token)}`
+          );
         }
       }
     }
   }
   stop() {
+    logManager.logMessage(
+      `Giveaway joiner stop monitoring with token:${getEncryptedToken(
+        this.token
+      )}`
+    );
     this.isMonitorStart = false;
     this.sendMonitoStatus("Stopped", false);
     this.monitor.destroy();

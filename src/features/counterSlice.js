@@ -165,6 +165,9 @@ export const counterSlice = createSlice({
     appendWebhookInList: (state, action) => {
       state.webhookSetting.webhookList = [action.payload];
     },
+    addClientCaptchaKey: (state, action) => {
+      state.webhookSetting.captchaClientKey = action.payload;
+    },
     openAddNewProxyModal: (state, action) => {
       state.addProxyStorage = action.payload;
     },
@@ -199,6 +202,7 @@ export const counterSlice = createSlice({
 });
 
 export const {
+  addClientCaptchaKey,
   setThemeState,
   setNftWalletList,
   updatespooferArray,
@@ -340,6 +344,8 @@ export const fetchClamerOnbordingState = (state) =>
   state[STATE_KEY].modals.clamerOnboardingScreen;
 export const fetchProxyOnbordingState = (state) =>
   state[STATE_KEY].modals.proxyOnboardingScreen;
+export const fetchClientCaptchaKey = (state) =>
+  state[STATE_KEY].webhookSetting.captchaClientKey;
 
 // LOGIN
 export const fetchLoggedUserDetails = (state) => state[STATE_KEY].userDetails;

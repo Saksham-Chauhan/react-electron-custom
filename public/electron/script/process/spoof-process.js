@@ -53,7 +53,7 @@ class SpooferInstance {
   getProxyData(proxy) {
     if (proxy) {
       const [host, port, user, pass] = proxy.split(":");
-      if (splitProxy.length > 2) {
+      if (proxy.split(":").length > 2) {
         return {
           host,
           port,
@@ -61,7 +61,6 @@ class SpooferInstance {
           pass,
         };
       }
-
       return {
         host,
         port,

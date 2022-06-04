@@ -30,15 +30,25 @@ export const discordServerInviteAPI = async (
   inviteCode,
   token,
   proxy,
-  solution = null
-) =>
-  await axios({
+  solution = null,
+  captchaData = null
+) => {
+  console.log(captchaData);
+  return await axios({
     url: `${BASE_URL}/invites/${inviteCode}`,
     headers: { Authorization: token },
     method: "POST",
-    data: JSON.stringify(solution ? { captcha_key: solution } : {}),
+    data: JSON.stringify(
+      solution
+        ? {
+            captcha_key: solution,
+            captcha_rqtoken: captchaData.captcha_rqtoken,
+          }
+        : {}
+    ),
     proxy,
   });
+};
 
 export const discordServerInviteReactAPI = async (
   proxyString,
@@ -109,20 +119,23 @@ export const discordServerAcceptRuleAPI = async (
   }
 };
 
-export const directDiscordJoinAPI = async (
+export const directDiscordJoinAPI = async ({
   proxy,
   inviteCode,
   token,
   settingObj,
-  solution
-) => {
+  solution,
+  captchaData,
+}) => {
+  console.log("call", settingObj);
   let inviteResponse;
   try {
     inviteResponse = await discordServerInviteAPI(
       inviteCode,
       token,
       proxy,
-      solution
+      solution,
+      captchaData
     );
     if (inviteResponse.status === 200) {
       console.log("joined");
