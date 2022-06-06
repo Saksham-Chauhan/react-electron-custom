@@ -61,6 +61,7 @@ import {
   fetchServer,
 } from "../../helper/electron-bridge";
 import { toastSuccess, toastWarning } from "../../toaster";
+import DiscordSpooferSlide from "./slides/DiscordSpooferSlide";
 // import { toastWarning } from "../";
 
 function AccountChanger() {
@@ -574,6 +575,10 @@ const getDynamicSlideRnder = (
           handleMonitorToken={handleMonitorToken}
         />
       );
+
+    case "discordSpoofer": {
+      return <DiscordSpooferSlide />;
+    }
     default:
       return <UserNameChangerSlide onChange={handleChange} />;
   }

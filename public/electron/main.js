@@ -104,6 +104,7 @@ const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
 const logManager = require("./script/manager/log-manager.jsc");
 const giveawayJoiner = require("./script/manager/giveawayJoiner-manager.jsc");
 const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
+const discordManager = require("./script/manager/discord-spoofer-manager");
 // const captchaResolverManager = require("./script/manager/captchaResolver-manager");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
@@ -504,8 +505,8 @@ ipcMain.on("checkForUpdates", () => {
 //Twitter section IPC
 ipcMain.handle(
   "fetchTweets",
-  (e, { consumerKey, consumerSecret, userHandler }) => {
-    return fetchTweets(consumerKey, consumerSecret, userHandler);
+  (e, { consumerKey, consumerSecret, userHandler, keyList }) => {
+    return fetchTweets(consumerKey, consumerSecret, userHandler, keyList);
   }
 );
 
@@ -552,6 +553,13 @@ const debugSendToIpcRenderer = (log) => {
     win.webContents.send(DEBUGGER_CHANNEL, log);
   }
 };
+
+// DISCORD SPOOFER IPC
+
+ipcMain.on("start-discord-spoofer", (_, data) => {
+  discordManager.addSpoofer(data);
+  // spooferManager.startSpoofer(data.id);
+});
 
 ipcMain.on("read-array", async (event, array) => {
   const fileName = +new Date();

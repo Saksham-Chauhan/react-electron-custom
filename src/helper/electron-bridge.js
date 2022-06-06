@@ -42,11 +42,12 @@ const spooferToaster = (callback) =>
 const launchSpoofer = (spoof) => ipcRenderer.send("launch-spoofer", spoof);
 
 // TWITTER IPC
-const getTweets = (consumerKey, consumerSecret, userHandler) =>
+const getTweets = (consumerKey, consumerSecret, userHandler, keyList) =>
   ipcRenderer.invoke("fetchTweets", {
     consumerKey,
     consumerSecret,
     userHandler,
+    keyList,
   });
 
 // PROXY IPC
@@ -62,10 +63,8 @@ const logoutUser = () => ipcRenderer.send("logout-user");
 const auth = () => ipcRenderer.send("auth");
 const decodeUser = (encodeString) =>
   jwt.verify(encodeString, process.env.REACT_APP_JWT_SECRET_KEY);
-
 const debuggerChannnel = () =>
   ipcRenderer.on("debugger", (_, logs) => console.log("Logs", logs));
-
 const interceptorFound = (callback) =>
   ipcRenderer.on("interceptor-tool-found", (_, interceptor) =>
     callback(interceptor)
@@ -73,7 +72,6 @@ const interceptorFound = (callback) =>
 const checkForURL = (value) => {
   ipcRenderer.send("get-server-avatar", value);
 };
-
 const getURL = (callback) => {
   ipcRenderer.on("url-is", (_, url) => callback(url));
 };
@@ -120,14 +118,11 @@ const errorInProxy = (callback) => {
 const fetchServer = (value) => {
   ipcRenderer.send("fetch_server", value);
 };
-
 const fetchedServer = (callback) =>
   ipcRenderer.once("fetched-server", (e, data) => callback(data));
-
 const fetchChannel = (value) => {
   ipcRenderer.send("fetch_channel", value);
 };
-
 const fetchedChannel = (callback) =>
   ipcRenderer.once("fetched-channel", (_, data) => callback(data));
 
@@ -137,8 +132,13 @@ const addCaptchaResolver = (captcha) =>
 const captchaResolverListener = (callback) =>
   ipcRenderer.on("captcha-response", (_, data) => callback(data));
 
+// DISCORD IPC
+const addDiscordSpoofer = (data) =>
+  ipcRenderer.on("start-discord-spoofer", data);
+
 module.exports = {
   errorInProxy,
+  addDiscordSpoofer,
   updateGiveawayJoinerStatus,
   startGiveawayJoiner,
   stopGiveawayJoiner,
