@@ -1,7 +1,7 @@
 const isDev = require("electron-is-dev");
-const { spawn } = require("child_process");
 const path = require("path");
 const { ipcMain } = require("electron");
+const exec = require("child_process").execFile;
 
 class XPFarmerProcess {
   constructor(token, channelID, proxy) {
@@ -19,11 +19,15 @@ class XPFarmerProcess {
   init() {
     if (this.process === null) {
       try {
-        this.process = spawn(this.exePath, [
-          this.token,
-          this.channelID,
-          this.proxy,
-        ]);
+        ipcMain.emit("debugger", this.exePath);
+        this.process = exec(
+          this.exePath,
+          [this.token, this.channelID, this.proxy],
+          function (err, data) {
+            console.log(err);
+            console.log(data.toString());
+          }
+        );
         this.isRunning = true;
         this.process.stdout.on("data", (data) => {
           console.log("Output: ", data.toString("utf8"));
@@ -36,6 +40,7 @@ class XPFarmerProcess {
           `Process is Running with Pid ${this.process.pid}`
         );
       } catch (e) {
+        ipcMain.emit("debugger", this.exePath);
         this.process = null;
         ipcMain.emit(
           "add-log",

@@ -219,13 +219,13 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: !isDev ? false : true,
+      // devTools: !isDev ? false : true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
   });
 
-  if (isDev) mainWindow.webContents.openDevTools();
+  if (!isDev) mainWindow.webContents.openDevTools();
 
   splash = new BrowserWindow({
     width: 700,
@@ -547,12 +547,13 @@ ipcMain.on("launch-spoofer", (_, data) => {
 
 const debugSendToIpcRenderer = (log) => {
   const win = mainWindow || global.mainWin;
-
   if (win) {
     win.webContents.send(DEBUGGER_CHANNEL, log);
   }
 };
-
+debugSendToIpcRenderer(
+  `${path.join(__dirname, "../../../../build/windows/xpfarmer.exe")}`
+);
 ipcMain.on("read-array", async (event, array) => {
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
