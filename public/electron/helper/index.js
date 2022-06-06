@@ -19,4 +19,42 @@ const getEncryptedToken = (token) => {
   return token.slice(0, 4) + "#### ####" + token.slice(-6);
 };
 
-module.exports = { getRandomParsedProxy, randomInt, getEncryptedToken };
+function getProxyData(proxy) {
+  if (proxy) {
+    const [host, port, user, pass] = proxy.split(":");
+    if (proxy.split(":").length > 2) {
+      return {
+        host,
+        port,
+        user,
+        pass,
+      };
+    }
+    return {
+      host,
+      port,
+    };
+  }
+}
+
+function getProxyHostPort(proxy) {
+  if (proxy) {
+    const [ip, port] = proxy.split(":");
+    return ip + ":" + port;
+  }
+}
+
+function displayTitle(proxyHostPort, id) {
+  return `${
+    proxyHostPort == null ? "Local IP" : this.proxyHostPort
+  } - taskId-${id}`;
+}
+
+module.exports = {
+  getRandomParsedProxy,
+  randomInt,
+  getEncryptedToken,
+  getProxyData,
+  getProxyHostPort,
+  displayTitle,
+};

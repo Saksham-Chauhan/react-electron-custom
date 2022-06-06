@@ -34,6 +34,7 @@ import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { getTweets, sendLogs } from "../../helper/electron-bridge";
 import { appendNewTweetInList } from "../../features/logic/twitter";
+import { makeStrOfArr } from "../../helper";
 
 const open = window.require("open");
 
@@ -66,8 +67,10 @@ function Twitter() {
             const newTweets = await getTweets(
               apiList[rotaterIndex]?.apiKey,
               apiList[rotaterIndex]?.apiSecret,
-              tweetUser["value"]
+              tweetUser["value"],
+              makeStrOfArr(keyWordList)
             );
+
             if (newTweets !== undefined && typeof newTweets !== "string") {
               const twitterStart = twitterSetting["monitorStartDate"];
               if (new Date(newTweets["created_at"]) > new Date(twitterStart)) {

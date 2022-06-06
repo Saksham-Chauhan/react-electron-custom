@@ -66,6 +66,7 @@ export const DISCORD_MASS_OPTIONS = [
   { value: "tokenRetrieve", label: "Token Retriever" },
   { value: "giveawayJoiner", label: "Giveaway Joiner" },
   { value: "xpFarmer", label: "XP Farmer" },
+  { value: "discordSpoofer", label: "Discord Spoofer" },
 ];
 
 export const replyList = [
