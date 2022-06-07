@@ -132,11 +132,15 @@ const addCaptchaResolver = (captcha) =>
 const captchaResolverListener = (callback) =>
   ipcRenderer.on("captcha-response", (_, data) => callback(data));
 
-// DISCORD IPC
+// DISCORD IPC  discord-spoofer-toaster
 const addDiscordSpoofer = (data) =>
-  ipcRenderer.on("start-discord-spoofer", data);
+  ipcRenderer.send("start-discord-spoofer", data);
+
+const updateDiscordSpooferStatus = (callback) =>
+  ipcRenderer.on("discord-spoofer-toaster", (_, res) => callback(res));
 
 module.exports = {
+  updateDiscordSpooferStatus,
   errorInProxy,
   addDiscordSpoofer,
   updateGiveawayJoinerStatus,

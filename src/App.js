@@ -57,6 +57,7 @@ import {
   webhookNotificationListener,
   debuggerChannnel,
   updateGiveawayJoinerStatus,
+  updateDiscordSpooferStatus,
 } from "./helper/electron-bridge";
 import {
   resetSpooferStatus,
@@ -158,6 +159,9 @@ function App() {
 
     // GJ
     updateGiveawayJoinerStatus((res) => dispatch(updateTaskState(res)));
+
+    // DISCORD SPOOFER
+    updateDiscordSpooferStatus((res) => dispatch(updateTaskState(res)));
 
     // channel for debugging in production
     debuggerChannnel();

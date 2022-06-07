@@ -11,6 +11,7 @@ import { toastWarning } from "../../../toaster";
 import { getProxy } from "../../../api";
 
 import {
+  addDiscordSpoofer,
   errorInProxy,
   readArrayOfJson,
   startGiveawayJoiner,
@@ -117,6 +118,8 @@ function TableSection({ list }) {
         updateTaskState({ id: obj.id, status: "Monitoring", active: true })
       );
       startGiveawayJoiner(obj);
+    } else if (type === "discordSpoofer") {
+      addDiscordSpoofer(obj);
     }
   };
 

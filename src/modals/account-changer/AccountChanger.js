@@ -577,7 +577,8 @@ const getDynamicSlideRnder = (
       );
 
     case "discordSpoofer": {
-      return <DiscordSpooferSlide />;
+      return null;
+      // return <DiscordSpooferSlide />;
     }
     default:
       return <UserNameChangerSlide onChange={handleChange} />;

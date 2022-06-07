@@ -6,11 +6,18 @@ class DiscordManager {
   }
 
   addSpoofer(data) {
-    const { id, isDisableImage = false, proxyValue } = data;
+    console.log(data);
+    const {
+      id,
+      isDisableImage = false,
+      proxyGroup: { value },
+      claimerGroup,
+    } = data;
     this.bots[id] = new DiscordSpooferProcess(
       id,
-      proxyValue.split("\n") || [],
-      isDisableImage
+      value.split("\n") || [],
+      isDisableImage,
+      claimerGroup.value.split("\n")
     );
   }
 }

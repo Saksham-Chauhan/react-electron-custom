@@ -1,18 +1,18 @@
 import React from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { AppSpacer } from "../../../component";
-import { fetchThemsState } from "../../../features/counterSlice";
+// import { fetchThemsState } from "../../../features/counterSlice";
 
 function DiscordSpooferSlide() {
-  const appTheme = useSelector(fetchThemsState);
-  const textClass = appTheme ? "lightMode_color" : "";
-  const handleCloseModal = () => {};
-  const handleSubmit = () => {};
+  // const appTheme = useSelector(fetchThemsState);
+  // const textClass = appTheme ? "lightMode_color" : "";
+  // const handleCloseModal = () => {};
+  // const handleSubmit = () => {};
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
       <AppSpacer spacer={30} />
-      <div className="modal-control-btns">
+      {/* <div className="modal-control-btns">
         <div
           onClick={handleCloseModal}
           className={
@@ -29,7 +29,7 @@ function DiscordSpooferSlide() {
         >
           <span className={textClass}>Create</span>
         </div>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 }
