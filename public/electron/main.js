@@ -11,6 +11,19 @@ const bytenode = require("bytenode");
 (async () => {
   try {
     bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/discord-spoofer-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/discord-spoofer-manager.jsc"
+      )}`,
+    });
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/script/manager/discord-spoofer-manager.jsc")}`
+    );
+    bytenode.compileFile({
       filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
       output: `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`,
     });
@@ -104,8 +117,7 @@ const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
 const logManager = require("./script/manager/log-manager.jsc");
 const giveawayJoiner = require("./script/manager/giveawayJoiner-manager.jsc");
 const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
-const discordManager = require("./script/manager/discord-spoofer-manager");
-// const captchaResolverManager = require("./script/manager/captchaResolver-manager");
+const discordManager = require("./script/manager/discord-spoofer-manager.jsc");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
 const str2ab = require("string-to-arraybuffer");
@@ -220,13 +232,13 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: !isDev ? false : true,
+      devTools: isDev ? true : false,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
   });
 
-  if (!isDev) mainWindow.webContents.openDevTools();
+  if (isDev) mainWindow.webContents.openDevTools();
 
   splash = new BrowserWindow({
     width: 700,
@@ -318,6 +330,7 @@ app.on("activate", () => {
 app.on("window-all-closed", function () {
   spooferManager.deleteAllSpoofer();
   logManager.saveLogs();
+  discordManager.deleteBrowser();
   app.quit();
 });
 
@@ -557,9 +570,13 @@ const debugSendToIpcRenderer = (log) => {
 
 ipcMain.on("start-discord-spoofer", (_, data) => {
   discordManager.addSpoofer(data);
-  // spooferManager.startSpoofer(data.id);
 });
 
+ipcMain.on("stop-discord-spoofer", (_, id) => {
+  discordManager.stopSpoofer(id);
+});
+
+// READY ARRAY
 ipcMain.on("read-array", async (event, array) => {
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);

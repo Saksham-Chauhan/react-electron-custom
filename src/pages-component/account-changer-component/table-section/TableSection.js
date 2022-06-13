@@ -12,6 +12,7 @@ import { getProxy } from "../../../api";
 
 import {
   addDiscordSpoofer,
+  deleteDiscordSpoofer,
   errorInProxy,
   readArrayOfJson,
   startGiveawayJoiner,
@@ -83,6 +84,7 @@ function TableSection({ list }) {
   };
 
   const handlePlay = async (obj) => {
+    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     flag.current = !flag.current;
     status = flag.current;
     const type = obj["changerType"];
@@ -105,9 +107,6 @@ function TableSection({ list }) {
     } else if (type === "avatarChanger") {
       await avatarChanger(obj, setting, user, webhookList);
     } else if (type === "xpFarmer") {
-      dispatch(
-        updateTaskState({ id: obj.id, status: "Running", active: true })
-      );
       startXpFarmer(obj);
     } else if (type === "linkOpener") {
       startLinkOpenerMonitor(obj, setting, user, webhookList);
@@ -167,6 +166,8 @@ function TableSection({ list }) {
       stopLinkOpenerMonitor(obj.id);
     } else if (type === "inviteJoiner") {
       stopInviteJoinerMonitor(obj.id);
+    } else if (type === "discordSpoofer") {
+      deleteDiscordSpoofer({ claimer: obj.claimerGroup, id: obj.id });
     }
   };
 

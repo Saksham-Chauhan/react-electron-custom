@@ -1,5 +1,5 @@
 import axios from "axios";
-import { arrayBufferToString } from "../helper";
+import { arrayBufferToString, getEncryptedToken } from "../helper";
 import { sendLogs } from "../helper/electron-bridge";
 import { toastSuccess, toastWarning } from "../toaster";
 
@@ -33,19 +33,20 @@ export const discordServerInviteAPI = async (
   solution = null,
   captchaData = null
 ) => {
-  console.log(captchaData);
+  let data = {};
+  if (solution && captchaData.captcha_rqtoken) {
+    const token = captchaData.captcha_rqtoken.toString();
+    console.log(token, typeof token);
+    data = JSON.stringify({
+      captcha_key: solution,
+      captcha_rqtoken: token,
+    });
+  }
   return await axios({
     url: `${BASE_URL}/invites/${inviteCode}`,
     headers: { Authorization: token },
     method: "POST",
-    data: JSON.stringify(
-      solution
-        ? {
-            captcha_key: solution,
-            captcha_rqtoken: captchaData.captcha_rqtoken,
-          }
-        : {}
-    ),
+    data,
     proxy,
   });
 };
@@ -125,9 +126,8 @@ export const directDiscordJoinAPI = async ({
   token,
   settingObj,
   solution,
-  captchaData,
+  captchaData = null,
 }) => {
-  console.log("call", settingObj);
   let inviteResponse;
   try {
     inviteResponse = await discordServerInviteAPI(
@@ -138,11 +138,10 @@ export const directDiscordJoinAPI = async ({
       captchaData
     );
     if (inviteResponse.status === 200) {
-      console.log("joined");
-      const tkn =
-        token.substring(0, 4) + "## ##" + token.charAt(token.length - 1);
       toastSuccess(`Joined the ${inviteResponse.data.guild.name} server`);
-      const log = `Joined the ${inviteResponse.data.guild.name} server with ${tkn}`;
+      const log = `Joined the ${
+        inviteResponse.data.guild.name
+      } server with ${getEncryptedToken(token)}`;
       sendLogs(log);
 
       if (settingObj?.isReact) {
@@ -156,7 +155,7 @@ export const directDiscordJoinAPI = async ({
           },
         });
         if (serverReactResponse.status === 201) {
-          const log = `Direct join Reaction added successfully  with ${tkn}`;
+          const log = `Direct join Reaction added successfully  with ${token}`;
           sendLogs(log);
           toastSuccess("Reaction added successfully");
         }
@@ -177,7 +176,7 @@ export const directDiscordJoinAPI = async ({
           acceptServerRulResponse !== null &&
           acceptServerRulResponse === 201
         ) {
-          const log = `Direct join Rules accepted successfully ${tkn}`;
+          const log = `Direct join Rules accepted successfully ${token}`;
           sendLogs(log);
           toastSuccess("Rules accepted successfully");
         }

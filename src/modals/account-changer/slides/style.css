@@ -123,3 +123,38 @@
   margin: 0 0 0 6px;
   cursor: pointer;
 }
+
+.img-field {
+  width: 100%;
+  outline: none;
+  background: transparent;
+  border: 1px solid #121638;
+  border-radius: 4px;
+  padding: 0.4em 0.4em;
+  color: var(--primary);
+  font-size: 13px;
+  height: 3rem;
+  line-height: 2rem;
+  position: relative;
+}
+.img-field > span {
+  color: var(--placeholder);
+  z-index: 0;
+}
+
+.img-field > input {
+  -webkit-appearance: none;
+  opacity: 0;
+  position: absolute;
+  z-index: 10;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+.img-lable {
+  font-weight: 500;
+  font-size: 13.149px;
+  line-height: 20px;
+  color: var(--primary);
+  margin-bottom: 10px;
+}

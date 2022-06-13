@@ -27,6 +27,7 @@ import {
 const tokenMsg = "Invalid format, Token not found in Discord Accounts";
 const passMsg = "Invalid format, Password not found";
 const emailMsg = "Invalid format, Email not found";
+const captchaMsg = "Error after resolve captcha with token :";
 const getTokenList = (obj) => obj.claimerGroup["value"]?.split("\n");
 
 export const useMassInviteJoiner = () => {
@@ -36,7 +37,6 @@ export const useMassInviteJoiner = () => {
   const dispatch = useDispatch();
   const captchaResolver = useCaptchaResolverMassJoiner();
   const callApi = async (obj) => {
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const inviteCodeList = obj.inviteCodes?.split("\n");
@@ -54,10 +54,11 @@ export const useMassInviteJoiner = () => {
         }
         try {
           await sleep(obj.delay);
+          const token = tokenArray[index]?.split(":")[2];
           const response = await directDiscordJoinAPI({
             proxy,
             inviteCode,
-            token: tokenArray[index]?.split(":")[2],
+            token,
             settingObj: obj,
           });
           if (response.status === 200 || response.status === 204) {
@@ -67,26 +68,35 @@ export const useMassInviteJoiner = () => {
                 status: `${counter + 1}/${tokenArray.length}  Joined`,
               })
             );
-            counter = counter + 1;
-            const log = `Server joined successfully with token: ${getEncryptedToken(
-              tokenArray[index]?.split(":")[2]
-            )}`;
-            sendLogs(log);
-          } else if ("captcha_key" in response?.response?.data) {
+            counter++;
+            sendLogs(
+              `Server joined successfully with token: ${getEncryptedToken(
+                token
+              )}`
+            );
+          } else if (
+            typeof response?.response?.data === "object" &&
+            response?.response?.data?.captcha_key
+          ) {
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
+                token
               )} in Mass Joiner`
             );
             const args = {
               proxy,
               inviteCode,
-              token: tokenArray[index]?.split(":")[2],
+              token,
               settingObj: obj,
               captchaData: response?.response?.data,
             };
-            console.log("captcha error");
-            captchaResolver(directDiscordJoinAPI, args);
+
+            const res = await captchaResolver(directDiscordJoinAPI, args);
+            if (res.status !== 200 || res.status !== 204) {
+              sendLogs(
+                `${captchaMsg}${getEncryptedToken(token)} in Mass Joiner`
+              );
+            }
           } else {
             toastWarning(response.message);
           }
@@ -96,10 +106,6 @@ export const useMassInviteJoiner = () => {
               status: `${counter}/${tokenArray.length} Joined`,
             })
           );
-          // const log = `Unable to join server with token: ${getEncryptedToken(
-          //   tokenArray[index]?.split(":")[2]
-          // )}, error message:${response.message}`;
-          // sendLogs(log);
         } catch (error) {
           dispatch(
             updateTaskState({
@@ -122,7 +128,6 @@ export const useMassInviteJoiner = () => {
         active: false,
       })
     );
-    // TODO => fetch logged uyser details from store instead of passing as parameter
     sendWebhook(obj, "TASKS", obj.changerType, setting, user, webhookList, {
       success: counter,
       total: tokenArray.length,
@@ -135,48 +140,58 @@ export const useServerLeaver = () => {
   const dispatch = useDispatch();
   const captchaResolver = useCaptchaResolverMassJoiner();
   const apiCall = async (obj, setting, user, webhookList) => {
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
-    let tracker = 0,
+    let next_counter = 0,
       flag = false;
     const { proxyGroup } = obj;
     const serverIdArray = obj.serverIDs?.split("\n");
     const tokenArray = getTokenList(obj);
     if (serverIdArray?.length !== undefined) {
       for (let index = 0; index < tokenArray.length; index++) {
+        const token = tokenArray[index]?.split(":")[2];
         flag = false;
         for (let i = 0; i < serverIdArray.length; i++) {
           try {
             const proxy = getProxy(proxyGroup["value"].split("\n"));
             await sleep(obj.delay);
+            if (!token) {
+              toastWarning(tokenMsg);
+              continue;
+            }
             const response = await serverLeaverAPI({
-              token: tokenArray[index]?.split(":")[2],
+              token: token,
               guildId: serverIdArray[i],
               proxy,
             });
             if (response.status === 200 || response.status === 204) {
               flag = true;
-              counter = counter + 1;
-              const log = `Server leave successfully, token: ${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
-              )}`;
-              sendLogs(log);
+              counter++;
+              sendLogs(
+                `Server leave successfully, token: ${getEncryptedToken(token)}`
+              );
             } else {
-              if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
-              else if ("captcha_key" in response?.response?.data) {
+              // TODO-> check response object
+              if (
+                typeof response?.response?.data === "object" &&
+                response?.response?.data?.captcha_key
+              ) {
                 sendLogs(
-                  `Captcha error with token :${getEncryptedToken(
-                    tokenArray[index]?.split(":")[2]
+                  `Captcha error with token:${getEncryptedToken(
+                    token
                   )} in Server Leaver`
                 );
                 const args = {
-                  token: tokenArray[index]?.split(":")[2],
+                  token,
                   guildId: serverIdArray[i],
                   proxy,
                   captchaData: response?.response?.data,
                 };
-                console.log("captcha error");
-                captchaResolver(serverLeaverAPI, args);
+                const res = await captchaResolver(serverLeaverAPI, args);
+                if (res.status !== 200 || res.status !== 204) {
+                  sendLogs(
+                    `${captchaMsg} ${getEncryptedToken(token)} in Server Leaver`
+                  );
+                }
               } else toastWarning(response.message);
               dispatch(
                 updateTaskState({
@@ -185,10 +200,11 @@ export const useServerLeaver = () => {
                   active: true,
                 })
               );
-              const log = `Unable to leave server, token: ${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
-              )},error:${response.message}`;
-              sendLogs(log);
+              sendLogs(
+                `Unable to leave server, token: ${getEncryptedToken(
+                  token
+                )},error:${response.message}`
+              );
             }
           } catch (error) {
             dispatch(
@@ -198,13 +214,10 @@ export const useServerLeaver = () => {
                 active: false,
               })
             );
-            const log = `Unable to leave server, token: ${getEncryptedToken(
-              tokenArray[index]?.split(":")[2]
-            )},error:${error.message}`;
-            sendLogs(log);
-            console.log(
-              "Something went wrong while trying to leave server",
-              error.message
+            sendLogs(
+              `Unable to leave server, token: ${getEncryptedToken(
+                token
+              )},error:${error.message}`
             );
           }
         }
@@ -212,11 +225,11 @@ export const useServerLeaver = () => {
           dispatch(
             updateTaskState({
               id: obj.id,
-              status: `${tracker + 1}/${tokenArray.length} Leaved`,
+              status: `${next_counter + 1}/${tokenArray.length} Leaved`,
               active: true,
             })
           );
-          tracker = tracker + 1;
+          next_counter = next_counter + 1;
         }
       }
     } else toastWarning("Invalid format, Server ID not found");
@@ -238,7 +251,6 @@ export const useUserName = () => {
   const captchaResolver = useCaptchaResolverMassJoiner();
   const dispatch = useDispatch();
   const apiCall = async (obj, setting, user, webhookList) => {
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     const { proxyGroup } = obj;
     let name = null;
     let counter = 0;
@@ -250,11 +262,19 @@ export const useUserName = () => {
     }
     const tokenArray = getTokenList(obj);
     for (let index = 0; index < tokenArray.length; index++) {
+      const token = tokenArray[index]?.split(":")[2];
       const proxy = getProxy(proxyGroup["value"].split("\n"));
       try {
         await sleep(obj.delay);
+        if (!tokenArray[index]?.split(":")[1]) {
+          toastWarning(passMsg);
+          continue;
+        } else if (!token) {
+          toastWarning(tokenMsg);
+          continue;
+        }
         const response = await usernameChangerAPI({
-          token: tokenArray[index]?.split(":")[2],
+          token: token,
           password: tokenArray[index]?.split(":")[1],
           proxy,
           username: name,
@@ -266,28 +286,35 @@ export const useUserName = () => {
               status: `${counter + 1}/${tokenArray.length} Changed`,
             })
           );
-          counter = counter + 1;
-          const log = `Username changed successfully with token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )}`;
-          sendLogs(log);
+          counter++;
+          sendLogs(
+            `Username changed successfully with token: ${getEncryptedToken(
+              token
+            )}`
+          );
         } else {
-          if (!tokenArray[index]?.split(":")[1]) toastWarning(passMsg);
-          else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
-          else if ("captcha_key" in response?.response?.data) {
+          if (
+            typeof response?.response?.data === "object" &&
+            response?.response?.data?.captcha_key
+          ) {
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
+                token
               )} in Username Changer`
             );
             const args = {
-              token: tokenArray[index]?.split(":")[2],
+              token: token,
               password: tokenArray[index]?.split(":")[1],
               proxy,
               username: name,
             };
-            console.log("captcha error");
-            captchaResolver(usernameChangerAPI, args);
+
+            const res = await captchaResolver(usernameChangerAPI, args);
+            if (res.status !== 200 || res.status !== 204) {
+              sendLogs(
+                `${captchaMsg}${getEncryptedToken(token)} in Username Changer`
+              );
+            }
           } else toastWarning(response.message);
           dispatch(
             updateTaskState({
@@ -295,10 +322,11 @@ export const useUserName = () => {
               status: `${counter}/${tokenArray.length} Changed`,
             })
           );
-          const log = `Unable to change username, token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )},error:${response.message}`;
-          sendLogs(log);
+          sendLogs(
+            `Unable to change username, token: ${getEncryptedToken(
+              token
+            )},error:${response.message}`
+          );
         }
       } catch (e) {
         dispatch(
@@ -308,10 +336,11 @@ export const useUserName = () => {
             active: false,
           })
         );
-        const log = `Unable to change username, token: ${getEncryptedToken(
-          tokenArray[index]?.split(":")[2]
-        )},error:${e.message}`;
-        sendLogs(log);
+        sendLogs(
+          `Unable to change username, token: ${getEncryptedToken(
+            token
+          )},error:${e.message}`
+        );
       }
     }
     dispatch(
@@ -327,22 +356,29 @@ export const useUserName = () => {
   };
   return apiCall;
 };
-
+// TODO REMOVE ALL CONSOLE
 export const useActivityChanger = () => {
   const captchaResolver = useCaptchaResolverMassJoiner();
   const dispatch = useDispatch();
   const apiCall = async (obj, setting, user, webhookList) => {
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
     let counter = 0;
     for (let index = 0; index < tokenArray.length; index++) {
+      const token = tokenArray[index]?.split(":")[2];
       try {
         const proxy = getProxy(proxyGroup["value"].split("\n"));
+        if (!obj.activityDetails) {
+          toastWarning("Invalid format, Status detail not found");
+          continue;
+        } else if (!token) {
+          toastWarning(tokenMsg);
+          continue;
+        }
         await sleep(obj.delay);
         const response = await activityChangerAPI({
-          token: tokenArray[index]?.split(":")[2],
-          message: obj.activityDetail,
+          token: token,
+          message: obj.activityDetails,
           emojiValue: obj.emojiValue,
           userStatus: obj.userStatus,
           proxy,
@@ -355,32 +391,35 @@ export const useActivityChanger = () => {
               active: true,
             })
           );
-          counter = counter + 1;
-          const log = `Status changed successfully with token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )}`;
-          sendLogs(log);
+          counter++;
+          sendLogs(
+            `Status changed successfully with token: ${getEncryptedToken(
+              token
+            )}`
+          );
         } else {
-          if (!obj.activityDetail)
-            toastWarning("Invalid format, Status detail not found");
-          else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
-          else if (!obj.emojiValue)
-            toastWarning("Invalid format, Emoji not found");
-          else if ("captcha_key" in response?.response?.data) {
+          if (
+            typeof response?.response?.data === "object" &&
+            response?.response?.data?.captcha_key
+          ) {
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
+                token
               )} in Status Changer`
             );
             const args = {
-              token: tokenArray[index]?.split(":")[2],
+              token: token,
               message: obj.activityDetail,
               emojiValue: obj.emojiValue,
               userStatus: obj.userStatus,
               proxy,
             };
-            console.log("captcha error");
-            captchaResolver(activityChangerAPI, args);
+            const res = await captchaResolver(activityChangerAPI, args);
+            if (res.status !== 200 || res.status !== 204) {
+              sendLogs(
+                `${captchaMsg}${getEncryptedToken(token)} in Activity Changer`
+              );
+            }
           } else toastWarning(response.message);
           dispatch(
             updateTaskState({
@@ -389,10 +428,11 @@ export const useActivityChanger = () => {
               active: true,
             })
           );
-          const log = `Unable to change status, token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )},error:${response.message}`;
-          sendLogs(log);
+          sendLogs(
+            `Unable to change status, token: ${getEncryptedToken(
+              token
+            )},error:${response.message}`
+          );
         }
       } catch (error) {
         dispatch(
@@ -402,13 +442,10 @@ export const useActivityChanger = () => {
             active: false,
           })
         );
-        const log = `Unable to change status, token: ${getEncryptedToken(
-          tokenArray[index]?.split(":")[2]
-        )},error:${error.message}`;
-        sendLogs(log);
-        console.log(
-          "Something went wrong while changing activity",
-          error.message
+        sendLogs(
+          `Unable to change status, token: ${getEncryptedToken(token)},error:${
+            error.message
+          }`
         );
       }
     }
@@ -431,50 +468,64 @@ export const useNickNameChanger = () => {
   const dispatch = useDispatch();
   const apiCall = async (obj, setting, user, webhookList) => {
     const tokenArray = getTokenList(obj);
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
-    let tracker = 0,
+    let next_counter = 0,
       flag = false;
     const { proxyGroup } = obj;
-    const serverIdArray = obj.serverIDs?.split("\n");
+    const serverIdArray = obj.serverIDs?.split("\n") || [];
     if (serverIdArray.length > 0) {
       const tokenArray = getTokenList(obj);
       const name = obj.nicknameGenerate?.split("\n");
       for (let i = 0; i < serverIdArray.length; i++) {
         flag = false;
         for (let index = 0; index < tokenArray.length; index++) {
+          const token = tokenArray[index]?.split(":")[2];
           try {
-            const proxy = getProxy(proxyGroup["value"].split("\n"));
             await sleep(obj.delay);
+            const proxy = getProxy(proxyGroup["value"].split("\n"));
+            if (!token) {
+              toastWarning(tokenMsg);
+              continue;
+            }
             const response = await nicknameChangerAPI({
-              token: tokenArray[index]?.split(":")[2],
+              token: token,
               guildId: serverIdArray[i],
               name: name[index],
               proxy,
             });
             if (response.status === 200 || response.status === 204) {
               flag = true;
-              counter = counter + 1;
-              const log = `Nickname changed successfully with token: ${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
-              )}`;
-              sendLogs(log);
+              counter++;
+              sendLogs(
+                `Nickname changed successfully with token: ${getEncryptedToken(
+                  token
+                )}`
+              );
             } else {
-              if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
-              else if ("captcha_key" in response?.response?.data) {
+              if (
+                typeof response?.response?.data === "object" &&
+                response?.response?.data?.captcha_key
+              ) {
                 sendLogs(
                   `Captcha error with token :${getEncryptedToken(
-                    tokenArray[index]?.split(":")[2]
+                    token
                   )} in Nickname Changer`
                 );
                 const args = {
-                  token: tokenArray[index]?.split(":")[2],
+                  token: token,
                   guildId: serverIdArray[i],
                   name: name[index],
                   proxy,
                 };
                 console.log("captcha error");
-                captchaResolver(nicknameChangerAPI, args);
+                const res = await captchaResolver(nicknameChangerAPI, args);
+                if (res.status !== 200 || res.status !== 204) {
+                  sendLogs(
+                    `${captchaMsg}${getEncryptedToken(
+                      token
+                    )} in Nickname Changer`
+                  );
+                }
               } else toastWarning(response.message);
               dispatch(
                 updateTaskState({
@@ -483,10 +534,11 @@ export const useNickNameChanger = () => {
                   active: true,
                 })
               );
-              const log = `Unable to change nickname, token: ${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
-              )},error${response.message}`;
-              sendLogs(log);
+              sendLogs(
+                `Unable to change nickname, token: ${getEncryptedToken(
+                  token
+                )},error${response.message}`
+              );
             }
           } catch (e) {
             dispatch(
@@ -496,21 +548,22 @@ export const useNickNameChanger = () => {
                 active: false,
               })
             );
-            const log = `Unable to change nickname, token: ${getEncryptedToken(
-              tokenArray[index]?.split(":")[2]
-            )},error${e.message}`;
-            sendLogs(log);
+            sendLogs(
+              `Unable to change nickname, token: ${getEncryptedToken(
+                token
+              )},error${e.message}`
+            );
           }
         }
         if (flag) {
           dispatch(
             updateTaskState({
               id: obj.id,
-              status: `${tracker + 1}/${tokenArray.length} Changed`,
+              status: `${next_counter + 1}/${tokenArray.length} Changed`,
               active: true,
             })
           );
-          tracker = tracker + 1;
+          next_counter = next_counter + 1;
         }
       }
     }
@@ -533,7 +586,7 @@ export const usePasswordChanger = () => {
   const dispatch = useDispatch();
   let arr = [];
   let user = [];
-  let tracker = 0;
+  let next_counter = 0;
   let tempObj = {};
   const helper = (response, obj) => {
     tempObj = { ...obj };
@@ -541,18 +594,17 @@ export const usePasswordChanger = () => {
     let tempuser = response.data.username;
     arr.push(newPass);
     user.push(tempuser);
-    if (tracker > 0) {
+    if (next_counter > 0) {
       arr = [...tempObj["newPass"].split("\n"), ...arr];
       user = [...tempObj["username"].split("\n"), ...user];
     }
     tempObj["newPass"] = arr.join("\n");
     tempObj["username"] = user.join("\n");
     dispatch(updatePasswordChangerStatus(tempObj));
-    tracker = tracker + 1;
+    next_counter = next_counter + 1;
   };
 
   const apiCall = async (obj, setting, user, webhookList) => {
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
@@ -568,11 +620,18 @@ export const usePasswordChanger = () => {
     }
     for (let index = 0; index < tokenArray.length; index++) {
       const proxy = getProxy(proxyGroup["value"].split("\n"));
+      const token = tokenArray[index]?.split(":")[2];
       try {
         await sleep(obj.delay);
-        // token, currentPassword, newPassword, proxy
+        if (!tokenArray[index]?.split(":")[1]) {
+          toastWarning("Invalid format, Password not found");
+          continue;
+        } else if (!token) {
+          toastWarning(tokenMsg);
+          continue;
+        }
         const response = await passwordChangerAPI({
-          token: tokenArray[index]?.split(":")[2],
+          token: token,
           currentPassword: tokenArray[index]?.split(":")[1],
           newPassword: newPass,
           proxy,
@@ -585,25 +644,31 @@ export const usePasswordChanger = () => {
               active: true,
             })
           );
-          counter = counter + 1;
+          counter++;
           helper(response, obj);
-          const log = `Password changed successfully with token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )}`;
-          sendLogs(log);
+          sendLogs(
+            `Password changed successfully with token: ${getEncryptedToken(
+              token
+            )}`
+          );
         } else {
-          if (!tokenArray[index]?.split(":")[1])
-            toastWarning("Invalid format, Password not found");
-          else if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
-          else if ("captcha_key" in response?.response?.data) {
+          if (
+            typeof response?.response?.data === "object" &&
+            response?.response?.data?.captcha_key
+          ) {
             const args = {
-              token: tokenArray[index]?.split(":")[2],
+              token: token,
               currentPassword: tokenArray[index]?.split(":")[1],
               newPassword: newPass,
               proxy,
             };
             console.log("captcha error");
-            captchaResolver(passwordChangerAPI, args);
+            const res = await captchaResolver(passwordChangerAPI, args);
+            if (res.status !== 200 || res.status !== 204) {
+              sendLogs(
+                `${captchaMsg}:${getEncryptedToken(token)} in Password Changer`
+              );
+            }
           } else toastWarning(response.message);
           dispatch(
             updateTaskState({
@@ -612,10 +677,11 @@ export const usePasswordChanger = () => {
               active: true,
             })
           );
-          const log = `Unable to change password, token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )},error:${response.message}`;
-          sendLogs(log);
+          sendLogs(
+            `Unable to change password, token: ${getEncryptedToken(
+              token
+            )},error:${response.message}`
+          );
         }
       } catch (e) {
         dispatch(
@@ -625,10 +691,11 @@ export const usePasswordChanger = () => {
             active: false,
           })
         );
-        const log = `Unable to change password, token: ${getEncryptedToken(
-          tokenArray[index]?.split(":")[2]
-        )},error:${e.message}`;
-        sendLogs(log);
+        sendLogs(
+          `Unable to change password, token: ${getEncryptedToken(
+            token
+          )},error:${e.message}`
+        );
       }
     }
     dispatch(
@@ -649,16 +716,20 @@ export const useTokeChecker = () => {
   const dispatch = useDispatch();
   const captchaResolver = useCaptchaResolverMassJoiner();
   const apiCall = async (obj, setting, user, webhookList) => {
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
     for (let index = 0; index < tokenArray.length; index++) {
       const proxy = getProxy(proxyGroup["value"].split("\n"));
+      const token = tokenArray[index]?.split(":")[2];
       try {
         await sleep(obj.delay);
+        if (!token) {
+          toastWarning(tokenMsg);
+          continue;
+        }
         const response = await tokenCheckerAPI({
-          token: tokenArray[index]?.split(":")[2],
+          token: token,
           proxy,
         });
         if (response.status === 200 || response.status === 204) {
@@ -669,25 +740,31 @@ export const useTokeChecker = () => {
               active: true,
             })
           );
-          counter = counter + 1;
-          const log = `Token checked successfully with token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )}`;
-          sendLogs(log);
+          counter++;
+          sendLogs(
+            `Token checked successfully with token: ${getEncryptedToken(token)}`
+          );
         } else {
-          if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
-          else if ("captcha_key" in response?.response?.data) {
+          if (
+            typeof response?.response?.data === "object" &&
+            response?.response?.data?.captcha_key
+          ) {
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
+                token
               )} in Token Checker`
             );
             const args = {
-              token: tokenArray[index]?.split(":")[2],
+              token: token,
               proxy,
             };
             console.log("captcha error");
-            captchaResolver(tokenCheckerAPI, args);
+            const res = await captchaResolver(tokenCheckerAPI, args);
+            if (res.status !== 200 || res.status !== 204) {
+              sendLogs(
+                `${captchaMsg}${getEncryptedToken(token)} in Token Checker`
+              );
+            }
           } else toastWarning(response.message);
           dispatch(
             updateTaskState({
@@ -696,10 +773,11 @@ export const useTokeChecker = () => {
               active: true,
             })
           );
-          const log = `Unable to check token, token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )},error:${response.message}`;
-          sendLogs(log);
+          sendLogs(
+            `Unable to check token, token: ${getEncryptedToken(token)},error:${
+              response.message
+            }`
+          );
         }
       } catch (e) {
         dispatch(
@@ -709,10 +787,11 @@ export const useTokeChecker = () => {
             active: false,
           })
         );
-        const log = `Unable to check token, token: ${getEncryptedToken(
-          tokenArray[index]?.split(":")[2]
-        )},error:${e.message}`;
-        sendLogs(log);
+        sendLogs(
+          `Unable to check token, token: ${getEncryptedToken(token)},error:${
+            e.message
+          }`
+        );
       }
     }
     dispatch(
@@ -735,37 +814,43 @@ export const useTokenRetriever = () => {
   let arr = [];
   let emailArr = [];
   let tempObj = {};
-  let tracker = 0;
+  let next_counter = 0;
   const helper = (apiResponse, tokenArr) => {
     console.log("in helper");
     let newToken = apiResponse.data.token;
     arr.push(newToken);
     emailArr.push(tokenArr.split(":")[0]);
-    if (tracker > 0) {
+    if (next_counter > 0) {
       arr = [...tempObj["newToken"].split("\n"), ...arr];
       emailArr = [...tempObj["email"].split("\n"), ...emailArr];
     }
     tempObj["newToken"] = arr.join("\n");
     tempObj["email"] = emailArr.join("\n");
     dispatch(updatePasswordChangerStatus(tempObj));
-    tracker = tracker + 1;
+    next_counter = next_counter + 1;
   };
   const apiCall = async (obj, setting, user, webhookList) => {
     const tokenArray = getTokenList(obj);
     tempObj = { ...obj };
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let counter = 0;
     const { proxyGroup } = obj;
     for (let index = 0; index < tokenArray.length; index++) {
       const proxy = getProxy(proxyGroup["value"].split("\n"));
+      const token = tokenArray[index]?.split(":")[2];
       try {
         await sleep(obj.delay);
+        if (!tokenArray[index]?.split(":")[0]) {
+          toastWarning(emailMsg);
+          continue;
+        } else if (!tokenArray[index]?.split(":")[1]) {
+          toastWarning(passMsg);
+          continue;
+        }
         const response = await tokenRetrieverAPI({
           email: tokenArray[index]?.split(":")[0],
           password: tokenArray[index]?.split(":")[1],
           proxy,
         });
-        console.log(response);
         if (response.status === 200 || response.status === 204) {
           console.log("in 200");
           dispatch(
@@ -776,30 +861,37 @@ export const useTokenRetriever = () => {
             })
           );
           tempObj["status"] = `${counter + 1}/${tokenArray.length} Retrieved`;
-          counter = counter + 1;
+          counter++;
           helper(response, tokenArray[index]);
-          const log = `Token Retrieve successfully with token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )}`;
-          sendLogs(log);
+          sendLogs(
+            `Token Retrieve successfully with token: ${getEncryptedToken(
+              token
+            )}`
+          );
         } else {
-          if (!tokenArray[index]?.split(":")[0]) toastWarning(emailMsg);
-          else if (!tokenArray[index]?.split(":")[1]) toastWarning(passMsg);
-          else if ("captcha_key" in response?.response?.data) {
+          if (
+            typeof response?.response?.data === "object" &&
+            response?.response?.data?.captcha_key
+          ) {
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
+                token
               )} in Token Retriever`
             );
             const args = {
               proxy,
-              discordToken: tokenArray[index]?.split(":")[2],
+              discordToken: token,
               taskObj: obj,
               captchaData: response?.response?.data,
               user: tokenArray[index]?.split(":")[0],
               pass: tokenArray[index]?.split(":")[1],
             };
-            captchaResolver(directDiscordJoinAPI, args);
+            const res = await captchaResolver(directDiscordJoinAPI, args);
+            if (res.status !== 200 || res.status !== 204) {
+              sendLogs(
+                `${captchaMsg}${getEncryptedToken(token)} in Token Retriever`
+              );
+            }
           } else toastWarning(response.message);
           dispatch(
             updateTaskState({
@@ -808,10 +900,11 @@ export const useTokenRetriever = () => {
               active: true,
             })
           );
-          const log = `Unable to retrieve token, token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )},error:${response.message}`;
-          sendLogs(log);
+          sendLogs(
+            `Unable to retrieve token, token: ${getEncryptedToken(
+              token
+            )},error:${response.message}`
+          );
         }
       } catch (e) {
         console.log(e);
@@ -822,10 +915,11 @@ export const useTokenRetriever = () => {
             active: false,
           })
         );
-        const log = `Unable to retrieve token, token: ${getEncryptedToken(
-          tokenArray[index]?.split(":")[2]
-        )},error:${e.message}`;
-        sendLogs(log);
+        sendLogs(
+          `Unable to retrieve token, token: ${getEncryptedToken(token)},error:${
+            e.message
+          }`
+        );
       }
     }
     dispatch(
@@ -846,31 +940,35 @@ export const useAvatarChanger = () => {
   const captchaResolver = useCaptchaResolverMassJoiner();
   const dispatch = useDispatch();
   const apiCall = async (obj, setting, user, webhookList) => {
-    dispatch(updateTaskState({ id: obj.id, status: "Running", active: true }));
     let randomImage;
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
     const avatarAPI = obj.apiInfo;
-    if (avatarAPI?.label === "Default API" || avatarAPI?.label === undefined) {
+    if (obj.customImage) {
+      randomImage = obj.customImage;
+    } else if (
+      avatarAPI?.label === "Default API" ||
+      avatarAPI?.label === undefined
+    ) {
       randomImage = await generateRandomAvatar();
     } else {
       randomImage = await generateRandomAvatar(avatarAPI.value);
     }
     for (let index = 0; index < tokenArray.length; index++) {
       const proxy = getProxy(proxyGroup["value"].split("\n"));
+      const token = tokenArray[index]?.split(":")[2];
       try {
         await sleep(obj.delay);
+        if (!token) {
+          toastWarning(tokenMsg);
+          continue;
+        }
         const response = await avatarChangerAPI({
-          token: tokenArray[index]?.split(":")[2],
+          token: token,
           image: randomImage,
           proxy,
         });
-        setTimeout(() => {
-          if (!response) {
-            toastWarning("API response time out");
-          }
-        }, 1000 * 10);
         if (response.status === 200 || response.status === 204) {
           dispatch(
             updateTaskState({
@@ -879,26 +977,34 @@ export const useAvatarChanger = () => {
               active: true,
             })
           );
-          counter = counter + 1;
-          const log = `Avatar changed successfully with token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )}`;
-          sendLogs(log);
+          counter++;
+          sendLogs(
+            `Avatar changed successfully with token: ${getEncryptedToken(
+              token
+            )}`
+          );
         } else {
-          if (!tokenArray[index]?.split(":")[2]) toastWarning(tokenMsg);
-          else if ("captcha_key" in response?.response?.data) {
+          if (
+            typeof response?.response?.data === "object" &&
+            response?.response?.data?.captcha_key
+          ) {
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
-                tokenArray[index]?.split(":")[2]
+                token
               )} in Avatar Changer`
             );
             const args = {
-              token: tokenArray[index]?.split(":")[2],
+              token: token,
               image: randomImage,
               proxy,
             };
             console.log("captcha error");
-            captchaResolver(avatarChangerAPI, args);
+            const res = await captchaResolver(avatarChangerAPI, args);
+            if (res.status !== 200 || res.status !== 204) {
+              sendLogs(
+                `${captchaMsg}${getEncryptedToken(token)} in Avatar Changer`
+              );
+            }
           } else toastWarning(response.message);
           dispatch(
             updateTaskState({
@@ -907,10 +1013,11 @@ export const useAvatarChanger = () => {
               active: true,
             })
           );
-          const log = `Unable to change avatar, token: ${getEncryptedToken(
-            tokenArray[index]?.split(":")[2]
-          )},error:${response.message}`;
-          sendLogs(log);
+          sendLogs(
+            `Unable to change avatar, token: ${getEncryptedToken(
+              token
+            )},error:${response.message}`
+          );
         }
       } catch (error) {
         dispatch(
@@ -920,10 +1027,11 @@ export const useAvatarChanger = () => {
             active: false,
           })
         );
-        const log = `Unable to change avatar, token: ${getEncryptedToken(
-          tokenArray[index]?.split(":")[2]
-        )},error:${error.message}`;
-        sendLogs(log);
+        sendLogs(
+          `Unable to change avatar, token: ${getEncryptedToken(token)},error:${
+            error.message
+          }`
+        );
       }
     }
     dispatch(

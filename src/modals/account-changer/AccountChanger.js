@@ -61,8 +61,6 @@ import {
   fetchServer,
 } from "../../helper/electron-bridge";
 import { toastSuccess, toastWarning } from "../../toaster";
-import DiscordSpooferSlide from "./slides/DiscordSpooferSlide";
-// import { toastWarning } from "../";
 
 function AccountChanger() {
   const navigate = useNavigate();
@@ -256,7 +254,11 @@ function AccountChanger() {
         valid = true;
       }
       if (valid) {
-        dispatch(addDataInTableList(accountChanger));
+        const obj = { ...accountChanger };
+        if (type === "discordSpoofer") {
+          obj["isOpen"] = 0;
+        }
+        dispatch(addDataInTableList(obj));
         handleCloseModal();
       }
     }
@@ -328,6 +330,22 @@ function AccountChanger() {
     setAccountChanger((pre) => {
       return { ...pre, [key]: value };
     });
+  };
+  const handleUpload = async (e) => {
+    var reader = new FileReader();
+    let file = e.target.files[0];
+    console.log(file);
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      let base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+      setAccountChanger((pre) => {
+        return {
+          ...pre,
+          customImage: `data:${file.type};base64,` + base64String,
+          imgname: file.name,
+        };
+      });
+    };
   };
 
   const textClass = appTheme ? "lightMode_color" : "";
@@ -431,7 +449,8 @@ function AccountChanger() {
         handleUpdateObject,
         handleSelectChannel,
         handleSelectServer,
-        handleSelectStatus
+        handleSelectStatus,
+        handleUpload
       )}
       <AppSpacer spacer={20} />
       {accountChanger?.changerType ? (
@@ -498,7 +517,8 @@ const getDynamicSlideRnder = (
   handleUpdateObject,
   handleSelectChannel,
   handleSelectServer,
-  handleSelectStatus
+  handleSelectStatus,
+  handleUpload
 ) => {
   switch (type) {
     case "avatarChanger":
@@ -506,6 +526,8 @@ const getDynamicSlideRnder = (
         <AvatarChangerSlide
           onChange={handleChange}
           handleSelectAPI={handleSelect}
+          handleUpload={handleUpload}
+          obj={state}
         />
       );
     case "serverLeaver":
@@ -578,7 +600,6 @@ const getDynamicSlideRnder = (
 
     case "discordSpoofer": {
       return null;
-      // return <DiscordSpooferSlide />;
     }
     default:
       return <UserNameChangerSlide onChange={handleChange} />;

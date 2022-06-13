@@ -1,37 +1,25 @@
-const electron = require("electron");
+const puppeteer = require("puppeteer");
 const UserAgent = require("user-agents");
-const {
-  getProxyHostPort,
-  getProxyData,
-  displayTitle,
-} = require("../../helper");
+const { getProxyData, randomInt } = require("../../helper");
 
-const session = electron.session;
-const BrowserWindow = electron.BrowserWindow;
+const SIZE = 700;
+const url = "https://discord.com/login";
+const emailClass = "input[type='text']";
+const btnClass = "button[type='submit']";
+const passClass = "input[type='password']";
 
-// ?data=stuff
-// const stuff = JSON.stringify({
-//   login:"+918218790712",
-//   password:"payjaL@1"
-// })
-
-// token passowrd
 class DiscordSpooferInstance {
-  constructor(id, proxyList, isImage, claimerGroup) {
+  constructor(id, proxyList, tokenList, email, password) {
     this.id = id;
-    this.proxyList = proxyList || [];
-    this.proxyCounter = 0;
-    this.claimerGroup = claimerGroup;
-    this.proxyHostPort = getProxyHostPort(this.proxyList[0]);
-    this.proxy = getProxyData(this.proxyList[0]);
-    this.url = "https://discord.com/login";
-    this.win = null;
-    this.isLaunched = false;
+    this.counter = 0;
+    this.maxCounter = tokenList;
+    this.email = email;
+    this.browser = null;
     this.isDeleted = false;
+    this.password = password;
+    this.proxyList = proxyList || [];
     this.mainWin = global.mainWin;
-    this.isImage = isImage;
-    this.maxNumberOfRetry = 10;
-    this.numberOfRetry = 0;
+    this.proxy = getProxyData(this.proxyList[0]);
     this.userAgent = new UserAgent(/Chrome/, { deviceCategory: "desktop" })
       .toString()
       .replace(/\|"/g, "");
@@ -42,66 +30,55 @@ class DiscordSpooferInstance {
 
   init() {
     this.sendStatus("Running", true);
-    for (let i = 0; i < this.claimerGroup.length; i++) {
-      this.launchBrowser(true);
-    }
+    this.launchBrowser();
   }
 
-  async launchBrowser(isShow = false) {
-    this.isLaunched = true;
-    this.win = new BrowserWindow({
-      width: 500,
-      height: 500,
-      resizable: true,
-      fullscreenable: false,
-      title: displayTitle(this.proxyHostPort, this.id),
-      show: isShow,
-      parent: this.mainWin,
-      webPreferences: {
-        nodeIntegration: true,
-        webSecurity: false,
-        devTools: true,
-        session,
-        partition: `persist:task_id_${this.id}`,
-        images: !this.isImage,
-      },
-    });
-    // load using proxy or not
-    if (this.proxy) {
-      this.win.webContents.session.setProxy(
-        {
-          proxyRules: this.proxyHostPort,
-        },
-        () => {}
-      );
-      this.win
-        .loadURL(this.url, {
-          userAgent: this.userAgent,
-        })
-        .catch((err) => {
-          console.log("Error while loading url", err);
+  async launchBrowser() {
+    const proxy = this.proxyList[randomInt(0, this.proxyList.length - 1)];
+    if (proxy) {
+      const [host, port, user, pass] = proxy.split(":");
+      try {
+        this.browser = await puppeteer.launch({
+          headless: false,
+          args: [
+            `--window-size=${SIZE},${SIZE}`,
+            `--proxy-server=http://${host}:${port}`,
+          ],
         });
-      this.win.webContents.on("did-fail-load", function () {
-        console.log("Proxy rotater is called");
-        // this.proxyRotater();
-      });
-      this.win.webContents.on("login", (event, _, authInfo, callback) => {
-        if (authInfo.isProxy) {
-          event.preventDefault();
-          callback(this.proxy.user, this.proxy.pass); //supply credentials to server
-        }
-      });
-    } else {
-      this.win.loadURL(this.url, {
-        userAgent: this.userAgent,
-      });
-    }
-    this.win.setMenu(null);
+        const page = await this.browser.newPage();
+        await page.setUserAgent(this.userAgent);
+        await page.setViewport({ height: SIZE, width: SIZE });
+        await page.authenticate({ password: pass, username: user });
+        await page.goto(url, {
+          waitUntil: "domcontentloaded",
+          timeout: 1 * 60 * 1000,
+        });
+        const emailField = await page.waitForSelector(emailClass);
+        const passField = await page.waitForSelector(passClass);
+        const btn = await page.waitForSelector(btnClass);
+        await page.waitForTimeout(1000);
+        await emailField.type(this.email, { delay: 100 });
+        await page.waitForTimeout(1000);
+        await passField.type(this.password, { delay: 100 });
+        await page.waitForTimeout(1000);
+        await btn.click();
+      } catch (error) {
+        console.log(
+          "Something went wrong on launching puppeteer",
+          error.message
+        );
+        this.deleteBrowser();
+      }
+      this.browser.on("disconnected", this.deleteBrowser.bind(this));
+    } else this.sendStatus("Proxy Not Found", false);
+  }
 
-    this.win.on("closed", () => {
-      this.sendStatus("Stopped", false);
-      this.win = null;
-    });
+  async deleteBrowser() {
+    if (!this.isDeleted) {
+      this.isDeleted = true;
+      this.sendStatus(`Closed:${this.maxCounter}`, false);
+      await this.browser.close();
+    }
   }
 
   sendStatus(msg, active) {

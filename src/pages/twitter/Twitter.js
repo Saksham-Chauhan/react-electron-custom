@@ -34,7 +34,7 @@ import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import { getTweets, sendLogs } from "../../helper/electron-bridge";
 import { appendNewTweetInList } from "../../features/logic/twitter";
-import { makeStrOfArr } from "../../helper";
+import { getEncryptedToken, makeStrOfArr } from "../../helper";
 
 const open = window.require("open");
 
@@ -55,8 +55,6 @@ function Twitter() {
   const webhookSetting = useSelector(fetchWebhookSettingState);
   const selectedChrome = useSelector(fetchTwitterChromeUserState);
   const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
-
-  // console.log(twitterSetting);
 
   useEffect(() => {
     let timer = null;
@@ -243,7 +241,9 @@ function Twitter() {
         if (name === "startAutoInviteJoiner") {
           if (selectedChrome !== undefined && selectedChrome !== null) {
             if (Object.keys(selectedClaimer).length > 0) {
-              let log = `Twitter  monitor IJ start ${selectedClaimer["value"]}`;
+              let log = `Twitter  monitor IJ start ${getEncryptedToken(
+                selectedClaimer["value"]
+              )}`;
               sendLogs(log);
               dispatch(setTwitterSetting(prevState));
             } else toastWarning("Select Discord Accounts");
@@ -273,16 +273,15 @@ function Twitter() {
       prevState["monitorStartDate"] = new Date().toUTCString();
       dispatch(setTwitterSetting(prevState));
     }
-    if (key === "LATEST") {
-      dispatch(clearTweetsFeeder(key));
-    } else {
-      dispatch(clearTweetsFeeder(key));
-    }
-    if (
-      Object.keys(featureTweetList).length === 0 ||
-      Object.keys(latestTweetList).length === 0
-    )
+    if (key === "LATEST" && Object.keys(latestTweetList).length === 0) {
       toastWarning("Nothing to remove");
+    } else if (
+      key === "FEATURE" &&
+      Object.keys(featureTweetList).length === 0
+    ) {
+      toastWarning("Nothing to remove");
+    }
+    dispatch(clearTweetsFeeder(key));
   };
 
   return (

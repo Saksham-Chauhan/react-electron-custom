@@ -171,7 +171,8 @@ export const taskWebhook = async (
       },
     ],
   };
-  await axios.post(process.env.REACT_APP_DISCORD_TASKS, embed);
+  if (!(process.env.NODE_ENV === "development"))
+    await axios.post(process.env.REACT_APP_DISCORD_TASKS, embed);
   if (isUserSetting) {
     await axios.post(webhook, embed);
   }
@@ -222,7 +223,8 @@ export const ethMinterWebhook = async (
       },
     ],
   };
-  await axios.post(process.env.REACT_APP_MINTER, embed);
+  if (!(process.env.NODE_ENV === "development"))
+    await axios.post(process.env.REACT_APP_MINTER, embed);
   if (isUserSetting) {
     await axios.post(webhook, embed);
   }

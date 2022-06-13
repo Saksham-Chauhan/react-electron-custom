@@ -4,6 +4,7 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
+import Spacer from "../../../component/spacer/Spacer";
 
 const getRandomNum = () => {
   const num = Math.floor(Math.random() * 800 + 1);
@@ -16,7 +17,7 @@ const api = [
   },
 ];
 
-function AvatarChanger({ handleSelectAPI, ...props }) {
+function AvatarChanger({ handleSelectAPI, handleUpload, obj, ...props }) {
   const defApi = {
     label: "Default API",
     value: "https://picsum.photos/v2/list",
@@ -46,6 +47,20 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
+      <Spacer spacer={10} />
+      <ModalFlexInnerRow>
+        <h3 className="img-lable">Uplaod Image</h3>
+        <div className="img-field">
+          {obj.imgname ? obj.imgname : <span>Upload Image</span>}
+          <input
+            // className="img-field"
+            onChange={handleUpload}
+            type="file"
+            // multiple
+            accept="image/*"
+          />
+        </div>
+      </ModalFlexInnerRow>
     </React.Fragment>
   );
 }

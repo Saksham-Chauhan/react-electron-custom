@@ -135,14 +135,16 @@ const captchaResolverListener = (callback) =>
 // DISCORD IPC  discord-spoofer-toaster
 const addDiscordSpoofer = (data) =>
   ipcRenderer.send("start-discord-spoofer", data);
-
 const updateDiscordSpooferStatus = (callback) =>
   ipcRenderer.on("discord-spoofer-toaster", (_, res) => callback(res));
+const deleteDiscordSpoofer = (id) =>
+  ipcRenderer.send("stop-discord-spoofer", id);
 
 module.exports = {
   updateDiscordSpooferStatus,
   errorInProxy,
   addDiscordSpoofer,
+  deleteDiscordSpoofer,
   updateGiveawayJoinerStatus,
   startGiveawayJoiner,
   stopGiveawayJoiner,
