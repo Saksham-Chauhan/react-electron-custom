@@ -51,7 +51,13 @@ function AvatarChanger({ handleSelectAPI, handleUpload, obj, ...props }) {
       <ModalFlexInnerRow>
         <h3 className="img-lable">Uplaod Image</h3>
         <div className="img-field">
-          {obj.imgname ? obj.imgname : <span>Upload Image</span>}
+          <span>
+            {obj.imgname ? (
+              <span class="default">{obj.imgname}</span>
+            ) : (
+              "Upload Image"
+            )}
+          </span>
           <input
             // className="img-field"
             onChange={handleUpload}

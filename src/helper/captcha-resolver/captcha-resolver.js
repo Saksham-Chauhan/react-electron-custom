@@ -34,7 +34,9 @@ export const useCaptchaResolverMassJoiner = () => {
               : {
                   type: "HCaptchaTaskProxyless",
                   websiteURL: `https://discord.com/`,
-                  websiteKey: CAPTCHA_SITEKEY,
+                  websiteKey: captcha_sitekey
+                    ? captcha_sitekey
+                    : CAPTCHA_SITEKEY,
                   userAgent:
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) kyro-v1/0.9.2 Chrome/98.0.4758.141 Electron/17.4.0 Safari/537.36",
                 },

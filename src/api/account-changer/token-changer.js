@@ -2,6 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../index";
 
 async function tokenChanger({ email, password, proxy, solution }) {
+  console.log(email, password, proxy, solution);
   try {
     const json = JSON.stringify(
       solution

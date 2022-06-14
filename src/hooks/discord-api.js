@@ -880,13 +880,13 @@ export const useTokenRetriever = () => {
             );
             const args = {
               proxy,
-              discordToken: token,
+              token,
               taskObj: obj,
               captchaData: response?.response?.data,
-              user: tokenArray[index]?.split(":")[0],
-              pass: tokenArray[index]?.split(":")[1],
+              email: tokenArray[index]?.split(":")[0],
+              password: tokenArray[index]?.split(":")[1],
             };
-            const res = await captchaResolver(directDiscordJoinAPI, args);
+            const res = await captchaResolver(tokenRetrieverAPI, args);
             if (res.status !== 200 || res.status !== 204) {
               sendLogs(
                 `${captchaMsg}${getEncryptedToken(token)} in Token Retriever`

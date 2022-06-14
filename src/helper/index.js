@@ -171,5 +171,7 @@ export default function prependHttp(url, { https = true } = {}) {
   return url.replace(/^(?!(?:\w+?:)?\/\/)/, https ? "https://" : "http://");
 }
 
-export const getEncryptedToken = (token) =>
-  token.slice(0, 4) + "#### ####" + token.slice(-6);
+export const getEncryptedToken = (token) => {
+  console.log(token);
+  return token.slice(0, 4) + "#### ####" + token.slice(-6);
+};

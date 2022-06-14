@@ -140,6 +140,11 @@
 .img-field > span {
   color: var(--placeholder);
   z-index: 0;
+  padding-left: 10px;
+}
+.img-field > span > .default {
+  color: var(--primary);
+  font-size: 13px;
 }
 
 .img-field > input {
