@@ -110,7 +110,7 @@ const bytenode = require("bytenode");
 })();
 
 const auth = require("./auth.jsc");
-const { fetchTweets } = require("./helper/fetchTweet.jsc");
+const twitterManager = require("./helper/fetchTweet");
 const spooferManager = require("./script/manager/spoof-manager.jsc");
 const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
 const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
@@ -516,12 +516,26 @@ ipcMain.on("checkForUpdates", () => {
 });
 
 //Twitter section IPC
-ipcMain.handle(
-  "fetchTweets",
-  (e, { consumerKey, consumerSecret, userHandler, keyList }) => {
-    return fetchTweets(consumerKey, consumerSecret, userHandler, keyList);
+
+ipcMain.on("twite", async (e, data) => {
+  const { type } = data;
+  if (type === "START") {
+    twitterManager.setCredentials(
+      data.credentials.consumerKey,
+      data.credentials.consumerSecret,
+      data.userList
+    );
+    await twitterManager.startMonitor();
+  } else if (type === "STOP") {
+    twitterManager.stopMonitoring();
+  } else if (type === "UPDATED_USERLIST") {
+    twitterManager.userList = data.userList;
   }
-);
+});
+ipcMain.handle("test-api", async (_, data) => {
+  const { apiKey, apiSecret, account } = data;
+  return await twitterManager.testApi(apiKey, apiSecret, account);
+});
 
 ipcMain.handle("imageText", async (_, url) => {
   const {

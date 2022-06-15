@@ -42,13 +42,13 @@ const spooferToaster = (callback) =>
 const launchSpoofer = (spoof) => ipcRenderer.send("launch-spoofer", spoof);
 
 // TWITTER IPC
-const getTweets = (consumerKey, consumerSecret, userHandler, keyList) =>
-  ipcRenderer.invoke("fetchTweets", {
-    consumerKey,
-    consumerSecret,
-    userHandler,
-    keyList,
-  });
+const startTwitterMonitor = (obj) => ipcRenderer.send("twite", obj);
+// const stopTwitterMonitor = () => ipcRenderer.send("stop-twitter-monitor")
+const getLatestTweet = (callback) =>
+  ipcRenderer.on("get-twite", (_, data) => callback(data));
+const testApi = async (data) => {
+  return await ipcRenderer.invoke("test-api", data);
+};
 
 // PROXY IPC
 const proxyTester = (proxy) => ipcRenderer.send("proxy-tester", proxy);
@@ -140,7 +140,10 @@ const updateDiscordSpooferStatus = (callback) =>
 const deleteDiscordSpoofer = (id) =>
   ipcRenderer.send("stop-discord-spoofer", id);
 
-module.exports = {
+export {
+  testApi,
+  startTwitterMonitor,
+  getLatestTweet,
   updateDiscordSpooferStatus,
   errorInProxy,
   addDiscordSpoofer,
@@ -160,7 +163,6 @@ module.exports = {
   minimizeApp,
   closeApp,
   maximizeApp,
-  getTweets,
   startSpoofer,
   stopSpoofer,
   toggleSpoofer,

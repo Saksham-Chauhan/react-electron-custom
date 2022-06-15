@@ -20,7 +20,7 @@ import back from "../../../assests/images/back.svg";
 import { twiiterApiSchema } from "../../../validation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppInputField, AppSpacer } from "../../../component";
-import { getTweets } from "../../../helper/electron-bridge";
+import { testApi } from "../../../helper/electron-bridge";
 import { TwitterPageTopSection } from "../../../pages-component";
 import { defaultChromeUser, RoutePath } from "../../../constant";
 import { validationChecker } from "../../../hooks/validationChecker";
@@ -66,14 +66,15 @@ function SettingScreen({
   };
 
   const handleSubmit = async () => {
+    console.log(",jhbdzhj");
     const result = validationChecker(twiiterApiSchema, twitterApi);
     if (result) {
       try {
-        const response = await getTweets(
-          twitterApi.apiKey,
-          twitterApi.apiSecret,
-          "KodersHQ"
-        );
+        const response = await testApi({
+          apiKey: twitterApi.apiKey,
+          apiSecret: twitterApi.apiSecret,
+          account: "KodersHQ",
+        });
         if (Object.keys(response).length > 0) {
           dispatch(addNewApiInList(twitterApi));
           setTwitterApi({
@@ -81,9 +82,12 @@ function SettingScreen({
             apiKey: "",
             apiSecret: "",
           });
+        } else {
+          toastWarning("Error while testing twitter API");
         }
       } catch (error) {
         console.log("Error while testing twitter API", error);
+        toastWarning("Error while testing twitter API");
       }
     }
   };
