@@ -33,9 +33,9 @@ import { toastSuccess, toastWarning } from "../../toaster";
 import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
 import {
-  getLatestTweet,
+  // getLatestTweet,
   sendLogs,
-  startTwitterMonitor,
+  // startTwitterMonitor,
   // stopTwitterMonitor,
 } from "../../helper/electron-bridge";
 import { appendNewTweetInList } from "../../features/logic/twitter";
@@ -43,10 +43,11 @@ import {
   getEncryptedToken,
   //  makeStrOfArr
 } from "../../helper";
+import { setupFrontendListener, emit } from "eiphop";
+const electron = window.require("electron"); // or require('electron')
+setupFrontendListener(electron);
 
 const open = window.require("open");
-
-// const TWEET_FETCH_TIME = process.env.NODE_ENV === "development" ? 100 : 100;
 
 function Twitter() {
   const dispatch = useDispatch();
@@ -67,6 +68,7 @@ function Twitter() {
   useEffect(() => {
     let timer = null;
     const fetchTweets = async (newTweets) => {
+      console.log("in fn", newTweets);
       if (newTweets !== undefined && typeof newTweets !== "string") {
         const twitterStart = twitterSetting["monitorStartDate"];
         if (new Date(newTweets["created_at"]) > new Date(twitterStart)) {
@@ -162,8 +164,46 @@ function Twitter() {
         dispatch(incrementApiRotater());
       }
     };
+
+    //     userList,
+    //     credentials: {
+    //       consumerKey: apiList[rotaterIndex]?.apiKey,
+    //       consumerSecret: apiList[rotaterIndex]?.apiSecret,
+    let id = null;
+    if (twitterSetting?.twitterMonitor) {
+      console.log("call");
+      // id = setInterval(() => {
+      for (let i = 0; i < userList.length; i++) {
+        emit(
+          "getTweet",
+          {
+            cKey: apiList[rotaterIndex]?.apiKey,
+            sKey: apiList[rotaterIndex]?.apiSecret,
+            account: userList[i].value,
+          },
+          (msg) => {
+            console.log(msg);
+          }
+        )
+          .then((res) => {
+            fetchTweets(res);
+          })
+          .catch((e) => console.log(e));
+      }
+      // }, 100);
+    } else {
+      console.log("clear interval");
+      clearInterval(id);
+    }
+
     // GET DATA
-    getLatestTweet((data) => fetchTweets(data));
+    // getLatestTweet((data) => {
+    //   console.log(data.length);
+    //   for (let i = 0; i < data.length; i++) {
+    //     console.log("in loop");
+    //     fetchTweets(data[i]);
+    //   }
+    // });
 
     return () => {
       clearInterval(timer);
@@ -203,19 +243,19 @@ function Twitter() {
           const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
           let log = `Twitter  monitor start with ${token}`;
           sendLogs(log);
-          if (!twitterSetting?.twitterMonitor) {
-            console.log("start");
-            startTwitterMonitor({
-              type: "START",
-              userList,
-              credentials: {
-                consumerKey: apiList[rotaterIndex]?.apiKey,
-                consumerSecret: apiList[rotaterIndex]?.apiSecret,
-              },
-            });
-          } else {
-            startTwitterMonitor({ type: "STOP" });
-          }
+          // if (!twitterSetting?.twitterMonitor) {
+          //   console.log("start");
+          //   startTwitterMonitor({
+          //     type: "START",
+          //     userList,
+          //     credentials: {
+          //       consumerKey: apiList[rotaterIndex]?.apiKey,
+          //       consumerSecret: apiList[rotaterIndex]?.apiSecret,
+          //     },
+          //   });
+          // } else {
+          //   startTwitterMonitor({ type: "STOP" });
+          // }
           if (checked === false) {
             prevState["startAutoInviteJoiner"] = false;
             prevState["startAutoLinkOpener"] = false;

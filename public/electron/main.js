@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const electron = require("electron");
 const _ = require("lodash");
 const path = require("path");
 const axios = require("axios");
@@ -110,7 +111,7 @@ const bytenode = require("bytenode");
 })();
 
 const auth = require("./auth.jsc");
-const twitterManager = require("./helper/fetchTweet");
+const { fetchTweets } = require("./helper/fetchTweet");
 const spooferManager = require("./script/manager/spoof-manager.jsc");
 const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
 const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
@@ -517,25 +518,25 @@ ipcMain.on("checkForUpdates", () => {
 
 //Twitter section IPC
 
-ipcMain.on("twite", async (e, data) => {
-  const { type } = data;
-  if (type === "START") {
-    twitterManager.setCredentials(
-      data.credentials.consumerKey,
-      data.credentials.consumerSecret,
-      data.userList
-    );
-    await twitterManager.startMonitor();
-  } else if (type === "STOP") {
-    twitterManager.stopMonitoring();
-  } else if (type === "UPDATED_USERLIST") {
-    twitterManager.userList = data.userList;
-  }
-});
-ipcMain.handle("test-api", async (_, data) => {
-  const { apiKey, apiSecret, account } = data;
-  return await twitterManager.testApi(apiKey, apiSecret, account);
-});
+// ipcMain.on("twite", async (e, data) => {
+//   const { type } = data;
+//   if (type === "START") {
+//     twitterManager.setCredentials(
+//       data.credentials.consumerKey,
+//       data.credentials.consumerSecret,
+//       data.userList
+//     );
+//     await twitterManager.startMonitor();
+//   } else if (type === "STOP") {
+//     twitterManager.stopMonitoring();
+//   } else if (type === "UPDATED_USERLIST") {
+//     twitterManager.userList = data.userList;
+//   }
+// });
+// ipcMain.handle("test-api", async (_, data) => {
+//   const { apiKey, apiSecret, account } = data;
+//   return await twitterManager.testApi(apiKey, apiSecret, account);
+// });
 
 ipcMain.handle("imageText", async (_, url) => {
   const {
@@ -712,8 +713,56 @@ ipcMain.on("fetch_channel", async (_, data) => {
   }
 });
 
-// CAPTCHA RESOLVER
+const { setupMainHandler } = require("eiphop");
+// const axios = require("axios");
+const util = require("util");
+const { getBearerToken } = require("twit/lib/helpers");
+const getbearerToken = util.promisify(getBearerToken);
 
-// ipcMain.on("add-captcha", (_, captcha) => {
-//   captchaResolverManager.addCaptcha(captcha);
-// });
+// fetchTweets
+const hipActions = {
+  getTweet: async (req, res) => {
+    const { data } = req;
+    const { cKey, sKey, account } = data;
+    console.log(data);
+    // const apiRes = await fetchTweets(cKey, sKey, account);
+    try {
+      const bearer = await getbearerToken(cKey, sKey);
+      const res = await axios(
+        `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
+        {
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+        }
+      );
+      res.send({ msg: res.data[0] });
+    } catch (e) {
+      return e.message;
+    }
+  },
+};
+
+setupMainHandler(electron, { ...hipActions });
+
+// const fetchTweets = async (clientKey, clientSecret, account) => {
+//   console.log("hit");
+//   try {
+//     const bearer = await getbearerToken(clientKey, clientSecret);
+//     const res = await axios(
+//       `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
+//       {
+//         mode: "no-cors",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${bearer}`,
+//         },
+//       }
+//     );
+//     return res.data[0];
+//   } catch (e) {
+//     return e.message;
+//   }
+// };

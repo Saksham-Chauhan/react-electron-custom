@@ -1,3 +1,32 @@
+class Queue {
+  constructor() {
+    this.elements = {};
+    this.head = 0;
+    this.tail = 0;
+  }
+  enqueue(element) {
+    this.elements[this.tail] = element;
+    this.tail++;
+  }
+  dequeue() {
+    const item = this.elements[this.head];
+    delete this.elements[this.head];
+    this.head++;
+    return item;
+  }
+  peek() {
+    return this.elements[this.head];
+  }
+  get length() {
+    return parseInt(this.tail - this.head);
+  }
+  get isEmpty() {
+    return this.length === 0;
+  }
+}
+
+module.exports = new Queue();
+
 // const axios = require("axios");
 // const util = require("util");
 // // const Twit = require("twit");
@@ -131,24 +160,137 @@ const util = require("util");
 const { getBearerToken } = require("twit/lib/helpers");
 const getbearerToken = util.promisify(getBearerToken);
 
-const fetchTweets = async (clientKey, clientSecret, account) => {
-  console.log("hit");
-  try {
-    const bearer = await getbearerToken(clientKey, clientSecret);
-    const res = await axios(
-      `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
-      {
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${bearer}`,
-        },
-      }
-    );
-    return res.data[0];
-  } catch (e) {
-    return e.message;
-  }
-};
+let taskData = [];
+let timer = 1;
 
-module.exports = { fetchTweets };
+class TwitterMonitor {
+  constructor() {
+    this.clientSecret = null;
+    this.clientKey = null;
+    this.userList = [];
+    this.cache = {};
+    this.retry = true;
+  }
+
+  async fetchTweets(account) {
+    try {
+      const bearer = await getbearerToken(this.clientKey, this.clientSecret);
+      const res = await axios(
+        `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
+        {
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+        }
+      );
+      return res;
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+  isReadyToStart() {
+    return (
+      this.userList.length > 0 &&
+      this.clientKey !== null &&
+      this.clientSecret !== null
+    );
+  }
+
+  async startMonitor() {
+    this.retry = true;
+    if (this.isReadyToStart()) {
+      for (let i = 0; i < this.userList.length; i++) {
+        const tweets = await this.fetchTweets(this.userList[i]["value"]);
+        if (global.mainWin && !this.cache[tweets.data[0].id]) {
+          taskData.push(tweets.data[0]);
+          if (taskData.length > 5) {
+            global.mainWin.webContents.send("get-twite", taskData);
+            console.log("emmit", timer);
+            taskData = [];
+          }
+        }
+        this.cache[tweets.data[0].id] = "MESSAGE IN CACHE";
+      }
+    }
+    await this.sleep(50);
+    if (this.retry) {
+      this.startMonitor();
+    }
+  }
+
+  // async emmitData() {
+  //   console.log(taskData.length);
+  //   await this.sleep(3000);
+  //   if (taskData.length > 0) {
+  //     let arr = [...taskData.reverse()];
+  //     if (taskData.length > 10) {
+  //       arr = [];
+  //       let temp = [];
+  //       const newArr = [...taskData.reverse()];
+  //       for (let i = 0; i < newArr.length; i++) {
+  //         if (i < 11) {
+  //           arr.push(newArr.pop());
+  //         } else {
+  //           temp.push(newArr.pop());
+  //         }
+  //       }
+  //       taskData = temp.reverse();
+  //     }
+  //     console.log(arr);
+  //     if (arr.length) {
+  //       global.mainWin.webContents.send("get-twite", arr);
+  //       console.log("emmit");
+  //     }
+  //   }
+  //   if (taskData.length) {
+  //     this.emmitData();
+  //   }
+  //   console.log(taskData.length);
+  // }
+
+  setCredentials(cKey, cSecret, userList) {
+    this.clientKey = cKey;
+    this.clientSecret = cSecret;
+    this.userList = userList;
+  }
+
+  stopMonitoring = () => {
+    this.retry = false;
+    console.log("clear with =>" + this.retry);
+  };
+
+  sleep = (time) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, time);
+    });
+  };
+
+  testApi = async (apiKey, apiSecret, account) => {
+    try {
+      const bearer = await getbearerToken(apiKey, apiSecret);
+      const res = await axios(
+        `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
+        {
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+        }
+      );
+      return res.data[0];
+    } catch (e) {
+      return e.message;
+    }
+  };
+  // updateTimer = async () => {
+  //   console.log(timer);
+  //   await this.sleep(3000);
+  //   timer = 1;
+  // };
+}
+
+module.exports = new TwitterMonitor();
