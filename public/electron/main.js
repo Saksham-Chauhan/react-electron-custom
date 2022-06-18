@@ -715,54 +715,17 @@ ipcMain.on("fetch_channel", async (_, data) => {
 
 const { setupMainHandler } = require("eiphop");
 // const axios = require("axios");
-const util = require("util");
-const { getBearerToken } = require("twit/lib/helpers");
-const getbearerToken = util.promisify(getBearerToken);
+// const util = require("util");
+// const { getBearerToken } = require("twit/lib/helpers");
+// const getbearerToken = util.promisify(getBearerToken);
 
-// fetchTweets
 const hipActions = {
   getTweet: async (req, res) => {
-    const { data } = req;
-    const { cKey, sKey, account } = data;
-    console.log(data);
-    // const apiRes = await fetchTweets(cKey, sKey, account);
-    try {
-      const bearer = await getbearerToken(cKey, sKey);
-      const res = await axios(
-        `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
-        {
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${bearer}`,
-          },
-        }
-      );
-      res.send({ msg: res.data[0] });
-    } catch (e) {
-      return e.message;
-    }
+    const { payload } = req;
+    const { cKey, sKey, account } = payload;
+    const apiRes = await fetchTweets(cKey, sKey, account);
+    res.send({ msg: apiRes });
   },
 };
 
-setupMainHandler(electron, { ...hipActions });
-
-// const fetchTweets = async (clientKey, clientSecret, account) => {
-//   console.log("hit");
-//   try {
-//     const bearer = await getbearerToken(clientKey, clientSecret);
-//     const res = await axios(
-//       `https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1&include_rts=1`,
-//       {
-//         mode: "no-cors",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${bearer}`,
-//         },
-//       }
-//     );
-//     return res.data[0];
-//   } catch (e) {
-//     return e.message;
-//   }
-// };
+setupMainHandler(electron, { ...hipActions }, true);

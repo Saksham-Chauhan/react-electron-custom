@@ -131,8 +131,9 @@ const util = require("util");
 const { getBearerToken } = require("twit/lib/helpers");
 const getbearerToken = util.promisify(getBearerToken);
 
+let lastMsgId = null;
+
 const fetchTweets = async (clientKey, clientSecret, account) => {
-  console.log("hit");
   try {
     const bearer = await getbearerToken(clientKey, clientSecret);
     const res = await axios(
@@ -145,7 +146,10 @@ const fetchTweets = async (clientKey, clientSecret, account) => {
         },
       }
     );
-    return res.data[0];
+    if (lastMsgId !== res.data[0].id) {
+      lastMsgId = res.data[0].id;
+      return res.data[0];
+    } else return {};
   } catch (e) {
     return e.message;
   }
