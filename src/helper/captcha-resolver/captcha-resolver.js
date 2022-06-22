@@ -3,6 +3,7 @@ import poller from "promise-poller";
 import { useSelector } from "react-redux";
 import { getEncryptedToken } from "..";
 import { fetchClientCaptchaKey } from "../../features/counterSlice";
+import { toastWarning } from "../../toaster";
 import { sendLogs } from "../electron-bridge";
 
 const CAPTCHA_SITEKEY = "4c672d35-0701-42b2-88c3-78380b0db560";
@@ -47,7 +48,10 @@ export const useCaptchaResolverMassJoiner = () => {
           resolve(res.data.taskId);
           console.log("Calling getCaptcha to get solution...");
         } else {
-          sendLogs(`Unable to get captcha task id`);
+          toastWarning(res?.data?.errorDescription);
+          sendLogs(
+            `Unable to get captcha task id:${res?.data?.errorDescription}`
+          );
           reject("Task ID not found" + res.data);
         }
       } catch (error) {

@@ -78,6 +78,7 @@ export const useMassInviteJoiner = () => {
             typeof response?.response?.data === "object" &&
             response?.response?.data?.captcha_key
           ) {
+            toastWarning("Captcha Error");
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
                 token
@@ -96,6 +97,9 @@ export const useMassInviteJoiner = () => {
               sendLogs(
                 `${captchaMsg}${getEncryptedToken(token)} in Mass Joiner`
               );
+            } else {
+              console.log(res.response);
+              // toastWarning(res.response)
             }
           } else {
             toastWarning(response.message);
@@ -170,11 +174,11 @@ export const useServerLeaver = () => {
                 `Server leave successfully, token: ${getEncryptedToken(token)}`
               );
             } else {
-              // TODO-> check response object
               if (
                 typeof response?.response?.data === "object" &&
                 response?.response?.data?.captcha_key
               ) {
+                toastWarning("Captcha Error");
                 sendLogs(
                   `Captcha error with token:${getEncryptedToken(
                     token
@@ -297,6 +301,7 @@ export const useUserName = () => {
             typeof response?.response?.data === "object" &&
             response?.response?.data?.captcha_key
           ) {
+            toastWarning("Captcha Error");
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
                 token
@@ -402,6 +407,7 @@ export const useActivityChanger = () => {
             typeof response?.response?.data === "object" &&
             response?.response?.data?.captcha_key
           ) {
+            toastWarning("Captcha Error");
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
                 token
@@ -506,6 +512,7 @@ export const useNickNameChanger = () => {
                 typeof response?.response?.data === "object" &&
                 response?.response?.data?.captcha_key
               ) {
+                toastWarning("Captcha Error");
                 sendLogs(
                   `Captcha error with token :${getEncryptedToken(
                     token
@@ -584,27 +591,31 @@ export const useNickNameChanger = () => {
 export const usePasswordChanger = () => {
   const captchaResolver = useCaptchaResolverMassJoiner();
   const dispatch = useDispatch();
+  let tempObj = {};
   let arr = [];
   let user = [];
   let next_counter = 0;
-  let tempObj = {};
-  const helper = (response, obj) => {
-    tempObj = { ...obj };
+  const helper = (response, status) => {
+    let temp = tempObj;
     let newPass = JSON.parse(response.config.data)["new_password"];
     let tempuser = response.data.username;
     arr.push(newPass);
     user.push(tempuser);
     if (next_counter > 0) {
-      arr = [...tempObj["newPass"].split("\n"), ...arr];
-      user = [...tempObj["username"].split("\n"), ...user];
+      console.log(temp);
+      arr = [...temp["newPass"].split("\n"), ...arr];
+      user = [...temp["username"].split("\n"), ...user];
     }
-    tempObj["newPass"] = arr.join("\n");
-    tempObj["username"] = user.join("\n");
-    dispatch(updatePasswordChangerStatus(tempObj));
+    temp["newPass"] = arr.join("\n");
+    temp["username"] = user.join("\n");
+    temp["status"] = status;
+    tempObj = { ...temp };
+    dispatch(updatePasswordChangerStatus(temp));
     next_counter = next_counter + 1;
   };
 
   const apiCall = async (obj, setting, user, webhookList) => {
+    tempObj = { ...obj };
     let counter = 0;
     const { proxyGroup } = obj;
     const tokenArray = getTokenList(obj);
@@ -644,8 +655,9 @@ export const usePasswordChanger = () => {
               active: true,
             })
           );
+          let status = `${counter + 1}/${tokenArray.length} Changed`;
+          helper(response, status);
           counter++;
-          helper(response, obj);
           sendLogs(
             `Password changed successfully with token: ${getEncryptedToken(
               token
@@ -656,6 +668,7 @@ export const usePasswordChanger = () => {
             typeof response?.response?.data === "object" &&
             response?.response?.data?.captcha_key
           ) {
+            toastWarning("Captcha Error");
             const args = {
               token: token,
               currentPassword: tokenArray[index]?.split(":")[1],
@@ -684,6 +697,7 @@ export const usePasswordChanger = () => {
           );
         }
       } catch (e) {
+        console.log(e);
         dispatch(
           updateTaskState({
             id: obj.id,
@@ -711,6 +725,10 @@ export const usePasswordChanger = () => {
   };
   return apiCall;
 };
+
+// ageboisandyn@hotmail.com:asdfghjkl#8:OTcwMDM3NTM1MjM5NzI1MTE4.G60Ciy.qvW_CG5yCxBgDkwkuHVPhIzNa_eDv2D4ZbRwlA
+// CimkoMelissen20022828@lenta.ru:asdfghjkl#8:OTUyODAzOTk4MTk1NDAwNzE0.G2qiiL.hhzCOUtm-ZQs9uHFeqGIGvhNWz9kbDQVr4KNQo
+// LazuninaElladeya19887190@myrambler.ru:abtolasthehai@1:OTUyNDgzNDIxMjY2MDAxOTIw.G68Sm7.iSiiKEvkzz3Ds9_EOcV_Ihp9LjCXQwZFthIHkU
 
 export const useTokeChecker = () => {
   const dispatch = useDispatch();
@@ -749,6 +767,7 @@ export const useTokeChecker = () => {
             typeof response?.response?.data === "object" &&
             response?.response?.data?.captcha_key
           ) {
+            toastWarning("Captcha Error");
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
                 token
@@ -780,6 +799,7 @@ export const useTokeChecker = () => {
           );
         }
       } catch (e) {
+        console.log(e.message);
         dispatch(
           updateTaskState({
             id: obj.id,
@@ -873,6 +893,7 @@ export const useTokenRetriever = () => {
             typeof response?.response?.data === "object" &&
             response?.response?.data?.captcha_key
           ) {
+            toastWarning("Captcha Error");
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
                 token
@@ -891,6 +912,10 @@ export const useTokenRetriever = () => {
               sendLogs(
                 `${captchaMsg}${getEncryptedToken(token)} in Token Retriever`
               );
+            } else {
+              console.log(res?.response);
+              console.log(res?.response?.data);
+              // toastWarning(res.response)
             }
           } else toastWarning(response.message);
           dispatch(
@@ -988,6 +1013,7 @@ export const useAvatarChanger = () => {
             typeof response?.response?.data === "object" &&
             response?.response?.data?.captcha_key
           ) {
+            toastWarning("Captcha Error");
             sendLogs(
               `Captcha error with token :${getEncryptedToken(
                 token

@@ -91,7 +91,9 @@ function InputWithList({
               {!isLogs
                 ? list?.map((data, index) => (
                     <div key={data["id"] || index} className="scroll-list-item">
-                      <span style={theme.spanText}>{data["label"]}</span>
+                      <span className="selectable" style={theme.spanText}>
+                        {data["label"]}
+                      </span>
                       <UseAnimations
                         onClick={() => onDelete(data)}
                         animation={trash2}

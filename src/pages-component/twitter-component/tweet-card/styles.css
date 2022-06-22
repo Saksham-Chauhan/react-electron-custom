@@ -11,6 +11,7 @@
   justify-content: space-between;
   align-items: center;
 }
+
 .tweet-card-top-section > #cardtitle,
 .tweet-card-middle-section > span,
 .tweet-card-middle-section > .twitter-logo > span {

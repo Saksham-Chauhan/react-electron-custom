@@ -34,7 +34,7 @@ function TweetCard({
         <span id="tweetTime">{tweetTime}</span>
       </div>
       <AppSpacer spacer={20} />
-      <div className="tweet-card-middle-section">
+      <div className="tweet-card-middle-section selectable">
         <div className="twitter-logo">
           <img src={bird} alt="" />
           <span>{tweetUser}</span>

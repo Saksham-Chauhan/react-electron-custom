@@ -8,6 +8,7 @@ const Tesseract = require("tesseract.js");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const bytenode = require("bytenode");
+const { setupMainHandler } = require("eiphop");
 
 (async () => {
   try {
@@ -517,7 +518,6 @@ ipcMain.on("checkForUpdates", () => {
 });
 
 //Twitter section IPC
-
 // ipcMain.on("twite", async (e, data) => {
 //   const { type } = data;
 //   if (type === "START") {
@@ -533,10 +533,11 @@ ipcMain.on("checkForUpdates", () => {
 //     twitterManager.userList = data.userList;
 //   }
 // });
-// ipcMain.handle("test-api", async (_, data) => {
-//   const { apiKey, apiSecret, account } = data;
-//   return await twitterManager.testApi(apiKey, apiSecret, account);
-// });
+ipcMain.handle("test-api", async (_, data) => {
+  const { apiKey, apiSecret, account } = data;
+  const res = await fetchTweets(apiKey, apiSecret, account);
+  return res;
+});
 
 ipcMain.handle("imageText", async (_, url) => {
   const {
@@ -713,12 +714,6 @@ ipcMain.on("fetch_channel", async (_, data) => {
   }
 });
 
-const { setupMainHandler } = require("eiphop");
-// const axios = require("axios");
-// const util = require("util");
-// const { getBearerToken } = require("twit/lib/helpers");
-// const getbearerToken = util.promisify(getBearerToken);
-
 const hipActions = {
   getTweet: async (req, res) => {
     const { payload } = req;
@@ -728,4 +723,4 @@ const hipActions = {
   },
 };
 
-setupMainHandler(electron, { ...hipActions }, true);
+setupMainHandler(electron, { ...hipActions });
