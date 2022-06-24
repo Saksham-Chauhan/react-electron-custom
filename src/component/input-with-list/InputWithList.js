@@ -86,7 +86,7 @@ function InputWithList({
             )}
             <AppSpacer spacer={10} />
             <div
-              className={`scroll-list ${list.length === 0 && "full-height"}`}
+              className={`scroll-list ${list?.length === 0 && "full-height"}`}
             >
               {!isLogs
                 ? list?.map((data, index) => (

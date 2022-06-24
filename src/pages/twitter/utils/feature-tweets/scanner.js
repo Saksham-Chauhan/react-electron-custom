@@ -130,7 +130,16 @@ const pastebinParser = async (urls) => {
 };
 // Checks URLs for given keywords
 function urlParser(urls, keywords) {
+  console.log("in parse");
   let response = [];
+  console.log(keywords, keywords.length);
+  if (!keywords.length) {
+    let ur = urls.map((item) => {
+      return item.expanded_url;
+    });
+    console.log(ur);
+    return ur;
+  }
   for (let url in urls) {
     const urlName = urls[url].expanded_url;
     for (let k of keywords) {
@@ -148,12 +157,13 @@ function urlParser(urls, keywords) {
 const scanner = async (
   tweetObject,
   keywords,
-  webhooks,
   option,
+  webhooks,
   webhookSetting,
   featureList
 ) => {
   let FTObject = Object.assign({}, tweetObject);
+  console.log("scanner", option, FTObject.entities.urls);
   const user = {
     name: tweetObject.user.name,
     screen_name: tweetObject.user.screen_name,
@@ -171,6 +181,7 @@ const scanner = async (
     FTObject.pastebinText = await pastebinParser(FTObject.entities.urls);
     if (option?.startAutoLinkOpener || option?.startAutoInviteJoiner) {
       FTObject.urlsExtracted = urlParser(FTObject.entities.urls, keywords);
+      console.log("lllllllllttttt", FTObject.urlsExtracted);
     }
   }
   if (FTObject.binaryText !== null) {

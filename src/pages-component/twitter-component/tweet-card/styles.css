@@ -35,12 +35,13 @@
 }
 .tweet-card-bottom-section {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
 }
 .tweet-card-bottom-section > div {
+  width: 32%;
   font-weight: 600;
+  text-align: center;
   font-size: 13px;
   line-height: 17px;
   display: block;

@@ -1,14 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 import {
-  TwitterTopLeftSection,
-  TwitterPageTopSection,
-  TwitterPageCardScroll,
-  TwitterUserListSection,
-  TwitterKeywordListSection,
-} from "../../pages-component";
-import {
-  fetchThemsState,
   setTwitterSetting,
   clearTweetsFeeder,
   fetchAPIlistState,
@@ -16,34 +8,42 @@ import {
   fetchTwitterUserList,
   fetchApiRotaterIndex,
   fetchLatestTweetList,
-  fetchWebhookListState,
   fetchFeatureTweetList,
   fetchTwitterKeywordList,
   fetchTwitterSettingState,
   fetchWebhookSettingState,
+  fetchWebhookListState,
   fetchTwitterClaimerGroupState,
   fetchTwitterChromeUserState,
+  fetchThemsState,
 } from "../../features/counterSlice";
+import {
+  TwitterTopLeftSection,
+  TwitterPageTopSection,
+  TwitterPageCardScroll,
+  TwitterUserListSection,
+  TwitterKeywordListSection,
+} from "../../pages-component";
 import { AppSpacer } from "../../component";
-import { discordServerInviteAPI } from "../../api";
+import { toastSuccess, toastWarning } from "../../toaster";
 import { useDispatch, useSelector } from "react-redux";
 import tweetHelper from "./utils/feature-tweets/helper";
-// import { TweetHandlerRegExp } from "../../constant/regex";
-import { toastSuccess, toastWarning } from "../../toaster";
+import { getTweets, sendLogs } from "../../helper/electron-bridge";
+import { TweetHandlerRegExp } from "../../constant/regex";
 import twitterScanner from "./utils/feature-tweets/scanner";
 import TwitterSettingScreen from "./sub-screen/SettingScreen";
-import { sendLogs } from "../../helper/electron-bridge";
 import { appendNewTweetInList } from "../../features/logic/twitter";
-import { getEncryptedToken } from "../../helper";
+import { discordServerInviteAPI } from "../../api";
 import { setupFrontendListener, emit } from "eiphop";
 const electron = window.require("electron");
 setupFrontendListener(electron);
 
 const open = window.require("open");
 
+const TWEET_FETCH_TIME = process.env.NODE_ENV === "development" ? 1000 : 100;
+
 function Twitter() {
   const dispatch = useDispatch();
-  const appTheme = useSelector(fetchThemsState);
   const apiList = useSelector(fetchAPIlistState);
   const userList = useSelector(fetchTwitterUserList);
   const [settingPage, setSettingPage] = useState(false);
@@ -56,132 +56,160 @@ function Twitter() {
   const webhookSetting = useSelector(fetchWebhookSettingState);
   const selectedChrome = useSelector(fetchTwitterChromeUserState);
   const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
-  let id = useRef(true);
+  const appTheme = useSelector(fetchThemsState);
 
-  const fetchTweets = async (newTweets) => {
-    if (newTweets !== undefined && typeof newTweets !== "string") {
-      const twitterStart = twitterSetting["monitorStartDate"];
-      if (new Date(newTweets["created_at"]) > new Date(twitterStart) || true) {
-        dispatch(
-          appendNewTweetInList({
-            key: "LATEST",
-            tweet: tweetHelper.extractDataFromTweet(newTweets),
-          })
-        );
-        let ft;
-        if (!("id" in latestTweetList)) {
-          ft = await twitterScanner(
-            newTweets,
-            keyWordList,
-            webhookList[0],
-            twitterSetting,
-            webhookSetting,
-            latestTweetList
-          );
-        }
-        if (ft.featured_type) {
-          if (
-            ft.featured_type === "URLs extracted" &&
-            ft.urlsExtracted?.length > 0
-          ) {
-            dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
-          } else if (ft.featured_type !== "URLs extracted") {
-            dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
-          }
-          if (
-            ft.urlsExtracted?.length > 0 &&
-            !(ft["tweet_id"] in latestTweetList)
-          ) {
-            for (let url of ft.urlsExtracted) {
-              let inviteCode = tweetHelper.isDiscordInvite(url);
-              if (inviteCode) {
-                if (twitterSetting?.startAutoInviteJoiner) {
-                  let tokenArray = selectedClaimer["value"].split("\n");
-                  tokenArray.forEach(async (token) => {
-                    const tkn = token?.split(":")[2]?.substring(0, 4) + "## ##";
-                    try {
-                      const info = await discordServerInviteAPI(
-                        inviteCode,
-                        token?.split(":")[2]
-                      );
-                      if (info.status === 200) {
-                        let log = `Successfully Joined ${info.data.guild.name} with ${tkn}`;
-                        sendLogs(log);
-                        toastSuccess(
-                          `Successfully Joined ${info.data.guild.name}`
-                        );
-                      }
-                    } catch (err) {
-                      let log = `Error in joininig server ${err.message} with ${tkn}`;
-                      sendLogs(log);
-                      toastWarning(`Error in joininig server ${err.message}`);
-                    }
-                  });
-                }
-              } else {
-                if (twitterSetting?.startAutoLinkOpener) {
-                  if (Object.keys(selectedChrome).length > 0) {
-                    if (selectedChrome) {
-                      let log = `Twitter  monitor LO open with ${selectedChrome["value"]} chrome user`;
-                      sendLogs(log);
-                      await open(url, {
-                        app: {
-                          name: open.apps.chrome,
-                          arguments: [
-                            `--profile-directory=${selectedChrome["value"]}`,
-                          ],
-                        },
-                      });
-                    }
-                  } else {
-                    await open(url, {
-                      app: {
-                        name: open.apps.chrome,
-                        arguments: [`--profile-directory=Default`],
-                      },
-                    });
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    } else {
-      const log = `${newTweets} with ${apiList[rotaterIndex]?.apiName}`;
-      sendLogs(log);
-      dispatch(incrementApiRotater());
-    }
-  };
+  useEffect(() => {
+    let timer = null;
 
-  const fetchData = async () => {
-    id.current = true;
-    for (let i = 0; i < userList.length; i++) {
+    const fetchData = async (cKey, sKey, account) => {
       const res = await emit(
         "getTweet",
         {
-          cKey: apiList[rotaterIndex]?.apiKey,
-          sKey: apiList[rotaterIndex]?.apiSecret,
-          account: userList[i].value,
+          cKey,
+          sKey,
+          account,
         },
         (msg) => {
           console.log(msg);
         }
       );
-      if (Object.keys(res.msg).length) {
-        fetchTweets(res.msg);
+      console.log(res.msg.created_at);
+      return res.msg;
+    };
+
+    const fetchTweets = () => {
+      try {
+        userList.forEach(async (tweetUser) => {
+          if (TweetHandlerRegExp.test(tweetUser["value"])) {
+            const newTweets = await fetchData(
+              apiList[rotaterIndex]?.apiKey,
+              apiList[rotaterIndex]?.apiSecret,
+              tweetUser["value"]
+            );
+            if (newTweets !== undefined && typeof newTweets !== "string") {
+              const twitterStart = twitterSetting["monitorStartDate"];
+              if (new Date(newTweets["created_at"]) > new Date(twitterStart)) {
+                dispatch(
+                  appendNewTweetInList({
+                    key: "LATEST",
+                    tweet: tweetHelper.extractDataFromTweet(newTweets),
+                  })
+                );
+                let ft;
+                if (!("id" in latestTweetList)) {
+                  ft = await twitterScanner(
+                    newTweets,
+                    keyWordList,
+                    twitterSetting,
+                    webhookList[0],
+                    webhookSetting,
+                    latestTweetList
+                  );
+                }
+                if (ft.featured_type) {
+                  dispatch(appendNewTweetInList({ key: "FEATURE", tweet: ft }));
+                  if (
+                    ft.urlsExtracted?.length > 0 &&
+                    !(ft["tweet_id"] in latestTweetList)
+                  ) {
+                    for (let url of ft.urlsExtracted) {
+                      let inviteCode = tweetHelper.isDiscordInvite(url);
+                      if (inviteCode) {
+                        if (twitterSetting?.startAutoInviteJoiner) {
+                          let tokenArray = selectedClaimer["value"].split("\n");
+                          tokenArray.forEach(async (token) => {
+                            const tkn =
+                              token?.split(":")[3]?.substring(0, 4) + "## ##";
+                            try {
+                              const info = await discordServerInviteAPI(
+                                inviteCode,
+                                token?.split(":")[3]
+                              );
+                              if (info.status === 200) {
+                                let log = `Successfully Joined ${info.data.guild.name} with ${tkn}`;
+                                sendLogs(log);
+                                toastSuccess(
+                                  `Successfully Joined ${info.data.guild.name}`
+                                );
+                              }
+                            } catch (err) {
+                              let log = `Error in joininig server ${err.message} with ${tkn}`;
+                              sendLogs(log);
+                              toastWarning(
+                                `Error in joininig server ${err.message}`
+                              );
+                            }
+                          });
+                        }
+                      } else {
+                        if (twitterSetting?.startAutoLinkOpener) {
+                          if (Object.keys(selectedChrome).length > 0) {
+                            if (selectedChrome) {
+                              let log = `Twitter  monitor LO open with ${selectedChrome["value"]} chrome user`;
+                              sendLogs(log);
+                              await open(url, {
+                                app: {
+                                  name: open.apps.chrome,
+                                  arguments: [
+                                    `--profile-directory=${selectedChrome["value"]}`,
+                                  ],
+                                },
+                              });
+                            }
+                          } else {
+                            await open(url, {
+                              app: {
+                                name: open.apps.chrome,
+                                arguments: [`--profile-directory=Default`],
+                              },
+                            });
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            } else {
+              const log = `${newTweets} with ${apiList[rotaterIndex]?.apiName}`;
+              sendLogs(log);
+              dispatch(incrementApiRotater());
+            }
+          }
+        });
+      } catch (error) {
+        const log = `${error.message} ${apiList[rotaterIndex]?.apiName}`;
+        sendLogs(log);
+        dispatch(incrementApiRotater());
       }
+    };
+
+    if (twitterSetting?.twitterMonitor) {
+      timer = setInterval(fetchTweets, TWEET_FETCH_TIME);
+    } else {
+      clearInterval(timer);
     }
-    // await sleep(1);
-    if (id.current) {
-      fetchData();
-    }
-  };
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [
+    apiList,
+    userList,
+    dispatch,
+    webhookList,
+    keyWordList,
+    rotaterIndex,
+    twitterSetting,
+    webhookSetting,
+    selectedChrome,
+    latestTweetList,
+    selectedClaimer,
+  ]);
 
   /**
    * function handle start stop switch btn
    **/
-
   const handleToggle = (event) => {
     let prevState = { ...twitterSetting };
     const { name, checked } = event.target;
@@ -199,11 +227,6 @@ function Twitter() {
           const token = `Api Key ${maskedKey} ## ## & Api secret ${maskedSecret} ## ##`;
           let log = `Twitter  monitor start with ${token}`;
           sendLogs(log);
-          if (!twitterSetting?.twitterMonitor) {
-            fetchData();
-          } else {
-            id.current = false;
-          }
           if (checked === false) {
             prevState["startAutoInviteJoiner"] = false;
             prevState["startAutoLinkOpener"] = false;
@@ -211,27 +234,23 @@ function Twitter() {
           } else {
             dispatch(setTwitterSetting(prevState));
           }
-        } else toastWarning("Enter Twitter Username");
+        } else toastWarning("Enter some Twitter handlers");
       } else {
-        toastWarning("Enter API keys under Twitter Setting");
+        toastWarning("Add some API keys");
       }
     } else {
-      if (twitterSetting.twitterMonitor) {
-        if (name === "startAutoInviteJoiner") {
-          if (selectedChrome !== undefined && selectedChrome !== null) {
-            if (Object.keys(selectedClaimer).length > 0) {
-              let log = `Twitter  monitor IJ start ${getEncryptedToken(
-                selectedClaimer["value"]
-              )}`;
-              sendLogs(log);
-              dispatch(setTwitterSetting(prevState));
-            } else toastWarning("Select Discord Accounts");
-          }
-        } else {
-          let log = `Twitter  monitor LO start`;
-          sendLogs(log);
-          dispatch(setTwitterSetting(prevState));
+      if (name === "startAutoInviteJoiner") {
+        if (selectedChrome !== undefined && selectedChrome !== null) {
+          if (Object.keys(selectedClaimer).length > 0) {
+            let log = `Twitter  monitor IJ start ${selectedClaimer["value"]}`;
+            sendLogs(log);
+            dispatch(setTwitterSetting(prevState));
+          } else toastWarning("Select Token Group");
         }
+      } else {
+        let log = `Twitter  monitor LO start`;
+        sendLogs(log);
+        dispatch(setTwitterSetting(prevState));
       }
     }
   };
@@ -252,15 +271,11 @@ function Twitter() {
       prevState["monitorStartDate"] = new Date().toUTCString();
       dispatch(setTwitterSetting(prevState));
     }
-    if (key === "LATEST" && Object.keys(latestTweetList).length === 0) {
-      toastWarning("Nothing to remove");
-    } else if (
-      key === "FEATURE" &&
-      Object.keys(featureTweetList).length === 0
-    ) {
-      toastWarning("Nothing to remove");
+    if (key === "LATEST") {
+      dispatch(clearTweetsFeeder(key));
+    } else {
+      dispatch(clearTweetsFeeder(key));
     }
-    dispatch(clearTweetsFeeder(key));
   };
 
   return (
@@ -332,7 +347,6 @@ const DefaultTwitterScreen = ({
               title="Latest Tweets"
               onClearTweets={() => handleDeleteAllTweets("LATEST")}
               appTheme={appTheme}
-              keyWordList={keyWordList}
             />
           </div>
           <div>
@@ -345,7 +359,6 @@ const DefaultTwitterScreen = ({
               title="Featured Tweets"
               onClearTweets={() => handleDeleteAllTweets("FEATURE")}
               appTheme={appTheme}
-              keyWordList={keyWordList}
             />
           </div>
         </div>
@@ -353,12 +366,3 @@ const DefaultTwitterScreen = ({
     </div>
   </React.Fragment>
 );
-
-// {
-//   consumer_key: "gYk4H5IhLUjmx5Kqb40ZJ8vmq",
-//   consumer_secret: "1xFOIZIyAU5QalGkNv0cggrmm2DXwjnnQItsKOW2C356IRdfsh",
-// },
-// {
-//   consumer_key: "cCPyXGNaaGzh5QWSGrUpl9aAe",
-//   consumer_secret: "JX3QpsLoOFxepOvefL4uN9tNW7WzRQZSbGOQjlof5hyQ638CVU",
-// },
