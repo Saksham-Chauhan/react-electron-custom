@@ -6,22 +6,17 @@ import {
   LabelWithToolTip,
 } from "../../../component";
 
-function GiveawayJoiner({ onChange, selectToken, handleToggler, ...props }) {
+function MassGiveawayJoiner({
+  onChange,
+  selectToken,
+  handleToggler,
+  ...props
+}) {
+  console.log("true slide");
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
       <div className="modal-flex-field-wrapper flex-col">
-        <div className="half-flex-field">
-          <AppInputField
-            fieldTitle="Monitor Token"
-            placeholderText="Enter Token"
-            // selectOptions={getTokensList()}
-            // isSelect={true}
-            onChange={onChange}
-            name="token"
-          />
-        </div>
-        <AppSpacer spacer={10} />
         <div className=" modal-flex-field-wrapper">
           <div style={{ width: "48%" }}>
             <AppInputField
@@ -71,4 +66,4 @@ function GiveawayJoiner({ onChange, selectToken, handleToggler, ...props }) {
   );
 }
 
-export default GiveawayJoiner;
+export default MassGiveawayJoiner;

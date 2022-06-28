@@ -5,14 +5,21 @@ const randomInt = (min, max) => {
 const getRandomParsedProxy = (proxyArray) => {
   const [host, port, username, password] =
     proxyArray[randomInt(0, proxyArray.length - 1)]?.split(":");
-  return {
-    host,
-    port,
-    auth: {
-      username,
-      password,
-    },
-  };
+  if (username && password) {
+    return {
+      host,
+      port,
+      auth: {
+        username,
+        password,
+      },
+    };
+  } else {
+    return {
+      host,
+      port,
+    };
+  }
 };
 const getEncryptedToken = (token) => {
   console.log(token);
@@ -49,6 +56,11 @@ function displayTitle(proxyHostPort, id) {
     proxyHostPort == null ? "Local IP" : this.proxyHostPort
   } - taskId-${id}`;
 }
+function sleep(time) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+}
 
 module.exports = {
   getRandomParsedProxy,
@@ -57,4 +69,5 @@ module.exports = {
   getProxyData,
   getProxyHostPort,
   displayTitle,
+  sleep,
 };

@@ -15,13 +15,17 @@ import {
   deleteDiscordSpoofer,
   errorInProxy,
   readArrayOfJson,
+  startGiveawayChecker,
   startGiveawayJoiner,
   startInviteJoinerMonitor,
   startLinkOpenerMonitor,
+  startMassGiveawayJoiner,
   startXpFarmer,
+  stopGiveawayChecker,
   stopGiveawayJoiner,
   stopInviteJoinerMonitor,
   stopLinkOpenerMonitor,
+  stopMassGiveawayJoiner,
   stopXpFarmer,
 } from "../../../helper/electron-bridge";
 
@@ -119,6 +123,10 @@ function TableSection({ list }) {
       startGiveawayJoiner(obj);
     } else if (type === "discordSpoofer") {
       addDiscordSpoofer(obj);
+    } else if (type === "massGiveawayJoiner") {
+      startMassGiveawayJoiner(obj);
+    } else if (type === "givewayChecker") {
+      startGiveawayChecker(obj);
     }
   };
 
@@ -168,6 +176,10 @@ function TableSection({ list }) {
       stopInviteJoinerMonitor(obj.id);
     } else if (type === "discordSpoofer") {
       deleteDiscordSpoofer({ claimer: obj.claimerGroup, id: obj.id });
+    } else if (type === "massGiveawayJoiner") {
+      stopMassGiveawayJoiner({ id: obj.id, value: obj.claimerGroup.value });
+    } else if (type === "givewayChecker") {
+      stopGiveawayChecker(obj.id);
     }
   };
 

@@ -1,6 +1,7 @@
 const bytenode = require("bytenode");
 const path = require("path");
 const logManager = require("./log-manager.jsc");
+const { ipcMain } = require("electron");
 
 (async () => {
   try {
@@ -29,34 +30,78 @@ const logManager = require("./log-manager.jsc");
   }
 })();
 
-const GiveawayJoinerProcess = require("../process/giveawayJoiner-process.jsc");
-const { getEncryptedToken } = require("../../helper/index.jsc");
+let success = 0;
+
+ipcMain.on("increase", () => {
+  success = success + 1;
+});
+ipcMain.on("send-final-status", () => {
+  console.log("send-final-status");
+  const obj = new MassGiveawayJoinerManager();
+  obj.sendMonitoStatus();
+});
+
+const GiveawayJoinerProcess = require("../process/massGiveawayJoiner-process");
 
 class MassGiveawayJoinerManager {
   constructor() {
     this.bots = {};
+    this.taskID = null;
+    this.tokens = null;
   }
 
   addMonitor(data) {
-    const { id, serverid, botid, tokens, delay } = data;
+    const {
+      id,
+      serverid,
+      botid,
+      claimerGroup: { value },
+      delay,
+    } = data;
+    const tokens = this.getTokenArray(value);
+    this.tokens = tokens.length;
+    this.taskID = id;
+    this.bots[id] = {};
+    this.flag = false;
     for (let i = 0; i < tokens.length; i++) {
-      // this.bots[id] = new GiveawayJoinerProcess(
-      //   id,
-      //   token,
-      //   serverid,
-      //   botid,
-      //   delay
-      // );
+      this.bots[id][tokens[i]] = new GiveawayJoinerProcess(
+        id,
+        tokens[i],
+        serverid,
+        botid,
+        delay,
+        i === tokens.length - 1 ? true : false
+      );
     }
-    logManager.logMessage(
-      `Giveaway joiner start monitoring with token:${getEncryptedToken(token)}`
-    );
+    this.flag = true;
+    logManager.logMessage(`Mass Giveaway joiner start monitoring`);
   }
 
-  stopMonitor(id) {
+  getTokenArray(value) {
+    return value.split("\n").map((item) => {
+      return item.split(":")[2];
+    });
+  }
+
+  stopMonitor({ id, value }) {
+    const tokens = this.getTokenArray(value);
     if (id in this.bots) {
-      this.bots[id].stop();
+      for (let i = 0; i < tokens.length; i++) {
+        this.bots[id][tokens[i]].stop();
+      }
       delete this.bots[id];
+    }
+  }
+
+  sendMonitoStatus() {
+    console.log("send");
+    const win = global.mainWin;
+    if (win) {
+      win.webContents.send("mass-giveaway-joiner-status", {
+        id: this.taskID,
+        status: `${success}/${this.tokens} Loggin`,
+        active: false,
+      });
     }
   }
 }

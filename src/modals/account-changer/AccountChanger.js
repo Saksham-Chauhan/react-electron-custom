@@ -17,7 +17,6 @@ import {
   fetchThemsState,
   setModalState,
 } from "../../features/counterSlice";
-import { addDataInTableList } from "../../features/logic/acc-changer";
 import {
   getClaimerValue,
   makeClaimerSelectOption,
@@ -46,6 +45,8 @@ import {
   InviteJoinerSlide,
   LinkOpenerSlide,
   XPFarmerSlide,
+  MassGiveawayJoinerSlide,
+  GiveawayCheckerSlide,
 } from "./slides";
 import NicknameChanger from "./slides/NicknameChanger";
 import Chance from "chance";
@@ -61,6 +62,7 @@ import {
   fetchServer,
 } from "../../helper/electron-bridge";
 import { toastSuccess, toastWarning } from "../../toaster";
+import { addDataInTableList } from "../../features/logic/acc-changer";
 
 function AccountChanger() {
   const navigate = useNavigate();
@@ -257,9 +259,18 @@ function AccountChanger() {
         const obj = { ...accountChanger };
         if (type === "discordSpoofer") {
           obj["isOpen"] = 0;
+        } else if (
+          (type === "giveawayJoiner" || type === "massGiveawayJoiner") &&
+          obj?.creategc
+        ) {
+          dispatch(addDataInTableList(obj));
+          obj["changerType"] = "givewayChecker";
+          dispatch(addDataInTableList(obj));
+          handleCloseModal();
+        } else {
+          dispatch(addDataInTableList(obj));
+          handleCloseModal();
         }
-        dispatch(addDataInTableList(obj));
-        handleCloseModal();
       }
     }
   };
@@ -573,6 +584,7 @@ const getDynamicSlideRnder = (
           onChange={handleChange}
           pageState={state}
           selectToken={handleSelectToken}
+          handleToggler={handleToggler}
         />
       );
     case "inviteJoiner":
@@ -597,10 +609,26 @@ const getDynamicSlideRnder = (
           handleMonitorToken={handleMonitorToken}
         />
       );
-
     case "discordSpoofer": {
       return null;
     }
+    case "massGiveawayJoiner":
+      return (
+        <MassGiveawayJoinerSlide
+          onChange={handleChange}
+          pageState={state}
+          selectToken={handleSelectToken}
+          handleToggler={handleToggler}
+        />
+      );
+    case "givewayChecker":
+      return (
+        <GiveawayCheckerSlide
+          onChange={handleChange}
+          pageState={state}
+          selectToken={handleSelectToken}
+        />
+      );
     default:
       return <UserNameChangerSlide onChange={handleChange} />;
   }

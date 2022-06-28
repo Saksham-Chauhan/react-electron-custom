@@ -13,3 +13,5 @@ export { default as LinkOpenerSlide } from "./LinkOpener";
 export { default as XPFarmerSlide } from "./XPFarmer";
 export { default as MassjoinerSlideOne } from "./MassjoinerSlideOne";
 export { default as MassjoinerSlideTwo } from "./MassjoinerSlideTwo";
+export { default as MassGiveawayJoinerSlide } from "./MassGiveawayJoiner";
+export { default as GiveawayCheckerSlide } from "./GiveawayChecker";

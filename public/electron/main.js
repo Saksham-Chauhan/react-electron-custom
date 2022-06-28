@@ -118,6 +118,8 @@ const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc")
 const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
 const logManager = require("./script/manager/log-manager.jsc");
 const giveawayJoiner = require("./script/manager/giveawayJoiner-manager.jsc");
+const massGiveawayJoiner = require("./script/manager/massGiveawayJoiner-manager");
+const giveawayChecker = require("./script/manager/giveawayChecker-manager");
 const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
 const discordManager = require("./script/manager/discord-spoofer-manager.jsc");
 const ObjectsToCsv = require("objects-to-csv");
@@ -518,21 +520,6 @@ ipcMain.on("checkForUpdates", () => {
 });
 
 //Twitter section IPC
-// ipcMain.on("twite", async (e, data) => {
-//   const { type } = data;
-//   if (type === "START") {
-//     twitterManager.setCredentials(
-//       data.credentials.consumerKey,
-//       data.credentials.consumerSecret,
-//       data.userList
-//     );
-//     await twitterManager.startMonitor();
-//   } else if (type === "STOP") {
-//     twitterManager.stopMonitoring();
-//   } else if (type === "UPDATED_USERLIST") {
-//     twitterManager.userList = data.userList;
-//   }
-// });
 ipcMain.handle("test-api", async (_, data) => {
   const { apiKey, apiSecret, account } = data;
   const res = await fetchTweets(apiKey, apiSecret, account);
@@ -675,6 +662,22 @@ ipcMain.on("run-xp-server", (_, data) => {
 
 ipcMain.on("stop-xp-server", (_, data) => {
   xpFarmerManager.stopFarmer(data);
+});
+
+// MASS GIVEAWAY JOINER
+ipcMain.on("start-mass-giveaway-joiner", (_, data) => {
+  massGiveawayJoiner.addMonitor(data);
+});
+ipcMain.on("stop-mass-giveaway-joiner", (_, id) => {
+  massGiveawayJoiner.stopMonitor(id);
+});
+
+// GIVEAWAY CHECKER
+ipcMain.on("start-giveaway-checker", (_, data) => {
+  giveawayChecker.addMonitor(data);
+});
+ipcMain.on("stop-giveaway-checker", (_, id) => {
+  giveawayChecker.stopMonitor(id);
 });
 
 // ACCOUNT CHANGER IPC

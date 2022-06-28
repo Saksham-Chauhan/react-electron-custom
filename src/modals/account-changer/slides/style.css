@@ -163,3 +163,8 @@
   color: var(--primary);
   margin-bottom: 10px;
 }
+.gc-toggler {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+}

@@ -54,7 +54,7 @@ class GiveawayJoinerProcess {
           embed?.description?.toLowerCase().includes("react")
         ) {
           await message.react("🎉");
-          const x = Math.floor(Math.random() * replyList.length + 1);
+          const x = Math.floor(Math.random() * replyList.length - 1);
           message.channel.startTyping();
           setTimeout(function () {
             message.channel.stopTyping();

@@ -1,6 +1,7 @@
 const { Client } = require("discord.js-selfbot");
 const logManager = require("../manager/log-manager.jsc");
 const { getEncryptedToken } = require("../../helper/index.jsc");
+const { ipcMain } = require("electron");
 
 const replyList = [
   "lfgooooo",
@@ -17,18 +18,24 @@ const replyList = [
 
 class GiveawayJoinerProcess {
   monitor = new Client();
-  constructor(id, token, serverID, authorID, delay) {
+  constructor(id, token, serverID, authorID, delay, flag) {
     this.id = id;
     this.token = token;
     this.serverID = serverID;
     this.authorID = authorID;
     this.delay = delay;
     this.isMonitorStart = true;
+    this.flag = flag;
     this.init();
   }
   init() {
     this.monitor.on("ready", () => {
       this.sendMonitoStatus("Monitoring", true);
+      ipcMain.emit("increase");
+      console.log("loged in");
+      if (this.flag) {
+        ipcMain.emit("send-final-status");
+      }
     });
     this.monitor.on("message", async (message) => {
       await this.sendReply(
@@ -40,9 +47,14 @@ class GiveawayJoinerProcess {
     });
     this.isMonitorStart = true;
     this.monitor.login(this.token).catch((e) => {
-      this.sendMonitoStatus("Invalid token", false);
+      console.log("token is invalid");
+      if (this.flag) {
+        ipcMain.emit("send-final-status");
+      }
       logManager.logMessage(
-        `Giveaway joiner found invalid token:${getEncryptedToken(this.token)}`
+        `Mass Giveaway joiner found invalid token:${getEncryptedToken(
+          this.token
+        )}`
       );
     });
   }
@@ -50,11 +62,11 @@ class GiveawayJoinerProcess {
     if (serverID === this.serverID) {
       if (authorID === this.authorID) {
         if (
-          embed?.title?.toLowerCase().includes("giveaway") &&
-          embed?.description?.toLowerCase().includes("react")
+          embed?.title?.toLowerCase().includes("anne") &&
+          embed?.description?.toLowerCase().includes("anne")
         ) {
           await message.react("🎉");
-          const x = Math.floor(Math.random() * replyList.length + 1);
+          const x = Math.floor(Math.random() * replyList.length - 1);
           message.channel.startTyping();
           setTimeout(function () {
             message.channel.stopTyping();
@@ -71,7 +83,7 @@ class GiveawayJoinerProcess {
   }
   stop() {
     logManager.logMessage(
-      `Giveaway joiner stop monitoring with token:${getEncryptedToken(
+      `Mass Giveaway joiner stop monitoring with token:${getEncryptedToken(
         this.token
       )}`
     );
@@ -83,7 +95,7 @@ class GiveawayJoinerProcess {
   sendMonitoStatus(status, active) {
     const win = global.mainWin;
     if (win) {
-      win.webContents.send("giveaway-joiner-status", {
+      win.webContents.send("mass-giveaway-joiner-status", {
         id: this.id,
         status,
         active,

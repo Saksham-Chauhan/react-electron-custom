@@ -42,10 +42,6 @@ const spooferToaster = (callback) =>
 const launchSpoofer = (spoof) => ipcRenderer.send("launch-spoofer", spoof);
 
 // TWITTER IPC
-// const startTwitterMonitor = (obj) => ipcRenderer.send("twite", obj);
-// // const stopTwitterMonitor = () => ipcRenderer.send("stop-twitter-monitor")
-// const getLatestTweet = (callback) =>
-//   ipcRenderer.on("get-twite", (_, data) => callback(data));
 const testApi = async (data) => {
   return await ipcRenderer.invoke("test-api", data);
 };
@@ -140,56 +136,81 @@ const updateDiscordSpooferStatus = (callback) =>
 const deleteDiscordSpoofer = (id) =>
   ipcRenderer.send("stop-discord-spoofer", id);
 
+// MASS GIVEAWAY JOINER
+const updateMassGiveawayJoinerStatus = (callback) =>
+  ipcRenderer.on("mass-giveaway-joiner-status", (_, res) => callback(res));
+
+const startMassGiveawayJoiner = (data) =>
+  ipcRenderer.send("start-mass-giveaway-joiner", data);
+
+const stopMassGiveawayJoiner = (id) =>
+  ipcRenderer.send("stop-mass-giveaway-joiner", id);
+
+// GIVEAWAY CHECKER
+const startGiveawayChecker = (data) => {
+  ipcRenderer.send("start-giveaway-checker", data);
+};
+const stopGiveawayChecker = (data) => {
+  ipcRenderer.send("stop-giveaway-checker", data);
+};
+const updateStatusGiveawayChecker = (callback) => {
+  ipcRenderer.on("update-gc-status", (_, data) => callback(data));
+};
+
 export {
-  testApi,
-  // startTwitterMonitor,
-  // getLatestTweet,
-  updateDiscordSpooferStatus,
-  errorInProxy,
-  addDiscordSpoofer,
-  deleteDiscordSpoofer,
-  updateGiveawayJoinerStatus,
-  startGiveawayJoiner,
-  stopGiveawayJoiner,
-  fetchChannel,
-  fetchedChannel,
-  fetchedServer,
-  fetchServer,
-  stopXpFarmer,
-  startXpFarmer,
-  getURL,
-  checkForURL,
-  interceptorFound,
-  minimizeApp,
-  closeApp,
-  maximizeApp,
-  startSpoofer,
-  stopSpoofer,
-  toggleSpoofer,
-  deleteSpoofer,
-  spooferToaster,
-  errorToaster,
-  launchSpoofer,
-  proxyTester,
-  proxyTestResultListener,
-  updateNotAvailable,
-  checkForUpdates,
-  decodeUser,
-  authUser,
-  logoutUser,
   auth,
-  readArrayOfJson,
-  debuggerChannnel,
-  updateProgress,
-  downloadingStart,
+  getURL,
+  testApi,
   sendLogs,
+  authUser,
+  closeApp,
+  decodeUser,
   exportLogs,
-  startLinkOpenerMonitor,
+  logoutUser,
+  fetchServer,
+  maximizeApp,
+  checkForURL,
+  minimizeApp,
+  stopSpoofer,
+  proxyTester,
+  startSpoofer,
+  errorInProxy,
+  fetchChannel,
+  stopXpFarmer,
+  errorToaster,
+  fetchedServer,
+  toggleSpoofer,
+  startXpFarmer,
+  deleteSpoofer,
+  launchSpoofer,
+  fetchedChannel,
+  spooferToaster,
+  updateProgress,
+  checkForUpdates,
+  readArrayOfJson,
+  interceptorFound,
+  downloadingStart,
+  debuggerChannnel,
+  addDiscordSpoofer,
+  updateNotAvailable,
+  stopGiveawayJoiner,
+  addCaptchaResolver,
+  startGiveawayJoiner,
+  stopGiveawayChecker,
+  startGiveawayChecker,
+  deleteDiscordSpoofer,
   updateStatusLOmonitor,
   stopLinkOpenerMonitor,
-  startInviteJoinerMonitor,
+  stopMassGiveawayJoiner,
+  startLinkOpenerMonitor,
+  startMassGiveawayJoiner,
+  proxyTestResultListener,
   stopInviteJoinerMonitor,
-  webhookNotificationListener,
-  addCaptchaResolver,
   captchaResolverListener,
+  startInviteJoinerMonitor,
+  updateDiscordSpooferStatus,
+  updateGiveawayJoinerStatus,
+  webhookNotificationListener,
+  updateStatusGiveawayChecker,
+  updateMassGiveawayJoinerStatus,
 };

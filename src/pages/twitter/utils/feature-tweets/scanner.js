@@ -130,9 +130,7 @@ const pastebinParser = async (urls) => {
 };
 // Checks URLs for given keywords
 function urlParser(urls, keywords) {
-  console.log("in parse");
   let response = [];
-  console.log(keywords, keywords.length);
   if (!keywords.length) {
     let ur = urls.map((item) => {
       return item.expanded_url;
@@ -163,7 +161,6 @@ const scanner = async (
   featureList
 ) => {
   let FTObject = Object.assign({}, tweetObject);
-  console.log("scanner", option, FTObject.entities.urls);
   const user = {
     name: tweetObject.user.name,
     screen_name: tweetObject.user.screen_name,
@@ -181,7 +178,6 @@ const scanner = async (
     FTObject.pastebinText = await pastebinParser(FTObject.entities.urls);
     if (option?.startAutoLinkOpener || option?.startAutoInviteJoiner) {
       FTObject.urlsExtracted = urlParser(FTObject.entities.urls, keywords);
-      console.log("lllllllllttttt", FTObject.urlsExtracted);
     }
   }
   if (FTObject.binaryText !== null) {
@@ -234,12 +230,20 @@ const scanner = async (
       webhookHandler(
         webhooks,
         user,
-        "I believe there is invite link in the tweet. Trying invite joiner",
+        "I believe there is link in the tweet. Trying to open.",
         FTObject.urlsExtracted.toString().split(",").join("\n")
       );
     }
   } else if ("inviteExtracted" in FTObject) {
     FTObject.featured_type = "Invite extracted";
+    if (webhookSetting?.twitterMonitor && !(FTObject["id"] in featureList)) {
+      webhookHandler(
+        webhooks,
+        user,
+        "I believe there is invite link in the tweet. Trying invite joiner",
+        FTObject.urlsExtracted.toString().split(",").join("\n")
+      );
+    }
   }
   let obj = {};
   obj["tweet_id"] = FTObject["id"];
