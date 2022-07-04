@@ -16,7 +16,6 @@ const XPFarmer = ({ handleMonitorToken, state, onChange }) => {
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
-            // isSelect={true}
             isCustomSelect={true}
             onChange={onChange}
             name="monitorToken"

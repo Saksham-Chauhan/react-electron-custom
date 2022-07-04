@@ -58,13 +58,7 @@ function AvatarChanger({ handleSelectAPI, handleUpload, obj, ...props }) {
               "Upload Image"
             )}
           </span>
-          <input
-            // className="img-field"
-            onChange={handleUpload}
-            type="file"
-            // multiple
-            accept="image/*"
-          />
+          <input onChange={handleUpload} type="file" accept="image/*" />
         </div>
       </ModalFlexInnerRow>
     </React.Fragment>

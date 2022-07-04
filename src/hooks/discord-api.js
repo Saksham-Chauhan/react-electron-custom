@@ -98,8 +98,7 @@ export const useMassInviteJoiner = () => {
                 `${captchaMsg}${getEncryptedToken(token)} in Mass Joiner`
               );
             } else {
-              console.log(res.response);
-              // toastWarning(res.response)
+              toastWarning(res?.response);
             }
           } else {
             toastWarning(response.message);
@@ -122,7 +121,6 @@ export const useMassInviteJoiner = () => {
             tokenArray[index]?.split(":")[2]
           )}, error message:${error.message}`;
           sendLogs(log);
-          console.log("Something went wrong while mass joiner", error.message);
         }
       }
     }
@@ -524,7 +522,6 @@ export const useNickNameChanger = () => {
                   name: name[index],
                   proxy,
                 };
-                console.log("captcha error");
                 const res = await captchaResolver(nicknameChangerAPI, args);
                 if (res.status !== 200 || res.status !== 204) {
                   sendLogs(
@@ -602,7 +599,6 @@ export const usePasswordChanger = () => {
     arr.push(newPass);
     user.push(tempuser);
     if (next_counter > 0) {
-      console.log(temp);
       arr = [...temp["newPass"].split("\n"), ...arr];
       user = [...temp["username"].split("\n"), ...user];
     }
@@ -675,7 +671,6 @@ export const usePasswordChanger = () => {
               newPassword: newPass,
               proxy,
             };
-            console.log("captcha error");
             const res = await captchaResolver(passwordChangerAPI, args);
             if (res.status !== 200 || res.status !== 204) {
               sendLogs(
@@ -697,7 +692,6 @@ export const usePasswordChanger = () => {
           );
         }
       } catch (e) {
-        console.log(e);
         dispatch(
           updateTaskState({
             id: obj.id,
@@ -777,7 +771,6 @@ export const useTokeChecker = () => {
               token: token,
               proxy,
             };
-            console.log("captcha error");
             const res = await captchaResolver(tokenCheckerAPI, args);
             if (res.status !== 200 || res.status !== 204) {
               sendLogs(
@@ -799,7 +792,6 @@ export const useTokeChecker = () => {
           );
         }
       } catch (e) {
-        console.log(e.message);
         dispatch(
           updateTaskState({
             id: obj.id,
@@ -836,7 +828,6 @@ export const useTokenRetriever = () => {
   let tempObj = {};
   let next_counter = 0;
   const helper = (apiResponse, tokenArr) => {
-    console.log("in helper");
     let newToken = apiResponse.data.token;
     arr.push(newToken);
     emailArr.push(tokenArr.split(":")[0]);
@@ -872,7 +863,6 @@ export const useTokenRetriever = () => {
           proxy,
         });
         if (response.status === 200 || response.status === 204) {
-          console.log("in 200");
           dispatch(
             updateTaskState({
               id: obj.id,
@@ -913,9 +903,7 @@ export const useTokenRetriever = () => {
                 `${captchaMsg}${getEncryptedToken(token)} in Token Retriever`
               );
             } else {
-              console.log(res?.response);
-              console.log(res?.response?.data);
-              // toastWarning(res.response)
+              toastWarning(res.response);
             }
           } else toastWarning(response.message);
           dispatch(
@@ -932,7 +920,6 @@ export const useTokenRetriever = () => {
           );
         }
       } catch (e) {
-        console.log(e);
         dispatch(
           updateTaskState({
             id: obj.id,
@@ -1024,7 +1011,6 @@ export const useAvatarChanger = () => {
               image: randomImage,
               proxy,
             };
-            console.log("captcha error");
             const res = await captchaResolver(avatarChangerAPI, args);
             if (res.status !== 200 || res.status !== 204) {
               sendLogs(

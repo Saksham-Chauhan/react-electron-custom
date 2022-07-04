@@ -172,6 +172,5 @@ export default function prependHttp(url, { https = true } = {}) {
 }
 
 export const getEncryptedToken = (token) => {
-  console.log(token);
   return token.slice(0, 4) + "#### ####" + token.slice(-6);
 };

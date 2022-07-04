@@ -19,7 +19,6 @@ function ActivityChanger({
     let codesArray = [];
     sym.forEach((el) => codesArray.push("0x" + el));
     let emojival = String.fromCodePoint(...codesArray);
-    console.log(emojival);
     handleUpdateObject("emojiValue", emojival);
   };
   return (

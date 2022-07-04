@@ -201,21 +201,6 @@ export const makeGroupOptions = (list = []) => {
   return groupArray;
 };
 
-// export const getAllServerIds = async (token) => {
-//   try {
-//     const res = await axios.get(`${BASE_URL}users/@me/guilds`, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: token,
-//       },
-//     });
-//     console.log(res);
-//     return res;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
 export const getAllChannelIds = async (id, token) => {
   try {
     const res = await axios.get(`${BASE_URL}guilds/${id}/channels`, {

@@ -25,7 +25,6 @@ class XPFarmerProcess {
           [this.token, this.channelID, this.proxy],
           function (err, data) {
             console.log(err);
-            console.log(data.toString());
           }
         );
         this.isRunning = true;

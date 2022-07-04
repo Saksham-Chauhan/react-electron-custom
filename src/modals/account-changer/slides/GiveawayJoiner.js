@@ -15,8 +15,6 @@ function GiveawayJoiner({ onChange, selectToken, handleToggler, ...props }) {
           <AppInputField
             fieldTitle="Monitor Token"
             placeholderText="Enter Token"
-            // selectOptions={getTokensList()}
-            // isSelect={true}
             onChange={onChange}
             name="token"
           />

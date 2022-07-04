@@ -32,7 +32,6 @@ class GiveawayJoinerProcess {
     this.monitor.on("ready", () => {
       this.sendMonitoStatus("Monitoring", true);
       ipcMain.emit("increase");
-      console.log("loged in");
       if (this.flag) {
         ipcMain.emit("send-final-status");
       }
@@ -47,7 +46,6 @@ class GiveawayJoinerProcess {
     });
     this.isMonitorStart = true;
     this.monitor.login(this.token).catch((e) => {
-      console.log("token is invalid");
       if (this.flag) {
         ipcMain.emit("send-final-status");
       }

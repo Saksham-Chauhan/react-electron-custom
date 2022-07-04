@@ -73,7 +73,6 @@ function Twitter() {
           console.log(msg);
         }
       );
-      console.log(res.msg.created_at);
       return res.msg;
     };
 

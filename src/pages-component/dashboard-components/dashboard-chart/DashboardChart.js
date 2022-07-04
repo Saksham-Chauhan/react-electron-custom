@@ -51,8 +51,6 @@ const DashboardChart = () => {
   const TWArr = useSelector(fetchTwiterArray);
   const SPArr = useSelector(fetchSpooferArray);
 
-  console.log(lnlArr, IJArr, TWArr, SPArr);
-
   let lO = [0, 0, 0, 0, 0, 0, 0];
   let IJ = [0, 0, 0, 0, 0, 0, 0];
   let TM = [0, 0, 0, 0, 0, 0, 0];

@@ -14,7 +14,6 @@ export const useCaptchaResolverMassJoiner = () => {
   // GET THE TASK ID
 
   const getTask = (proxy, inviteCode, captchaData) => {
-    console.log("first", inviteCode, captchaData);
     const { captcha_sitekey, captcha_rqdata } = captchaData;
     return new Promise(async (resolve, reject) => {
       const obj = {
@@ -56,7 +55,7 @@ export const useCaptchaResolverMassJoiner = () => {
         }
       } catch (error) {
         sendLogs(`Unable to get captcha task id`);
-        reject(error.message);
+        reject(error);
       }
     });
   };
@@ -103,43 +102,45 @@ export const useCaptchaResolverMassJoiner = () => {
   const solveCaptcha = async (fn, args) => {
     sendLogs(`Resolving captcha of token: -> ${getEncryptedToken(args.token)}`);
     const { proxy, inviteCode, captchaData } = args;
-    return getTask(proxy, inviteCode, captchaData).then(async (response) => {
-      if (response) {
-        return poller({
-          taskFn: () => {
-            return new Promise(async (resolve, reject) => {
-              getSolution(response)
-                .then((solution) => {
-                  if (fn instanceof Function) {
-                    fn({ ...args, solution: solution.msg, captchaData })
-                      .then((res) => {
-                        resolve(res);
-                      })
-                      .catch((err) => {
-                        sendLogs(
-                          `Error after captcha resolved with token:${getEncryptedToken(
-                            args.token
-                          )},${err.message}`
-                        );
-                        resolve({
-                          type: "ERROR join",
-                          msg: "error",
+    return getTask(proxy, inviteCode, captchaData)
+      .then(async (response) => {
+        if (response) {
+          return poller({
+            taskFn: () => {
+              return new Promise(async (resolve, reject) => {
+                getSolution(response)
+                  .then((solution) => {
+                    if (fn instanceof Function) {
+                      fn({ ...args, solution: solution.msg, captchaData })
+                        .then((res) => {
+                          resolve(res);
+                        })
+                        .catch((err) => {
+                          sendLogs(
+                            `Error after captcha resolved with token:${getEncryptedToken(
+                              args.token
+                            )},${err.message}`
+                          );
+                          resolve({
+                            type: "ERROR join",
+                            msg: "error",
+                          });
                         });
-                      });
-                  }
-                })
-                .catch((err) => {
-                  reject(err);
-                });
-            });
-          },
-          interval: 500,
-          retries: 3,
-        })
-          .then((res) => res)
-          .catch((e) => console.log("CATCH", e));
-      }
-    });
+                    }
+                  })
+                  .catch((err) => {
+                    reject(err);
+                  });
+              });
+            },
+            interval: 500,
+            retries: 3,
+          })
+            .then((res) => res)
+            .catch((e) => console.log("CATCH", e));
+        }
+      })
+      .catch((e) => e);
   };
 
   return solveCaptcha;

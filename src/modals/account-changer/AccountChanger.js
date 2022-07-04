@@ -259,6 +259,8 @@ function AccountChanger() {
         const obj = { ...accountChanger };
         if (type === "discordSpoofer") {
           obj["isOpen"] = 0;
+          dispatch(addDataInTableList(obj));
+          handleCloseModal();
         } else if (
           (type === "giveawayJoiner" || type === "massGiveawayJoiner") &&
           obj?.creategc
@@ -345,7 +347,6 @@ function AccountChanger() {
   const handleUpload = async (e) => {
     var reader = new FileReader();
     let file = e.target.files[0];
-    console.log(file);
     reader.readAsDataURL(file);
     reader.onload = function () {
       let base64String = reader.result.replace("data:", "").replace(/^.+,/, "");

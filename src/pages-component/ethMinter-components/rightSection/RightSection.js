@@ -13,7 +13,6 @@ import lightModesearch from "../../../assests/images/lightModesearch.svg";
 import lightModeplay from "../../../assests/images/lightMode_play.svg";
 import stop from "../../../assests/images/stop.svg";
 
-// import stop from "../../../assests/images/stop.svg";
 import {
   fetchActiveNftGroupState,
   fetchNftSettingDelaytate,

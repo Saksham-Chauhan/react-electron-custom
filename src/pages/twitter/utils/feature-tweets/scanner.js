@@ -135,7 +135,6 @@ function urlParser(urls, keywords) {
     let ur = urls.map((item) => {
       return item.expanded_url;
     });
-    console.log(ur);
     return ur;
   }
   for (let url in urls) {

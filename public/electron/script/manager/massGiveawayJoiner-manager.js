@@ -36,7 +36,6 @@ ipcMain.on("increase", () => {
   success = success + 1;
 });
 ipcMain.on("send-final-status", () => {
-  console.log("send-final-status");
   const obj = new MassGiveawayJoinerManager();
   obj.sendMonitoStatus();
 });
@@ -94,7 +93,6 @@ class MassGiveawayJoinerManager {
   }
 
   sendMonitoStatus() {
-    console.log("send");
     const win = global.mainWin;
     if (win) {
       win.webContents.send("mass-giveaway-joiner-status", {

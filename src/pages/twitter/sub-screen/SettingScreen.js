@@ -66,7 +66,6 @@ function SettingScreen({
   };
 
   const handleSubmit = async () => {
-    console.log(",jhbdzhj");
     const result = validationChecker(twiiterApiSchema, twitterApi);
     if (result) {
       try {
@@ -86,7 +85,6 @@ function SettingScreen({
           toastWarning("Error while testing twitter API");
         }
       } catch (error) {
-        console.log("Error while testing twitter API", error);
         toastWarning("Error while testing twitter API");
       }
     }

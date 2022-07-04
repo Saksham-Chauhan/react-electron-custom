@@ -22,7 +22,6 @@ const getRandomParsedProxy = (proxyArray) => {
   }
 };
 const getEncryptedToken = (token) => {
-  console.log(token);
   return token.slice(0, 4) + "#### ####" + token.slice(-6);
 };
 

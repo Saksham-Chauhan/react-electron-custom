@@ -100,18 +100,41 @@
   "build": {
     "productName": "Kyro",
     "appId": "com.kyro.koders",
+    "directories": {
+      "output": "dist"
+    },
     "publish": {
       "provider": "generic",
       "url": "http://downloads.kyrotools.in"
     },
     "files": [
-      "build/**/*"
+      "build/**/*",
+      "package.json",
+      "main.js",
+      "icon.ico",
+      "web"
     ],
     "buildDependenciesFromSource": true,
     "win": {
       "artifactName": "${productName}-${version}.${ext}",
-      "target": "nsis",
+      "target": [
+        {
+          "target": "nsis-web",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "public/images/icon.ico"
+    },
+    "nsisWeb": {
+      "installerIcon": "public/images/icon.ico",
+      "artifactName": "${productName}_Setup_${version}.${ext}",
+      "deleteAppDataOnUninstall": true,
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "license": "./public/assets/license.txt"
     },
     "pkg": {
       "installLocation": "/Applications",
@@ -128,13 +151,6 @@
       "artifactName": "${productName}-${version}.${ext}",
       "target": "pkg",
       "icon": "public/images/icon.icns"
-    },
-    "nsis": {
-      "installerIcon": "public/images/installer.ico",
-      "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true,
-      "oneClick": "false",
-      "license": "./public/assets/license.txt"
     }
   }
 }

@@ -36,7 +36,6 @@ export const discordServerInviteAPI = async (
   let data = {};
   if (solution && captchaData.captcha_rqtoken) {
     const token = captchaData.captcha_rqtoken.toString();
-    console.log(token, typeof token);
     data = JSON.stringify({
       captcha_key: solution,
       captcha_rqtoken: token,
