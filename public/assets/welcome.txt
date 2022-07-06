@@ -1,4 +1,4 @@
-First Ever Custom NFT Whitelist Toolbox with features such as:
+First Custom NFT Whitelist + Minter Toolbox with features such as:
 
 -    Link opener that allows you to select different Chrome profiles
 -    Mass Invite Joiner
@@ -8,22 +8,23 @@ First Ever Custom NFT Whitelist Toolbox with features such as:
 -    Spoof browser
 -    Blazing fast twitter monitor
 -    Advance twitter monitor - OCR, QR and 17 more featured tweet separator
+-    Avatar Changer 
+-    Password Changer 
+-    Username Changer 
+-    Activity Changer 
+-    Giveaway Joiner 
+-    Token Checker 
+-    Token Retreiver 
+-    NFT Minter 
+-    XP Farmer
 
 Coming Soon:
--  NFT Minter 
--  XP Farmer 
--  Avatar Changer 
--  Password Changer 
--  Username Changer 
+-    Solana Minter
+-    Premint Raffle Bot
+-    Discord Account Gen
+-    Opensea Sniper
+
 and many more
 
 Join us for the latest updates:
 https://twitter.com/ToolsKyro
-
-
-
-
-
-
-
-

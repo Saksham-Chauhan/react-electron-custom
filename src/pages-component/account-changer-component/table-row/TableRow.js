@@ -4,20 +4,37 @@ import play from "../../../assests/images/play.svg";
 import trash2 from "react-useanimations/lib/trash2";
 import stop from "../../../assests/images/stop.svg";
 import download from "../../../assests/images/download.svg";
+import lightMode_play from "../../../assests/images/lightMode_play.svg";
 import { DISCORD_MASS_OPTIONS } from "../../../constant";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../../features/counterSlice";
+
+// const type = ["linkOpner", "inviteJoiner", "passwordChanger", "tokenRetrieve"];
 
 function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
+  const appTheme = useSelector(fetchThemsState);
+  const theme = {
+    tableBody: appTheme
+      ? "acc-chnager-page-table-header body  light-bg light-mode-table-color"
+      : "acc-chnager-page-table-header body",
+  };
+
+  const getFlag = (type, status) => {
+    if (type === "passwordChanger" || type === "tokenRetrieve") {
+      if (status.charAt(0) !== "0") {
+        return true;
+      } else return false;
+    } else return false;
+  };
   return (
-    <div className="acc-chnager-page-table-header body">
+    <div className={theme.tableBody}>
       <div>{index}</div>
       <div style={{ display: "flex" }}>
         <div style={{ width: "70%", overflow: "hidden" }}>
-          {obj.changerType === "giveawayJoiner" ||
-          obj.changerType === "linkOpener"
+          {obj.changerType === "linkOpener"
             ? obj?.monitorToken?.label
             : obj?.claimerGroup?.label}
         </div>
-        {obj.changerType === "giveawayJoiner" && "..."}
       </div>
       <div>
         {
@@ -35,14 +52,27 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
       </div>
       <div>
         <div className="acc-changer-table-row-action-column">
-          {obj?.status === "Completed" &&
-          (obj?.changerType === "passwordChanger" ||
-            obj?.changerType === "tokenRetrieve") ? (
+          {obj["active"] ? (
+            <img
+              src={stop}
+              alt=""
+              onClick={() => {
+                onStop(obj);
+              }}
+            />
+          ) : (obj.status === "Success" ||
+              obj.status.includes("Changed") ||
+              obj.status.includes("Retrieved")) &&
+            getFlag(obj.changerType, obj.status) ? (
             <img src={download} alt="dwd" onClick={() => onDownload(obj)} />
-          ) : obj["active"] ? (
-            <img src={stop} alt="" onClick={() => onStop(obj)} />
           ) : (
-            <img src={play} alt="" onClick={() => onPlay(obj)} />
+            <img
+              src={appTheme ? lightMode_play : play}
+              alt=""
+              onClick={() => {
+                onPlay(obj);
+              }}
+            />
           )}
           <UseAnimations
             wrapperStyle={{ cursor: "pointer" }}
@@ -60,18 +90,28 @@ function TableRow({ onDelete, obj, index, onPlay, onStop, onDownload }) {
 export default TableRow;
 
 const getColor = (status, appTheme) => {
-  switch (status) {
-    case "Running":
-      return appTheme ? "var(--lightMode-status)" : "var(--status)";
-    case "Monitoring...":
-      return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
-    case "Completed":
-      return appTheme ? "var(--lightMode-complete)" : "#1186db";
-    case "Stopped":
-      return "var(--delete)";
-    case "idle":
-      return appTheme ? "var(--lightMode-text-color)" : "";
-    default:
-      return "var(--primary)";
+  if (status.includes("/")) {
+    return appTheme ? "var(--lightMode-complete)" : "#1186db";
+  } else {
+    switch (status) {
+      case "Running":
+        return appTheme ? "var(--lightMode-status)" : "var(--status)";
+      case "Monitoring...":
+        return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
+      case "Monitoring":
+        return appTheme ? "var( --lightMode-monitoring)" : "var(--status)";
+      case "Completed":
+        return appTheme ? "var(--lightMode-complete)" : "#1186db";
+      case "Success":
+        return appTheme ? "var(--lightMode-complete)" : "#1186db";
+      case "Stopped":
+        return "var(--delete)";
+      case "Error":
+        return "var(--delete)";
+      case "Idle":
+        return appTheme ? "var(--lightMode-text-color)" : "";
+      default:
+        return "var(--primary)";
+    }
   }
 };

@@ -7,6 +7,8 @@ import {
 } from "../../../component";
 import { Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../../features/counterSlice";
 
 const MassjoinerSlideTwo = ({
   onChange,
@@ -14,6 +16,7 @@ const MassjoinerSlideTwo = ({
   pageState,
   handleIsEmoji,
   handleUpdateObject,
+  currentSlide,
 }) => {
   const addEmoji = (e) => {
     let sym = e.unified.split("-");
@@ -23,26 +26,37 @@ const MassjoinerSlideTwo = ({
     handleUpdateObject("emojiValue", emojival);
   };
 
+  const appTheme = useSelector(fetchThemsState);
+  const textClass = appTheme ? "lightMode_color" : "";
+
   return (
     <>
       <div className="mj-slide">
+        {pageState.emoji && (
+          <div className="emoji-tray-picker">
+            <Picker onSelect={addEmoji} />
+          </div>
+        )}
         {true && (
           <>
             <div className="toggler-btn-label">
               <label>React</label>
               <AppSpacer spacer={5} />
-              <div className="joiner-custom-toggle">
+              <div className="d-flex">
                 <AppToggler
                   id="invite-joiner-react-setting-mode"
-                  checked={pageState.isReact}
+                  checked={pageState?.isReact}
                   onChange={handleToggler}
                   name="isReact"
                 />
-                <label>Turn {!true ? "ON" : "OFF"}</label>
+                <label style={{ marginLeft: "5px" }}>
+                  Turn {pageState?.isReact ? "ON" : "OFF"}
+                </label>
               </div>
             </div>
-            <div className={`react-joiner-setting-section`}>
-              {pageState.isReact && (
+            <AppSpacer spacer={10} />
+            <div className="react-joiner-setting-section">
+              {pageState?.isReact && (
                 <>
                   <div>
                     <AppInputField
@@ -64,7 +78,6 @@ const MassjoinerSlideTwo = ({
                     <AppInputField
                       fieldTitle="Emoji"
                       placeholderText="Enter Emoji"
-                      // onCopy={handleReactChange}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleIsEmoji(!pageState.emoji);
@@ -73,17 +86,12 @@ const MassjoinerSlideTwo = ({
                       value={pageState.emojiValue}
                       onChange={onChange}
                     />
-                    {pageState.emoji && (
-                      <div className="emoji-tray-picker">
-                        <Picker onSelect={addEmoji} />
-                      </div>
-                    )}
                   </div>
                 </>
               )}
             </div>
             <AppSpacer spacer={10} />
-            <div className="joiner-custom-input">
+            <div className="toggler-btn-label">
               <LabelWithToolTip
                 delayHide={1500}
                 isCustomToolTip={true}
@@ -102,17 +110,22 @@ const MassjoinerSlideTwo = ({
                 </p>
               </LabelWithToolTip>
               <AppSpacer spacer={10} />
-              <div className="joiner-custom-toggle">
+              <div className="d-flex">
                 <AppToggler
                   id="invite-joiner-accept-rule"
                   checked={pageState.isAcceptRule}
                   onChange={handleToggler}
                   name="isAcceptRule"
                 />
-                <label>Turn {!pageState.isAcceptRule ? "ON" : "OFF"}</label>
+                <label
+                  className={textClass}
+                  style={{ marginLeft: "5px", color: "var(--primary)" }}
+                >
+                  Turn {pageState.isAcceptRule ? "ON" : "OFF"}
+                </label>
               </div>
               <AppSpacer spacer={10} />
-              {pageState.isAcceptRule && (
+              {pageState.isAcceptRule && currentSlide === 1 && (
                 <div className={`accept-joiner-setting-section `}>
                   <AppInputField
                     isMulti={true}

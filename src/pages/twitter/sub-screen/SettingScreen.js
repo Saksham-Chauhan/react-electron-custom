@@ -1,30 +1,31 @@
-import React, { useState } from 'react'
-import './styles.css'
+import React, { useState } from "react";
+import "./styles.css";
 import {
+  fetchThemsState,
   setTwitterChromeUser,
   setTwitterClaimerGroup,
   fetchClaimerGroupList,
   fetchChromeUserListState,
-  fetchTwitterChromeUserState,
   fetchTwitterClaimerGroupState,
-  fetchThemsState,
-} from '../../../features/counterSlice'
+} from "../../../features/counterSlice";
 import {
   addNewApiInList,
   removeApiFromList,
-} from '../../../features/logic/twitter'
-import { toastWarning } from '../../../toaster'
-import UseAnimations from 'react-useanimations'
-import trash2 from 'react-useanimations/lib/trash2'
-import back from '../../../assests/images/back.svg'
-import { twiiterApiSchema } from '../../../validation'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppInputField, AppSpacer } from '../../../component'
-import { TwitterPageTopSection } from '../../../pages-component'
-import { validationChecker } from '../../../hooks/validationChecker'
-import { getClaimerValue, makeClaimerSelectOption } from '../../../helper'
-import { useNavigate } from 'react-router-dom'
-import { RoutePath } from '../../../constant'
+} from "../../../features/logic/twitter";
+import { useNavigate } from "react-router-dom";
+import { toastWarning } from "../../../toaster";
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
+import back from "../../../assests/images/back.svg";
+import { twiiterApiSchema } from "../../../validation";
+import { useDispatch, useSelector } from "react-redux";
+import { AppInputField, AppSpacer } from "../../../component";
+import { testApi } from "../../../helper/electron-bridge";
+import { TwitterPageTopSection } from "../../../pages-component";
+import { defaultChromeUser, RoutePath } from "../../../constant";
+import { validationChecker } from "../../../hooks/validationChecker";
+import { getClaimerValue, makeClaimerSelectOption } from "../../../helper";
+import LabelWithTooltip from "../../../component/tooltip-label/LabelWithTooltip";
 
 function SettingScreen({
   handleScreen,
@@ -33,69 +34,91 @@ function SettingScreen({
   rotaterIndex,
   twitterSetting,
 }) {
-  const dispatch = useDispatch()
-  const chromeList = useSelector(fetchChromeUserListState)
-  const claimerList = useSelector(fetchClaimerGroupList)
-  const selectedChrome = useSelector(fetchTwitterChromeUserState)
-  const selectedClaimer = useSelector(fetchTwitterClaimerGroupState)
-  const appTheme = useSelector(fetchThemsState)
-  let navigate = useNavigate()
+  const dispatch = useDispatch();
+  const chromeList = useSelector(fetchChromeUserListState);
+  const claimerList = useSelector(fetchClaimerGroupList);
+  const selectedClaimer = useSelector(fetchTwitterClaimerGroupState);
+  const appTheme = useSelector(fetchThemsState);
+
+  const theme = {
+    textClass: appTheme ? "lightMode_color" : "",
+    settingPageBack: appTheme
+      ? "twitter-setting-page-back btn light-mode-sidebar"
+      : "twitter-setting-page-back btn",
+    apiScrollArea: appTheme
+      ? "api-keys-scroll-acrea light-mode-sidebar"
+      : "api-keys-scroll-acrea",
+    backGrounnd: appTheme ? "btn light-mode-sidebar" : "",
+  };
+
+  let navigate = useNavigate();
   const [twitterApi, setTwitterApi] = useState({
-    apiName: '',
-    apiKey: '',
-    apiSecret: '',
-  })
+    apiName: "",
+    apiKey: "",
+    apiSecret: "",
+  });
 
   const handleChange = (e) => {
-    const { value, name } = e.target
+    const { value, name } = e.target;
     setTwitterApi((pre) => {
-      return { ...pre, [name]: value }
-    })
-  }
+      return { ...pre, [name]: value };
+    });
+  };
 
-  const handleSubmit = () => {
-    const result = validationChecker(twiiterApiSchema, twitterApi)
+  const handleSubmit = async () => {
+    const result = validationChecker(twiiterApiSchema, twitterApi);
     if (result) {
-      dispatch(addNewApiInList(twitterApi))
-      setTwitterApi({
-        apiName: '',
-        apiKey: '',
-        apiSecret: '',
-      })
+      try {
+        const response = await testApi({
+          apiKey: twitterApi.apiKey,
+          apiSecret: twitterApi.apiSecret,
+          account: "KodersHQ",
+        });
+        if (Object.keys(response).length > 0) {
+          dispatch(addNewApiInList(twitterApi));
+          setTwitterApi({
+            apiName: "",
+            apiKey: "",
+            apiSecret: "",
+          });
+        } else {
+          toastWarning("Error while testing twitter API");
+        }
+      } catch (error) {
+        toastWarning("Error while testing twitter API");
+      }
     }
-  }
+  };
 
   const handleApiDelete = (api, index) => {
     if (!twitterSetting?.twitterMonitor) {
-      dispatch(removeApiFromList(api))
+      dispatch(removeApiFromList(api));
     } else {
       if (rotaterIndex !== index) {
-        dispatch(removeApiFromList(api))
-      } else toastWarning('API in use!!!!')
+        dispatch(removeApiFromList(api));
+      } else toastWarning("API in use!!!!");
     }
-  }
+  };
 
   const handleUserSelect = (data) => {
-    dispatch(setTwitterChromeUser(data))
-  }
+    dispatch(setTwitterChromeUser(data));
+  };
 
   const handleClaimerSelect = (data) => {
-    dispatch(setTwitterClaimerGroup(data))
-  }
+    dispatch(setTwitterClaimerGroup(data));
+  };
 
   const handleChromeMenuOpen = () => {
     if (chromeList.length === 0) {
-      navigate(RoutePath.setting, { replace: true })
+      navigate(RoutePath.setting, { replace: true });
     }
-  }
+  };
 
   const handleClaimerMenuOpen = () => {
     if (claimerList.length === 0) {
-      navigate(RoutePath.setting, { replace: true })
+      navigate(RoutePath.setting, { replace: true });
     }
-  }
-
-  const textClass = appTheme ? 'lightMode_color' : ''
+  };
 
   return (
     <div>
@@ -105,21 +128,17 @@ function SettingScreen({
       />
       <AppSpacer spacer={20} />
       <div className="twitter-setting-page-inner">
-        <div
-          onClick={handleScreen}
-          className={
-            appTheme
-              ? 'twitter-setting-page-back btn lightModeSidebar'
-              : 'twitter-setting-page-back btn'
-          }
-        >
+        <div onClick={handleScreen} className={theme.settingPageBack}>
           <img src={back} alt="" />
           <span>Twitter Page</span>
         </div>
         <AppSpacer spacer={30} />
         <div className="twitter-secting-col">
           <div>
-            <h3 className={textClass}>Keys</h3>
+            <div className="d-flex">
+              <h3 className={theme.textClass}>Twitter API</h3>
+              <LabelWithTooltip toolTopText="Multiple API keys would enable rotation" />
+            </div>
             <AppInputField
               hideLabel={true}
               isCustomLabel={true}
@@ -128,6 +147,8 @@ function SettingScreen({
               value={twitterApi?.apiName}
               onChange={handleChange}
               placeholderText="Enter API Name"
+              submit={handleSubmit}
+              submitFlag={true}
             />
             <AppInputField
               hideLabel={true}
@@ -137,6 +158,8 @@ function SettingScreen({
               value={twitterApi?.apiKey}
               onChange={handleChange}
               placeholderText="Enter API Key"
+              submit={handleSubmit}
+              submitFlag={true}
             />
             <AppInputField
               hideLabel={true}
@@ -146,40 +169,44 @@ function SettingScreen({
               value={twitterApi?.apiSecret}
               onChange={handleChange}
               placeholderText="Enter API Secret"
+              submit={handleSubmit}
+              submitFlag={true}
             />
             <AppSpacer spacer={15} />
             <div className="setting-twitter-flex full">
               <div
                 onClick={handleSubmit}
-                className={appTheme ? 'btn lightModeSidebar' : ''}
+                className={theme.backGrounnd}
+                style={{ cursor: "pointer" }}
               >
-                <span>Save Token</span>
+                <span>Add Key</span>
               </div>
             </div>
             <AppSpacer spacer={15} />
-            <div
-              className={
-                appTheme
-                  ? 'api-keys-scroll-acrea lightModeSidebar'
-                  : 'api-keys-scroll-acrea'
-              }
-            >
+            <div className={theme.apiScrollArea}>
               {apiList.map((api, index) => (
-                <div key={api['id']} className="api-list-item">
-                  <span>{api['apiName']}</span>
+                <div key={api["id"]} className="api-list-item">
+                  <span>{api["apiName"]}</span>
                   <UseAnimations
                     onClick={() => handleApiDelete(api, index)}
                     animation={trash2}
                     strokeColor="#B60E0E"
                     size={25}
-                    wrapperStyle={{ cursor: 'pointer' }}
+                    wrapperStyle={{ cursor: "pointer" }}
                   />
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <h3 className={textClass}>Claimer</h3>
+            <div className="d-flex">
+              <h3 className={theme.textClass}>Discord Accounts</h3>
+              <LabelWithTooltip
+                toolTopText="For invite joiner"
+                labelText="invite"
+                text={false}
+              />
+            </div>
             <AppInputField
               fieldTitle=""
               hideLabel={true}
@@ -187,8 +214,8 @@ function SettingScreen({
               onChange={handleClaimerSelect}
               placeholderText={
                 claimerList.length > 0
-                  ? 'Select Token Group'
-                  : 'Add Token Group'
+                  ? "Select Discord Accounts"
+                  : "Add Discord Accounts"
               }
               selectOptions={makeClaimerSelectOption(claimerList)}
               value={getClaimerValue(claimerList, selectedClaimer)}
@@ -201,8 +228,16 @@ function SettingScreen({
             />
           </div>
           <div>
-            <h3 className={textClass}>Chrome User</h3>
+            <div className="d-flex">
+              <h3 className={theme.textClass}>Chrome User</h3>
+              <LabelWithTooltip
+                labelText="link"
+                text={false}
+                toolTopText="For link opener"
+              />
+            </div>
             <AppInputField
+              defaultValue={defaultChromeUser}
               fieldTitle=""
               hideLabel={true}
               isCustomLabel={true}
@@ -210,22 +245,15 @@ function SettingScreen({
               onChange={handleUserSelect}
               onMenuOpen={handleChromeMenuOpen}
               placeholderText={
-                chromeList.length > 0 ? 'Select Chrome User' : 'Add Chrome User'
+                chromeList.length > 0 ? "Select Chrome User" : "Add Chrome User"
               }
-              value={
-                chromeList.length > 0
-                  ? chromeList.filter((d) => d['id'] === selectedChrome['id'])
-                  : ''
-              }
-              isSelect={chromeList.length > 0}
-              disabled={chromeList.length > 0}
-              navigate={chromeList.length > 0 ? () => {} : handleChromeMenuOpen}
+              isSelect={true}
             />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default SettingScreen
+export default SettingScreen;

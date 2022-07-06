@@ -1,8 +1,22 @@
+.input-field-container {
+  width: 100%;
+}
 .input-field-container > label {
   font-weight: 500;
   font-size: 13.149px;
   line-height: 20px;
   color: var(--primary);
+}
+.input-field-container > div > label,
+a {
+  font-weight: 500;
+  font-size: 13.149px;
+  line-height: 20px;
+  color: var(--primary);
+}
+.input-field-container > div > a {
+  color: black;
+  margin-left: 10px;
 }
 .input-field-container > .custom-label {
   color: var(--primary);
@@ -16,7 +30,7 @@
 .input-field-box {
   margin-top: 0.4em;
 }
-.input-field-box > input,
+.input-field-box > div > input,
 .input-field-box > textarea {
   width: 100%;
   border: none;
@@ -28,13 +42,13 @@
   font-size: 15.5px;
   line-height: 23px;
   color: var(--primary);
-  font-family: 'Poppins';
+  font-family: "Poppins";
 }
 .input-field-box > textarea {
   overflow-y: scroll;
   resize: none;
 }
-.input-field-box > input:focus,
+.input-field-box > div > input:focus,
 .input-field-box > textarea:focus {
   border-color: var(--active-input);
 }
@@ -45,7 +59,7 @@
   background: var(--scrollbar-bg);
   border-radius: 10px;
 }
-.input-field-box > input::placeholder,
+.input-field-box > div > input::placeholder,
 .input-field-box > textarea::placeholder {
   font-size: 13px;
   line-height: 18px;
@@ -58,7 +72,7 @@
   font-size: 15.5px;
   line-height: 23px;
   color: var(--scrollbar-bg);
-  font-family: 'Poppins';
+  font-family: "Poppins";
   pointer-events: none;
   padding: 5px 0px;
   padding-left: 10px;

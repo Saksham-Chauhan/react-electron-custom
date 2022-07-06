@@ -13,14 +13,14 @@ function UserNameChanger({ ...props }) {
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
             name="delay"
             {...props}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <LabelWithToolTip
-            toolTopText="Enter user name"
+            toolTopText="Leave blank for random usernames"
             labelText="Username (Optional)"
             parentStyle={{ style: { marginBottom: "10px" } }}
           />

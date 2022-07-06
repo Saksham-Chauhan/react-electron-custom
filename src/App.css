@@ -1,14 +1,19 @@
 /* light mode classes  */
-
-.lightModeSidebar {
+.table-header-lightmode {
+  background-color: var(--lightMode-bg) !important;
+}
+.table-header-lightmode > div > .edit {
+  filter: invert(1);
+}
+.light-mode-sidebar {
   background: var(--lightMode-sidebar-bg) !important;
 }
 
-.activeLink {
+.light-mode-active-link {
   background: var(--lightMode-activeLink) !important;
 }
 
-.lightModePage-section {
+.light-mode-page-section {
   color: var(--lightMode-text-color);
   background: var(--lightMode-page-section) !important;
 }
@@ -16,11 +21,11 @@
   color: var(--lightMode-text-color) !important;
 }
 
-.lightMode_tableColor {
+.light-mode-table-color {
   color: var(--lightMode-tableColor) !important;
 }
 
-.lightBg {
+.light-bg {
   background: var(--lightMode-bg) !important;
 }
 
@@ -28,30 +33,52 @@
   color: var(--lightMode-text) !important;
 }
 
-.LightMode-LogOutBtn {
-  background: #e4e7ea !important;
+.Light-mode-logoutbtn {
+  background: var(--lightMode-bg) !important;
   box-shadow: 0px 2.92083px 2.92083px rgba(0, 0, 0, 0.25) !important;
 }
 
-.lightModeInput {
-  color: #706a6a !important;
+.light-mode-input {
+  color: var(--lightMode-text) !important;
 }
-.lightModeInput::placeholder {
-  color: #706a6a !important;
+.light-mode-input::placeholder {
+  color: var(--lightMode-text) !important;
 }
-.lightBg_Modal {
-  background: #ffffff !important;
-  box-shadow: -1px 6px 5px -3px rgba(0, 0, 0, 0.75);
-}
-.btn_shadow {
+
+.light-mode-card {
+  background: var(--lightMode-bg) !important;
   box-shadow: -1px 6px 5px -3px rgba(0, 0, 0, 0.75);
 }
 
-.lightMode-modalBtn {
+.light-mode-card:hover {
+  background: var(--active-card) !important;
+  cursor: pointer;
+}
+
+.light-bg-modal {
   background: #ffffff !important;
-  border: 0.730498px solid rgba(13, 0, 39, 0.4);
+  box-shadow: -1px 6px 5px -3px rgba(0, 0, 0, 0.75);
+}
+.btn-shadow {
+  box-shadow: -1px 6px 5px -3px rgba(0, 0, 0, 0.75);
+}
+
+.light-mode-modalbtn {
+  background: #ffffff !important;
+  border: 0.730498px solid rgba(13, 0, 39, 0.4) !important;
   box-sizing: border-box;
   box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.75);
+}
+.lightMode-divider {
+  background: #e4e7ea;
+  height: 0.5px;
+}
+
+.light-mode-Bottom-border {
+  border-bottom: 1px solid #e4e7ea !important;
+}
+.light-mode-left-border {
+  border-right: 1px solid #e4e7ea !important;
 }
 
 /* app.css */
@@ -167,7 +194,6 @@
 .left-container {
   height: 100%;
   width: 18%;
-  border-right: 0.5px solid #131b3c;
 }
 .group-card-scroll {
   height: 50vh;
@@ -295,4 +321,7 @@
 /* UTILITY */
 .d-flex {
   display: flex;
+}
+.cursor-pointer {
+  cursor: pointer;
 }

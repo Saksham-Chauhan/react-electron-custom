@@ -1,19 +1,20 @@
 const { Client } = require("discord.js-selfbot");
 const { ipcMain } = require("electron");
 const { default: axios } = require("axios");
-const BASE_URL = "https://discord.com/api/v9/";
+const { getRandomParsedProxy } = require("../../helper");
+const BASE_URL = "https://discord.com/api/v9";
 
 class InviteJoinerMonitor {
   monitor = new Client();
   /**
    * @param {Array} channelArray channel that want to monitor
-   * @param {String} monitorToken monitor with selected disoord token
+   * @param {String} monitorToken monitor with selected discord token
    * @param {Array} tokenArray token group that has to join
-   * @param {Array} proxyArray  use different IP to avoid account banned
+   * @param {Array} proxyArray use different IP to avoid account banned
    * @param {String} id unique ID for each monitor
    * @param {Number} delay
    */
-  constructor(channelArray, tokenArray, proxyArray, monitorToken, delay, id) {
+  constructor(id, monitorToken, tokenArray, channelArray, proxyArray, delay) {
     this.id = id;
     this.token = monitorToken;
     this.tokenList = tokenArray;
@@ -29,16 +30,12 @@ class InviteJoinerMonitor {
       this.sendMonitorStatus("Monitoring...", true);
     });
     this.monitor.on("message", async (message) => {
-      let msgContent = message.content;
-      let channelID = message.channel.id;
-      await this.scanMessage(channelID, msgContent);
+      await this.scanMessage(message.channel.id, message.content);
     });
-    if (/^[0-9A-Za-z_.-]+$/.test(this.token)) {
-      this.isMonitorStart = true;
-      this.monitor.login(this.token).catch((e) => {
-        this.sendMonitorStatus("Invalid token", false);
-      });
-    } else this.sendMonitorStatus("Invalid token", false);
+    this.isMonitorStart = true;
+    this.monitor.login(this.token).catch((e) => {
+      this.sendMonitorStatus("Invalid token", false);
+    });
   }
 
   /**
@@ -49,27 +46,29 @@ class InviteJoinerMonitor {
   async scanMessage(channelID, msgContent) {
     if (this.isMonitorStart) {
       if (this.channelList.includes(channelID)) {
-        let isDiscordInvite = this.checkDiscordInvite(msgContent);
-        let inviteCode = this.getInviteCode(msgContent);
-        if (isDiscordInvite) {
+        const inviteCode = this.getInviteCode(msgContent);
+        if (inviteCode) {
           for (let i = 0; i < this.tokenList.length; i++) {
-            const token = this.tokenList[i].split(":")[3];
-            const proxy = this.getProxy(this.proxyList);
+            const token = this.tokenList[i].split(":")[2];
+            const proxy = getRandomParsedProxy(this.proxyList);
             try {
               const info = await this.discordServerInviteAPI(
                 inviteCode,
                 token,
                 proxy
               );
+              // FUTURE SCOPE => Check if already joined
               if (info.status === 200) {
-                let log = `Joined ${info.data.guild.name} server `;
+                const log = `Joined ${info.data.guild.name} server `;
                 this.sendWebhook(log);
                 ipcMain.emit("add-log", log);
                 break;
               }
             } catch (error) {
-              let log = `Something went wrong ${error.message} while joining server  `;
-              ipcMain.emit("add-log", log);
+              ipcMain.emit(
+                "add-log",
+                `Something went wrong while joining server. Error: ${error.message}`
+              );
             }
             await this.sleep();
           }
@@ -79,48 +78,10 @@ class InviteJoinerMonitor {
   }
 
   /**
-   * helper function generate random number between min & max interval
-   * @param {Number} min
-   * @param {Number} max
-   */
-  randomIntFromInterval(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
-  /**
-   * helper function generate random proxy
-   * @param {Array} proxyArray
-   */
-  getProxy(proxyArray) {
-    const indIndex = this.randomIntFromInterval(0, proxyArray?.length || 0);
-    let proxySplit = proxyArray[indIndex]?.split(":");
-    const [host, port, username, password] = proxySplit;
-    const proxy = {
-      host: host,
-      port: port,
-      auth: {
-        username: username,
-        password: password,
-      },
-    };
-    return proxy;
-  }
-
-  /**
-   * helper function check message is valid invite link
-   */
-  checkDiscordInvite(url) {
-    let inviteCheck = url.match(
-      /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discord\.com|discordapp\.com\/invite)\/.+[a-z|A-Z|0-9]/g
-    );
-    return inviteCheck ? true : false;
-  }
-
-  /**
    * helper function extract invite code from invite link
    */
   getInviteCode(url) {
-    let invite = url.match(
+    const invite = url.match(
       /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discord\.com|discordapp\.com\/invite)\/.+[a-z|A-Z|0-9]/g
     );
     if (invite) {
@@ -155,7 +116,7 @@ class InviteJoinerMonitor {
   sendMonitorStatus(status, active) {
     const win = global.mainWin;
     if (win) {
-      win.webContents.send("lo-status", { id: this.id, status, active });
+      win.webContents.send("update-status", { id: this.id, status, active });
     }
   }
 
@@ -166,6 +127,7 @@ class InviteJoinerMonitor {
   sendWebhook(status) {
     const win = global.mainWin;
     if (win) {
+      // TODO => Should not use bridge for the same
       win.webContents.send("webhook-status", { status, type: "IJ" });
     }
   }
@@ -178,9 +140,9 @@ class InviteJoinerMonitor {
    */
   async discordServerInviteAPI(inviteCode, token, proxy) {
     return await axios({
-      url: `${BASE_URL}invites/${inviteCode}`,
+      url: `${BASE_URL}/invites/${inviteCode}`,
       headers: { Authorization: token },
-      method: "post",
+      method: "POST",
       data: JSON.stringify({}),
       proxy,
     });

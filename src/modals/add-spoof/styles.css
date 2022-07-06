@@ -7,6 +7,9 @@
   width: 80%;
   margin-right: 1em;
 }
+.joiner-custom-toggle {
+  color: var(--primary);
+}
 .spoofer-counter {
   height: 78px;
 }

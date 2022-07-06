@@ -9,3 +9,7 @@
   background: var(--scrollbar-bg);
   border-radius: 10px;
 }
+.wallet-balance {
+  width: 150px;
+  overflow: hidden;
+}

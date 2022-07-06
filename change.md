@@ -63,5 +63,42 @@
 
 # V0.8.8
 
--Added functionality of Direct Join.
--Added functionality of XP-Farmer.
+- Added functionality of Direct Join.
+- Added functionality of XP-Farmer.
+
+# V0.9.0
+
+- Added Direct Join functionality.
+- Added NFT minter page and functionality.
+- Light mode added.
+- Added default option for chrome user.
+- Import/Export format changed to .json.
+- Claimer group updated to Discord accounts.
+- Updated format for discord accounts and proxies.
+- Added onboarding msgs for discord accounts and proxies.
+- Added keyword functionality for twitter monitor.
+- Seprated featured tweets for twitter monitor.
+- Added local timezone for twitter monitor.
+- Fixed animation toggler.
+- Multi wallet functionality in task page.
+- Activity changer updated to status changer.
+- Improved UI and UX with proper toaster and tooltips.
+
+# V0.9.1
+
+- Auto fetch server and channel names from monitor token in link opner and invite joiner modals.
+- Fixed ETH minter bugs to save RPC URL.
+- Added default RPC and Etherscane API.
+- Added more fields in status changer modal.
+- Fixed Massjoine issue.
+- Webhook embed updated.
+- Added webhook for ETH minter and discord accounts.
+- Added tooltips and updated content.
+
+# V0.9.2
+
+- Optimize discord module code.
+- Fixed spoofer issues.
+- Fixed Massjoiner issue.
+- Added refresh button for fetching server id in IJ and LO modal.
+- Fixed bugs of discord module.

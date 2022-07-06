@@ -1,19 +1,27 @@
 import axios from "axios";
 import { BASE_URL } from "../index";
 
-async function tokenChanger(proxy, email, password) {
+async function tokenChanger({ email, password, proxy, solution }) {
+  console.log(email, password, proxy, solution);
   try {
-    const json = JSON.stringify({
-      login: email,
-      password: password,
-    });
-    let res = await axios.post(`${BASE_URL}auth/login`, json, {
+    const json = JSON.stringify(
+      solution
+        ? {
+            login: email,
+            password: password,
+            captcha_key: solution,
+          }
+        : {
+            login: email,
+            password: password,
+          }
+    );
+    return await axios.post(`${BASE_URL}/auth/login`, json, {
       headers: {
         "Content-Type": "application/json",
       },
       proxy: proxy,
     });
-    return res;
   } catch (error) {
     return error;
   }

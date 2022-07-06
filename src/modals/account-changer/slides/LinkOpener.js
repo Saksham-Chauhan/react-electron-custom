@@ -1,69 +1,91 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { AppInputField, AppSpacer } from "../../../component";
+import { AppInputField, AppSpacer, LabelWithToolTip } from "../../../component";
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
-import { fetchClaimerGroupList } from "../../../features/counterSlice";
-import { makeGroupOptions } from "../helper";
+import { fetchServer } from "../../../helper/electron-bridge";
 
-function LinkOpener({ handleMonitorToken, state, ...props }) {
-  const claimerGroupList = useSelector(fetchClaimerGroupList);
-
+function LinkOpener({
+  handleSelectChannel,
+  handleSelectServer,
+  state,
+  onChange,
+}) {
+  const onBtnClick = () => {
+    fetchServer(state?.monitorToken?.label);
+  };
   return (
     <React.Fragment>
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
-            isSelect={true}
-            isCustomSelect={true}
-            onChange={handleMonitorToken}
+            onChange={onChange}
+            name="monitorToken"
             fieldTitle="Monitor Token"
-            placeholderText="Select Monitor token"
-            selectOptions={makeGroupOptions(claimerGroupList)}
+            placeholderText="Enter Monitor token"
+            isBtn={true}
+            onBtnClick={onBtnClick}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Delay (Optional)"
+            placeholderText="Delay (in seconds)"
             name="delay"
             type="number"
             min={0}
-            {...props}
+            onChange={onChange}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
-      <AppSpacer spacer={10} />
+      <AppSpacer spacer={15} />
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
+          <LabelWithToolTip
+            toolTopText="This lets you select a server after entring monitor token."
+            labelText="Server"
+            parentStyle={{ style: { marginBottom: "10px" } }}
+          />
           <AppInputField
-            {...props}
-            fieldTitle="Channel ID[s]"
-            name="channelIDs"
-            isMulti={true}
-            multiHeight="100px"
-            placeholderText={`Eg.
-        936538800027467123
-        936534767688678923
-        936538800027467344`}
+            isSelect={true}
+            name="serverIDs"
+            hideLabel={true}
+            placeholderText="Select Server"
+            onChange={handleSelectServer}
+            selectOptions={state.serverIDs}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <AppInputField
-            {...props}
-            fieldTitle="Keyword [s]"
-            name="keywords"
+            isSelect={true}
             isMulti={true}
-            multiHeight="100px"
-            placeholderText={`Eg.
+            fieldTitle="Channel[s]"
+            placeholderText="Select Channels"
+            name="channelIDs"
+            onChange={handleSelectChannel}
+            selectOptions={state.channels}
+            autoClose={false}
+          />
+        </ModalFlexInnerRow>
+      </ModalFlexOuterRow>
+      <AppSpacer spacer={15} />
+      <LabelWithToolTip
+        toolTopText="Leave blank for all Keywords"
+        labelText="Keyword[s] (Optional)"
+        parentStyle={{ style: { marginBottom: "10px" } }}
+      />
+      <AppInputField
+        onChange={onChange}
+        hideLabel={true}
+        name="keywords"
+        isMulti={true}
+        multiHeight="100px"
+        placeholderText={`Eg.
         google
         koders
         walmart`}
-          />
-        </ModalFlexInnerRow>
-      </ModalFlexOuterRow>
+      />
     </React.Fragment>
   );
 }

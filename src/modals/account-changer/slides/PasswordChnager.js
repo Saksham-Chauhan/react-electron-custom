@@ -9,7 +9,7 @@ function PasswordChnager({ ...props }) {
         <div className="half-flex-field">
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
             {...props}
             name="delayInPassword"
           />
@@ -23,7 +23,7 @@ function PasswordChnager({ ...props }) {
             {...props}
             name="commonPassword"
             hideLabel={true}
-            placeholderText="Leave Blank For Randomize"
+            placeholderText="Leave blank for random passwords"
           />
         </div>
       </div>

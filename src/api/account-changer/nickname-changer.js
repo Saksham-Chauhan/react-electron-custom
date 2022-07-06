@@ -1,24 +1,36 @@
 import axios from "axios";
 import { BASE_URL } from "../index";
 
-async function changeNickname(token, guildid, name, proxy) {
+async function changeNickname({
+  token,
+  guildId,
+  name,
+  proxy,
+  solution = null,
+}) {
   try {
-    const json = JSON.stringify({
-      nick: `${name}`,
-    });
+    const json = JSON.stringify(
+      solution
+        ? {
+            nick: name,
+            captcha_key: solution,
+          }
+        : {
+            nick: name,
+          }
+    );
 
-    let res = await axios.patch(
-      `${BASE_URL}guilds/${guildid}/members/@me`,
+    return await axios.patch(
+      `${BASE_URL}/guilds/${guildId}/members/@me`,
       json,
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${token}`,
+          Authorization: token,
         },
         proxy: proxy,
       }
     );
-    return res;
   } catch (error) {
     return error;
   }

@@ -28,6 +28,8 @@
   font-size: 20.4539px;
   line-height: 31px;
   color: var(--primary);
+  display: flex;
+  align-items: center;
 }
 
 /* modal btns css */

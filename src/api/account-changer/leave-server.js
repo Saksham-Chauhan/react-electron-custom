@@ -1,11 +1,13 @@
 import axios from "axios";
 import { BASE_URL } from "../index";
 
-async function leaveServer(token, guildid, proxy) {
+async function leaveServer({ token, guildId, proxy, solution = null }) {
   try {
-    const json = JSON.stringify({ lurking: false });
+    const json = JSON.stringify(
+      solution ? { lurking: false, captcha_key: solution } : { lurking: false }
+    );
     return await axios({
-      url: `${BASE_URL}users/@me/guilds/${guildid}`,
+      url: `${BASE_URL}/users/@me/guilds/${guildId}`,
       method: "DELETE",
       headers: { "Content-Type": "application/json", Authorization: token },
       proxy: proxy,

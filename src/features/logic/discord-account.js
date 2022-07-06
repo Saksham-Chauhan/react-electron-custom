@@ -14,10 +14,9 @@ import { generateId } from "../../helper";
 
 export const addDiscordAccountInList = (account) => (dispatch, getState) => {
   const currentAccountList = fetchDiscordAccountList(getState());
-  let tempCurrentAccount = [...currentAccountList];
-  let tempAccount = { ...account };
+  const tempAccount = { ...account };
   tempAccount["id"] = generateId();
-  let combiner = [tempAccount, ...tempCurrentAccount];
+  const combiner = [tempAccount, ...currentAccountList];
   dispatch(appendDiscordAccount(combiner));
 };
 
@@ -26,9 +25,8 @@ export const editDiscordAccountInList =
     const currentAccountList = fetchDiscordAccountList(getState());
     const inviteJoinerToken = fetchSelectedClaimerTokenInviteJoiner(getState());
     const linkOpenerToken = fetchSelectedMinitorTokenLinkOpener(getState());
-    let tempCurrentAccount = [...currentAccountList];
-    let tempAccount = { ...editedAccount };
-    let afterUpdate = tempCurrentAccount.map((account) => {
+    const tempAccount = { ...editedAccount };
+    const afterUpdate = [...currentAccountList].map((account) => {
       if (account["id"] === tempAccount["id"]) return tempAccount;
       return account;
     });
@@ -44,10 +42,8 @@ export const editDiscordAccountInList =
 export const deleteAccountFromList =
   (deleteAccount) => (dispatch, getState) => {
     const currentAccountList = fetchDiscordAccountList(getState());
-    let tempCurrentAccount = [...currentAccountList];
-    let tempAccount = { ...deleteAccount };
-    let afterDelete = tempCurrentAccount.filter(
-      (account) => account["id"] !== tempAccount["id"]
+    const afterDelete = [...currentAccountList].filter(
+      (account) => account["id"] !== deleteAccount["id"]
     );
     dispatch(appendDiscordAccount(afterDelete));
     dispatch(setSelectedMonitorTokenLO({}));
@@ -55,18 +51,16 @@ export const deleteAccountFromList =
 
 export const addClaimerAccountInList = (account) => (dispatch, getState) => {
   const currentAccountList = fetchClaimerDiscordAccountList(getState());
-  let tempCurrentAccount = [...currentAccountList];
-  let newAccount = { ...account };
+  const newAccount = { ...account };
   newAccount["id"] = generateId();
-  let combiner = [newAccount, ...tempCurrentAccount];
+  const combiner = [newAccount, ...currentAccountList];
   dispatch(appendClaimerDiscordAccount(combiner));
 };
 
 export const deleteClaimerAccountFromList =
   (account) => (dispatch, getState) => {
     const currentAccountList = fetchClaimerDiscordAccountList(getState());
-    let tempCurrentAccount = [...currentAccountList];
-    let afterFilter = tempCurrentAccount.filter(
+    const afterFilter = [...currentAccountList].filter(
       (acc) => acc["id"] !== account["id"]
     );
     dispatch(appendClaimerDiscordAccount(afterFilter));
@@ -74,8 +68,7 @@ export const deleteClaimerAccountFromList =
 
 export const editClaimerAccountFromList = (account) => (dispatch, getState) => {
   const currentAccountList = fetchClaimerDiscordAccountList(getState());
-  let tempCurrentAccount = [...currentAccountList];
-  let afterUpdate = tempCurrentAccount.map((data) => {
+  const afterUpdate = [...currentAccountList].map((data) => {
     if (data["id"] === account["id"]) return account;
     return data;
   });
@@ -84,7 +77,7 @@ export const editClaimerAccountFromList = (account) => (dispatch, getState) => {
 
 export const linkOpenerSettingHandler = (data) => (dispatch, getState) => {
   const settingState = fetchLOSettingState(getState());
-  let settingObj = { ...settingState };
+  const settingObj = { ...settingState };
   const { key, checked, value } = data;
   if (key === "TOGGLER_STATE") {
     settingObj["linkOpenerState"] = checked;

@@ -1,58 +1,104 @@
-import React from 'react'
-import Select from 'react-select'
+import React from "react";
+import Select from "react-select";
 import {
   selectCustomStyles,
   selectStyles,
   lightMode_selectStyles,
   LightMode_selectCustomStyles,
-} from './styles'
-import NumberFormat from 'react-number-format'
-import './styles.css'
-import { useSelector } from 'react-redux'
-import { fetchThemsState } from '../../features/counterSlice'
-const DefaultOptions = []
+} from "./styles";
+import NumberFormat from "react-number-format";
+import "./styles.css";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../features/counterSlice";
+import makeAnimated from "react-select/animated";
+import refresh from "../../assests/images/refresh.svg";
+const animatedComponents = makeAnimated();
+
+const DefaultOptions = [];
 
 function InputField({
   isSelect = false,
   isCustomInputField = false,
-  placeholderText = 'Select Site',
-  fieldTitle = 'Site',
+  placeholderText = "Select Site",
+  fieldTitle = "Site",
   hideLabel = false,
-  format = '### ### ####',
-  defaultValue = '',
+  format = "### ### ####",
+  defaultValue = "",
   isMulti = false,
-  multiHeight = '150px',
+  multiHeight = "150px",
   selectOptions = DefaultOptions,
   isCustomLabel = false,
+  autoClose = true,
+  tooltip = false,
+  submit,
+  submitFlag = false,
+  isBtn = false,
+  onBtnClick,
   ...props
 }) {
-  const appTheme = useSelector(fetchThemsState)
-  const textClass = appTheme ? 'lightMode_color' : ''
+  const appTheme = useSelector(fetchThemsState);
+  const textClass = appTheme ? "lightMode_color" : "";
 
   const CustomLabelStyle = appTheme
     ? LightMode_selectCustomStyles
-    : selectCustomStyles
+    : selectCustomStyles;
   return (
     <div className="input-field-container" onClick={props.navigate}>
       {isCustomLabel && <label className="custom-label ">{fieldTitle}</label>}
-      {!hideLabel && <label className={textClass}>{fieldTitle}</label>}
+      {!hideLabel && (
+        <div className="d-flex">
+          <label className={textClass} data-tip data-for={props.labelId}>
+            {fieldTitle}
+          </label>
+          {props.hyperLink && (
+            <label
+              className={textClass}
+              style={{
+                marginLeft: "10px",
+                cursor: "pointer",
+                color: "#7878e9",
+                textDecorationLine: "underline",
+              }}
+              onClick={() =>
+                window.open("https://www.youtube.com/watch?v=YEgFvgg7ZPI")
+              }
+            >
+              Need help with finding your Discord Token?
+            </label>
+          )}
+        </div>
+      )}
       {!isSelect ? (
         <div className="input-field-box">
           {!isMulti ? (
             !isCustomInputField ? (
-              <input
-                className={
-                  appTheme
-                    ? `${isCustomLabel} paragraph-color lightModeInput`
-                    : `${isCustomLabel && 'custom-label-input'}`
-                }
-                {...props}
-                autoSave="off"
-                autoCapitalize="off"
-                autoCorrect="off"
-                autoComplete="off"
-                placeholder={placeholderText}
-              />
+              <div className="d-flex">
+                <input
+                  className={
+                    appTheme
+                      ? `${isCustomLabel} paragraph-color lightModeInput`
+                      : `${isCustomLabel && "custom-label-input"}`
+                  }
+                  {...props}
+                  autoSave="off"
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                  autoComplete="off"
+                  placeholder={placeholderText}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13 && submitFlag) {
+                      submit();
+                    }
+                  }}
+                />
+                {isBtn ? (
+                  <div className="refresh-btn" onClick={onBtnClick}>
+                    <img src={refresh} alt="" />
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
             ) : (
               <NumberFormat
                 {...props}
@@ -71,7 +117,7 @@ function InputField({
               }}
               {...props}
               placeholder={placeholderText}
-              className={appTheme ? 'lightModeInput ' : ''}
+              className={appTheme ? "light-mode-input " : ""}
             ></textarea>
           )}
         </div>
@@ -79,6 +125,9 @@ function InputField({
         <div className="input-field-box">
           <Select
             {...props}
+            isMulti={isMulti}
+            closeMenuOnSelect={autoClose}
+            components={animatedComponents}
             placeholder={placeholderText}
             isOptionSelected={true}
             options={selectOptions}
@@ -90,11 +139,12 @@ function InputField({
                 : selectStyles
             }
             isSearchable={false}
+            defaultValue={defaultValue}
           />
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default InputField
+export default InputField;

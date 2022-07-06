@@ -42,7 +42,7 @@ export const DISCORD_MASS_OPTIONS = [
   },
   {
     value: "activityChanger",
-    label: "Activity Changer",
+    label: "Status Changer",
   },
   {
     value: "serverLeaver",
@@ -50,7 +50,7 @@ export const DISCORD_MASS_OPTIONS = [
   },
   {
     value: "tokenChecker",
-    label: "Token checker",
+    label: "Token Checker",
   },
   {
     value: "nicknameChanger",
@@ -63,9 +63,12 @@ export const DISCORD_MASS_OPTIONS = [
   { value: "massInviter", label: "Mass Joiner" },
   { value: "inviteJoiner", label: "Invite Joiner" },
   { value: "linkOpener", label: "Link Opener" },
-  { value: "tokenRetrieve", label: "Token Retrieve" },
+  { value: "tokenRetrieve", label: "Token Retriever" },
   { value: "giveawayJoiner", label: "Giveaway Joiner" },
-  { value: "xpFarmer", label: "XP Farmer" },
+  // { value: "xpFarmer", label: "XP Farmer" },
+  { value: "discordSpoofer", label: "Discord Spoofer" },
+  { value: "massGiveawayJoiner", label: "Mass Giveaway Joiner" },
+  { value: "givewayChecker", label: "Giveaway Checker" },
 ];
 
 export const replyList = [
@@ -81,7 +84,13 @@ export const replyList = [
   "THIS IS MINE!",
 ];
 
-export const nftOptionsList = [
-  { label: "Eth", value: "eth" },
-  { label: "BTC", value: "btc" },
+export const nftOptionsList = [{ label: "ETH", value: "eth" }];
+
+export const defaultChromeUser = { label: "Default", value: "default" };
+
+export const statusList = [
+  { label: "Online", value: "online" },
+  { label: "Idle", value: "idle" },
+  { label: "Invisible", value: "invisible" },
+  { label: "Do Not Disturb", value: "dnd" },
 ];

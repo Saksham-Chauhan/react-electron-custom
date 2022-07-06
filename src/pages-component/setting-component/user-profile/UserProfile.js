@@ -19,6 +19,13 @@ function UserProfile({ userDetails }) {
   const option = useSelector(fetchWebhookSettingState);
   const appTheme = useSelector(fetchThemsState);
 
+  const Theme = {
+    userLogOutBtn: appTheme
+      ? "Light-mode-logoutbtn user-logout-btn btn"
+      : "user-logout-btn btn",
+    textClass: appTheme ? "lightMode_color" : "",
+  };
+
   const makeDate = (str = "") => {
     let date = str.match(discordJoinedAtRegex);
     if (date !== undefined && date !== null) {
@@ -39,7 +46,6 @@ function UserProfile({ userDetails }) {
     dispatch(setUserDetails({}));
   };
 
-  const textClass = appTheme ? "lightMode_color" : "";
   return (
     <div className="flex-right-align">
       <div className="user-profile-section">
@@ -47,23 +53,16 @@ function UserProfile({ userDetails }) {
           <img src={userDetails?.avatar || user} alt="" />
         </div>
         <div className="user-profile-details">
-          <h3 className={textClass}>
+          <h3 className={Theme.textClass}>
             {userDetails?.username}#{userDetails?.discriminator}
           </h3>
-          <p className={textClass}>
+          <p className={Theme.textClass}>
             User since {makeDate(userDetails?.joined_at)}
           </p>
         </div>
-        <div
-          onClick={handleLogout}
-          className={
-            appTheme
-              ? "LightMode-LogOutBtn user-logout-btn btn"
-              : "user-logout-btn btn"
-          }
-        >
+        <div onClick={handleLogout} className={Theme.userLogOutBtn}>
           <img src={logout} alt="" />
-          <span>logout</span>
+          <span>Logout</span>
         </div>
       </div>
     </div>

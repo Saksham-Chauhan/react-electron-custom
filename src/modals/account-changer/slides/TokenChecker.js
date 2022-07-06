@@ -15,7 +15,7 @@ function TokenChecker({ ...props }) {
             {...props}
             name="delayInToken"
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>

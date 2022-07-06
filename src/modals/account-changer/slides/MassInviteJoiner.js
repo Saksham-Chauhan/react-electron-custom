@@ -4,6 +4,8 @@ import MassjoinerSlideTwo from "./MassjoinerSlideTwo";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useSelector } from "react-redux";
+import { fetchThemsState } from "../../../features/counterSlice";
 
 function MassInviteJoiner({
   handleToggler,
@@ -24,7 +26,7 @@ function MassInviteJoiner({
       <div
         className="modal-cancel-btn submit btn modal-control-btns custom-btn-right"
         onClick={() => {
-          if (pageState.isReact || pageState.isAcceptRule) {
+          if (pageState?.isReact || pageState.isAcceptRule) {
             slider?.current?.slickNext();
             if (currentSlide === 1) handleSubmit();
           } else {
@@ -33,7 +35,7 @@ function MassInviteJoiner({
         }}
       >
         <span>
-          {(pageState.isReact || pageState.isAcceptRule) && currentSlide === 0
+          {(pageState?.isReact || pageState.isAcceptRule) && currentSlide === 0
             ? "Next"
             : "Create"}
         </span>
@@ -42,15 +44,23 @@ function MassInviteJoiner({
   };
 
   const ButtonBack = () => {
+    const appTheme = useSelector(fetchThemsState);
+    const textClass = appTheme ? "lightMode_color" : "";
     return (
       <div
-        className="modal-cancel-btn btn modal-control-btns custom-btn-left"
+        className={
+          appTheme
+            ? "modal-cancel-btn btn light-mode-modalbtn custom-btn-left"
+            : "modal-cancel-btn btn custom-btn-left"
+        }
         onClick={() => {
           slider?.current?.slickPrev();
           if (currentSlide === 0) handleCloseModal();
         }}
       >
-        <span> {currentSlide === 0 ? "Cancel" : "back"}</span>
+        <span className={textClass}>
+          {currentSlide === 0 ? "Cancel" : "Back"}
+        </span>
       </div>
     );
   };
@@ -71,6 +81,7 @@ function MassInviteJoiner({
           pageState,
           handleIsEmoji,
           handleUpdateObject,
+          currentSlide,
         }}
       />
     </Slider>

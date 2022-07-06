@@ -1,27 +1,133 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const electron = require("electron");
 const _ = require("lodash");
 const path = require("path");
-const ping = require("ping");
-const auth = require("./auth");
+const axios = require("axios");
 const isDev = require("electron-is-dev");
 const Tesseract = require("tesseract.js");
-const NetworkSpeed = require("network-speed");
-const { fetchTweets } = require("./helper/fetchTweet");
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
-const spooferManager = require("./script/manager/spoof-manager");
-const InviteJoinerManager = require("./script/manager/inviteJoiner-manager");
-const linkOpernerManager = require("./script/manager/linkOpener-manager");
-const logManager = require("./script/manager/log-manager");
-const richPresence = require("discord-rich-presence")("938338403106320434");
-const axios = require("axios");
+const bytenode = require("bytenode");
+const { setupMainHandler } = require("eiphop");
 
+(async () => {
+  try {
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/discord-spoofer-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/discord-spoofer-manager.jsc"
+      )}`,
+    });
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/script/manager/discord-spoofer-manager.jsc")}`
+    );
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
+      output: `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`,
+    });
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`
+    );
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
+      output: `${path.join(__dirname, "/helper/fetchTweet.jsc")}`,
+    });
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/helper/fetchTweet.jsc")}`
+    );
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "/auth.js")}`,
+      output: `${path.join(__dirname, "/auth.jsc")}`,
+    });
+    bytenode.runBytecodeFile(`${path.join(__dirname, "/auth.jsc")}`);
+
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/giveawayJoiner-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/giveawayJoiner-manager.jsc"
+      )}`,
+    });
+
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/script/manager/giveawayJoiner-manager.jsc")}`
+    );
+
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/xp-farmer-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/xp-farmer-manager.jsc"
+      )}`,
+    });
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/script/manager/xp-farmer-manager.jsc")}`
+    );
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
+      output: `${path.join(__dirname, "/script/manager/log-manager.jsc")}`,
+    });
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/script/manager/log-manager.jsc")}`
+    );
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/linkOpener-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/linkOpener-manager.jsc"
+      )}`,
+    });
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/script/manager/linkOpener-manager.jsc")}`
+    );
+    bytenode.compileFile({
+      filename: `${path.join(
+        __dirname,
+        "/script/manager/inviteJoiner-manager.js"
+      )}`,
+      output: `${path.join(
+        __dirname,
+        "/script/manager/inviteJoiner-manager.jsc"
+      )}`,
+    });
+    bytenode.runBytecodeFile(
+      `${path.join(__dirname, "/script/manager/inviteJoiner-manager.jsc")}`
+    );
+  } catch (e) {
+    console.log(e);
+  }
+})();
+
+const auth = require("./auth.jsc");
+const { fetchTweets } = require("./helper/fetchTweet");
+const spooferManager = require("./script/manager/spoof-manager.jsc");
+const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
+const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
+const logManager = require("./script/manager/log-manager.jsc");
+const giveawayJoiner = require("./script/manager/giveawayJoiner-manager.jsc");
+const massGiveawayJoiner = require("./script/manager/massGiveawayJoiner-manager");
+const giveawayChecker = require("./script/manager/giveawayChecker-manager");
+const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
+const discordManager = require("./script/manager/discord-spoofer-manager.jsc");
 const ObjectsToCsv = require("objects-to-csv");
 const { download } = require("electron-dl");
-var str2ab = require("string-to-arraybuffer");
+const str2ab = require("string-to-arraybuffer");
+const richPresence = require("discord-rich-presence")("938338403106320434");
 
 const DEBUGGER_CHANNEL = "debugger";
-const networkSpeed = new NetworkSpeed();
 const SCAN_PROCESS_INTERVAL = 3 * 60 * 1000;
 
 let win = null;
@@ -29,18 +135,18 @@ let mainWindow = null;
 let splash = null;
 
 const INTERCEPTOR_TOOLS = [
-  "charles",
-  "wireshark",
-  "fiddler",
-  "aircrack-ng",
-  "cowpatty",
+  "pyrit",
   "reaver",
   "wifite",
-  "wepdecrypt",
-  "cloudcracker",
-  "pyrit",
+  "charles",
+  "fiddler",
   "fern-pro",
+  "cowpatty",
+  "wireshark",
   "airgeddon",
+  "wepdecrypt",
+  "aircrack-ng",
+  "cloudcracker",
 ];
 
 // AUTH WINDOW CREATION
@@ -62,7 +168,7 @@ function createAuthWindow() {
     session: { webRequest },
   } = win.webContents;
   const filter = {
-    urls: [auth.redirect_uri],
+    urls: [auth.redirectUrl],
   };
   webRequest.onBeforeRequest(filter, async ({ url }) => {
     try {
@@ -80,7 +186,7 @@ function createAuthWindow() {
         message: "Login Failed",
         detail: "You are not allowed to login",
       };
-      dialog.showMessageBox(null, options, (response, checkboxChecked) => {});
+      await dialog.showMessageBox(null, options);
     }
   });
   win.on("authenticated", () => {
@@ -95,7 +201,6 @@ function destroyAuthWin() {
   win.close();
   win = null;
 }
-
 // MAIN WINDOW CREATOR
 function createWindow() {
   try {
@@ -112,18 +217,16 @@ function createWindow() {
         { label: "Twitter", url: "https://twitter.com/KyroTools" },
         {
           label: "Discord",
-          url: "https://discord.gg/vSSezmnv2H",
+          url: "https://discord.gg/vSSezmnv2H", // TODO => Check this invite link
         },
       ],
     });
   } catch (err) {
-    console.log("Error in Disocrd RPC Wrapper", err.message);
+    console.log("Error in Discord RPC Wrapper", err.message);
   }
   mainWindow = new BrowserWindow({
     width: 1402,
     height: 800,
-    // minWidth: 1402,
-    // minHeight: 800,
     resizable: true,
     frame: false,
     show: false,
@@ -133,17 +236,13 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: !isDev ? false : true,
+      devTools: isDev ? true : false,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
   });
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  } else {
-    console.log(`This is Build Product ${app.getVersion()}`);
-  }
+  if (isDev) mainWindow.webContents.openDevTools();
 
   splash = new BrowserWindow({
     width: 700,
@@ -181,20 +280,17 @@ ipcMain.on("logout-user", () => {
   auth.logout();
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-
 ipcMain.on("close", () => {
+  const win = mainWindow || global.mainWin;
   try {
-    let tempMainWindow = mainWindow || global.mainWin;
-    if (tempMainWindow) {
-      tempMainWindow.close();
+    if (win) {
+      win.close();
     }
   } catch (error) {
     console.log("Something went wrong on closing app", error);
+  }
+  if (app.isQuitting) {
+    win.hide();
   }
 });
 
@@ -204,9 +300,9 @@ ipcMain.handle("get-app-version", () => {
 
 ipcMain.on("minimize", () => {
   try {
-    let tempMainWindow = mainWindow || global.mainWin;
-    if (tempMainWindow) {
-      tempMainWindow.minimize();
+    const win = mainWindow || global.mainWin;
+    if (win) {
+      win.minimize();
     }
   } catch (error) {
     console.log("Something went wrong on minimizing app", error);
@@ -214,11 +310,11 @@ ipcMain.on("minimize", () => {
 });
 
 ipcMain.on("maximize", () => {
-  let tempMainWindow = mainWindow || global.mainWin;
-  if (!tempMainWindow.isMaximized()) {
-    tempMainWindow.maximize();
+  const win = mainWindow || global.mainWin;
+  if (!win.isMaximized()) {
+    win.maximize();
   } else {
-    tempMainWindow.unmaximize();
+    win.unmaximize();
   }
 });
 
@@ -227,14 +323,18 @@ ipcMain.on("close", () => {
 });
 
 app.on("activate", () => {
+  const win = mainWindow || global.mainWin;
   if (win === null) {
     createWindow();
+  } else {
+    win.show();
   }
 });
 
 app.on("window-all-closed", function () {
   spooferManager.deleteAllSpoofer();
   logManager.saveLogs();
+  discordManager.deleteBrowser();
   app.quit();
 });
 
@@ -251,82 +351,88 @@ app.on("ready", () => {
 });
 
 const updateCheck = () => {
-  autoUpdater.autoDownload = false;
+  try {
+    autoUpdater.autoDownload = false;
 
-  autoUpdater.checkForUpdates();
-  const updateMessage = (message, err = null) => {
-    if (err) {
-      console.log(err);
-      sendUpdateMessage("update:anerror");
-      return;
-    }
-    sendUpdateMessage(message);
-  };
-  const available = (info) => {
-    updateMessage("update:avail");
-    setTimeout(() => {
-      sendUpdateMessage("update:showModal", info);
-    }, 700);
-  };
-  autoUpdater.on("update-available", available);
-  const notavailable = (info) => {
-    updateMessage("update:not-avail");
-    ipcMain.emit("update:ADecision", "event", "ignore");
-  };
-  autoUpdater.on("update-not-available", notavailable);
+    autoUpdater.checkForUpdates();
+    const updateMessage = (message, err = null) => {
+      if (err) {
+        sendUpdateMessage("update:anerror");
+        return;
+      }
+      sendUpdateMessage(message);
+    };
+    const available = (info) => {
+      updateMessage("update:avail");
+      setTimeout(() => {
+        sendUpdateMessage("update:showModal", info);
+      }, 700);
+    };
+    autoUpdater.on("update-available", available);
 
-  const anerror = (err) => {
-    updateMessage("update:anerror", err);
-    ipcMain.emit("update:ADecision", "event", "ignore");
-    ipcMain.emit("update:installDecision", "event", "ignore");
-  };
-  autoUpdater.on("error", anerror);
+    const notavailable = () => {
+      updateMessage("update:not-avail");
+      ipcMain.emit("update:ADecision", "event", "ignore");
+    };
+    autoUpdater.on("update-not-available", notavailable);
 
-  const progression = (progressObj) => {
-    const percent = Math.trunc(progressObj.percent);
-    sendUpdateMessage("update:pogress", percent);
-    if (progressObj.percent === "100")
-      autoUpdater.removeListener("download-progress", progression);
-  };
-  autoUpdater.on("download-progress", progression);
-  ipcMain.once("update:ADecision", (e, decision) => {
-    const actualDecision = decision || e;
-    if (actualDecision === "ignore") {
-      autoUpdater.removeListener("update-available", available);
-      autoUpdater.removeListener("update-not-available", notavailable);
-      autoUpdater.removeListener("error", anerror);
-      autoUpdater.removeListener("download-progress", progression);
-    } else {
-      autoUpdater.downloadUpdate();
-      sendUpdateMessage("update:downloading");
-    }
-  });
-  ipcMain.once("update:installDecision", (e, decision) => {
-    const actualDecision = decision || e;
-    if (actualDecision === "ignore") {
-      autoUpdater.removeListener("update-available", available);
-      autoUpdater.removeListener("update-not-available", notavailable);
-      autoUpdater.removeListener("error", anerror);
-      autoUpdater.removeListener("download-progress", progression);
-    } else {
-      autoUpdater.quitAndInstall();
-      app.quit();
-    }
-  });
-  const installation = () => {
-    sendUpdateDownloaded();
-  };
-  autoUpdater.on("update-downloaded", installation);
+    const anerror = (err) => {
+      updateMessage("update:anerror", err);
+      ipcMain.emit("update:ADecision", "event", "ignore");
+      ipcMain.emit("update:installDecision", "event", "ignore");
+    };
+    autoUpdater.on("error", anerror);
+
+    const progression = (progressObj) => {
+      const percent = Math.trunc(progressObj.percent);
+      sendUpdateMessage("update:pogress", percent);
+      if (progressObj.percent === "100")
+        autoUpdater.removeListener("download-progress", progression);
+    };
+    autoUpdater.on("download-progress", progression);
+    ipcMain.once("update:ADecision", (e, decision) => {
+      const actualDecision = decision || e;
+      if (actualDecision === "ignore") {
+        autoUpdater.removeListener("update-available", available);
+        autoUpdater.removeListener("update-not-available", notavailable);
+        autoUpdater.removeListener("error", anerror);
+        autoUpdater.removeListener("download-progress", progression);
+      } else {
+        autoUpdater.downloadUpdate();
+        sendUpdateMessage("update:downloading");
+      }
+    });
+    ipcMain.once("update:installDecision", (e, decision) => {
+      const actualDecision = decision || e;
+      if (actualDecision === "ignore") {
+        autoUpdater.removeListener("update-available", available);
+        autoUpdater.removeListener("update-not-available", notavailable);
+        autoUpdater.removeListener("error", anerror);
+        autoUpdater.removeListener("download-progress", progression);
+      } else {
+        autoUpdater.quitAndInstall();
+        app.quit();
+      }
+    });
+    const installation = () => {
+      sendUpdateDownloaded();
+    };
+    autoUpdater.on("update-downloaded", installation);
+  } catch (error) {
+    console.log(error, "in update");
+  }
 };
 
 /**
  * function scan current running process
  */
 function scanProcesses() {
-  currentProcesses.get((err, processes) => {
+  let flag = false;
+  currentProcesses.get((event, processes) => {
     const sorted = _.sortBy(processes, "cpu");
     for (let i = 0; i < sorted.length; i += 1) {
       if (INTERCEPTOR_TOOLS.includes(sorted[i].name.toLowerCase())) {
+        flag = true;
         const win = mainWindow || global.mainWin;
         if (win) {
           win.webContents.send(
@@ -335,9 +441,9 @@ function scanProcesses() {
           );
         }
         process.kill(sorted[i].pid);
-        app.quit();
       }
     }
+    if (flag) app.quit();
   });
 }
 
@@ -414,16 +520,21 @@ ipcMain.on("checkForUpdates", () => {
 });
 
 //Twitter section IPC
-ipcMain.handle(
-  "fetchTweets",
-  (e, { consumerKey, consumerSecret, userHandler }) => {
-    return fetchTweets(consumerKey, consumerSecret, userHandler);
-  }
-);
-ipcMain.handle("imageText", async (event, url) => {
+ipcMain.handle("test-api", async (_, data) => {
+  const { apiKey, apiSecret, account } = data;
+  const res = await fetchTweets(apiKey, apiSecret, account);
+  return res;
+});
+
+ipcMain.handle("imageText", async (_, url) => {
   const {
     data: { text },
-  } = await Tesseract.recognize(url, "eng");
+    // TODO =>FUTURE SCOPE: FIX BINARY ISSUE IN PRODUCTION
+  } = await Tesseract.recognize(url, "eng", {
+    langPath: path.join(__dirname, ".."),
+    gzip: false,
+    cacheMethod: "none",
+  });
   return text;
 });
 
@@ -451,90 +562,30 @@ ipcMain.on("launch-spoofer", (_, data) => {
   spooferManager.toggleSpoofer(data.id);
 });
 
-// proxy IPC
-const proxyTester = async (proxy) => {
-  let res = await ping.promise.probe(proxy, { timeout: 5 });
-  if (res["time"] !== "unknown") {
-    return res;
-  } else {
-    return null;
-  }
-};
-
-ipcMain.on("proxy-tester", async (event, data) => {
-  const { proxy } = data;
-  let proxyArr = proxy.split(":");
-  if (proxyArr.length === 4 || proxyArr.length === 2) {
-    let proxyWithPort = proxyArr[0];
-    const response = await proxyTester(proxyWithPort);
-    event.sender.send("proxy-test-result", {
-      ...data,
-      status: response !== null ? response["avg"] : "Bad",
-    });
-  }
-});
-
-// NEWTORK SPEED
-// async function getNetworkDownloadSpeed() {
-//   const baseUrl = "https://eu.httpbin.org/stream-bytes/5000";
-//   const fileSizeInBytes = 5000;
-//   let speed;
-//   try {
-//     speed = await networkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   if (speed) {
-//     return speed.kbps;
-//   }
-// }
-
-// async function getNetworkUploadSpeed() {
-//   const options = {
-//     hostname: "www.google.com",
-//     port: 80,
-//     path: "/catchers/544b09b4599c1d0200000289",
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   };
-//   const fileSizeInBytes = 5000;
-//   let speed;
-//   try {
-//     speed = await networkSpeed.checkUploadSpeed(options, fileSizeInBytes);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   if (speed) {
-//     return speed.kbps;
-//   }
-// }
-
-// ipcMain.handle("get-speed", async () => {
-//   const download = await getNetworkDownloadSpeed();
-//   const upload = await getNetworkUploadSpeed();
-//   return { download, upload };
-// });
-
 const debugSendToIpcRenderer = (log) => {
-  let win = mainWindow || global.mainWin;
+  const win = mainWindow || global.mainWin;
   if (win) {
     win.webContents.send(DEBUGGER_CHANNEL, log);
   }
 };
 
+// DISCORD SPOOFER IPC
+
+ipcMain.on("start-discord-spoofer", (_, data) => {
+  discordManager.addSpoofer(data);
+});
+
+ipcMain.on("stop-discord-spoofer", (_, id) => {
+  discordManager.stopSpoofer(id);
+});
+
+// READY ARRAY
 ipcMain.on("read-array", async (event, array) => {
-  debugSendToIpcRenderer("Ready to read array", array);
   const fileName = +new Date();
   const csv = new ObjectsToCsv(array);
-  debugSendToIpcRenderer(csv);
   const data = await csv.toString();
-  debugSendToIpcRenderer(data);
   const str = str2ab(data);
-  debugSendToIpcRenderer(str);
   const url = `data:text/csv;base64,${new Buffer.from(str).toString("base64")}`;
-  debugSendToIpcRenderer(url);
   await downloadCsvFileDialog(`${fileName}.csv`, url);
 });
 
@@ -567,13 +618,12 @@ ipcMain.on("export-log-report", (_, data) => {
 // ACC CHANGER IPC
 ipcMain.on("get-server-avatar", async (event, code) => {
   let url;
-  qq;
   var config = {
     method: "get",
     url: `https://discord.com/api/v9/invites/${code}`,
   };
   try {
-    let res = await axios(config);
+    const res = await axios(config);
     url = `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
   } catch (e) {
     console.log(e);
@@ -595,3 +645,85 @@ ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
 ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
   InviteJoinerManager.stopMonitor(id);
 });
+
+// GIVEAWAY JOINER
+ipcMain.on("start-giveaway-joiner", (_, data) => {
+  giveawayJoiner.addMonitor(data);
+});
+ipcMain.on("stop-giveaway-joiner", (_, id) => {
+  giveawayJoiner.stopMonitor(id);
+});
+
+// XP FARMER IPC
+
+ipcMain.on("run-xp-server", (_, data) => {
+  xpFarmerManager.addFarmer(data);
+});
+
+ipcMain.on("stop-xp-server", (_, data) => {
+  xpFarmerManager.stopFarmer(data);
+});
+
+// MASS GIVEAWAY JOINER
+ipcMain.on("start-mass-giveaway-joiner", (_, data) => {
+  massGiveawayJoiner.addMonitor(data);
+});
+ipcMain.on("stop-mass-giveaway-joiner", (_, id) => {
+  massGiveawayJoiner.stopMonitor(id);
+});
+
+// GIVEAWAY CHECKER
+ipcMain.on("start-giveaway-checker", (_, data) => {
+  giveawayChecker.addMonitor(data);
+});
+ipcMain.on("stop-giveaway-checker", (_, id) => {
+  giveawayChecker.stopMonitor(id);
+});
+
+// ACCOUNT CHANGER IPC
+ipcMain.on("fetch_server", async (_, token) => {
+  try {
+    const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    if (res.status === 200 || res.status === 204) {
+      mainWindow.webContents.send("fetched-server", res.data);
+    }
+  } catch (e) {
+    mainWindow.webContents.send("fetched-server", {
+      error: e.message,
+      badRQ: true,
+    });
+  }
+});
+
+ipcMain.on("fetch_channel", async (_, data) => {
+  try {
+    const res = await axios.get(
+      `https://discord.com/api/v9/guilds/${data.id}/channels`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: data.token,
+        },
+      }
+    );
+    mainWindow.webContents.send("fetched-channel", res.data);
+  } catch (e) {
+    mainWindow.webContents.send("fetched-channel", e.message);
+  }
+});
+
+const hipActions = {
+  getTweet: async (req, res) => {
+    const { payload } = req;
+    const { cKey, sKey, account } = payload;
+    const apiRes = await fetchTweets(cKey, sKey, account);
+    res.send({ msg: apiRes });
+  },
+};
+
+setupMainHandler(electron, { ...hipActions });

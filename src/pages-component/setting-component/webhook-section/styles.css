@@ -17,7 +17,7 @@
 }
 .webhook-input-section {
   display: flex;
-  height: 45px;
+  height: 35px;
 }
 .webhook-input-section > input {
   background: var(--btn-bg);
@@ -71,7 +71,7 @@
   display: flex;
   align-items: center;
 }
-.system-setting>label{
+.system-setting > label {
   /* text-align: right; */
   margin-right: 0.5em;
 }
@@ -83,4 +83,8 @@
   height: 18px;
   fill: var(--primary);
   cursor: pointer;
+}
+.toggler-row-two {
+  width: 39.6%;
+  justify-content: space-between;
 }

@@ -1,17 +1,34 @@
-const spooferProcess = require("../process/spoof-process");
+const bytenode = require("bytenode");
+const path = require("path");
+
+(async () => {
+  try {
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "../process/spoof-process.js")}`,
+      output: `${path.join(__dirname, "../process/spoof-process.jsc")}`,
+    });
+    await bytenode.runBytecodeFile(
+      `${path.join(__dirname, "../process/spoof-process.jsc")}`
+    );
+  } catch (e) {
+    console.log(e);
+  }
+})();
+
+const spooferProcess = require("../process/spoof-process.jsc");
+
 class SpooferManager {
   constructor() {
     this.bots = {};
   }
 
   addSpoofer(data) {
-    let proxyArr = data.proxyValue.split("\n") || [];
-    this.bots[data.id] = new spooferProcess(
-      data.id,
-      data.url,
-      proxyArr,
-      global.mainWin,
-      data.isDisableImage
+    const { id, url, isDisableImage, proxyValue } = data;
+    this.bots[id] = new spooferProcess(
+      id,
+      url,
+      proxyValue.split("\n") || [],
+      isDisableImage
     );
   }
 

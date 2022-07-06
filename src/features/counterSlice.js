@@ -34,6 +34,8 @@ const initialState = {
     nftTaskModal: false,
     nftWalletModal: false,
     nftSettingModal: false,
+    clamerOnboardingScreen: false,
+    proxyOnboardingScreen: false,
   },
   themes: {
     lightMode: false,
@@ -163,6 +165,9 @@ export const counterSlice = createSlice({
     appendWebhookInList: (state, action) => {
       state.webhookSetting.webhookList = [action.payload];
     },
+    addClientCaptchaKey: (state, action) => {
+      state.webhookSetting.captchaClientKey = action.payload;
+    },
     openAddNewProxyModal: (state, action) => {
       state.addProxyStorage = action.payload;
     },
@@ -189,10 +194,15 @@ export const counterSlice = createSlice({
     setActiveNftGroup: (state, action) => {
       state.activeNftGroup = action.payload;
     },
+    setNftSetting: (state, action) => {
+      const { key, value } = action.payload;
+      state[key] = value;
+    },
   },
 });
 
 export const {
+  addClientCaptchaKey,
   setThemeState,
   setNftWalletList,
   updatespooferArray,
@@ -232,6 +242,7 @@ export const {
   appendClaimerDiscordAccount,
   appendInviteJoinerAccount,
   appendTaskInTable,
+  setNftSetting,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -329,6 +340,12 @@ export const fetchWebhookSettingState = (state) =>
   state[STATE_KEY].webhookSetting;
 export const fetchWebhookListState = (state) =>
   state[STATE_KEY].webhookSetting.webhookList;
+export const fetchClamerOnbordingState = (state) =>
+  state[STATE_KEY].modals.clamerOnboardingScreen;
+export const fetchProxyOnbordingState = (state) =>
+  state[STATE_KEY].modals.proxyOnboardingScreen;
+export const fetchClientCaptchaKey = (state) =>
+  state[STATE_KEY].webhookSetting.captchaClientKey;
 
 // LOGIN
 export const fetchLoggedUserDetails = (state) => state[STATE_KEY].userDetails;
@@ -377,3 +394,7 @@ export const fetchNftWalletModalState = (state) =>
   state[STATE_KEY].modals.nftWalletModal;
 export const fetchNftSettingModalState = (state) =>
   state[STATE_KEY].modals.nftSettingModal;
+export const fetchNftSettingEhterAPIState = (state) =>
+  state[STATE_KEY].etherScanAPI;
+export const fetchNftSettingDelaytate = (state) => state[STATE_KEY].retryDelay;
+export const fetchNftSettingRPCState = (state) => state[STATE_KEY].rpcURL;

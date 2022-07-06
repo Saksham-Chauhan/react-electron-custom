@@ -1,4 +1,21 @@
-const inviteJoinerMonitor = require("../process/inviteJoiner-process");
+const bytenode = require("bytenode");
+const path = require("path");
+
+(async () => {
+  try {
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "../process/inviteJoiner-process.js")}`,
+      output: `${path.join(__dirname, "../process/inviteJoiner-process.jsc")}`,
+    });
+    await bytenode.runBytecodeFile(
+      `${path.join(__dirname, "../process/inviteJoiner-process.jsc")}`
+    );
+  } catch (e) {
+    console.log(e);
+  }
+})();
+
+const inviteJoinerMonitor = require("../process/inviteJoiner-process.jsc");
 
 class InviteJoinerManager {
   constructor() {
@@ -6,17 +23,15 @@ class InviteJoinerManager {
   }
 
   addMonitor(data) {
-    const channelArray = data?.channelIDs?.split("\n");
-    const proxyArray = data?.proxyGroup?.value?.split("\n");
-    const tokenArray = data?.claimerGroup?.value?.split("\n");
-    const monitorToken = data?.monitorToken?.value?.split(":")[3];
-    this.bots[data.id] = new inviteJoinerMonitor(
-      channelArray,
-      tokenArray,
-      proxyArray,
-      monitorToken,
-      data?.delay || 1000,
-      data.id
+    const { channelIDs, proxyGroup, claimerGroup, monitorToken, id, delay } =
+      data;
+    this.bots[id] = new inviteJoinerMonitor(
+      id,
+      monitorToken?.value?.split(":")[2],
+      claimerGroup?.value?.split("\n"),
+      channelIDs?.split("\n"),
+      proxyGroup?.value?.split("\n"),
+      delay || 1000
     );
   }
 

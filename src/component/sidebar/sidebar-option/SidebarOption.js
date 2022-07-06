@@ -18,7 +18,9 @@ const SideBarOption = ({
       className={
         appTheme
           ? ({ isActive }) =>
-              !isActive ? `sidebar-option ` : `sidebar-option activeLink`
+              !isActive
+                ? `sidebar-option `
+                : `sidebar-option active-link light-mode-active-link`
           : ({ isActive }) =>
               !isActive ? `sidebar-option ` : `sidebar-option active-link `
       }

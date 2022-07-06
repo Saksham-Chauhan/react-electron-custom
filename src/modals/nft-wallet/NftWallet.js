@@ -5,14 +5,21 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../component/modal-wrapper/Modal";
-import { fetchThemsState, setModalState } from "../../features/counterSlice";
+import {
+  fetchNftSettingRPCState,
+  fetchThemsState,
+  setModalState,
+} from "../../features/counterSlice";
 import { appendNftWalletInList } from "../../features/logic/nft";
+import { sendLogs } from "../../helper/electron-bridge";
+import { handleFetchWallet } from "../../helper/nft-minter";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftWalletSchema } from "../../validation";
 
 function NftWallet() {
   const dispatch = useDispatch();
   const appTheme = useSelector(fetchThemsState);
+  const rpcURL = useSelector(fetchNftSettingRPCState);
   const textClass = appTheme ? "lightMode_color" : "";
   const [wallet, setWallet] = useState({
     walletNickName: "",
@@ -34,18 +41,27 @@ function NftWallet() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleDispatchWallet = (wallet) => {
+    dispatch(appendNftWalletInList(wallet));
+  };
+
+  const handleSubmit = async () => {
     const validationResult = validationChecker(nftWalletSchema, wallet);
     if (validationResult) {
-      dispatch(appendNftWalletInList(wallet));
-      handleCloseModal();
+      const res = await handleFetchWallet(wallet, rpcURL, handleDispatchWallet);
+      if (res) {
+        handleCloseModal();
+        sendLogs(
+          `Wallet created with ${wallet.walletNickName} for wallet address:${wallet.walletPublicKey}`
+        );
+      }
     }
   };
 
   return (
     <ModalWrapper>
       <div className="modal-tilte">
-        <h2>Create Wallet</h2>
+        <h2 className={textClass}>Create Wallet</h2>
       </div>
       <AppSpacer spacer={30} />
       <ModalFlexOuterRow>
@@ -83,7 +99,7 @@ function NftWallet() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? "modal-cancel-btn btn lightMode-modalBtn "
+              ? "modal-cancel-btn btn light-mode-modalbtn"
               : "modal-cancel-btn btn"
           }
         >
@@ -93,7 +109,7 @@ function NftWallet() {
           onClick={handleSubmit}
           className={
             appTheme
-              ? "modal-cancel-btn submit btn btn_shadow "
+              ? "modal-cancel-btn submit btn btn-shadow "
               : " modal-cancel-btn submit btn"
           }
         >

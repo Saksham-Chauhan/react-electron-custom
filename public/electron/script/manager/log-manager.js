@@ -3,16 +3,15 @@ const path = require("path");
 const fs = require("fs");
 const { download } = require("electron-dl");
 
-const FILE_NAME_PREFIX = "kyro_tool";
+const logFile = "kyro.log";
+const WAIT_INTERVAL = 20000;
+const MAX_FILE_SIZE = 1000000;
 
 class LogManager {
   constructor() {
-    this.WAIT_INTERVAL = 20000;
     this.logString = [];
     this.folderPath = path.join(app.getPath("userData"), "/Logs");
-    this.maxFileSize = 1;
     this.currentLogFile = null;
-    this.logFile = `${FILE_NAME_PREFIX}.log`;
   }
 
   saveLogs() {
@@ -26,37 +25,35 @@ class LogManager {
   }
 
   checkFileSize() {
-    const filePath = `${this.folderPath}/${this.logFile}`;
+    const filePath = `${this.folderPath}/${logFile}`;
     if (fs.existsSync(filePath)) {
-      const stats = fs.statSync(filePath);
-      const fileSizeInBytes = stats.size;
-      const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-      return fileSizeInMB;
+      const fileSizeInBytes = fs.statSync(filePath).size;
+      return fileSizeInBytes < MAX_FILE_SIZE;
     }
   }
   initLogs() {
     if (!fs.existsSync(this.folderPath)) {
       fs.mkdirSync(this.folderPath);
     }
-    const newLogFile = this.logFile;
     const logFiles = fs.readdirSync(this.folderPath);
     if (logFiles.length > 0) {
       this.lastLogFile = logFiles[logFiles.length - 1];
-      const isExceed = this.checkFileSize() < this.maxFileSize;
-      if (isExceed) {
+      if (this.checkFileSize()) {
         this.currentLogFile = this.lastLogFile;
-        console.log("Last file has the same date, dont create a new one");
+        console.log(
+          "Last file doesn't overflow its maximum size so, dont create a new one"
+        );
       } else {
         for (let i = 0; i < logFiles.length; i++) {
           fs.rmSync(`${this.folderPath}/${logFiles[i]}`);
         }
-        this.currentLogFile = newLogFile;
+        this.currentLogFile = logFile;
         console.log("Creating a new log file for the day");
-        fs.appendFileSync(`${this.folderPath}/${newLogFile}`, "");
+        fs.appendFileSync(`${this.folderPath}/${logFile}`, "");
       }
     } else {
-      this.currentLogFile = newLogFile;
-      fs.appendFileSync(`${this.folderPath}/${newLogFile}`, "");
+      this.currentLogFile = logFile;
+      fs.appendFileSync(`${this.folderPath}/${logFile}`, "");
     }
     this.startLogSession();
   }
@@ -69,11 +66,9 @@ class LogManager {
           const win = global.mainWin;
           if (win) {
             const options = {
-              buttons: ["Yes", "No"],
-              defaultId: 0,
-              title: "Kyro",
-              message: `Do you want to download ${this.currentLogFile}`,
-              detail: "Log report",
+              buttons: ["Download", "Cancel"],
+              title: "Kyro Tools Log File Downloader",
+              message: `Do you want to download ${this.currentLogFile}?`,
             };
             const dialogResult = await dialog.showMessageBox(win, options);
             if (dialogResult.response === 0) {
@@ -93,7 +88,7 @@ class LogManager {
   startLogSession() {
     setInterval(() => {
       this.saveLogs();
-    }, this.WAIT_INTERVAL);
+    }, WAIT_INTERVAL);
   }
 }
 

@@ -1,24 +1,31 @@
-const path = require("path");
 const electron = require("electron");
 const UserAgent = require("user-agents");
+const {
+  getProxyData,
+  getProxyHostPort,
+  randomInt,
+  displayTitle,
+} = require("../../helper");
 
 const session = electron.session;
 const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
 
 class SpooferInstance {
-  constructor(id, url, proxyList, mainWin, isImage) {
+  constructor(id, url, proxyList, isImage) {
     this.id = id;
-    this.proxyList = proxyList;
+    this.proxyList = proxyList || [];
     this.proxyCounter = 0;
-    this.proxyHostPort = this.getProxyHostPort(this.proxyList[0]);
-    this.proxy = this.getProxyData(this.proxyList[0]);
+    this.proxyHostPort = getProxyHostPort(this.proxyList[0]);
+    this.proxy = getProxyData(this.proxyList[0]);
     this.url = url;
     this.win = null;
-    this.status = "";
     this.isLaunched = false;
     this.isDeleted = false;
-    this.mainWin = mainWin;
+    this.mainWin = global.mainWin;
     this.isImage = isImage;
+    this.maxNumberOfRetry = 10;
+    this.numberOfRetry = 0;
     this.userAgent = new UserAgent(/Chrome/, { deviceCategory: "desktop" })
       .toString()
       .replace(/\|"/g, "");
@@ -48,49 +55,27 @@ class SpooferInstance {
     }
   }
 
-  getProxyData(proxy) {
-    if (proxy) {
-      const splitProxy = proxy.split(":");
-      if (splitProxy.length > 2) {
-        return {
-          host: splitProxy[0],
-          port: splitProxy[1],
-          user: splitProxy[2],
-          pass: splitProxy[3],
-        };
-      }
-
-      return {
-        host: splitProxy[0],
-        port: splitProxy[1],
-      };
-    }
-  }
-
-  getProxyHostPort(proxy) {
-    if (proxy) {
-      const splitProxy = proxy.split(":");
-      const final = splitProxy[0] + ":" + splitProxy[1];
-      return final;
-    }
-  }
-
-  randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
   proxyRotater() {
     this.deleteBrowser();
-    if (this.proxyCounter < this.proxyList.length) {
-      this.proxyCounter = this.randomInt(0, this.proxyList?.length || 0);
+    if (this.numberOfRetry < this.proxyList.length) {
+      if (this.proxyCounter < this.proxyList.length) {
+        this.proxyCounter = randomInt(0, this.proxyList?.length - 1 || 0);
+      } else {
+        this.proxyCounter = 0;
+      }
+      const currentProxy = this.proxyList[this.proxyCounter];
+      this.proxyHostPort = getProxyHostPort(currentProxy);
+      this.proxy = getProxyData(currentProxy);
+      const log = "Proxy rotater used new proxy" + this.proxyHostPort;
+      ipcMain.emit("add-log", log);
+      this.numberOfRetry += 1;
+      this.launchBrowser(true);
     } else {
-      this.proxyCounter = 0;
+      this.deleteBrowser();
+      this.sendStatus("Stopped");
+      this.win = null;
+      console.log("Exceed the number of retry.");
     }
-    const currentProxy = this.proxyList[this.proxyCounter];
-    this.proxyHostPort = this.getProxyHostPort(currentProxy);
-    this.proxy = this.getProxyData(currentProxy);
-    console.log("Proxy rotater used new proxy", this.proxyHostPort);
-    this.launchBrowser(true);
   }
 
   // LAUNCH BROWSER
@@ -101,8 +86,7 @@ class SpooferInstance {
       height: 500,
       resizable: true,
       fullscreenable: false,
-      title: this.displayTitle(),
-      icon: path.resolve(__dirname, "img", "icon-win.ico"),
+      title: displayTitle(this.proxyHostPort, this.id),
       show: isShow,
       parent: this.mainWin,
       webPreferences: {
@@ -114,7 +98,7 @@ class SpooferInstance {
       },
     });
 
-    // # load using proxy or not
+    // load using proxy or not
     if (this.proxy) {
       this.win.webContents.session.setProxy(
         {
@@ -122,38 +106,29 @@ class SpooferInstance {
         },
         () => {}
       );
-
       this.win
         .loadURL(this.url, {
           userAgent: this.userAgent,
         })
         .catch((err) => {
-          return this.proxyRotater();
+          console.log("Error while loading url", err);
         });
-
-      this.win.webContents.on(
-        "login",
-        (event, authenticationResponseDetails, authInfo, callback) => {
-          if (authInfo.isProxy) {
-            event.preventDefault();
-            callback(this.proxy.user, this.proxy.pass); //supply credentials to server
-          }
+      this.win.webContents.on("did-fail-load", function () {
+        console.log("Proxy rotater is called");
+        this.proxyRotater();
+      });
+      this.win.webContents.on("login", (event, _, authInfo, callback) => {
+        if (authInfo.isProxy) {
+          event.preventDefault();
+          callback(this.proxy.user, this.proxy.pass); //supply credentials to server
         }
-      );
+      });
     } else {
       this.win.loadURL(this.url, {
         userAgent: this.userAgent,
       });
     }
     this.win.setMenu(null);
-
-    // # Fixed title not showing
-    this.win.on("page-title-updated", (evt, title) => {
-      evt.preventDefault();
-      // # update title when title update
-
-      // # if title change, notify user
-    });
 
     this.win.on("closed", () => {
       this.sendStatus("Stopped");
@@ -175,13 +150,6 @@ class SpooferInstance {
     } else {
       this.mainWin.webContents.send("error", "Instance Not created");
     }
-  }
-
-  // # set title
-  displayTitle() {
-    return `${
-      this.proxyHostPort == null ? "Local IP" : this.proxyHostPort
-    } - taskId-${this.id}`;
   }
 
   closeBrowser() {

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { AppInputField } from "../../../component";
+import { AppInputField, AppSpacer } from "../../../component";
 import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
@@ -16,18 +16,18 @@ const XPFarmer = ({ handleMonitorToken, state, onChange }) => {
       <ModalFlexOuterRow>
         <ModalFlexInnerRow>
           <AppInputField
-            isSelect={true}
             isCustomSelect={true}
-            onChange={handleMonitorToken}
+            onChange={onChange}
+            name="monitorToken"
             fieldTitle="Monitor Token"
-            placeholderText="Select Monitor token"
+            placeholderText="Enter Monitor token"
             selectOptions={makeGroupOptions(claimerGroupList)}
           />
         </ModalFlexInnerRow>
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Delay (Optional)"
+            placeholderText="Delay (in seconds)"
             name="delay"
             type="number"
             min={0}
@@ -35,6 +35,7 @@ const XPFarmer = ({ handleMonitorToken, state, onChange }) => {
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
+      <AppSpacer spacer={10} />
       <ModalFlexInnerRow>
         <AppInputField
           fieldTitle="Channel ID"

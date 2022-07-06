@@ -1,3 +1,8 @@
+.group-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .group-title-card {
   display: flex;
   align-items: center;
@@ -10,16 +15,16 @@
   color: var(--primary);
 }
 .group-title-card-btn {
-  height: 30px;
-  width: 30px;
-  background: #131a3c;
+  height: 40px;
+  width: 40px;
   border-radius: 5px;
-  display: flex;
-  align-items: center;
   justify-content: center;
   position: absolute;
   right: 0;
-  z-index: 999;
+  cursor: pointer;
+  background: var(--btn-bg);
+  display: flex;
+  align-items: center;
 }
 .group-title-card-btn > img {
   height: 16px;

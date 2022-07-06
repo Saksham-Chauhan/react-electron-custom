@@ -15,13 +15,17 @@ import {
 } from "../counterSlice";
 import { generateId } from "../../helper";
 import { sendLogs } from "../../helper/electron-bridge";
-import { inviteJoinerTest, linkOpenerWebhook } from "../../helper/webhook";
+import {
+  ethMinterWebhook,
+  inviteJoinerTest,
+  linkOpenerWebhook,
+  taskWebhook,
+} from "../../helper/webhook";
+import { DISCORD_MASS_OPTIONS } from "../../constant";
 
 export const addGroupInClaimerList = (group) => (dispatch, getState) => {
   const currentList = fetchClaimerGroupList(getState());
-  let obj = { ...group };
-  obj["id"] = generateId();
-  let combiner = [obj, ...currentList];
+  const combiner = [{ ...group, id: generateId() }, ...currentList];
   dispatch(appendClaimerGroupInList(combiner));
 };
 
@@ -43,6 +47,7 @@ export const deleteClaimerGroupFromList = (group) => (dispatch, getState) => {
   let tempList = [...currentList];
   let obj = { ...group };
   let afterEdit = tempList.filter((d) => d["id"] !== obj["id"]);
+
   if (ijSelectedClaimer["id"] === obj["id"]) {
     dispatch(setSelectedClaimerGroup({}));
   }
@@ -81,6 +86,10 @@ export const toggleSettingSwitch = (toggle) => (dispatch, getState) => {
     tempSettingObj["twitterMonitor"] = checked;
   } else if (key === "LOG") {
     tempSettingObj["logOnOff"] = checked;
+  } else if (key === "TASKS") {
+    tempSettingObj["tasks"] = checked;
+  } else if (key === "ETH") {
+    tempSettingObj["ethMinter"] = checked;
   } else {
     tempSettingObj["bgAnimation"] = checked;
   }
@@ -104,7 +113,7 @@ export const readTokenGroupFromFile = (data) => (dispatch, getState) => {
   for (let i = 0; i < tokenList.length; i++) {
     const token = tokenList[i];
     let len = token.split(":").length;
-    if (len === 4) {
+    if (len === 3) {
       valid.push(token);
     }
   }
@@ -114,7 +123,7 @@ export const readTokenGroupFromFile = (data) => (dispatch, getState) => {
   obj["claimerList"] = [];
   obj["claimerToken"] = valid.map((tkn) => tkn).join("\n");
   obj["createdAt"] = new Date().toUTCString();
-  const log = `New Token Group is created ${obj["name"]}`;
+  const log = `New Discord Account is created ${obj["name"]}`;
   sendLogs(log);
   let combiner = [obj, ...currentList];
   dispatch(appendClaimerGroupInList(combiner));
@@ -143,5 +152,44 @@ export const webhookNotifier = (payload) => async (dispatch, getState) => {
         setting?.linkOpener
       );
     }
+  }
+};
+
+export const sendWebhook = async (
+  data,
+  type,
+  message,
+  setting,
+  user,
+  webhookList,
+  counter
+) => {
+  if (type === "TASKS") {
+    const taskType = getType(message);
+    await taskWebhook(
+      data,
+      user.username,
+      user.avatar,
+      webhookList[0],
+      setting?.tasks,
+      taskType,
+      counter
+    );
+  } else {
+    await ethMinterWebhook(
+      data,
+      user.username,
+      user.avatar,
+      webhookList[0],
+      setting?.ethMinter,
+      message
+    );
+  }
+};
+
+const getType = (message) => {
+  for (let i = 0; i < DISCORD_MASS_OPTIONS.length; i++) {
+    if (DISCORD_MASS_OPTIONS[i].value === message)
+      return DISCORD_MASS_OPTIONS[i].label;
   }
 };

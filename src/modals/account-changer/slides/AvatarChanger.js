@@ -4,21 +4,24 @@ import {
   ModalFlexInnerRow,
   ModalFlexOuterRow,
 } from "../../../component/modal-wrapper/Modal";
+import Spacer from "../../../component/spacer/Spacer";
 
+const getRandomNum = () => {
+  const num = Math.floor(Math.random() * 800 + 1);
+  return num;
+};
 const api = [
   {
-    label: "Default API",
-    value: "https://picsum.photos/v2/list",
-    key: "defaultAPI",
-  },
-  {
-    label: "Custom API",
-    value: "https://picsum.photos/v2/list",
-    key: "customAPI",
+    label: "Rick & Morty API",
+    value: `https://rickandmortyapi.com/api/character/avatar/${getRandomNum()}.jpeg`,
   },
 ];
 
-function AvatarChanger({ handleSelectAPI, ...props }) {
+function AvatarChanger({ handleSelectAPI, handleUpload, obj, ...props }) {
+  const defApi = {
+    label: "Default API",
+    value: "https://picsum.photos/v2/list",
+  };
   return (
     <React.Fragment>
       <AppSpacer spacer={10} />
@@ -26,7 +29,7 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
         <ModalFlexInnerRow>
           <AppInputField
             fieldTitle="Delay (Optional)"
-            placeholderText="Enter Delay (in ms)"
+            placeholderText="Enter Delay (in seconds)"
             name="delay"
             type="number"
             min={0}
@@ -40,9 +43,24 @@ function AvatarChanger({ handleSelectAPI, ...props }) {
             selectOptions={api}
             isSelect={true}
             onChange={handleSelectAPI}
+            defaultValue={defApi}
           />
         </ModalFlexInnerRow>
       </ModalFlexOuterRow>
+      <Spacer spacer={10} />
+      <ModalFlexInnerRow>
+        <h3 className="img-lable">Uplaod Image</h3>
+        <div className="img-field">
+          <span>
+            {obj.imgname ? (
+              <span class="default">{obj.imgname}</span>
+            ) : (
+              "Upload Image"
+            )}
+          </span>
+          <input onChange={handleUpload} type="file" accept="image/*" />
+        </div>
+      </ModalFlexInnerRow>
     </React.Fragment>
   );
 }

@@ -4,6 +4,7 @@ import { AppInputField, AppSpacer, ModalWrapper } from "../../component";
 import { nftOptionsList } from "../../constant";
 import { fetchThemsState, setModalState } from "../../features/counterSlice";
 import { appendGroupInNftGroupList } from "../../features/logic/nft";
+import { sendLogs } from "../../helper/electron-bridge";
 import { validationChecker } from "../../hooks/validationChecker";
 import { nftGroupSchema } from "../../validation";
 
@@ -13,7 +14,7 @@ function NftGroup() {
   const textClass = appTheme ? "lightMode_color" : "";
   const [group, setGroup] = useState({
     minterTitle: "",
-    minterType: "",
+    minterType: "ETH",
     minterList: [],
   });
 
@@ -39,6 +40,8 @@ function NftGroup() {
   const handleSubmit = () => {
     const validationResult = validationChecker(nftGroupSchema, group);
     if (validationResult) {
+      const log = `New ETH minter group is created ${group.minterTitle}`;
+      sendLogs(log);
       dispatch(appendGroupInNftGroupList(group));
       handleCloseModal();
     }
@@ -54,13 +57,16 @@ function NftGroup() {
         onChange={handleChange}
         fieldTitle="Group Name"
         placeholderText="Enter Group Name"
+        submit={handleSubmit}
+        submitFlag={true}
       />
       <AppSpacer spacer={10} />
       <AppInputField
         fieldTitle="Type"
         isSelect={true}
         onChange={handleSelect}
-        placeholderText="Select Type"
+        // placeholderText="Select Type"
+        defaultValue={{ label: "ETH", value: "eth" }}
         selectOptions={nftOptionsList}
       />
       <AppSpacer spacer={25} />
@@ -69,7 +75,7 @@ function NftGroup() {
           onClick={handleCloseModal}
           className={
             appTheme
-              ? "modal-cancel-btn btn lightMode-modalBtn "
+              ? "modal-cancel-btn btn light-mode-modalbtn"
               : "modal-cancel-btn btn"
           }
         >

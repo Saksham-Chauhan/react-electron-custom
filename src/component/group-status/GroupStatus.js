@@ -24,7 +24,7 @@ function GroupStatus({ title = '', subText = '', isHide = false }) {
       {!isHide && (
         <div className="group-status-stats">
           <span />
-          <span>{subText}</span>
+          <span className={appTheme ? 'lightMode_color' : ''}>{subText}</span>
         </div>
       )}
     </div>

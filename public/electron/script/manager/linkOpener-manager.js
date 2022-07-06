@@ -1,4 +1,21 @@
-const linkOpenerProcess = require("../process/linkOpener-process");
+const bytenode = require("bytenode");
+const path = require("path");
+
+(async () => {
+  try {
+    bytenode.compileFile({
+      filename: `${path.join(__dirname, "../process/linkOpener-process.js")}`,
+      output: `${path.join(__dirname, "../process/linkOpener-process.jsc")}`,
+    });
+    await bytenode.runBytecodeFile(
+      `${path.join(__dirname, "../process/linkOpener-process.jsc")}`
+    );
+  } catch (e) {
+    console.log(e);
+  }
+})();
+
+const linkOpenerProcess = require("../process/linkOpener-process.jsc");
 
 class LinkOpenerManager {
   constructor() {
@@ -6,16 +23,13 @@ class LinkOpenerManager {
   }
 
   addMonitor(data) {
-    const channelArray = data?.channelIDs?.split("\n");
-    const keywordArray = data?.keywords?.split("\n");
-    const chromeUser = data?.chromeUser;
-    const monitorToken = data?.monitorToken?.value?.split(":")[3];
-    this.bots[data.id] = new linkOpenerProcess(
-      channelArray,
-      keywordArray,
-      chromeUser,
-      monitorToken,
-      data.id
+    const { channelIDs, keywords, chromeUser, monitorToken, id } = data;
+    this.bots[id] = new linkOpenerProcess(
+      id,
+      monitorToken?.value?.split(":")[2],
+      channelIDs?.split("\n"),
+      keywords?.label?.split("\n"),
+      chromeUser
     );
   }
 
