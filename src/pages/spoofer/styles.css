@@ -1,7 +1,0 @@
-.spoofer-page-outer-section {
-  height: 100vh;
-}
-.spoofer-page-inner-section {
-  padding: 0px 1em;
-  height: calc(100vh - 100px);
-}

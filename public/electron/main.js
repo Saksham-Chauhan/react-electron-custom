@@ -2,43 +2,17 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const electron = require("electron");
 const _ = require("lodash");
 const path = require("path");
-const axios = require("axios");
 const isDev = require("electron-is-dev");
-const Tesseract = require("tesseract.js");
+
 const { autoUpdater } = require("electron-updater");
 const currentProcesses = require("current-processes");
 const bytenode = require("bytenode");
-const { setupMainHandler } = require("eiphop");
+// const { Client } = require("discord.js-selfbot-v13");
+
+// const selfClient = new Client({});
 
 (async () => {
   try {
-    bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/discord-spoofer-manager.js"
-      )}`,
-      output: `${path.join(
-        __dirname,
-        "/script/manager/discord-spoofer-manager.jsc"
-      )}`,
-    });
-    bytenode.runBytecodeFile(
-      `${path.join(__dirname, "/script/manager/discord-spoofer-manager.jsc")}`
-    );
-    bytenode.compileFile({
-      filename: `${path.join(__dirname, "/script/manager/spoof-manager.js")}`,
-      output: `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`,
-    });
-    bytenode.runBytecodeFile(
-      `${path.join(__dirname, "/script/manager/spoof-manager.jsc")}`
-    );
-    bytenode.compileFile({
-      filename: `${path.join(__dirname, "/helper/fetchTweet.js")}`,
-      output: `${path.join(__dirname, "/helper/fetchTweet.jsc")}`,
-    });
-    bytenode.runBytecodeFile(
-      `${path.join(__dirname, "/helper/fetchTweet.jsc")}`
-    );
     bytenode.compileFile({
       filename: `${path.join(__dirname, "/auth.js")}`,
       output: `${path.join(__dirname, "/auth.jsc")}`,
@@ -46,65 +20,11 @@ const { setupMainHandler } = require("eiphop");
     bytenode.runBytecodeFile(`${path.join(__dirname, "/auth.jsc")}`);
 
     bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/giveawayJoiner-manager.js"
-      )}`,
-      output: `${path.join(
-        __dirname,
-        "/script/manager/giveawayJoiner-manager.jsc"
-      )}`,
-    });
-
-    bytenode.runBytecodeFile(
-      `${path.join(__dirname, "/script/manager/giveawayJoiner-manager.jsc")}`
-    );
-
-    bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/xp-farmer-manager.js"
-      )}`,
-      output: `${path.join(
-        __dirname,
-        "/script/manager/xp-farmer-manager.jsc"
-      )}`,
-    });
-    bytenode.runBytecodeFile(
-      `${path.join(__dirname, "/script/manager/xp-farmer-manager.jsc")}`
-    );
-    bytenode.compileFile({
       filename: `${path.join(__dirname, "/script/manager/log-manager.js")}`,
       output: `${path.join(__dirname, "/script/manager/log-manager.jsc")}`,
     });
     bytenode.runBytecodeFile(
       `${path.join(__dirname, "/script/manager/log-manager.jsc")}`
-    );
-    bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/linkOpener-manager.js"
-      )}`,
-      output: `${path.join(
-        __dirname,
-        "/script/manager/linkOpener-manager.jsc"
-      )}`,
-    });
-    bytenode.runBytecodeFile(
-      `${path.join(__dirname, "/script/manager/linkOpener-manager.jsc")}`
-    );
-    bytenode.compileFile({
-      filename: `${path.join(
-        __dirname,
-        "/script/manager/inviteJoiner-manager.js"
-      )}`,
-      output: `${path.join(
-        __dirname,
-        "/script/manager/inviteJoiner-manager.jsc"
-      )}`,
-    });
-    bytenode.runBytecodeFile(
-      `${path.join(__dirname, "/script/manager/inviteJoiner-manager.jsc")}`
     );
   } catch (e) {
     console.log(e);
@@ -112,19 +32,8 @@ const { setupMainHandler } = require("eiphop");
 })();
 
 const auth = require("./auth.jsc");
-const { fetchTweets } = require("./helper/fetchTweet");
-const spooferManager = require("./script/manager/spoof-manager.jsc");
-const InviteJoinerManager = require("./script/manager/inviteJoiner-manager.jsc");
-const linkOpernerManager = require("./script/manager/linkOpener-manager.jsc");
 const logManager = require("./script/manager/log-manager.jsc");
-const giveawayJoiner = require("./script/manager/giveawayJoiner-manager.jsc");
-const massGiveawayJoiner = require("./script/manager/massGiveawayJoiner-manager");
-const giveawayChecker = require("./script/manager/giveawayChecker-manager");
-const xpFarmerManager = require("./script/manager/xp-farmer-manager.jsc");
-const discordManager = require("./script/manager/discord-spoofer-manager.jsc");
-const ObjectsToCsv = require("objects-to-csv");
-const { download } = require("electron-dl");
-const str2ab = require("string-to-arraybuffer");
+
 const richPresence = require("discord-rich-presence")("938338403106320434");
 
 const DEBUGGER_CHANNEL = "debugger";
@@ -161,7 +70,7 @@ function createAuthWindow() {
     },
     transparent: true,
     frame: false,
-    devTools: false,
+    devTools: true,
   });
   win.loadURL(auth.getAuthenticationURL());
   const {
@@ -205,19 +114,19 @@ function destroyAuthWin() {
 function createWindow() {
   try {
     richPresence.updatePresence({
-      details: "Playing Kyro Tools",
+      details: "Playing Mirror Bot",
       state: `v:${app.getVersion()}`,
       startTimestamp: Date.now(),
-      largeImageKey: "kyros_logo",
-      largeImageText: "@getKyroTools",
+      largeImageKey: "mirror_logo",
+      largeImageText: "@getMirrorBot",
       smallImageKey: "emoji",
-      smallImageText: "Kyro Tools",
+      smallImageText: "Mirror Bot",
       instance: true,
       buttons: [
-        { label: "Twitter", url: "https://twitter.com/KyroTools" },
+        { label: "Twitter", url: "https://twitter.com/mirrorbot" },
         {
           label: "Discord",
-          url: "https://discord.gg/vSSezmnv2H", // TODO => Check this invite link
+          url: "https://discord.gg/vSSezmnv2H",
         },
       ],
     });
@@ -236,13 +145,14 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: isDev ? true : false,
+      devTools: true,
       webviewTag: true,
     },
     titleBarStyle: "customButtonsOnHover",
   });
 
   if (isDev) mainWindow.webContents.openDevTools();
+  else mainWindow?.webContents?.openDevTools();
 
   splash = new BrowserWindow({
     width: 700,
@@ -264,6 +174,7 @@ function createWindow() {
   mainWindow.once("ready-to-show", () => {
     splash.destroy();
     mainWindow.show();
+    mainWindow.webContents.openDevTools();
   });
 }
 
@@ -332,9 +243,7 @@ app.on("activate", () => {
 });
 
 app.on("window-all-closed", function () {
-  spooferManager.deleteAllSpoofer();
   logManager.saveLogs();
-  discordManager.deleteBrowser();
   app.quit();
 });
 
@@ -519,211 +428,10 @@ ipcMain.on("checkForUpdates", () => {
   updateCheck();
 });
 
-//Twitter section IPC
-ipcMain.handle("test-api", async (_, data) => {
-  const { apiKey, apiSecret, account } = data;
-  const res = await fetchTweets(apiKey, apiSecret, account);
-  return res;
-});
-
-ipcMain.handle("imageText", async (_, url) => {
-  const {
-    data: { text },
-    // TODO =>FUTURE SCOPE: FIX BINARY ISSUE IN PRODUCTION
-  } = await Tesseract.recognize(url, "eng", {
-    langPath: path.join(__dirname, ".."),
-    gzip: false,
-    cacheMethod: "none",
-  });
-  return text;
-});
-
-// Spoofer IPC
-ipcMain.on("start-spoofer", (_, data) => {
-  spooferManager.addSpoofer(data);
-  spooferManager.startSpoofer(data.id);
-});
-
-ipcMain.on("stop-spoofer", (_, data) => {
-  spooferManager.stopSpoofer(data.id);
-});
-
-ipcMain.on("toggle-spoofer", (_, data) => {
-  spooferManager.toggleSpoofer(data.id);
-});
-
-ipcMain.on("delete-spoofer", (_, data) => {
-  spooferManager.deleteSpoofer(data.id);
-});
-
-ipcMain.on("launch-spoofer", (_, data) => {
-  spooferManager.addSpoofer(data);
-  spooferManager.startSpoofer(data.id);
-  spooferManager.toggleSpoofer(data.id);
-});
-
+// Debug channel
 const debugSendToIpcRenderer = (log) => {
   const win = mainWindow || global.mainWin;
   if (win) {
     win.webContents.send(DEBUGGER_CHANNEL, log);
   }
 };
-
-// DISCORD SPOOFER IPC
-
-ipcMain.on("start-discord-spoofer", (_, data) => {
-  discordManager.addSpoofer(data);
-});
-
-ipcMain.on("stop-discord-spoofer", (_, id) => {
-  discordManager.stopSpoofer(id);
-});
-
-// READY ARRAY
-ipcMain.on("read-array", async (event, array) => {
-  const fileName = +new Date();
-  const csv = new ObjectsToCsv(array);
-  const data = await csv.toString();
-  const str = str2ab(data);
-  const url = `data:text/csv;base64,${new Buffer.from(str).toString("base64")}`;
-  await downloadCsvFileDialog(`${fileName}.csv`, url);
-});
-
-const downloadCsvFileDialog = async (fileName, url) => {
-  const options = {
-    buttons: ["Yes", "No"],
-    defaultId: 0,
-    title: "Kyro",
-    message: `Do you want to download ${fileName}`,
-    detail: "New generated password csv along with username",
-  };
-  const dialogResult = await dialog.showMessageBox(mainWindow, options);
-  if (dialogResult.response === 0) {
-    await download(mainWindow, url, {
-      saveAs: true,
-    });
-  }
-};
-
-// LOG IPC EVENT
-ipcMain.on("add-log", (e, log) => {
-  const logMsg = log || e;
-  logManager.logMessage(logMsg);
-});
-
-ipcMain.on("export-log-report", (_, data) => {
-  logManager.sendLogs();
-});
-
-// ACC CHANGER IPC
-ipcMain.on("get-server-avatar", async (event, code) => {
-  let url;
-  var config = {
-    method: "get",
-    url: `https://discord.com/api/v9/invites/${code}`,
-  };
-  try {
-    const res = await axios(config);
-    url = `https://cdn.discordapp.com/icons/${res.data.guild.id}/${res.data.guild.icon}.png`;
-  } catch (e) {
-    console.log(e);
-  }
-  mainWindow.webContents.send("url-is", url);
-});
-
-// LO IPC EVENTS
-ipcMain.on("start-linkOpener-monitor", (_, data) => {
-  linkOpernerManager.addMonitor(data);
-});
-ipcMain.on("stop-linkOpener-monitor", (_, id) => {
-  linkOpernerManager.stopMonitor(id);
-});
-
-ipcMain.on("start-inviteJoiner-monitor", (_, data) => {
-  InviteJoinerManager.addMonitor(data);
-});
-ipcMain.on("stop-inviteJoiner-monitor", (_, id) => {
-  InviteJoinerManager.stopMonitor(id);
-});
-
-// GIVEAWAY JOINER
-ipcMain.on("start-giveaway-joiner", (_, data) => {
-  giveawayJoiner.addMonitor(data);
-});
-ipcMain.on("stop-giveaway-joiner", (_, id) => {
-  giveawayJoiner.stopMonitor(id);
-});
-
-// XP FARMER IPC
-
-ipcMain.on("run-xp-server", (_, data) => {
-  xpFarmerManager.addFarmer(data);
-});
-
-ipcMain.on("stop-xp-server", (_, data) => {
-  xpFarmerManager.stopFarmer(data);
-});
-
-// MASS GIVEAWAY JOINER
-ipcMain.on("start-mass-giveaway-joiner", (_, data) => {
-  massGiveawayJoiner.addMonitor(data);
-});
-ipcMain.on("stop-mass-giveaway-joiner", (_, id) => {
-  massGiveawayJoiner.stopMonitor(id);
-});
-
-// GIVEAWAY CHECKER
-ipcMain.on("start-giveaway-checker", (_, data) => {
-  giveawayChecker.addMonitor(data);
-});
-ipcMain.on("stop-giveaway-checker", (_, id) => {
-  giveawayChecker.stopMonitor(id);
-});
-
-// ACCOUNT CHANGER IPC
-ipcMain.on("fetch_server", async (_, token) => {
-  try {
-    const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
-    if (res.status === 200 || res.status === 204) {
-      mainWindow.webContents.send("fetched-server", res.data);
-    }
-  } catch (e) {
-    mainWindow.webContents.send("fetched-server", {
-      error: e.message,
-      badRQ: true,
-    });
-  }
-});
-
-ipcMain.on("fetch_channel", async (_, data) => {
-  try {
-    const res = await axios.get(
-      `https://discord.com/api/v9/guilds/${data.id}/channels`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: data.token,
-        },
-      }
-    );
-    mainWindow.webContents.send("fetched-channel", res.data);
-  } catch (e) {
-    mainWindow.webContents.send("fetched-channel", e.message);
-  }
-});
-
-const hipActions = {
-  getTweet: async (req, res) => {
-    const { payload } = req;
-    const { cKey, sKey, account } = payload;
-    const apiRes = await fetchTweets(cKey, sKey, account);
-    res.send({ msg: apiRes });
-  },
-};
-
-setupMainHandler(electron, { ...hipActions });

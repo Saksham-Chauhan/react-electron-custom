@@ -3,10 +3,11 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 
 // PROD CREDS. TODO => Pass it with .env file
-const botToken = "OTM4MzM4NDAzMTA2MzIwNDM0.Yfo1vA.RA9WBRV-R6CpsTUqt6OVlGtUIXg";
-const clientId = "938338403106320434";
-const clientSecret = "L74jCftmysbzbqpy08i8O_QegPvo8NRb";
-const guildId = "936538800027467816";
+const botToken =
+  "MTE0ODQ5OTQ4OTc2Njc4OTEzMA.GlIrjp.DCR2cLn_fLy1R08b8hspU5A8LiLD-eWYSyIll0";
+const clientId = "1148499489766789130";
+const clientSecret = "7X2S0ezxp83SjIRjt7cZziETRseqMscd";
+const guildId = "1148499899709661276";
 const redirectUrl = "http://localhost/callback/*";
 let accessToken = null;
 let user = null;

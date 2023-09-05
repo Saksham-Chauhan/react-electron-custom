@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const { download } = require("electron-dl");
 
-const logFile = "kyro.log";
+const logFile = "mirror.log";
 const WAIT_INTERVAL = 20000;
 const MAX_FILE_SIZE = 1000000;
 
@@ -67,7 +67,7 @@ class LogManager {
           if (win) {
             const options = {
               buttons: ["Download", "Cancel"],
-              title: "Kyro Tools Log File Downloader",
+              title: "Mirror Bot Log File Downloader",
               message: `Do you want to download ${this.currentLogFile}?`,
             };
             const dialogResult = await dialog.showMessageBox(win, options);
